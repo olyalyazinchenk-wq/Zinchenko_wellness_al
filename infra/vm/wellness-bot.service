@@ -1,0 +1,15 @@
+[Unit]
+Description=Antigravity Wellness Telegram Bot
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/antigravity-wellness
+ExecStart=/opt/antigravity-wellness/.venv/bin/python WellnessBot/main.py
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
