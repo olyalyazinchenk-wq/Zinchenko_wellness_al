@@ -291,6 +291,35 @@ section {
     padding: 24px;
 }
 
+.offer-price-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin: 6px 0 14px;
+}
+
+.offer-price {
+    display: inline-flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgba(164, 91, 63, 0.16) 0%, rgba(125, 63, 40, 0.18) 100%);
+    color: var(--accent-deep);
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+}
+
+.offer-price-note {
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
 .offer-card ul {
     display: grid;
     gap: 10px;
@@ -298,6 +327,13 @@ section {
     padding-left: 18px;
     color: var(--muted);
     line-height: 1.6;
+}
+
+.offer-microcopy {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
 }
 
 .accent-card {
@@ -371,6 +407,83 @@ section {
     background: rgba(255, 251, 244, 0.56);
 }
 
+.reviews-layout {
+    display: grid;
+    grid-template-columns: 0.86fr 1.14fr;
+    gap: 22px;
+    align-items: start;
+}
+
+.review-policy-card,
+.review-card {
+    padding: 24px;
+    border-radius: 28px;
+    border: 1px solid var(--line);
+    background: var(--surface-strong);
+}
+
+.review-policy-card {
+    background:
+        linear-gradient(180deg, rgba(255, 246, 238, 0.94) 0%, rgba(255, 250, 243, 0.98) 100%);
+}
+
+.review-steps {
+    display: grid;
+    gap: 12px;
+    margin: 18px 0;
+    padding-left: 18px;
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.review-policy-note {
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+}
+
+.review-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.review-card {
+    display: grid;
+    gap: 14px;
+    min-height: 100%;
+    background: rgba(255, 251, 244, 0.72);
+}
+
+.review-tag {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 34px;
+    padding: 0 12px;
+    border-radius: 999px;
+    background: rgba(107, 119, 84, 0.12);
+    color: var(--olive);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.review-card p,
+.review-card strong {
+    line-height: 1.7;
+}
+
+.review-card p {
+    color: var(--muted);
+}
+
+.review-card strong {
+    font-size: 0.95rem;
+    color: var(--ink);
+}
+
 .cta-card {
     padding: 30px;
 }
@@ -391,7 +504,9 @@ section {
     .hero-section,
     .offer-grid,
     .safety-grid,
-    .dossier-layout {
+    .dossier-layout,
+    .reviews-layout,
+    .review-grid {
         grid-template-columns: 1fr;
     }
 

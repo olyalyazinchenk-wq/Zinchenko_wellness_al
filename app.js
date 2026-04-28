@@ -20,7 +20,7 @@ function wireChecklistCopy() {
     button.addEventListener("click", async () => {
         try {
             await navigator.clipboard.writeText(checklist.textContent.trim());
-            button.textContent = "Checklist скопирован";
+            button.textContent = "Чек-лист скопирован";
         } catch (error) {
             button.textContent = "Скопируйте вручную ниже";
             console.error(error);

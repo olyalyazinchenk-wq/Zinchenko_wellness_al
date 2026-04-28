@@ -1,17 +1,48 @@
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $venvPython = Join-Path $projectRoot ".venv\Scripts\python.exe"
+$entryPath = Join-Path $projectRoot "WellnessBot\main.py"
 $stderrPath = Join-Path $projectRoot "bot.stderr.log"
 $stdoutPath = Join-Path $projectRoot "bot.stdout.log"
 
-$botProcesses = Get-Process -ErrorAction SilentlyContinue | Where-Object {
-    $_.ProcessName -like "python*" -and $_.Path -eq $venvPython
+function Get-ProjectBotProcesses {
+    $allPython = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
+        $_.Name -like "python*"
+    }
+
+    foreach ($proc in $allPython) {
+        $cmd = [string]$proc.CommandLine
+        $exe = [string]$proc.ExecutablePath
+        $isProjectBot = $false
+
+        if ($exe -eq $venvPython) { $isProjectBot = $true }
+        if ($cmd.Contains($entryPath)) { $isProjectBot = $true }
+        elseif ($cmd.Contains("WellnessBot\main.py")) { $isProjectBot = $true }
+
+        if ($isProjectBot) {
+            [pscustomobject]@{
+                Id = [int]$proc.ProcessId
+                ProcessName = $proc.Name
+                Path = $exe
+                Runtime = if ($exe -eq $venvPython) { "venv" } else { "external" }
+                CommandLine = $cmd
+            }
+        }
+    }
 }
+
+$botProcesses = @(Get-ProjectBotProcesses)
 
 Write-Output "=== bot-process ==="
 if ($botProcesses) {
-    $botProcesses | Select-Object Id, ProcessName, Path | Format-Table -AutoSize
+    $botProcesses | Select-Object Id, ProcessName, Runtime, Path | Format-Table -AutoSize
+    $external = @($botProcesses | Where-Object { $_.Runtime -ne "venv" })
+    if ($external.Count -gt 0) {
+        Write-Output ""
+        Write-Output "WARNING: External bot process detected."
+        $external | Select-Object Id, Path, CommandLine | Format-List
+    }
 } else {
-    Write-Output "Bot process is not running from project virtualenv."
+    Write-Output "Project bot process is not running."
 }
 
 Write-Output ""

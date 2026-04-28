@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wellness AI — Диагностика</title>
+    <title>Wellness Clarity — Разбор кейса</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -287,7 +287,7 @@
     <div class="app">
         <div class="app-header">
             <div class="app-logo">
-                Wellness AI
+                Wellness Clarity
                 <span>by Ольга Зинченко</span>
             </div>
             <div class="app-step-indicator" id="stepIndicator"></div>
@@ -296,43 +296,19 @@
         <div class="app-body" id="appBody">
             <!-- Screen 1: Tier Selection -->
             <div class="screen active" id="screenTier">
-                <div class="tier-select-title">Выберите направление</div>
-                <div class="tier-select-sub">Каждое направление использует специализированную базу знаний</div>
+                <div class="tier-select-title">Начать разбор кейса</div>
+                <div class="tier-select-sub">Один входной путь: ясность, следующий шаг и затем Premium Wellness Dossier при необходимости</div>
 
                 <div class="tier-option" onclick="selectTier('premium')">
                     <div class="tier-option-header">
                         <div class="tier-option-icon">💎</div>
                         <div>
-                            <div class="tier-option-name">Premium Wellness</div>
-                            <div class="tier-option-audience">Женщины & Мужчины 25-45</div>
+                            <div class="tier-option-name">Wellness Clarity</div>
+                            <div class="tier-option-audience">Женщины 28-45 • fatigue • ЖКТ • unclear symptoms</div>
                         </div>
                     </div>
-                    <div class="tier-option-desc">Полный разбор анализов, закрытие дефицитов, план питания LCHF, корзина нутрицевтиков, анти-стресс протокол</div>
+                    <div class="tier-option-desc">Спокойно собираем ваш кейс, выделяем главное, определяем следующий шаг и при необходимости переводим в Premium Wellness Dossier с проверкой эксперта</div>
                     <div class="tier-option-price">от 2 990 ₽</div>
-                </div>
-
-                <div class="tier-option" onclick="selectTier('sport')">
-                    <div class="tier-option-header">
-                        <div class="tier-option-icon">💪</div>
-                        <div>
-                            <div class="tier-option-name">Sport PRO</div>
-                            <div class="tier-option-audience">Спортсмены & Бодибилдеры</div>
-                        </div>
-                    </div>
-                    <div class="tier-option-desc">Мониторинг гормональной панели, контроль ароматизации, безопасность печени, ПКТ</div>
-                    <div class="tier-option-price">1 990 ₽ / мес</div>
-                </div>
-
-                <div class="tier-option" onclick="selectTier('social')">
-                    <div class="tier-option-header">
-                        <div class="tier-option-icon">🌿</div>
-                        <div>
-                            <div class="tier-option-name">Здоровье 50+</div>
-                            <div class="tier-option-audience">Возраст 50+ / Бюджетно</div>
-                        </div>
-                    </div>
-                    <div class="tier-option-desc">Диагностика по симптомам без дорогих анализов, бюджетное меню, учёт хронических заболеваний</div>
-                    <div class="tier-option-price">990 ₽</div>
                 </div>
             </div>
 
@@ -368,7 +344,7 @@
             <div class="screen" id="screenUpload">
                 <div class="form-label">Анализы</div>
                 <div class="form-question">Загрузите результаты</div>
-                <div class="form-hint">PDF или фото из лаборатории. Можно пропустить — AI проведёт диагностику по симптомам.</div>
+                <div class="form-hint">PDF или фото из лаборатории. Можно пропустить и начать по симптомам, а файлы дослать позже.</div>
                 <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
                     <div class="upload-icon">📎</div>
                     <div class="upload-text">Нажмите для загрузки</div>
@@ -432,24 +408,6 @@
                 { key: 'goals', q: 'Какой результат хотите через 8 недель?', hint: '', type: 'textarea', placeholder: 'Хочу просыпаться с энергией...' },
                 { key: 'background', q: 'Диагнозы, лекарства, БАДы?', hint: 'Что уже принимаете или принимали', type: 'textarea', placeholder: 'Гипотиреоз, L-тироксин 50 мкг...' },
                 { key: 'red_flags', q: 'Есть ли сейчас критические состояния?', hint: 'Острая боль, кровотечения, высокая температура, беременность с осложнениями', type: 'input', placeholder: 'Нет' },
-            ],
-            sport: [
-                { key: 'name', q: 'Как к вам обращаться?', hint: '', type: 'input', placeholder: 'Дмитрий' },
-                { key: 'age', q: 'Возраст?', hint: '', type: 'input', placeholder: '28' },
-                { key: 'sport_type', q: 'Вид спорта и стаж?', hint: '', type: 'input', placeholder: 'Бодибилдинг, 5 лет' },
-                { key: 'symptoms', q: 'Что беспокоит?', hint: '', type: 'textarea', placeholder: 'Акне на спине, задержка воды, снижение либидо...', chips: ['Акне','Задержка воды','Гинекомастия','Либидо','Бессонница','Агрессия','Выпадение волос'] },
-                { key: 'course', q: 'Текущий курс / препараты?', hint: 'Что и в каких дозировках используется сейчас. Информация конфиденциальна.', type: 'textarea', placeholder: 'Тестостерон энантат 500 мг/нед...' },
-                { key: 'background', q: 'Хронические заболевания, аллергии?', hint: '', type: 'textarea', placeholder: 'Нет / есть...' },
-                { key: 'red_flags', q: 'Критические состояния?', hint: 'Боль в груди, сильные отёки, потеря зрения', type: 'input', placeholder: 'Нет' },
-            ],
-            social: [
-                { key: 'name', q: 'Как к вам обращаться?', hint: 'Имя', type: 'input', placeholder: 'Наталья Петровна' },
-                { key: 'age', q: 'Сколько вам лет?', hint: '', type: 'input', placeholder: '62' },
-                { key: 'chronic', q: 'Какие хронические заболевания?', hint: 'Отметьте или опишите', type: 'textarea', placeholder: 'Артроз коленей, удалён желчный...', chips: ['Артроз','Гастрит','Диабет 2 типа','Гипертония','Удалён желчный','Варикоз','Остеопороз'] },
-                { key: 'symptoms', q: 'Что беспокоит сейчас?', hint: 'Опишите все жалобы', type: 'textarea', placeholder: 'Мёрзнут ноги, тянет на сладкое, бессонница...', chips: ['Мёрзнут ноги','Отёки','Запоры','Тяга к сладкому','Боли в суставах','Сухая кожа','Усталость'] },
-                { key: 'medications', q: 'Какие лекарства принимаете?', hint: '', type: 'textarea', placeholder: 'Метформин 500 мг, эналаприл...' },
-                { key: 'budget', q: 'Бюджет на питание / добавки?', hint: 'Это поможет подобрать доступные решения', type: 'input', placeholder: 'Минимальный / средний' },
-                { key: 'red_flags', q: 'Критические жалобы?', hint: 'Резкая боль, головокружение, потеря сознания', type: 'input', placeholder: 'Нет' },
             ]
         };
 
@@ -602,69 +560,31 @@
 
         // ─── Result ───
         function showResult() {
-            const titles = { premium: 'Premium Wellness-Досье', sport: 'Sport PRO — Гормональный Разбор', social: 'Здоровье 50+ — Диагностика' };
-            document.getElementById('resultTitle').textContent = titles[state.tier];
+            document.getElementById('resultTitle').textContent = 'Premium Wellness-Досье';
             document.getElementById('resultSub').textContent = `Подготовлено для ${state.data.name || 'вас'}`;
 
             // Demo result content
             const content = document.getElementById('resultContent');
-            if (state.tier === 'premium') {
-                content.innerHTML = `
-                    <div class="result-section">
-                        <div class="result-section-title">Выявленные риски</div>
-                        <div class="result-item"><strong>Ферритин:</strong> Вероятный латентный дефицит железа <span class="tag-red">⚠ ВНИМАНИЕ</span></div>
-                        <div class="result-item"><strong>Витамин D:</strong> Субоптимальный уровень, требует коррекции</div>
-                        <div class="result-item"><strong>Кортизол:</strong> Признаки хронического стресса</div>
-                    </div>
-                    <div class="result-section">
-                        <div class="result-section-title">Протокол нутрицевтиков</div>
-                        <div class="result-item"><strong>Железо:</strong> Бисглицинат 25 мг + Витамин C 500 мг (натощак)</div>
-                        <div class="result-item"><strong>Витамин D3:</strong> 5000 МЕ + K2 (MK-7) 100 мкг</div>
-                        <div class="result-item"><strong>Магний:</strong> Глицинат 400 мг за час до сна</div>
-                        <div class="result-item"><strong>Ашваганда:</strong> KSM-66, 300 мг утром</div>
-                    </div>
-                    <div class="result-section">
-                        <div class="result-section-title">Питание</div>
-                        <div class="result-item">Протокол LCHF: акцент на качественные жиры и белок</div>
-                        <div class="result-item">Исключить: добавленный сахар, рафинированные масла</div>
-                        <div class="result-item">Основа: птица, рыба, яйца, авокадо, зелёные овощи</div>
-                    </div>`;
-            } else if (state.tier === 'sport') {
-                content.innerHTML = `
-                    <div class="result-section">
-                        <div class="result-section-title">Гормональная панель</div>
-                        <div class="result-item"><strong>Эстрадиол:</strong> Риск ароматизации <span class="tag-red">⚠ КОНТРОЛЬ</span></div>
-                        <div class="result-item"><strong>АЛТ/АСТ:</strong> Требует мониторинга на фоне курса</div>
-                        <div class="result-item"><strong>Гематокрит:</strong> В пределах нормы <span class="tag-green">✓ OK</span></div>
-                    </div>
-                    <div class="result-section">
-                        <div class="result-section-title">Рекомендации</div>
-                        <div class="result-item"><strong>Гепатопротекция:</strong> УДХК 500 мг на ночь</div>
-                        <div class="result-item"><strong>Омега-3:</strong> 2000 мг EPA/DHA для текучести крови</div>
-                        <div class="result-item"><strong>Цинк пиколинат:</strong> 30 мг/день — натуральный ингибитор ароматазы</div>
-                    </div>`;
-            } else {
-                content.innerHTML = `
-                    <div class="result-section">
-                        <div class="result-section-title">Симптоматическая оценка</div>
-                        <div class="result-item"><strong>Мёрзнут ноги + сухая кожа:</strong> Подозрение на гипотиреоз</div>
-                        <div class="result-item"><strong>Тяга к сладкому:</strong> Вероятная инсулинорезистентность</div>
-                        <div class="result-item"><strong>Боли в суставах:</strong> Системное воспаление, дефицит коллагена</div>
-                    </div>
-                    <div class="result-section">
-                        <div class="result-section-title">Бюджетный протокол</div>
-                        <div class="result-item"><strong>Суставы:</strong> Пищевой желатин 1 ст. л. + отвар шиповника</div>
-                        <div class="result-item"><strong>Микробиом:</strong> Квашеная капуста ежедневно</div>
-                        <div class="result-item"><strong>Железо:</strong> Печень 2-3 раза в неделю</div>
-                        <div class="result-item"><strong>Омега-3:</strong> Льняное семя перемолотое</div>
-                    </div>
-                    <div class="result-section">
-                        <div class="result-section-title">Меню (доступные продукты)</div>
-                        <div class="result-item">Гречка, перловка, белокочанная капуста, морковь, свёкла</div>
-                        <div class="result-item">Куриные желудки, минтай, яйца</div>
-                        <div class="result-item">Режим: 3 раза в день, строго без перекусов</div>
-                    </div>`;
-            }
+            content.innerHTML = `
+                <div class="result-section">
+                    <div class="result-section-title">Выявленные риски</div>
+                    <div class="result-item"><strong>Ферритин:</strong> Вероятный латентный дефицит железа <span class="tag-red">⚠ ВНИМАНИЕ</span></div>
+                    <div class="result-item"><strong>Витамин D:</strong> Субоптимальный уровень, требует коррекции</div>
+                    <div class="result-item"><strong>Кортизол:</strong> Признаки хронического стресса</div>
+                </div>
+                <div class="result-section">
+                    <div class="result-section-title">Протокол нутрицевтиков</div>
+                    <div class="result-item"><strong>Железо:</strong> Бисглицинат 25 мг + Витамин C 500 мг (натощак)</div>
+                    <div class="result-item"><strong>Витамин D3:</strong> 5000 МЕ + K2 (MK-7) 100 мкг</div>
+                    <div class="result-item"><strong>Магний:</strong> Глицинат 400 мг за час до сна</div>
+                    <div class="result-item"><strong>Ашваганда:</strong> KSM-66, 300 мг утром</div>
+                </div>
+                <div class="result-section">
+                    <div class="result-section-title">Питание</div>
+                    <div class="result-item">Протокол LCHF: акцент на качественные жиры и белок</div>
+                    <div class="result-item">Исключить: добавленный сахар, рафинированные масла</div>
+                    <div class="result-item">Основа: птица, рыба, яйца, авокадо, зелёные овощи</div>
+                </div>`;
             showScreen('result');
         }
 

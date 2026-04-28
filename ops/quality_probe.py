@@ -17,7 +17,7 @@ from config import load_settings  # noqa: E402
 
 def run_smoke() -> int:
     settings = load_settings()
-    prompt = "How will we continue communication after dossier completion?"
+    prompt = "После завершения досье как будет продолжаться общение? Мне нужно будет куда-то переходить или всё останется здесь?"
     reply = generate_live_reply(settings, [], prompt) or ""
     print("=== smoke-reply ===")
     print(reply[:800] if reply else "EMPTY")

@@ -23,5 +23,8 @@ See:
 
 - `docs/NCB.md` for strategy-to-execution map.
 - `ops/permissions-checklist.md` for approval flow.
+- `ops/TEAM_OPERATING_MODEL.md` for the team command structure.
+- `ops/skills/agency-orchestrator-skill.md` for multi-role orchestration rules.
+- `ops/skills/loop-breaker-skill.md` for anti-loop escalation and token discipline.
 - `ops/skills/live-dialogue-skill.md` for dialogue QA loop.
 - `ops/skills/release-skill.md` for release checklist.

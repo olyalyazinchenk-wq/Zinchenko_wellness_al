@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Wellness Ecosystem v3.0</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════
+           DESIGN SYSTEM: "Liquid Wellness" Dark Theme
+           Inspired by Apple Health + Oura Ring + Whoop
+           ═══════════════════════════════════════════════ */
+        :root {
+            --bg-primary: #0D0D0F;
+            --bg-card: #161618;
+            --bg-card-hover: #1C1C1F;
+            --bg-elevated: #1F1F23;
+            --border-subtle: rgba(255,255,255,0.06);
+            --border-glow: rgba(212,175,55,0.2);
+            --text-primary: #F5F5F7;
+            --text-secondary: #8E8E93;
+            --text-tertiary: #48484A;
+            --gold: #D4AF37;
+            --gold-dim: rgba(212,175,55,0.15);
+            --green: #30D158;
+            --green-dim: rgba(48,209,88,0.15);
+            --amber: #FF9F0A;
+            --amber-dim: rgba(255,159,10,0.15);
+            --red: #FF453A;
+            --red-dim: rgba(255,69,58,0.15);
+            --blue: #64D2FF;
+            --radius: 16px;
+            --radius-sm: 12px;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* ── Splash Screen ── */
+        .splash {
+            position: fixed; inset: 0; z-index: 100;
+            background: var(--bg-primary);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+        .splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .splash-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px; font-weight: 400; letter-spacing: 0.1em;
+            color: var(--gold);
+            opacity: 0; animation: fadeUp 0.8s 0.2s ease forwards;
+        }
+        .splash-line {
+            width: 40px; height: 1px; background: var(--gold);
+            margin: 16px 0;
+            opacity: 0; animation: fadeUp 0.8s 0.4s ease forwards;
+        }
+        .splash-sub {
+            font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+            color: var(--text-secondary);
+            opacity: 0; animation: fadeUp 0.8s 0.6s ease forwards;
+        }
+        .splash-ring {
+            position: absolute; width: 120px; height: 120px;
+            border: 1px solid var(--gold-dim); border-radius: 50%;
+            animation: pulseRing 2s ease infinite;
+        }
+
+        /* ── Navigation ── */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            background: rgba(13,13,15,0.85);
+            backdrop-filter: blur(20px) saturate(1.8);
+            -webkit-backdrop-filter: blur(20px) saturate(1.8);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0 16px; height: 52px;
+            display: flex; align-items: center; justify-content: center;
+            gap: 4px;
+        }
+        .nav-btn {
+            background: none; border: none; color: var(--text-tertiary);
+            font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+            padding: 8px 14px; border-radius: 20px;
+            cursor: pointer; transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-btn.active {
+            color: var(--text-primary);
+            background: var(--bg-elevated);
+        }
+        .nav-btn.active::after {
+            content:''; position: absolute;
+            bottom: -1px; left: 50%; transform: translateX(-50%);
+            width: 16px; height: 2px; border-radius: 1px;
+            background: var(--gold);
+        }
+
+        /* ── Main Layout ── */
+        .app { padding: 68px 16px 100px; max-width: 430px; margin: 0 auto; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+
+        /* ── Health Score Ring (SVG) ── */
+        .score-container { text-align: center; margin-bottom: 32px; position: relative; }
+        .score-svg { width: 200px; height: 200px; transform: rotate(-90deg); }
+        .score-bg { fill: none; stroke: var(--bg-elevated); stroke-width: 8; }
+        .score-ring {
+            fill: none; stroke-width: 8; stroke-linecap: round;
+            stroke-dasharray: 502; stroke-dashoffset: 502;
+            transition: stroke-dashoffset 2s cubic-bezier(0.4, 0, 0.2, 1),
+                        stroke 1s ease;
+        }
+        .score-center {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .score-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 48px; font-weight: 400;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .score-label {
+            font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+            color: var(--text-secondary); margin-top: 4px;
+        }
+
+        /* ── Metric Cards (Glass) ── */
+        .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 16px;
+            transition: all 0.3s ease;
+            cursor: default;
+            animation: slideUp 0.6s ease backwards;
+        }
+        .metric-card:hover { background: var(--bg-card-hover); transform: translateY(-2px); }
+        .metric-icon { font-size: 20px; margin-bottom: 8px; }
+        .metric-value { font-size: 24px; font-weight: 600; line-height: 1.2; }
+        .metric-label { font-size: 10px; color: var(--text-secondary); letter-spacing: 0.05em; margin-top: 2px; }
+        .metric-badge {
+            display: inline-block; font-size: 9px; font-weight: 600;
+            padding: 3px 8px; border-radius: 6px; margin-top: 8px;
+            letter-spacing: 0.03em;
+        }
+        .badge-green { background: var(--green-dim); color: var(--green); }
+        .badge-amber { background: var(--amber-dim); color: var(--amber); }
+        .badge-red { background: var(--red-dim); color: var(--red); }
+
+        /* ── Section Headers ── */
+        .section-header {
+            display: flex; align-items: center; gap: 10px;
+            margin-bottom: 16px; margin-top: 32px;
+        }
+        .section-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+        .section-title {
+            font-size: 13px; font-weight: 600; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--text-secondary);
+        }
+
+        /* ── Biomarker Cards ── */
+        .bio-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 16px; margin-bottom: 8px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: slideUp 0.5s ease backwards;
+        }
+        .bio-card:hover { background: var(--bg-card-hover); border-color: var(--border-glow); }
+        .bio-name { font-size: 13px; font-weight: 500; }
+        .bio-range { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+        .bio-value { font-size: 18px; font-weight: 600; text-align: right; }
+        .bio-status {
+            width: 8px; height: 8px; border-radius: 50%; margin-left: 12px; flex-shrink: 0;
+            animation: pulse 2s ease infinite;
+        }
+        .status-ok { background: var(--green); box-shadow: 0 0 8px var(--green); }
+        .status-warn { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+        .status-alert { background: var(--red); box-shadow: 0 0 8px var(--red); }
+
+        /* ── Hypothesis Cards ── */
+        .hypo-card {
+            background: var(--bg-card);
+            border-left: 3px solid var(--gold);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 16px 20px; margin-bottom: 12px;
+            font-size: 13px; line-height: 1.7;
+            color: var(--text-secondary);
+            animation: slideLeft 0.5s ease backwards;
+        }
+
+        /* ── Vision AI Section ── */
+        .vision-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            background: linear-gradient(135deg, rgba(100,210,255,0.1), rgba(212,175,55,0.1));
+            border: 1px solid rgba(100,210,255,0.2);
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+            color: var(--blue);
+        }
+        .vision-eye { animation: blink 3s ease infinite; }
+
+        /* ── Shop Cards ── */
+        .shop-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 24px; margin-bottom: 16px;
+            text-align: center;
+            transition: all 0.4s ease;
+        }
+        .shop-card:hover { border-color: var(--gold); transform: scale(1.01); }
+        .shop-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px; margin-bottom: 8px; color: var(--text-primary);
+        }
+        .shop-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+        .shop-btn {
+            display: inline-block; padding: 12px 32px;
+            border: 1px solid var(--gold); color: var(--gold);
+            font-size: 10px; font-weight: 600; letter-spacing: 0.15em;
+            text-transform: uppercase; text-decoration: none;
+            border-radius: 8px; transition: all 0.3s ease;
+        }
+        .shop-btn:hover { background: var(--gold); color: var(--bg-primary); }
+        .shop-btn.primary { background: var(--gold); color: var(--bg-primary); }
+        .shop-btn.primary:hover { background: var(--text-primary); }
+
+        /* ── Guide Cards ── */
+        .guide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius);
+            padding: 20px; margin-bottom: 12px;
+        }
+        .guide-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .guide-text { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+
+        /* ── Footer ── */
+        .footer-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            padding: 16px;
+            background: linear-gradient(to top, var(--bg-primary) 60%, transparent);
+        }
+        .footer-btn {
+            display: block; width: 100%; max-width: 430px; margin: 0 auto;
+            padding: 14px; border: none; border-radius: 14px;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            font-size: 12px; font-weight: 500; letter-spacing: 0.05em;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .footer-btn:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+
+        /* ═══ ANIMATIONS ═══ */
+        @keyframes fadeUp { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        @keyframes slideUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+        @keyframes slideLeft { from { opacity:0; transform: translateX(-20px); } to { opacity:1; transform: translateX(0); } }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }
+        @keyframes pulseRing { 0%,100% { transform:scale(1); opacity:0.3; } 50% { transform:scale(1.15); opacity:0; } }
+        @keyframes blink { 0%,90%,100% { opacity:1; } 95% { opacity:0.2; } }
+        @keyframes countUp { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+        /* Stagger delays for cards */
+        .metric-card:nth-child(1) { animation-delay: 0.1s; }
+        .metric-card:nth-child(2) { animation-delay: 0.2s; }
+        .metric-card:nth-child(3) { animation-delay: 0.3s; }
+        .metric-card:nth-child(4) { animation-delay: 0.35s; }
+        .bio-card:nth-child(1) { animation-delay: 0.1s; }
+        .bio-card:nth-child(2) { animation-delay: 0.15s; }
+        .bio-card:nth-child(3) { animation-delay: 0.2s; }
+        .bio-card:nth-child(4) { animation-delay: 0.25s; }
+        .bio-card:nth-child(5) { animation-delay: 0.3s; }
+        .hypo-card:nth-child(1) { animation-delay: 0.1s; }
+        .hypo-card:nth-child(2) { animation-delay: 0.2s; }
+        .hypo-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 0; }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ SPLASH ═══ -->
+    <div class="splash" id="splash">
+        <div class="splash-ring"></div>
+        <div class="splash-logo">Olga Zinchenko</div>
+        <div class="splash-line"></div>
+        <div class="splash-sub">Wellness Intelligence</div>
+    </div>
+
+    <!-- ═══ NAVIGATION ═══ -->
+    <nav class="nav" id="nav" style="display:none">
+        <button class="nav-btn active" data-tab="dash" onclick="switchTab('dash', this)">Здоровье</button>
+        <button class="nav-btn" data-tab="report" onclick="switchTab('report', this)">Досье</button>
+        <button class="nav-btn" data-tab="shop" onclick="switchTab('shop', this)">Маркет</button>
+        <button class="nav-btn" data-tab="guide" onclick="switchTab('guide', this)">Гайд</button>
+    </nav>
+
+    <!-- ═══ APP ═══ -->
+    <div class="app" id="app" style="display:none">
+
+        <!-- ──── TAB: HEALTH DASHBOARD ──── -->
+        <div class="tab-content active" id="tab-dash">
+
+            <!-- Greeting -->
+            <div style="text-align:center; margin-bottom: 28px;">
+                <div style="font-size:11px; color:var(--text-tertiary); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:4px;">Ваш Wellness-Профиль</div>
+                <div id="clientName" style="font-family:'Playfair Display',serif; font-size:26px; font-weight:400;"></div>
+            </div>
+
+            <!-- Health Score Ring -->
+            <div class="score-container">
+                <svg class="score-svg" viewBox="0 0 180 180">
+                    <circle class="score-bg" cx="90" cy="90" r="80"/>
+                    <circle class="score-ring" id="scoreRing" cx="90" cy="90" r="80"/>
+                </svg>
+                <div class="score-center">
+                    <div class="score-number" id="scoreNum">0</div>
+                    <div class="score-label">Health Score</div>
+                </div>
+            </div>
+
+            <!-- Quick Metrics -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon">🧬</div>
+                    <div class="metric-value" id="bioCount">0</div>
+                    <div class="metric-label">Биомаркеров</div>
+                    <div class="metric-badge badge-green">Tracked</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">👁️</div>
+                    <div class="metric-value" id="visionStatus">—</div>
+                    <div class="metric-label">Vision AI</div>
+                    <div class="metric-badge badge-amber" id="visionBadge">Awaiting</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">📋</div>
+                    <div class="metric-value" id="hypoCount">0</div>
+                    <div class="metric-label">Гипотез</div>
+                    <div class="metric-badge badge-green">Analyzed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon">💊</div>
+                    <div class="metric-value" id="schemeCount">0</div>
+                    <div class="metric-label">Схем приёма</div>
+                    <div class="metric-badge badge-green">Ready</div>
+                </div>
+            </div>
+
+            <!-- Weekly Focus -->
+            <div class="section-header">
+                <div class="section-dot"></div>
+                <div class="section-title">Фокус недели</div>
+            </div>
+            <div class="guide-card" style="border-left: 3px solid var(--gold);">
+                <div class="guide-title">⚡ Восстановление энергии</div>
+                <div class="guide-text">Продолжайте приём магния и витамина D. Следите за водным балансом — минимум 30 мл на кг веса. Отслеживайте самочувствие после еды.</div>
+            </div>
+        </div>
+
+        <!-- ──── TAB: CLINICAL REPORT ──── -->
+        <div class="tab-content" id="tab-report">
+
+            <div style="text-align:center; margin-bottom:28px;">
+                <div style="font-family:'Playfair Display',serif; font-size:22px;">Клинический Разбор</div>
+                <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;">13-секционный анализ</div>
+            </div>
+
+            <!-- Vision AI -->
+            <div id="visionSection" style="display:none">
+                <div class="section-header">
+                    <div class="section-dot" style="background:var(--blue);"></div>
+                    <div class="section-title">Визуальная Диагностика</div>
+                    <div class="vision-badge"><span class="vision-eye">👁️</span> Vision AI</div>
+                </div>
+                <div class="guide-card" style="border:1px solid rgba(100,210,255,0.15);" id="visionContent"></div>
+            </div>
+
+            <!-- Biomarkers -->
+            <div class="section-header">
+                <div class="section-dot"></div>
+                <div class="section-title">Лабораторная Панель</div>
+            </div>
+            <div id="biomarkersContainer"></div>
+
+            <!-- Hypotheses -->
+            <div class="section-header">
+                <div class="section-dot"></div>
+                <div class="section-title">Рабочие Гипотезы</div>
+            </div>
+            <div id="hypothesesContainer"></div>
+
+        </div>
+
+        <!-- ──── TAB: SHOP ──── -->
+        <div class="tab-content" id="tab-shop">
+            <div style="text-align:center; margin-bottom:28px;">
+                <div style="font-family:'Playfair Display',serif; font-size:22px;">Нутритивная Поддержка</div>
+                <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;">Персонально подобранные корзины</div>
+            </div>
+
+            <div class="shop-card">
+                <div class="shop-brand">Siberian Wellness</div>
+                <div class="shop-desc">Базовая омега-поддержка, витамин D3 в масляной форме и магний в хелатной форме.<br><br><span style="color:var(--gold); font-size:10px;">При регистрации выберите «У меня есть консультант» и укажите номер: <b>8-926-129-07-66</b></span></div>
+                <a href="https://ru.siberianhealth.com/ru/shop/catalog/category/252/?referral=2663395625" target="_blank" class="shop-btn primary">Открыть корзину</a>
+            </div>
+
+            <div class="shop-card">
+                <div class="shop-brand">Vitamax (SPZ03)</div>
+                <div class="shop-desc">Профессиональная линейка: High Purity Fish Oil и комплексы для ЖКТ.<br><br><span style="color:var(--gold)">Промокод на скидку: <b>844131</b></span></div>
+                <a href="https://vitamax.ru/catalog/" target="_blank" class="shop-btn">Выбрать на Vitamax</a>
+            </div>
+        </div>
+
+        <!-- ──── TAB: GUIDE ──── -->
+        <div class="tab-content" id="tab-guide">
+            <div style="text-align:center; margin-bottom:28px;">
+                <div style="font-family:'Playfair Display',serif; font-size:22px;">Забота о себе</div>
+                <div style="font-size:11px; color:var(--text-tertiary); margin-top:4px;">Инструкции и рекомендации</div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-title">🩸 Как сдавать анализы?</div>
+                <div class="guide-text">Строго натощак (8-12 часов голода). Накануне исключите интенсивные тренировки и алкоголь. Для гормонального профиля — 3-5 день цикла. Кровь сдаётся до 10 утра.</div>
+            </div>
+            <div class="guide-card">
+                <div class="guide-title">📓 Как вести дневник?</div>
+                <div class="guide-text">Записывайте не калории, а самочувствие через 30-60 минут после еды. Вздутие, сонливость или туман — это важные маркеры непереносимости.</div>
+            </div>
+            <div class="guide-card">
+                <div class="guide-title">💧 Питьевой режим</div>
+                <div class="guide-text">30 мл на кг массы тела. Начинайте утро со стакана тёплой воды с лимоном. Основной объём — до 18:00. Исключите воду во время еды.</div>
+            </div>
+            <div class="guide-card">
+                <div class="guide-title">🌙 Ритуал сна</div>
+                <div class="guide-text">Ложитесь до 23:00. За час до сна — никаких экранов. Спальня: 18-20°С, полная темнота. Магний принимать за 30 минут до сна.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══ FOOTER ═══ -->
+    <div class="footer-bar" id="footer" style="display:none">
+        <button class="footer-btn" onclick="closeApp()">Закрыть кабинет</button>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        // ═══ STATE ═══
+        let sessionData = {};
+
+        // ═══ INIT ═══
+        async function init() {
+            const tg = window.Telegram?.WebApp;
+            if (tg) { tg.expand(); tg.ready(); }
+            const params = new URLSearchParams(location.search);
+            const userId = tg?.initDataUnsafe?.user?.id || params.get('user_id') || 999999;
+            const accessToken = params.get('access_token');
+
+            try {
+                const query = new URLSearchParams({ user_id: String(userId) });
+                if (accessToken) query.set('access_token', accessToken);
+                const r = await fetch(`/api/session?${query.toString()}`);
+                if (r.ok) sessionData = await r.json();
+            } catch(e) { console.error(e); }
+
+            // Reveal UI after splash
+            setTimeout(() => {
+                document.getElementById('splash').classList.add('hidden');
+                document.getElementById('nav').style.display = '';
+                document.getElementById('app').style.display = '';
+                document.getElementById('footer').style.display = '';
+                renderDashboard();
+            }, 1800);
+        }
+
+        // ═══ RENDER ═══
+        function renderDashboard() {
+            // Name
+            const name = sessionData.profile?.full_name || 'Wellness Guest';
+            document.getElementById('clientName').textContent = name;
+
+            // Counts
+            const biomarkers = sessionData.parsed_biomarkers || [];
+            const hypotheses = sessionData.hypotheses || [];
+            const schemes = sessionData.schemes || [];
+            animateCounter('bioCount', biomarkers.length);
+            animateCounter('hypoCount', hypotheses.length);
+            animateCounter('schemeCount', schemes.length);
+
+            // Vision
+            if (sessionData.vision_analysis) {
+                document.getElementById('visionStatus').textContent = 'Done';
+                document.getElementById('visionBadge').className = 'metric-badge badge-green';
+                document.getElementById('visionBadge').textContent = 'Complete';
+            }
+
+            // Health Score Ring
+            const score = calculateHealthScore(biomarkers, hypotheses);
+            animateRing(score);
+
+            // Biomarkers
+            renderBiomarkers(biomarkers);
+
+            // Hypotheses
+            renderHypotheses(hypotheses);
+
+            // Vision Section
+            renderVision();
+        }
+
+        function calculateHealthScore(biomarkers, hypotheses) {
+            let base = 72;
+            if (biomarkers.length > 0) base += Math.min(biomarkers.length * 2, 15);
+            if (hypotheses.length > 0) base += 5;
+            return Math.min(base, 98);
+        }
+
+        function animateRing(score) {
+            const ring = document.getElementById('scoreRing');
+            const circumference = 2 * Math.PI * 80; // 502.65
+            const offset = circumference - (score / 100) * circumference;
+
+            // Color based on score
+            let color = '#FF453A'; // red
+            if (score >= 80) color = '#30D158'; // green
+            else if (score >= 60) color = '#D4AF37'; // gold
+            else if (score >= 40) color = '#FF9F0A'; // amber
+
+            ring.style.stroke = color;
+            ring.style.filter = `drop-shadow(0 0 6px ${color})`;
+
+            setTimeout(() => {
+                ring.style.strokeDashoffset = offset;
+            }, 600);
+
+            // Animate number
+            let current = 0;
+            const step = score / 40;
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= score) { current = score; clearInterval(interval); }
+                document.getElementById('scoreNum').textContent = Math.round(current);
+            }, 30);
+        }
+
+        function animateCounter(id, target) {
+            const el = document.getElementById(id);
+            if (!target) { el.textContent = '0'; return; }
+            let current = 0;
+            const step = Math.max(1, Math.ceil(target / 20));
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) { current = target; clearInterval(interval); }
+                el.textContent = current;
+            }, 50);
+        }
+
+        function renderBiomarkers(biomarkers) {
+            const c = document.getElementById('biomarkersContainer');
+            if (!biomarkers.length) {
+                c.innerHTML = '<div class="guide-card"><div class="guide-text" style="text-align:center;">Загрузите анализы в бот, чтобы увидеть вашу лабораторную панель</div></div>';
+                return;
+            }
+            c.innerHTML = biomarkers.map((bm, i) => {
+                const status = bm.status === 'vulnerable' ? 'status-alert' : bm.status === 'borderline' ? 'status-warn' : 'status-ok';
+                return `<div class="bio-card" style="animation-delay:${(i*0.06)}s">
+                    <div>
+                        <div class="bio-name">${bm.name || 'Маркер'}</div>
+                        <div class="bio-range">Оптимум: ${bm.normal_range || '—'}</div>
+                    </div>
+                    <div style="display:flex; align-items:center;">
+                        <div class="bio-value">${bm.value || '—'}</div>
+                        <div class="bio-status ${status}"></div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderHypotheses(hypotheses) {
+            const c = document.getElementById('hypothesesContainer');
+            if (!hypotheses.length) {
+                c.innerHTML = '<div class="guide-card"><div class="guide-text" style="text-align:center;">Гипотезы будут сформированы после сбора всех данных</div></div>';
+                return;
+            }
+            c.innerHTML = hypotheses.map((h, i) =>
+                `<div class="hypo-card" style="animation-delay:${(i*0.1)}s">${typeof h === 'string' ? h : JSON.stringify(h)}</div>`
+            ).join('');
+        }
+
+        function renderVision() {
+            if (!sessionData.vision_analysis) return;
+            const s = document.getElementById('visionSection');
+            const c = document.getElementById('visionContent');
+            s.style.display = '';
+            const v = sessionData.vision_analysis;
+            let html = '';
+            if (v.interpretation) html += `<div class="guide-text" style="margin-bottom:12px;">${v.interpretation}</div>`;
+            if (v.findings?.length) {
+                html += v.findings.map(f => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <div style="width:5px; height:5px; border-radius:50%; background:var(--blue); flex-shrink:0;"></div>
+                    <span style="font-size:12px; color:var(--text-secondary);">${f}</span>
+                </div>`).join('');
+            }
+            c.innerHTML = html;
+        }
+
+        // ═══ TAB SWITCHING ═══
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function closeApp() {
+            if (window.Telegram?.WebApp) window.Telegram.WebApp.close();
+            else window.close();
+        }
+
+        // ═══ START ═══
+        init();
+    </script>
+</body>
+</html>

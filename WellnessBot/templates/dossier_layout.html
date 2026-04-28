@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Wellness Досье</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@200;300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        serif: ['Cormorant Garamond', 'serif'],
+                        script: ['Pinyon Script', 'cursive'],
+                        sans: ['Outfit', 'sans-serif'] 
+                    },
+                    colors: {
+                        vanilla: '#FAF9F6',
+                        paper: '#FFFFFF',
+                        ink: '#1C1917',
+                        goldDark: '#78350F', /* Deeper, more royal gold */
+                        goldAntique: '#AF906A', /* Lighter antique gold for borders */
+                        goldSubtle: '#E7E5E4',
+                        alertHighlight: '#FFF8F6',
+                        alertBorder: '#FDE0D9',
+                        alertText: '#9F1239'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            -webkit-print-color-adjust: exact; 
+            print-color-adjust: exact; 
+            background-color: #FAF9F6; 
+            color: #1C1917; 
+            font-family: 'Outfit', sans-serif;
+            font-weight: 300;
+        }
+        
+        .page-break { page-break-after: always; }
+        .page { padding: 80px 90px; width: 210mm; min-height: 297mm; margin: 0 auto; background: #FAF9F6; box-sizing: border-box; position: relative;}
+        
+        /* Cover Styling */
+        .cover-page { 
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center; text-align: center;
+            padding: 120px 70px;
+        }
+        .signature { font-family: 'Pinyon Script', cursive; font-size: 4.5rem; color: #78350F; line-height: 1; margin-bottom: 0.5rem;}
+        .cover-title { font-family: 'Cormorant Garamond', serif; font-size: 3.8rem; font-weight: 300; letter-spacing: 0.15em; line-height: 1.1; color: #1C1917; text-transform: uppercase;}
+        
+        .divider-gold { width: 60px; height: 1.5px; background-color: #AF906A; margin: 2rem auto; }
+        
+        /* Inner Styling */
+        h2 { 
+            font-family: 'Cormorant Garamond', serif; 
+            font-weight: 400; 
+            font-size: 1.6rem; 
+            letter-spacing: 0.1em; 
+            color: #78350F; 
+            margin-bottom: 25px;
+            border-bottom: 0.5px solid #AF906A;
+            padding-bottom: 12px;
+            text-transform: uppercase;
+        }
+        
+        p, li { 
+            font-family: 'Outfit', sans-serif; 
+            font-size: 1rem; 
+            line-height: 1.75; 
+            letter-spacing: 0.01em;
+            color: #292524; 
+            font-weight: 300;
+        }
+        p { margin-bottom: 1.25rem; }
+        
+        ul { list-style-type: none; padding-left: 0; }
+        ul li { position: relative; padding-left: 28px; margin-bottom: 14px;}
+        ul li::before { 
+            content: ""; 
+            position: absolute; left: 0; top: 12px;
+            width: 14px; height: 0.5px;
+            background-color: #AF906A;
+        }
+        
+        /* Medical Card Styling */
+        .med-block { 
+            background: #FFFFFF; 
+            border: 0.5px solid #E7E5E4;
+            padding: 40px 50px; 
+            margin-bottom: 35px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01);
+            border-radius: 2px;
+        }
+        .med-block.alert {
+            background: #FFF8F6;
+            border-color: #FDE0D9;
+        }
+        .alert h2 { color: #9F1239; border-bottom-color: #FDE0D9; }
+        
+        /* Schemes */
+        .scheme-item {
+            display: grid; grid-template-columns: 140px 1fr; gap: 30px; padding: 24px 0; border-bottom: 0.5px solid #F1F0EE;
+        }
+        .scheme-item:last-child { border-bottom: none; padding-bottom: 0;}
+        .scheme-time { font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.15em; color: #AF906A; font-weight: 500; text-transform: uppercase; padding-top: 4px;}
+        .scheme-content { display: flex; flex-direction: column; }
+        .scheme-name { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: #1C1917; font-weight: 400; margin-bottom: 4px;}
+        .scheme-desc { font-style: italic; color: #78716C; font-size: 0.9rem; line-height: 1.6;}
+        .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 18px; }
+        .summary-card { background: #FFFFFF; border: 0.5px solid #E7E5E4; padding: 22px; min-height: 155px; }
+        .summary-label { font-family: 'Cormorant Garamond', serif; color: #78350F; letter-spacing: 0.12em; text-transform: uppercase; font-size: 0.78rem; margin-bottom: 12px; }
+        .summary-card ul li { font-size: 0.82rem; line-height: 1.45; margin-bottom: 9px; padding-left: 18px; }
+        .summary-card ul li::before { width: 9px; top: 9px; }
+        .protocol-step { border-left: 2px solid #AF906A; padding-left: 22px; margin-bottom: 20px; }
+        .protocol-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; color: #1C1917; margin-bottom: 6px; }
+        .micro-plan { display: grid; grid-template-columns: 1fr; gap: 16px; }
+        .micro-day { background: #FFFFFF; border: 0.5px solid #E7E5E4; padding: 22px 26px; }
+        .micro-day h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; color: #78350F; margin-bottom: 4px; }
+        .micro-day p { font-size: 0.92rem; margin-bottom: 8px; color: #78716C; }
+        .micro-day li { font-size: 0.9rem; line-height: 1.45; margin-bottom: 7px; }
+        .doctor-card { margin-bottom: 18px; padding-bottom: 16px; border-bottom: 0.5px solid #F1F0EE; }
+        .doctor-card:last-child { border-bottom: none; }
+        .doctor-title { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #78350F; margin-bottom: 8px; }
+
+        /* Footer */
+        .page-footer { position: absolute; bottom: 50px; left: 90px; right: 90px; display: flex; justify-content: space-between; font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; letter-spacing: 0.1em; color: #A8A29E; border-top: 0.5px solid #F1F0EE; padding-top: 15px;}
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- PAGE 1: COVER -->
+    <div class="page cover-page page-break flex flex-col items-center">
+        <div class="w-full text-center flex flex-col items-center">
+            <div class="signature">Olga Zinchenko</div>
+            <div class="font-serif text-[0.85rem] tracking-[0.4em] text-goldDark uppercase mt-4">Премиальная Нутрициология</div>
+            <div class="w-16 h-[1px] bg-goldAntique mt-8"></div>
+        </div>
+        
+        <div class="flex flex-col items-center">
+            <h1 class="cover-title">Wellness<br>Досье</h1>
+            <div class="divider-gold"></div>
+            <p class="font-serif italic text-2xl text-gray-500 tracking-wide font-light">Нутрициологический Разбор и Следующие Шаги</p>
+        </div>
+        
+        <div class="w-full text-center px-10">
+            <p class="font-serif text-[0.75rem] tracking-[0.3em] text-goldDark uppercase mb-6 opacity-70">Конфиденциальный Клиентский Файл</p>
+            <div class="h-[1px] w-full bg-goldSubtle mb-8"></div>
+            <p class="text-2xl text-ink font-light leading-relaxed max-w-2xl mx-auto">{{ client_profile | e | replace('\n', '<br />') | safe }}</p>
+        </div>
+    </div>
+
+    <!-- PAGE 2: PREMIUM ROADMAP -->
+    <div class="page page-break relative">
+        <div class="mb-8">
+            <h2>{{ executive_summary.headline | default('Карта ближайших 14 дней') | e }}</h2>
+            <p class="text-xl font-serif italic text-gray-600">{{ analysis_confidence | default('Нутрициологическая навигация без медицинского диагноза') | e }}</p>
+            <p class="text-sm text-gray-500">{{ mini_example | e }}</p>
+        </div>
+
+        <div class="summary-grid">
+            <div class="summary-card">
+                <div class="summary-label">3 вывода</div>
+                <ul>
+                    {% for item in executive_summary.key_findings %}
+                    {% if item|string and item.strip() %}<li>{{ item | e }}</li>{% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">3 действия</div>
+                <ul>
+                    {% for item in executive_summary.top_actions %}
+                    {% if item|string and item.strip() %}<li>{{ item | e }}</li>{% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="summary-card">
+                <div class="summary-label">Стоп-сигналы</div>
+                <ul>
+                    {% for item in executive_summary.stop_signals %}
+                    {% if item|string and item.strip() %}<li>{{ item | e }}</li>{% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="med-block mt-8">
+            <h2>Трёхшаговый Протокол</h2>
+            {% for item in three_step_protocol %}
+            <div class="protocol-step">
+                <div class="protocol-title">{{ item.title | e }}</div>
+                <p class="mb-0">{{ item.body | e }}</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="page-footer">
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span>СТР. 02</span>
+        </div>
+    </div>
+
+    <!-- PAGE 3: 3 DAY PLAN -->
+    <div class="page page-break relative">
+        <div class="med-block">
+            <h2>План На 3 Дня</h2>
+            <div class="micro-plan">
+                {% for item in plan_3_days %}
+                <div class="micro-day">
+                    <h3>{{ item.day | e }} · {{ item.focus | e }}</h3>
+                    <ul>
+                        {% for action in item.actions %}
+                        {% if action|string and action.strip() %}<li>{{ action | e }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="med-block">
+            <h2>Циркадный Чек-Лист</h2>
+            <ul>
+                {% for item in circadian_checklist %}
+                {% if item|string and item.strip() %}<li>{{ item | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="page-footer">
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span>СТР. 03</span>
+        </div>
+    </div>
+
+    <!-- PAGE 4: DOCTOR ROUTE -->
+    <div class="page page-break relative">
+        <div class="med-block">
+            <h2>Вопросы Для Врача</h2>
+            {% for doctor in doctor_questions %}
+            <div class="doctor-card">
+                <div class="doctor-title">{{ doctor.specialist | e }}</div>
+                <ul>
+                    {% for question in doctor.questions %}
+                    {% if question|string and question.strip() %}<li>{{ question | e }}</li>{% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="med-block alert">
+            <h2>Сопровождение 30 Дней</h2>
+            <ul>
+                {% for item in followup_offer %}
+                {% if item|string and item.strip() %}<li>{{ item | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="page-footer">
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span>СТР. 04</span>
+        </div>
+    </div>
+
+    <!-- PAGE 5: ANALYSIS -->
+    <div class="page page-break relative">
+        <div class="med-block">
+            <h2>Основной Запрос</h2>
+            <p class="text-xl font-light italic leading-relaxed text-ink mb-0">{{ main_request | e | replace('\n', '<br />') | safe }}</p>
+        </div>
+
+        <div class="med-block">
+            <h2>Рабочие Гипотезы</h2>
+            <ul>
+                {% for item in working_hypotheses %}
+                {% if item|string and item.strip() %}<li>{{ item.replace('•', '').strip() | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="med-block">
+            <h2>Векторы Сопровождения</h2>
+            <ul class="space-y-1">
+                {% for item in support_priorities %}
+                {% if item|string and item.strip() %}<li>{{ item.replace('•', '').replace('1.', '').replace('2.', '').replace('3.', '').replace('4.', '').strip() | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="page-footer">
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span>СТР. 05</span>
+        </div>
+    </div>
+
+    <!-- PAGE 6: PROTOCOLS -->
+    <div class="page page-break relative">
+        <div class="med-block">
+            <h2>Стратегия Питания</h2>
+            <ul>
+                {% for item in diet_strategy %}
+                {% if item|string and item.strip() %}<li>{{ item.replace('•', '').strip() | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="med-block">
+            <h2>Образ Жизни</h2>
+            <ul>
+                {% for item in lifestyle %}
+                {% if item|string and item.strip() %}<li>{{ item.replace('•', '').strip() | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="med-block">
+            <h2>Что Стоит Обсудить И Проверить</h2>
+            <ul>
+                {% for item in additional_control %}
+                {% if item|string and item.strip() %}<li>{{ item.replace('•', '').replace('1.', '').replace('2.', '').replace('3.', '').strip() | e }}</li>{% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="page-footer">
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span>СТР. 06</span>
+        </div>
+    </div>
+
+    <!-- PAGE 7: SCHEMES -->
+    <div class="page relative">
+        <div class="med-block pb-10">
+            <h2>Стартовая Схема Поддержки</h2>
+            <div class="flex flex-col mt-4">
+                {% for item in schemes %}
+                <div class="scheme-item">
+                    <div class="scheme-time">{{ item.time | e }}</div>
+                    <div class="scheme-content">
+                        <div class="scheme-name">{{ item.name | e }}</div>
+                        <div class="scheme-desc">{{ item.comment | e }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="med-block alert mt-10 relative">
+            <div class="absolute -top-3 left-10 px-4 bg-[#FFF8F6] font-serif text-sm tracking-widest text-alertText uppercase">Заключение эксперта</div>
+            <p class="mb-0 text-alertText italic leading-relaxed">{{ final_conclusion | e }}</p>
+        </div>
+
+        <div class="page-footer">
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span>СТР. 07</span>
+        </div>
+    </div>
+
+</body>
+</html>

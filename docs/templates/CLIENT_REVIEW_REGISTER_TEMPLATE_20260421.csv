@@ -1,0 +1,2 @@
+case_id,delivery_date,client_alias,private_review_requested,private_review_received,score_1_10,publication_consent,attribution_style,approved_surfaces,publication_status,follow_up_due_date,ops_notes,product_feedback
+CASE-001,2026-04-21,Client A,no,no,,pending,pending,pending,private_only,2026-04-22,,

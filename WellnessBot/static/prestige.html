@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olga Zinchenko | Premium Wellness</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        serif: ['Cormorant Garamond', 'serif'],
+                        sans: ['Outfit', 'sans-serif']
+                    },
+                    colors: {
+                        darkSilk: '#111111',
+                        darkerSilk: '#0A0A0A',
+                        ivory: '#FAF9F6',
+                        gold: '#D4AF37',
+                        mutedGold: '#8C7A4A'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0A0A0A; color: #FAF9F6; -webkit-font-smoothing: antialiased; }
+        .glass-dark { background: rgba(17, 17, 17, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.15); }
+        .gold-glow { text-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+        .lux-transition { transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="font-sans selection:bg-gold selection:text-darkSilk">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-dark">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="font-serif text-2xl tracking-widest text-gold">OZ</div>
+            <div class="hidden md:flex space-x-12 text-[10px] uppercase tracking-[0.2em] text-gray-400">
+                <a href="#philosophy" class="hover:text-gold lux-transition">Философия</a>
+                <a href="#method" class="hover:text-gold lux-transition">Метод</a>
+                <a href="#dossier" class="hover:text-gold lux-transition">Wellness Досье</a>
+            </div>
+            <a href="https://t.me/zinchenko_wellness_ai_1_bot" target="_blank" class="px-6 py-2 border border-gold text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-darkSilk lux-transition">Начать работу</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Using absolute path for artifacts -->
+            <img src="file:///C:/Users/HP/.gemini/antigravity/brain/3a24645f-dd22-41f0-bb4e-0a6ee4de39f5/premium_wellness_hero_1776677559392.png" alt="Premium Wellness Clinic" class="w-full h-full object-cover opacity-30 object-center">
+            <div class="absolute inset-0 bg-gradient-to-t from-darkerSilk via-transparent to-darkerSilk"></div>
+        </div>
+        
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto mt-20">
+            <div class="text-[10px] uppercase tracking-[0.4em] text-gold mb-8 italic">Высокотехнологичная нутрициология</div>
+            <h1 class="font-serif text-5xl md:text-7xl mb-8 leading-tight gold-glow font-light">
+                Ясность. Энергия.<br>
+                <span class="text-gold italic">Искусство баланса.</span>
+            </h1>
+            <p class="text-gray-400 font-light text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
+                Мы превращаем хаос из симптомов и десятков анализов в пошаговую стратегию. Индивидуальный разбор под контролем эксперта и Искусственного Интеллекта.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <a href="https://t.me/zinchenko_wellness_ai_1_bot" class="w-full sm:w-auto px-10 py-4 bg-gold text-darkSilk uppercase tracking-widest text-xs font-medium hover:bg-ivory lux-transition">Создать мое Досье</a>
+                <a href="#method" class="w-full sm:w-auto px-10 py-4 border border-gray-600 text-gray-300 uppercase tracking-widest text-xs hover:border-gold hover:text-gold lux-transition">Как это работает</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section id="philosophy" class="py-32 bg-darkerSilk">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+            <div class="order-2 md:order-1 relative">
+                <div class="absolute inset-0 border border-gold/30 translate-x-4 translate-y-4"></div>
+                <img src="file:///C:/Users/HP/.gemini/antigravity/brain/3a24645f-dd22-41f0-bb4e-0a6ee4de39f5/premium_lifestyle_1776677592596.png" alt="Lifestyle Focus" class="w-full aspect-[4/5] object-cover relative z-10 grayscale hover:grayscale-0 lux-transition">
+            </div>
+            <div class="order-1 md:order-2">
+                <h2 class="font-serif text-4xl mb-8 font-light"><span class="text-gold italic">Здоровье</span> — это не отсутствие болезней. Это ваш капитал.</h2>
+                <div class="space-y-6 text-gray-400 font-light leading-relaxed">
+                    <p>Часто мы игнорируем первые сигналы тела: утреннюю усталость, тягу к сладкому, выпадение волос или нестабильный фон. Врачи называют это «нормой» по усредненным референсам лабораторий.</p>
+                    <p>Мой подход — функциональная нутрициология. Мы не ждем диагноза. Мы находим и закрываем дефициты на самом раннем этапе, восстанавливая вашу природную норму.</p>
+                </div>
+                <div class="mt-12">
+                    <div class="font-serif text-2xl text-ivory">Ольга Зинченко</div>
+                    <div class="text-[10px] uppercase tracking-widest text-gold mt-2">Клинический нутрициолог</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Product: Interactive Dossier -->
+    <section id="dossier" class="py-32 bg-darkSilk relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-24 max-w-3xl mx-auto">
+                <div class="text-[10px] uppercase tracking-[0.4em] text-gold mb-6">Инновации в практике</div>
+                <h2 class="font-serif text-4xl md:text-5xl mb-6 font-light">Ваш карманный консьерж</h2>
+                <p class="text-gray-400 font-light leading-relaxed">Вы получаете не просто PDF-файл. Мы создали закрытое Telegram-приложение — <span class="text-ivory">Interactive Wellness Dossier</span>. Это ваш личный кабинет с динамикой анализов и интерактивным планом.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <div class="space-y-12">
+                        <div class="flex items-start">
+                            <span class="text-gold font-serif text-3xl mr-6">01</span>
+                            <div>
+                                <h3 class="text-xl font-serif mb-2">Лабораторный интеллект</h3>
+                                <p class="text-sm text-gray-400 font-light leading-relaxed">Просто загрузите фото ваших анализов в бот. Наш Vision AI автоматически извлечет показатели и сравнит их с функциональными оптимумами, а не с лабораторными границами.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gold font-serif text-3xl mr-6">02</span>
+                            <div>
+                                <h3 class="text-xl font-serif mb-2">13 ступеней разбора</h3>
+                                <p class="text-sm text-gray-400 font-light leading-relaxed">Мы анализируем не только кровь. Сон, стресс, паттерны питания, визуальный осмотр языка и кожи — всё это формирует полную картину.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-gold font-serif text-3xl mr-6">03</span>
+                            <div>
+                                <h3 class="text-xl font-serif mb-2">Шоппинг в 1 клик</h3>
+                                <p class="text-sm text-gray-400 font-light leading-relaxed">Готовые корзины подобранных нутрицевтиков от профессиональных брендов (Siberian Wellness, Vitamax). Платите и покупайте в один клик без долгих поисков.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative flex justify-center">
+                    <img src="file:///C:/Users/HP/.gemini/antigravity/brain/3a24645f-dd22-41f0-bb4e-0a6ee4de39f5/luxury_app_mockup_1776677579267.png" alt="App Interface" class="w-full max-w-sm rounded-[2rem] shadow-[0_0_50px_rgba(212,175,55,0.1)] border border-gold/20">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scarcity / Call to action -->
+    <section class="py-32 bg-darkerSilk text-center border-t border-gold/10">
+        <div class="max-w-2xl mx-auto px-6">
+            <h2 class="font-serif text-4xl mb-6 font-light">Готовы к ясности?</h2>
+            <p class="text-gray-400 font-light mb-12">В связи с высокой детализацией ручной проверки каждого кейса, я беру <span class="text-gold font-medium">не более 5 человек</span> на первичное составление досье в неделю.</p>
+            <a href="https://t.me/zinchenko_wellness_ai_1_bot" class="inline-block px-12 py-5 bg-gold text-darkSilk uppercase tracking-widest text-xs font-medium hover:bg-ivory lux-transition shadow-[0_0_30px_rgba(212,175,55,0.3)]">Забронировать место</a>
+        </div>
+    </section>
+
+    <footer class="py-12 glass-dark text-center">
+        <div class="font-serif text-2xl text-gold mb-4">OZ Wellness</div>
+        <p class="text-[10px] uppercase tracking-widest text-gray-500">2026 © Olga Zinchenko. Powered by Elite Wellness Ecosystem.</p>
+    </footer>
+
+</body>
+</html>

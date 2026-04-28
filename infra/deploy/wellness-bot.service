@@ -1,0 +1,28 @@
+[Unit]
+Description=Antigravity Wellness Telegram Bot
+Documentation=file:/opt/antigravity-wellness/docs/PRODUCTION_LAUNCH_RUNBOOK_20260421.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=wellnessbot
+Group=wellnessbot
+WorkingDirectory=/opt/antigravity-wellness
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+EnvironmentFile=/opt/antigravity-wellness/.env
+ExecStart=/opt/antigravity-wellness/.venv/bin/python WellnessBot/main.py
+Restart=always
+RestartSec=10
+TimeoutStopSec=30
+KillSignal=SIGINT
+
+# Basic hardening while preserving write access to local case storage.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/opt/antigravity-wellness/WellnessBot/data
+
+[Install]
+WantedBy=multi-user.target
