@@ -1,4 +1,4 @@
-# Project Pulse Log
+﻿# Project Pulse Log
 
 ## 2026-04-13 12:55 MSK
 ### Delivery Delta
@@ -89,7 +89,7 @@
 
 ### Strategy Delta
 - Conversion bridge is now less templated while preserving benchmark stability.
-- Payment handoff moved from “planned” to “implemented in runtime flow”.
+- Payment handoff moved from вЂњplannedвЂќ to вЂњimplemented in runtime flowвЂќ.
 
 ### Next 12h Focus
 - Run real Telegram payment smoke in production-like conditions.
@@ -782,7 +782,7 @@
 - Unit tests passed: 25 tests OK.
 - Bot restarted with a single active process and polling is active.
 
-## 2026-04-24 16:38 MSK — DeepSeek Connector Prepared
+## 2026-04-24 16:38 MSK вЂ” DeepSeek Connector Prepared
 
 - Разделены настройки текстовой LLM и распознавания голоса: LLM_* теперь отвечает за модель разборов/ответов, STT_* — за голосовые сообщения.
 - Подготовлен безопасный мастер подключения DeepSeek: ops\set-deepseek-token.cmd / ops\set-deepseek-token.ps1.
@@ -795,7 +795,7 @@
 Next gate:
 - Ввести DeepSeek API key через ops\set-deepseek-token.cmd, затем перезапустить бота и провести live smoke: текстовый вопрос, голосовое, intake/PDF.
 
-## 2026-04-24 18:02 MSK — DeepSeek Key Connected, Balance Gate Found
+## 2026-04-24 18:02 MSK вЂ” DeepSeek Key Connected, Balance Gate Found
 
 - DeepSeek API key was written to env safely and tested through https://api.deepseek.com.
 - API authentication reached DeepSeek successfully, but the provider returned 402 Insufficient Balance.
@@ -803,7 +803,7 @@ Next gate:
 - Current active route: Yandex Foundation Models for text + Yandex SpeechKit for voice.
 - Next gate: top up DeepSeek balance, then switch LLM_PROVIDER=openai_compatible, LLM_API_KEY=DEEPSEEK_API_KEY, LLM_MODEL=deepseek-v4-flash, LLM_API_MODE=chat_completions, LLM_BASE_URL=https://api.deepseek.com and run smoke again.
 
-## 2026-04-24 20:54 MSK — Direct DeepSeek Activated
+## 2026-04-24 20:54 MSK вЂ” Direct DeepSeek Activated
 
 - DeepSeek balance was topped up by the owner.
 - Active LLM switched from yandex_foundation to direct DeepSeek via OpenAI-compatible mode.
@@ -815,7 +815,7 @@ Next gate:
 Next gate:
 - Run Telegram live E2E: short text question, voice message, intake start, then controlled dossier branch.
 
-## 2026-04-24 21:02 MSK — Dossier Actionability Upgrade
+## 2026-04-24 21:02 MSK вЂ” Dossier Actionability Upgrade
 
 - Incorporated owner critique: dossier was safe but too generic and needed stronger actionable value.
 - DOSSIER_DRAFT_PROMPT now requires phased plans: 24-72h, 7 days, 2-4 weeks, 1 month, 3 months.
@@ -826,7 +826,7 @@ Next gate:
 - Safety filter removes high-risk supplement items such as iodine/selenium/iron in complex or uncertain cases.
 - Verification: py_compile OK, unittest discover OK (25 tests), local action-floor smoke OK, live bot restarted successfully.
 
-## 2026-04-24 21:11 MSK — Accuracy / Medical Error Prevention Upgrade
+## 2026-04-24 21:11 MSK вЂ” Accuracy / Medical Error Prevention Upgrade
 
 - Owner clarified that the product must behave like a drafting instrument for an experienced expert and must minimize medical-error risk.
 - Critical infrastructure fix: lab_ocr.recognize_text() no longer depends on active LLM_API_KEY; when text LLM is DeepSeek, Yandex OCR now uses separate Yandex credentials from STT_*.
@@ -836,7 +836,7 @@ Next gate:
 - PDF safe-action layer now injects a visible accuracy protocol and final accuracy note: uncertain labs must be resent or manually confirmed; medical decisions remain doctor-level.
 - Verification: py_compile OK, unittest discover OK (27 tests), action-floor smoke OK, live bot restarted successfully.
 
-## 2026-04-24 21:56 MSK — Complex Case E2E Smoke / Safety Filters
+## 2026-04-24 21:56 MSK вЂ” Complex Case E2E Smoke / Safety Filters
 
 - Ran controlled complex-case smoke through direct DeepSeek: draft generation, internal judge, normalized JSON, PDF render.
 - Output files:
@@ -849,18 +849,19 @@ Next gate:
 - Critical product finding: safety is improved, but judge still flags premium-value issues: repetition, overloaded sections, missing one-page executive summary, need stronger first-week action card and grouped doctor questions.
 - Decision: do not treat this as final launch-quality PDF without human review. Next architecture step is PDF/dossier structure redesign, not more prompt/filter tweaking.
 
-## 2026-04-24 22:21 MSK — Live Bot Smoke Test / Dossier Orchestration Fix
+## 2026-04-24 22:21 MSK вЂ” Live Bot Smoke Test / Dossier Orchestration Fix
 
 - Ran live Telegram test with owner as client: intake progressed, documents uploaded, manual payment confirmed, dossier generation started.
 - DeepSeek text calls returned 200 OK.
-- Yandex OCR worked for two photo uploads; one PDF returned 400 Bad Request, so lab data was marked unsafe: equires_lab_resubmission=true, parsed biomarkers remained empty.
+- Yandex OCR worked for two photo uploads; one PDF returned 400 Bad Request, so lab data was marked unsafe: 
+equires_lab_resubmission=true, parsed biomarkers remained empty.
 - Found orchestration bug: dossier case could stay stuck in dossier_generation_in_progress after draft/review creation when later review/growth/PDF flow did not complete cleanly.
 - Added timeouts to generation steps: draft 120s, judge 90s, growth 90s, so growth cannot hang the entire case.
 - Recovered live smoke case 20260424T190738Z_1084557944: rendered PDF from draft, set pdf_path, updated status to waiting_human_review.
 - Sent recovered test PDF to admin Telegram chat via bot proxy.
 - Current product signal: safe behavior on uncertain labs is correct; PDF quality still requires human review and later structure redesign.
 
-## 2026-04-24 23:10 MSK — Premium Dossier / 30-Day Support Upgrade
+## 2026-04-24 23:10 MSK вЂ” Premium Dossier / 30-Day Support Upgrade
 
 - Owner critique incorporated: PDF must feel like premium personal navigation, not a generic wellness article.
 - Added premium first pages to the dossier: 14-day executive map, 3-step recovery protocol, personalized 3-day start, doctor questions, circadian checklist, and 30-day support offer.
@@ -877,7 +878,7 @@ Decision:
 - Bot can continue controlled pilot testing with mandatory human review before client PDF delivery.
 - Not yet "fully autonomous medical-grade". It is a premium nutrition-navigation assistant with safety gates, expert review, and 30-day guided follow-up.
 
-## 2026-04-24 23:24 MSK — Lab OCR Client Confirmation Gate
+## 2026-04-24 23:24 MSK вЂ” Lab OCR Client Confirmation Gate
 
 - Decision fixed: bot accepts client files, photos, PDFs and analyses, but OCR values are not treated as final unless the client confirms them.
 - Added client confirmation message after successful OCR: bot lists recognized biomarkers and asks "да, верно" or corrections.
@@ -889,7 +890,7 @@ Decision:
 - PDF logic now treats pending or corrected OCR values as uncertain, not as confirmed lab facts.
 - Verification: py_compile OK, unittest discover OK (28 tests).
 
-## 2026-04-24 23:40 MSK — Lab PDF / Manual Values Reading Upgrade
+## 2026-04-24 23:40 MSK вЂ” Lab PDF / Manual Values Reading Upgrade
 
 - Owner clarified: clients may send laboratory PDFs or manually type their biomarkers; bot must read both carefully and ask clarification only when unsure.
 - Added embedded PDF text extraction via pypdf before Yandex OCR. Laboratory PDFs are now read as text first, avoiding unnecessary OCR failures on machine-readable lab files.
@@ -898,7 +899,7 @@ Decision:
 - Manual values are marked as client-provided text; unclear text remains a note and is not forced into numeric facts.
 - Verification: py_compile OK, unittest discover OK (29 tests).
 
-## 2026-04-25 — Project Skill System / Medical Skill DB
+## 2026-04-25 вЂ” Project Skill System / Medical Skill DB
 
 - Created a project skill registry: docs/PROJECT_SKILL_REGISTRY_20260425.md.
 - Added new reusable project skills:
@@ -921,7 +922,7 @@ Decision:
 Decision:
 - All valuable project learning should become an operational artifact: code rule, test, skill, template, checklist, or registry entry. Chat-only knowledge is treated as not yet operationalized.
 
-## 2026-04-25 — Supplement Product Catalog v1
+## 2026-04-25 вЂ” Supplement Product Catalog v1
 
 - Owner approved adding Siberian Wellness / Vitamax product knowledge for supplement orientation.
 - Created structured product catalog:
@@ -1022,7 +1023,7 @@ Decision:
 - Added text navigation for premium intake: `назад`, `шаг назад`, `повтори вопрос`, `дальше`, `готово`, `можно дальше`, `продолжить`, `пропустить`.
 - Navigation commands are no longer saved as accidental answers to questionnaire fields.
 - If the client says `дальше` before answering a required step, the bot repeats the current question and asks for a short answer or `пропустить`.
-- Red-flag step is protected: `нет` remains a valid red-flag answer, not a generic skip command.
+- Red-flag step is protected: `РЅРµС‚` remains a valid red-flag answer, not a generic skip command.
 - Premium prompt tightened: first give priorities, avoid repetition and generic free-advice wording, use timing of symptoms/meals/coffee/medications/energy as accuracy data, and structure corrections by 3 days / 2 weeks / 1-3 months.
 - Verification: py_compile OK; unittest discover OK, 37 tests; bot restarted at 00:47 MSK without TelegramConflictError.
 
@@ -1287,3 +1288,29 @@ Decision:
 
 - Notion: выполнить обновление страницы статуса прогона (создать/обновить страницу с executive summary без секретов).
 - GitHub: blocked (remote не настроен) — отчёт добавлен в `docs/external_sync/`.
+
+## 2026-04-29 21:16 MSK — Регулярная синхронизация (github-notion-12)
+
+### Итог
+
+- Перепроверен актуальный контекст и опорные документы (стратегия, продуктовая линейка, ручная оплата, протокол аудитора, реестр навыков).
+- Зафиксирован ключевой вывод по качеству диалогов: бенч 20/20 без пустых ответов, но `0/20` запросов доходит до модели из‑за избыточного роутера (см. `docs/WELLNESS_DIALOGUE_QA_20260429.md`).
+- Мелкий, но критичный runtime‑фикс: разбиение админ‑дайджеста на чанки перед отправкой в Telegram, чтобы не падать на лимитах длины (`WellnessBot/main.py`).
+
+### Текущий этап
+
+- Controlled concierge pilot; public launch заблокирован до отдельного решения.
+- Активный пилотный режим оплаты: `PAYMENT_MODE=manual`.
+- Human review обязателен перед любой клиентской выдачей.
+
+### Блокеры / риски
+
+1. Runtime‑to‑storage mismatch: живой `week` runtime указывает на `week_runtime_20260427T173913Z`, но соответствующий submission JSON отсутствует.
+2. Same‑user drift: один и тот же пользователь держит `week` runtime + 2 ветки `premium`; нужна одна активная платная траектория.
+3. Disk hygiene: `C:` ниже целевого порога `10 GB` свободного места.
+
+### Следующие шаги (12 часов)
+
+1. Починить/сбросить `week_runtime_20260427T173913Z`, чтобы runtime и storage совпали.
+2. Зафиксировать одну активную ветку (week или premium) для текущего пользователя, остальные — заморозить/архивировать.
+3. Сузить роутер: оставить детерминизм только для emergency/crisis/узких FAQ, всё остальное — отдавать модели с проверкой на «не выдумывать факты».

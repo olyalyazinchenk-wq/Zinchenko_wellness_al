@@ -1,150 +1,136 @@
 # Agent Context Hub
 
-Updated: 2026-04-28 12:16 MSK
-
-## RU Status Snapshot (2026-04-28)
-
-### Что изменилось с прошлого прогона
-
-- В репозитории появился большой пакет обновлений по `WellnessBot/`, `ops/`, `infra/deploy/`, `docs/`, `landing/`, `mini-app/` (функционал и документация заметно расширены).
-- Появились/усилились админ-команды, governance-слой, режим ручной оплаты, генерация артефактов (PDF/HTML), эксперименты/решения.
-- Выявлены техдолги: треки кодировок (часть RU-доков отображается битой кодировкой), лог-файлы были случайно включены в git, а `git remote` всё ещё не настроен.
-
-### Текущий этап
-
-- Controlled concierge pilot (Telegram-first, без публичного запуска).
-- Активен пилотный режим оплаты: `PAYMENT_MODE=manual`.
-- Human review обязателен перед выдачей любого клиентского результата.
-
-### Блокеры / стоп-факторы
-
-1. **Единственная активная ветка на пользователя**: требуется свести кейсы `20260425T214914Z_1084557944` и `20260425T212847Z_1084557944` к одному активному delivery-кандидату (второй — архив/фриз).
-2. **Lab-gate**: любые артефакты после `requires_lab_resubmission=true` не считаются delivery-safe до получения читаемых анализов / ручных биомаркеров и перегенерации из подтверждённых фактов.
-3. **GitHub push**: в репозитории отсутствует настроенный remote (`git remote -v` пусто) — внешняя синхронизация через GitHub заблокирована.
-4. **Диск < 10 GB**: на `C:` зафиксировано ~`8.6 GB` свободного места — риск деградации среды/CI/установок.
-
-### Что готово к пилоту (controlled)
-
-- Telegram-интеграция и основной пайплайн: анкета → ручная оплата → AI-черновик → human review → выдача.
-- Документы-опоры по продукту/операциям: продуктовая линейка, ручная оплата, runbook/чеклисты (см. `docs/`).
-
-### Что нельзя запускать публично
-
-- Любой public launch / маркетинговое масштабирование.
-- Любая выдача досье без human review.
-- Любая генерация/доставка по кейсам с неразрешённым `requires_lab_resubmission=true`.
+Updated: 2026-04-29 21:16 MSK
 
 ## Stage
 
-- controlled concierge pilot with branch-control pressure and an unsafe-lab artifact branch
+- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and disk headroom risk
+
+## Objective
+
+- restore one coherent paid-path truth for the current same-user case
+- stop unsafe premium delivery from unreadable or unconfirmed lab evidence
+- stop first-touch Telegram quality from being hidden behind deterministic templates
+- close one fact-safe, human-reviewed paid cycle before any new growth work
 
 ## Product Direction
 
-- Telegram-first operating model only
-- service ladder:
+- Telegram-first only
+- service ladder remains:
   - `demo` builds trust
   - `week` is the low-friction entry rail
-  - `premium` is the active proof path
+  - `premium` remains the flagship proof path
   - `vip` stays parked until operator-load evidence exists
 - official pilot payment mode: `PAYMENT_MODE=manual`
 - human review is mandatory before any client delivery
 
 ## Done
 
-- North star fixed in `docs/PROJECT_NORTH_STAR_EXECUTION_PLAN_20260427.md`
-- Product ladder fixed in `docs/PRODUCT_LINE_V2_20260426.md`
-- Manual concierge payment accepted as the official pilot mode in `docs/MANUAL_PAYMENT_MODE_20260426.md`
-- Benchmark baseline still stable in `ops/reports/quality_report_20260421T183148Z.md`:
-  - `20` prompts
-  - `0` empty replies
-- Latest persisted branch truth reviewed:
-  - `WellnessBot/data/runtime_state.json` is empty
-  - `20260425T214914Z_1084557944` is the freshest branch
-  - `20260425T214914Z_1084557944` is not delivery-safe because `requires_lab_resubmission=true`
-  - `20260425T212847Z_1084557944` is the cleaner safe-delivery rewrite candidate
-- Governance memory still shows loop pressure:
-  - `WellnessBot/data/product_governance.json`
-  - `115` stored experiments
-  - repeated titles still duplicated
+- Telegram-first operating model remains locked
+- manual concierge payment remains the official pilot mode
+- product prices remain locked:
+  - `week` = `3900 RUB`
+  - `premium` = `6900 RUB`
+  - `vip` = `14900 RUB`
+- latest QA truth has been validated and captured:
+  - benchmark report: `ops/reports/quality_report_20260429T080345Z.md`
+  - `20/20` prompts returned non-empty replies
+  - `20/20` prompts were intercepted by `route_live_reply()`
+  - `0/20` prompts reached the model
+  - clarifying-question count remains `0/20`
+- latest case truth has been re-read from raw artifacts:
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
+  - both premium review artifacts
+- runtime is currently up:
+  - clean bot start logged at `2026-04-29 09:35 MSK`
+  - no new local crash loop was observed in `bot.stderr.log`
+- admin digest delivery hardened:
+  - product digest text is now split into Telegram-safe chunks before sending (`WellnessBot/main.py`)
+
+## Current Truth
+
+- one live `week` runtime session still exists at `consent`:
+  - `submission_id = 20260427T173913Z_1084557944`
+  - there is still no matching persisted submission JSON
+- the same user still has two unresolved `premium` branches:
+  - `premium_fresh_20260425T214914Z`
+  - `premium_legacy_20260425T212847Z`
+- `premium_fresh_20260425T214914Z`
+  - manual payment confirmed
+  - `requires_lab_resubmission=true`
+  - remains evidence-only and unsafe for delivery
+- `premium_legacy_20260425T212847Z`
+  - manual payment confirmed
+  - review verdict remains `must_rewrite_with_high_caution`
+  - remains the only realistic premium rewrite candidate if proof closure is attempted
+- first-touch chat quality is still not actually model-led:
+  - symptom prompts are being answered by deterministic templates
+  - duplicate-pattern clusters remain visible
+  - unsupported detail risk remains present
+- governance memory remains bloated:
+  - `115` experiments
+  - `4` duplicate title groups
+- disk pressure remains active:
+  - `C:` free space is `8.53 GB`
 
 ## Next
 
-1. Declare `20260425T212847Z_1084557944` the only delivery candidate for user `1084557944`.
-2. Freeze `20260425T214914Z_1084557944` as evidence-only until readable labs or manual biomarkers arrive.
-3. Rewrite and close or archive `20260425T212847Z_1084557944` from confirmed intake facts only.
-4. Run one live Telegram walkthrough for `week`.
-5. Run one live Telegram walkthrough for `premium`.
-6. Keep exactly one post-delivery experiment candidate:
-   - compress premium into a stronger `72h -> 7d -> 30d` structure
+1. Resolve `week_runtime_20260427T173913Z`: persist it properly or clear it.
+2. Reduce the same-user case to one active paid path across `week` and `premium`.
+3. Shrink `route_live_reply()` so symptom prompts stop being fully template-owned.
+4. Remove unsupported router details and add clarifying-question behavior for symptom-first replies.
+5. Rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
+6. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
+7. Restore disk free space above `10 GB`.
 
 ## Must-Not-Change Rules
 
-- Do not switch away from Telegram-first execution.
-- Do not treat `week` or `vip` as the main proof path; `premium` remains the flagship test.
-- Do not let YooKassa or provider-token work block the pilot path while manual payment works.
-- Do not allow more than one delivery candidate per Telegram user.
-- Do not treat unreadable or unconfirmed labs as facts.
-- Do not use the current `20260425T214914Z_1084557944` artifacts as delivery proof.
-- Do not deliver any dossier without human review.
-- Do not use diagnosis or treatment framing.
-- Do not let branded supplement mentions become the core value story.
-- Do not spend the next cycle on growth-channel, landing, mini-app, or public-launch expansion.
-- Do not seed more governance ideas until fresh delivery evidence exists.
-
-## Latest Validated Evidence
-
-- `docs/PROJECT_NORTH_STAR_EXECUTION_PLAN_20260427.md`
-- `docs/PRODUCT_LINE_V2_20260426.md`
-- `docs/MANUAL_PAYMENT_MODE_20260426.md`
-- `docs/STRATEGY_LIVE_DELTA.md`
-- `docs/SPRINT_BOARD_20260413.md`
-- `WellnessBot/data/runtime_state.json`
-- `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
-- `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
-- `WellnessBot/data/drafts/20260425T212847Z_1084557944.review.json`
-- `WellnessBot/data/drafts/20260425T214914Z_1084557944.review.json`
-- `WellnessBot/data/product_governance.json`
-- `ops/reports/quality_report_20260421T183148Z.md`
+- Telegram-first only
+- one active paid path per Telegram user at a time
+- manual concierge remains the official pilot mode
+- human review required before delivery
+- no diagnosis or treatment framing
+- no unreadable or unconfirmed lab facts
+- no invented symptoms or unsupported condition claims
+- do not treat a runtime-only session as settled paid-case truth if its submission JSON is missing
+- do not present routed template coverage as proof of personalized live-chat quality
+- do not spend the next cycle on landing, mini-app, growth channels, pricing debate, or public-launch expansion
 
 ## Context For New Model
 
 Stage:
 
-- controlled concierge pilot with one unsafe fresh branch and one safer rewrite candidate
+- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and disk headroom risk
 
 Objective:
 
-- restore one clean delivery candidate
-- close one fact-safe human-reviewed premium cycle
-- verify `week` and `premium` walkthroughs without opening new product drift
+- restore one coherent paid-path truth for the current same-user case
+- stop unsafe premium delivery from unreadable or unconfirmed lab evidence
+- make the first Telegram exchange less generic by reducing deterministic router capture
+- close one fact-safe, human-reviewed paid cycle without opening new growth drift
 
-Working truth:
+Constraints:
 
-- `runtime_state.json` is empty, so persisted submissions and logs are authoritative
-- `20260425T214914Z_1084557944` is freshest but unsafe because generation happened after a lab-resubmission gate
-- `20260425T212847Z_1084557944` should be treated as the only delivery candidate if the team wants one safe premium proof now
-- `premium` at `6900 RUB` remains the active monetization proof path
-- manual concierge payment remains official
+- Telegram-first only
+- one active paid path per Telegram user
+- manual concierge remains official pilot mode
+- human review required before delivery
+- no diagnosis or treatment framing
+- no unreadable or unconfirmed lab facts
+- no invented symptoms or unsupported condition claims
+- no new growth or UI work until state truth, router scope, and lab gating are fixed
 
-Immediate actions:
+Immediate next actions:
 
-1. Lock `20260425T212847Z_1084557944` as the only delivery candidate.
-2. Freeze `20260425T214914Z_1084557944` as evidence-only until readable labs or manual biomarker text exist.
-3. Rewrite `20260425T212847Z_1084557944` from confirmed facts only and make one human review decision: deliver or archive.
-4. Run one `week` walkthrough and one `premium` walkthrough.
-5. Keep one post-delivery experiment only: stronger `72h -> 7d -> 30d` premium structure.
+1. Verify whether `week_runtime_20260427T173913Z` should be persisted as the live `week` path or cleared as an orphaned runtime session.
+2. Declare exactly one active paid path for the same-user case, then freeze, archive, or merge the others.
+3. Cut `route_live_reply()` back to safety/logistics coverage, then rerun the benchmark so symptom prompts can actually test model quality.
+4. Do not deliver the current premium PDF; first obtain readable labs or manual biomarker text and regenerate from confirmed facts only.
+5. Clear the disk-space risk before the environment degrades further.
 
-## What To Read First
+Reference benchmark:
 
-1. This file
-2. `docs/STRATEGY_LIVE_DELTA.md`
-3. `docs/SPRINT_BOARD_20260413.md`
-4. `docs/ENGINEERING_MANDATE_20260413.md`
-5. `docs/PROJECT_NORTH_STAR_EXECUTION_PLAN_20260427.md`
-6. `WellnessBot/data/runtime_state.json`
-7. `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
-8. `WellnessBot/data/drafts/20260425T212847Z_1084557944.review.json`
-9. `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
-10. `WellnessBot/data/drafts/20260425T214914Z_1084557944.review.json`
-11. `WellnessBot/data/product_governance.json`
-12. `ops/reports/quality_report_20260421T183148Z.md`
+- `ops/reports/quality_report_20260429T080345Z.md`
+- current truth: `20/20` routed, `0/20` model reached, `0/20` clarifying questions

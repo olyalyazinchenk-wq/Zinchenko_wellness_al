@@ -3519,11 +3519,12 @@ async def send_product_digest_to_admins(payload: dict[str, Any]) -> bool:
     if not (payload.get("cases") or {}):
         return False
 
-    digest_text = build_admin_digest_text(payload)
+    digest_chunks = split_telegram_text(build_admin_digest_text(payload))
     delivered = False
     for admin_chat_id in settings.admin_chat_ids:
         try:
-            await bot.send_message(admin_chat_id, digest_text)
+            for chunk in digest_chunks:
+                await bot.send_message(admin_chat_id, chunk)
             delivered = True
         except Exception:
             logger.exception("Failed to send product digest to admin chat %s", admin_chat_id)

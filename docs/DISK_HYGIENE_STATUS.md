@@ -108,3 +108,92 @@
 - Risk flags:
   - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
   - the safe cleanup target sizes are now too small to materially improve space without manual deletion of larger user folders
+
+## 2026-04-28 23:44:08 +03:00
+
+- Before C:: `214.91 GB used / 8.10 GB free`
+- After C:: `214.91 GB used / 8.10 GB free`
+- Delta free space: `+0.00 GB` (`0.00 MB` net change after cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `11` stale items (`10` files, `1` directory); `22` locked/in-use deletions skipped; folder size still grew during the run because background apps wrote new temp data
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders already exist
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Large-folder triage because free space is below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.20 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.03 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\04_Веб_Прототипы` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521`
+  - `C:\Users\HP\Downloads\wps_download`
+  - `C:\Users\HP\Downloads\Telegram Desktop`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - temp cleanup removed stale items, but active applications refilled `%TEMP%` during the run
+  - meaningful recovery now requires manual review of user-owned folders, especially in `Downloads`
+
+## 2026-04-29 21:13:16 +03:00
+
+- Before C:: `214.49 GB used / 8.53 GB free`
+- After C:: `214.49 GB used / 8.53 GB free`
+- Delta free space: `+0.00 GB` (`0.00 MB` net change after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `1` stale item; `14` locked/in-use deletions skipped
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: `Clear-RecycleBin` did not complete cleanly
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Large-folder triage because free space is below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.20 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.03 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\скан дядя Женя` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Академия Эксперт BIO_часть 2.7z.crdownload` — `13.00 GB` incomplete download file
+  - `C:\Users\HP\Downloads\Академия Эксперт BIO_часть 1.7z.crdownload` — `11.47 GB` incomplete download file
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521`
+  - `C:\Users\HP\Downloads\wps_download`
+  - `C:\Users\HP\Downloads\Telegram Desktop`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked items that were skipped safely
+  - Recycle Bin may still contain locked or protected items
+  - the biggest immediate recovery opportunity is manual review of the two `.crdownload` files in `Downloads`

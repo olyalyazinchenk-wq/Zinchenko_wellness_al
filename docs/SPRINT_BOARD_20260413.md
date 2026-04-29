@@ -1,11 +1,35 @@
 # Sprint Board
 
-Date: 2026-04-27
-Status: Active refresh after persisted-branch review
+Date: 2026-04-29
+Status: Active refresh after QA truth recheck
 Sprint owner: Chief Orchestrator
-Operating mode: pilot stabilization for one safe Telegram paid cycle
+Operating mode: controlled Telegram-first pilot stabilization
 
-## P0. Single Delivery Candidate
+## P0. Runtime Truth Repair
+
+Owner:
+
+- Lead Developer
+- Operator
+
+Task:
+
+- make runtime and persisted storage tell the same story for the live `week` session
+
+Concrete changes:
+
+- inspect why `20260427T173913Z_1084557944` exists only in `runtime_state.json`
+- either persist the correct submission record or clear the orphaned runtime session
+- do not progress the same user while the session remains runtime-only
+- log the path decision in docs and operator practice
+
+Done when:
+
+- runtime and storage are coherent
+- there is no runtime-only session being treated as a live paid case
+- the next operator action is obvious
+
+## P0. One Active Same-User Path
 
 Owner:
 
@@ -15,140 +39,92 @@ Owner:
 
 Task:
 
-- restore one clear delivery candidate for Telegram user `1084557944`
+- reduce user `1084557944` to one active commercial path
 
 Concrete changes:
 
-- declare `20260425T212847Z_1084557944` the only delivery candidate
-- downgrade `20260425T214914Z_1084557944` to evidence-recovery status until readable labs or manual biomarkers exist
-- record this branch decision in operator practice and future state updates
-- stop carrying forward freshness alone as the deciding rule when the freshest branch is unsafe
+- classify each branch as active, evidence-only, or archived
+- keep `20260425T214914Z_1084557944` frozen as evidence-only because `requires_lab_resubmission=true`
+- keep `20260425T212847Z_1084557944` as the only premium rewrite candidate if a proof closure is pursued
+- block same-user `week` progression until the active-path choice is explicit
 
 Done when:
 
-- exactly one branch is treated as delivery-capable
-- the other branch is explicitly paused for evidence recovery
-- the reason is written in the next run notes and handoff context
+- one user has one active path
+- every other branch has an explicit non-active role
+- no same-user ambiguity remains across offers
 
-## P0. Safe Premium Closure
-
-Owner:
-
-- Operator
-- Product Strategist
-- Lead Developer
-
-Task:
-
-- close `20260425T212847Z_1084557944` into a safe premium proof or archive it explicitly
-
-Concrete changes:
-
-- use `WellnessBot/data/drafts/20260425T212847Z_1084557944.review.json` as the rewrite brief
-- remove invented symptoms, unsupported condition framing, and unjustified brand references
-- compress the deliverable into a time-based map:
-  - what to do in the next `72h`
-  - what to verify in the next `7d`
-  - what to revisit during the `30d` follow-up window
-- make one human review decision only: deliver or archive with reason
-
-Done when:
-
-- one safe premium proof exists or the branch is archived with a reason
-- the closure decision is logged
-- one operator friction note and one follow-up target are captured
-
-## P0. Unsafe Lab Gate Freeze
+## P0. Router Scope Surgery
 
 Owner:
 
 - Lead Developer
-- Operator
+- Quality Auditor
 
 Task:
 
-- stop `20260425T214914Z_1084557944` from acting like a deliverable while labs remain unreadable
+- stop deterministic reply routing from pretending to be product quality
 
 Concrete changes:
 
-- preserve the case as evidence-only while `lab_quality_check.status=needs_resubmission`
-- do not use current generated artifacts as delivery proof
-- prepare one reusable Telegram request for readable PDF/photo or manual biomarker text
-- confirm the team treats unreadable labs as unreadable, not "good enough"
+- treat `20/20 routed` and `0/20 model reached` as an execution blocker, not a nice-to-have metric
+- narrow deterministic routing to emergency, crisis, file-upload guidance, and a small logistics FAQ surface
+- remove unsupported symptom details from router templates, especially facts the user did not state
+- add up to two clarifying questions on symptom-first replies when they materially change interpretation or safety
+- rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count
 
 Done when:
 
-- the branch is either paused with a clear operator message or reopened with readable evidence
-- no unsafe PDF or draft is treated as client-ready
+- symptom prompts are no longer fully template-owned
+- model-reached count is no longer zero on the benchmark
+- unsupported-detail injection is gone from the routed layer
 
-## P0. Week Walkthrough
+## P0. Safety and Delivery Gate Integrity
 
 Owner:
 
-- Operator
+- Lead Developer
+- Quality Auditor
+
+Task:
+
+- stop paid confirmation, freshness, or generic templates from bypassing safety rules
+
+Concrete changes:
+
+- enforce that `requires_lab_resubmission=true` means no delivery and no new premium truth claims
+- require rewrite-from-confirmed-facts before any premium closure attempt
+- keep human review mandatory before any client-facing output
+- preserve no-diagnosis, no-treatment, and urgent-care routing language
+
+Done when:
+
+- unreadable-lab branches cannot masquerade as ready
+- the next premium candidate is fact-safe by construction
+- operator copy and code follow the same safety gate
+
+## P1. Environment Stability
+
+Owner:
+
+- Ops
 - Lead Developer
 
 Task:
 
-- verify that `week` works as the low-friction packaging rail inside the same Telegram-first model
+- restore enough local headroom to avoid runtime degradation
 
 Concrete changes:
 
-- run one walkthrough for `week`
-- verify selected product, amount, and manual payment context reach the admin correctly
-- verify Russian-only copy and no broken handoff text in the critical path
-- check that `week` is easy to explain as a lighter entry path, not a conflicting product story
+- treat `8.53 GB` free on `C:` as an active operational risk
+- complete manual deletion review for the large user-owned folders already listed in `docs/DISK_HYGIENE_STATUS.md`
+- keep generated artifact growth contained until free space is back above `10 GB`
+- avoid new non-critical asset generation while headroom remains below threshold
 
 Done when:
 
-- the `week` flow completes without critical ambiguity
-- admin handoff shows the correct product and amount
-- the operator can explain `week` versus `premium` without improvising
-
-## P1. Premium Walkthrough
-
-Owner:
-
-- Operator
-- Lead Developer
-
-Task:
-
-- verify the flagship `premium` flow after the branch decision is made
-
-Concrete changes:
-
-- run one walkthrough for `premium`
-- verify manual payment handoff is coherent
-- verify human review remains explicit in operator and client-facing steps
-- compare copy and context against the intended `72h -> 7d -> 30d` value story
-
-Done when:
-
-- the `premium` flow reaches admin handoff cleanly
-- there is no ambiguity around the flagship promise or payment rule
-
-## P1. Demo Result Example
-
-Owner:
-
-- Product Strategist
-- Lead Developer
-
-Task:
-
-- create one demo-ready result example only after a safe premium closure exists
-
-Concrete changes:
-
-- extract a safe, non-identifying sample from the corrected premium branch
-- show priorities, hypotheses, doctor questions, and next-step timing
-- keep the demo short enough to build trust instead of recreating dossier sprawl
-
-Done when:
-
-- the start menu can point to one believable demo result
-- the demo makes `premium` easier to buy and makes `week` easier to understand
+- `C:` free space is back above `10 GB`
+- disk pressure is no longer a blocker on the paid pilot path
 
 ## P1. Governance Compression
 
@@ -159,51 +135,56 @@ Owner:
 
 Task:
 
-- stop governance memory from pretending to be product progress
+- stop idea accumulation from pretending to be progress
 
 Concrete changes:
 
-- treat `115` stored experiments and repeated titles as loop signals, not momentum
-- allow no new experiment burst before one fresh safe delivery outcome exists
-- keep only one next experiment candidate for the post-delivery cycle:
-  - tighten premium into a stronger `72h -> 7d -> 30d` structure
+- treat `115` experiments and `4` duplicate title groups as a loop signal
+- allow no new experiment burst before one coherent paid closure exists
+- keep only one post-closure experiment candidate:
+  - stronger `week -> premium -> 30d` upgrade story
 
 Done when:
 
-- governance reflects one next learning move instead of a backlog flood
-- live delivery evidence drives the next experiment
+- governance reflects one next learning move
+- live evidence outranks ideation backlog growth
 
 ## Stop List
 
 Blocked for now:
 
-- new same-user premium generation before `20260425T212847Z_1084557944` is delivered or archived
-- treating `20260425T214914Z_1084557944` as delivery-safe while labs remain unreadable
-- active `vip` selling before one safe premium proof and operator-load evidence exist
-- pricing experiments before premium credibility is proven
-- more governance experiments before fresh delivery evidence
-- YooKassa debate on the live pilot critical path
-- new landing, mini-app, or growth-channel expansion work
+- promoting the runtime-only `week` session into the live proof path
+- running concurrent `week` and `premium` progress for the same Telegram user
+- treating `20260425T214914Z_1084557944` as delivery-safe while unreadable labs remain unresolved
+- prompt or model tuning that leaves routed share unchanged
+- new growth, landing, mini-app, or launch work
+- pricing experiments
+- YooKassa/provider debate on the live pilot critical path
+- governance expansion before fresh paid evidence
+- non-critical artifact generation while disk headroom remains below the safety floor
 
 ## Loop Risk
 
 Repeated low-impact tasks to stop:
 
-- arguing over freshest branch versus safest branch without making a branch decision
-- generating or revising unsafe artifacts before readable labs exist
-- adding more product-governance ideas while no fresh delivery proof exists
-- treating `week` or `vip` as strategy expansion instead of controlled support rails
+- status updates and sync notes that do not change runtime truth
+- repeated branch debate without an active-path declaration
+- prompt churn while the model still sees none of the benchmark symptom prompts
+- governance additions while delivery truth is unresolved
+- packaging or walkthrough chatter on the conflicted same-user path
 
 Replacement action:
 
-- declare one delivery candidate, freeze the unsafe branch, close one safe premium proof, run one `week` walkthrough, and keep one post-delivery structure experiment
+- fix runtime truth first, cut router overreach second, then close one safe premium proof path, then run one upgrade experiment only
 
 ## Next 12h Command Set
 
-1. Declare `20260425T212847Z_1084557944` the only delivery candidate for user `1084557944`.
-2. Freeze `20260425T214914Z_1084557944` as evidence-only until readable labs or manual biomarkers arrive.
-3. Rewrite and close or archive `20260425T212847Z_1084557944` after one factual human review pass.
-4. Run one live Telegram walkthrough for `week`.
-5. Run one live Telegram walkthrough for `premium`.
-6. Verify manual payment handoff shows the correct product, amount, and Russian copy.
-7. Keep one governance experiment only after real delivery evidence exists: premium compression into `72h -> 7d -> 30d`.
+1. Repair or clear `20260427T173913Z_1084557944` so runtime and storage agree.
+2. Freeze same-user `week` progression until one active path is declared.
+3. Freeze `20260425T214914Z_1084557944` as evidence-only until readable labs or manual biomarkers exist.
+4. Use `20260425T212847Z_1084557944` as the only premium rewrite candidate, or archive it explicitly.
+5. Shrink `route_live_reply()` to emergency, crisis, file-upload, and narrow logistics coverage only.
+6. Remove unsupported symptom details from routed templates and add clarifying-question behavior for symptom-first replies.
+7. Rerun the benchmark and log routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
+8. Restore `C:` above `10 GB` free using the manual delete-review queue already identified in `docs/DISK_HYGIENE_STATUS.md`.
+9. Keep `premium` at `6900 RUB`, `week` at `3900 RUB`, and manual concierge payment unchanged.

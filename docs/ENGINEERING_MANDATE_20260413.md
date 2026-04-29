@@ -1,124 +1,133 @@
 # Engineering Mandate
 
-Date: 2026-04-27
+Date: 2026-04-29
 Issued by: Chief Orchestrator
-Status: Active refresh after persisted-branch review
+Status: Active refresh after QA truth recheck
 
 ## Mission
 
-Run one reliable Telegram paid cycle across the accepted product ladder:
+Run one coherent Telegram paid cycle through:
 
 `demo trust -> product choice -> structured intake -> manual concierge payment -> AI draft -> human review -> safe client result -> same-thread follow-up`
 
-The active proof path is still `premium`.
+`premium` remains the flagship proof path. `week` remains the lower-friction support rail. Public launch remains blocked.
 
 ## Chief Engineer Mandate
 
-The Chief Engineer owns safe flagship proof, branch control, and evidence-backed iteration.
+The Chief Engineer owns runtime truth, same-user path control, router truth, safety-gate integrity, and environment stability.
 
 ### Immediate responsibilities
 
-1. Treat the product ladder as one Telegram-first operating system:
-   - `demo` builds trust
-   - `week` reduces entry friction
-   - `premium` proves the flagship
-   - `vip` stays parked until operator-load evidence exists
-2. Use persisted submissions and logs as the source of truth when `runtime_state.json` is empty.
-3. Keep one delivery candidate per Telegram user at a time.
-4. Keep manual concierge payment as the official pilot mode until live provider proof exists.
-5. Preserve hard boundaries around diagnosis claims, treatment claims, unreadable labs, and branded supplement drift.
-6. Prevent governance duplication and packaging expansion from replacing live delivery learning.
+1. Keep Telegram as the only live operating channel.
+2. Keep manual concierge payment as the official pilot mode.
+3. Distinguish runtime intake from persisted case from delivery-safe reviewed result.
+4. Keep exactly one active commercial path per Telegram user across runtime and storage.
+5. Prevent unreadable labs, unsupported claims, or stale branch artifacts from becoming client truth.
+6. Prevent deterministic routing from becoming a hidden substitute for real model quality.
+7. Keep disk headroom above the operational safety floor so the pilot does not fail for environmental reasons.
+8. Prevent governance churn, offer expansion, or launch work from replacing paid-cycle learning.
 
 ### Immediate engineering sequence
 
-1. Declare `20260425T212847Z_1084557944` the only delivery candidate for user `1084557944`.
-2. Downgrade `20260425T214914Z_1084557944` to evidence-recovery status until readable labs or manual biomarkers exist.
-3. Rewrite `20260425T212847Z_1084557944` from confirmed intake facts only:
-   - remove fabricated facts
-   - remove unsupported condition framing
-   - remove unjustified brand orientation
-   - make the result time-based and action-led
-4. Deliver or archive `20260425T212847Z_1084557944` with a stated reason.
-5. Run one live walkthrough for `week`.
-6. Run one live walkthrough for `premium`.
-7. Verify selected product, amount, and manual payment context reach the operator/admin correctly.
-8. Extract one safe demo result example only after the premium proof is corrected.
-9. Promote only one post-delivery improvement after fresh evidence exists:
-   - stronger `72h -> 7d -> 30d` structure
+1. Inspect `WellnessBot/data/runtime_state.json` first.
+2. Treat `20260427T173913Z_1084557944` as provisional runtime state until it is either persisted correctly or cleared.
+3. Freeze same-user `week` progression until runtime and storage agree on one path.
+4. Inspect `route_live_reply()` against `docs/WELLNESS_DIALOGUE_QA_20260429.md` and `ops/reports/quality_report_20260429T080345Z.md`.
+5. Narrow deterministic routing to emergency, crisis, file-upload guidance, and a small logistics FAQ surface.
+6. Remove unsupported symptom details from deterministic templates and require clarifying questions when they materially change interpretation or safety.
+7. Rerun the benchmark and verify the symptom path is no longer fully template-owned.
+8. Treat `20260425T214914Z_1084557944` as evidence-only while `requires_lab_resubmission=true`.
+9. Treat `20260425T212847Z_1084557944` as the only premium rewrite candidate if a clean proof closure is attempted.
+10. Keep human review mandatory before any client-facing delivery.
+11. Restore `C:` above `10 GB` free before allowing non-critical artifact growth or repeated generation work.
+12. Promote only one post-closure improvement after fresh evidence exists:
+   - stronger `week -> premium -> 30d` narrative
 
 ### Things the Chief Engineer must block
 
-- any new same-user premium generation before `20260425T212847Z_1084557944` is delivered or archived
+- any same-user concurrency across runtime and persisted active paths
+- any treatment of runtime-only state as delivery truth
+- any prompt or model tuning pass that leaves routed share unchanged
+- any symptom template that injects facts the user did not provide
+- any generic Premium CTA pattern that overwhelms symptom-first answers
+- any delivery or regeneration flow that bypasses `requires_lab_resubmission=true`
 - any use of unreadable or unconfirmed labs as if they were facts
-- any attempt to treat the current `20260425T214914Z_1084557944` PDF as client-safe proof
-- any attempt to actively sell `vip` before premium proof and operator-effort evidence exist
-- pricing or packaging drift before premium credibility is proven
-- prompt churn not grounded in the freshest relevant review artifact
-- duplicate experiment seeding from governance memory
-- YooKassa discussion on the live pilot critical path
-- public-launch, mini-app-first, or multi-channel expansion work during pilot stabilization
-- any wording that weakens human review, urgent-care routing, or no-diagnosis framing
+- any attempt to treat artifact freshness as a substitute for safety clearance
+- any active `vip` selling
+- any pricing or packaging drift before one coherent paid closure exists
+- any governance expansion that is not anchored to fresh delivery evidence
+- any new growth, landing, mini-app, or public-launch work on the pilot critical path
+- any wording that weakens no-diagnosis, no-treatment, urgent-care routing, or human review
+- any avoidable artifact generation while `C:` remains below `10 GB` free
 
 ## Lead Developer / Executor Mandate
 
-The Lead Developer / Executor owns the repo and runtime changes that make the first safe paid cycle easier to close.
+The Lead Developer / Executor owns the concrete repo and runtime behaviors that make one coherent paid cycle easier to close and one first-touch dialogue easier to trust.
 
 ### Sprint tasks
 
-1. Keep product choice, pricing, and manual payment behavior coherent across the Telegram flow and admin handoff.
-2. Make branch ownership obvious in runtime behavior and operator practice.
-3. Prevent unreadable labs from silently becoming premium facts or premium artifacts.
-4. Make the flagship result shorter, safer, and easier to deliver.
-5. Keep `week` and `premium` aligned to one Telegram-first product story.
-6. Keep `vip` defined in the catalog, but not treated as an active operational bet.
-7. Ensure strategy edits reflect live evidence instead of repeated AI ideation.
+1. Make runtime-only, persisted, and review-ready states unambiguous in operator practice and code behavior.
+2. Ensure one user cannot silently carry multiple active offer paths.
+3. Reduce router scope so the model can actually handle non-emergency symptom prompts.
+4. Prevent unreadable labs from silently becoming premium facts, drafts, or delivery assumptions.
+5. Keep `week` and `premium` aligned to one Telegram-first story without same-user cross-tier drift.
+6. Keep manual payment behavior and pricing consistent with the active pilot docs.
+7. Reflect live evidence in strategy docs without creating documentation-only motion.
 
 ### Definition of done
 
 A task is not done unless:
 
-- it helps complete the next safe paid cycle
-- it reduces ambiguity around which branch is active
+- it reduces ambiguity around the active same-user path
+- it improves runtime-storage coherence
+- it improves routed-vs-model truth for live dialogue
 - it preserves legal and safety boundaries
-- it survives available smoke checks, logs, or operator review
-- it makes the paid value easier to explain and deliver
-- it removes a loop instead of opening another
+- it survives available checks, logs, benchmark evidence, and operator review
+- it makes the next paid cycle easier to explain and deliver
+- it removes a loop instead of creating another
 
 ## Quality Auditor Mandate
 
 The auditor must stop the cycle if any of these are true:
 
-- more than one delivery candidate exists for the same Telegram user
-- a new premium artifact is generated before the prior candidate is delivered or archived
+- more than one active same-user path exists across runtime and persisted state
+- a runtime-only intake is being treated as a real paid case
 - unreadable or unconfirmed labs are being treated as facts
-- the current `20260425T214914Z_1084557944` branch is treated as delivery-ready while `requires_lab_resubmission=true`
-- the flagship result still reads like repeated warnings instead of a navigation map
-- branded supplement references are carrying the value story
-- `vip` selling starts before premium proof exists
+- `20260425T214914Z_1084557944` is treated as delivery-ready while `requires_lab_resubmission=true`
+- a premium rewrite proceeds without confirmed facts and human review
+- benchmark symptom prompts are still fully intercepted by deterministic routing after a supposed quality pass
+- unsupported router detail remains in symptom replies
+- governance expansion is being treated as progress while no coherent paid closure exists
+- disk headroom falls below the safety floor and non-critical generation still continues
 - public launch language gets ahead of legal, payment, support, or delivery readiness
 
 ## Sprint Focus For The Next Execution Cycle
 
 ### Focus 1
 
-Restore one delivery candidate and close one safe premium proof cleanly.
+Repair runtime truth and reduce the active user to one coherent path.
 
 ### Focus 2
 
-Validate the product ladder in the live Telegram flow for `week` and `premium`.
+Reduce router overreach so the benchmark can measure real product quality instead of template coverage.
 
 ### Focus 3
 
-Keep the legal/safety posture and Telegram-first operating model fixed while the first paid cycle is stabilized.
+Protect the lab gate and keep only one premium proof candidate alive.
+
+### Focus 4
+
+Preserve the Telegram-first legal/safety posture while restoring environment stability.
 
 ## Loop-Break Rule
 
-If a second same-user paid branch appears before the current delivery candidate is closed:
+If a same-user path conflict or a full-router benchmark lock appears:
 
 1. stop
-2. keep exactly one delivery candidate
-3. downgrade the other branch to evidence-only or archive it
-4. finish delivery or archive on the active candidate
-5. log the reason before any new generation continues
+2. classify each case item as runtime intake, persisted case, evidence-only, or archive
+3. classify each reply path as deterministic safety/logistics or model-owned reasoning
+4. keep exactly one active paid path
+5. freeze or archive the rest
+6. rerun the benchmark before any new prompt, pricing, or growth discussion continues
 
-No silent same-user branch multiplication is allowed.
+No silent same-user path multiplication or silent template capture is allowed.

@@ -1,55 +1,68 @@
 # Knowledge Sync Hub
 
 ## Purpose
-Single control point for regular project synchronization and strategy refresh.
-This hub defines what must be updated every 12 hours and where the updates go.
+Single control point for the Antigravity synchronization cycle.
+This hub defines what must be refreshed every run, how connector availability is judged, and what local artifacts remain mandatory even when external sync is partially blocked.
 
 ## Mandatory Knowledge Bases
-- Obsidian: local mirror vault at `C:\Users\HP\Desktop\Новая папка\docs\obsidian_mirror`
-- Notion: workspace connected account `Ольга Ковалева`
-- GitHub: connected account `olyalyazinchenk-wq`
-- Google Drive: required target when the connector is exposed with upload/share permissions
+- Obsidian local mirror: `C:\Users\HP\Desktop\Новая папка\docs\obsidian_mirror`
+- Notion workspace: connected workspace pages for run notes and model context
+- GitHub repo: `olyalyazinchenk-wq/Zinchenko_wellness_al`
+- Google Drive: required target only when upload/create and share tools are exposed in the current session
 
-## 12h Sync Standard
-Every run must update:
-- Key progress since previous run
-- Product changes in bot/web/mini-app
-- Quality metrics (latest benchmark report and critical deltas)
-- Latest benchmark reference from `ops/reports` when one exists
-- Current blockers and risks
-- Next 12h execution priorities
-- Strategy, goal, and plan adjustments
-- Context for new contributors/models (stage, purpose, current direction, next actions)
-- External contributor snapshot artifacts for GitHub and local mirror storage
+## Every-Run Standard
+Every run must refresh:
+- key changes since the previous run
+- latest project state across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`
+- latest benchmark reference from `ops/reports` when one exists
+- runtime-versus-storage mismatches and delivery-safety regressions
+- current blockers, risks, owners, and next fix actions
+- `Plan Delta`, `Strategy Delta`, `Goals Delta`, and next 12h priorities
+- a concise `Context For New Model` block
+- sanitized external-contributor artifacts for GitHub and the local mirror
 
 ## Run Output Contract
-Each sync cycle creates:
-- One new entry in [PROJECT_PULSE_LOG.md](C:\Users\HP\Desktop\Новая папка\docs\PROJECT_PULSE_LOG.md)
-- One strategy refresh note section (`Plan Delta` + `Strategy Delta`)
-- Connector status map (`Done`, `Pending`, `Blocked`)
-- One run note mirror inside `docs/obsidian_mirror/`
-- One GitHub status artifact and one GitHub context snapshot for external contributors
-- Updated onboarding artifact:
+Each sync cycle creates or refreshes:
+- one new timestamped entry in [PROJECT_PULSE_LOG.md](C:\Users\HP\Desktop\Новая папка\docs\PROJECT_PULSE_LOG.md)
+- one new strategy refresh section in [STRATEGY_LIVE_DELTA.md](C:\Users\HP\Desktop\Новая папка\docs\STRATEGY_LIVE_DELTA.md)
+- refreshed onboarding hubs:
   - [AGENT_CONTEXT_HUB.md](C:\Users\HP\Desktop\Новая папка\docs\AGENT_CONTEXT_HUB.md)
   - [obsidian_mirror/AGENT_CONTEXT_HUB.md](C:\Users\HP\Desktop\Новая папка\docs\obsidian_mirror\AGENT_CONTEXT_HUB.md)
+- one run-note mirror in `docs/obsidian_mirror/`
+- one GitHub status artifact and one GitHub context snapshot for external contributors
+- one connector status map with `Done`, `Changed`, `Blocked`, and `Next 12h`
+
+## Connector Discovery Rule
+At the start of every run:
+- verify which connector tools are exposed in the current session
+- treat GitHub as connector-first when the repository name is known; a missing local `git remote` is a CLI gap, not by itself a GitHub sync blocker
+- treat Google Drive as available only when file create/upload and share tools are exposed
+- if a connector is partially available, use the working surface and log the missing capability precisely
 
 ## Connector Fallback Rule
 If any connector is unavailable:
-- Save full update in local hub files first
-- Mark connector as `Blocked` with exact reason
-- Add exact action request for the next run (what access is needed)
-- Repeat the same access request in the inbox summary
+- complete the full local refresh first
+- mark the connector as `Blocked` with the exact reason
+- write the exact access request needed for the next run
+- repeat that same access request in the inbox summary
 
 ## State Validation Rule
-Before carrying forward any "active case" or "current blocker" from the previous sync:
-- Re-read `WellnessBot/data/runtime_state.json`
-- Re-check the newest `WellnessBot/data/submissions/*.json` and latest draft review artifacts
-- Prefer the newest persisted runtime evidence over yesterday's narrative
-- If the live story changed, write that correction explicitly into `PROJECT_PULSE_LOG.md`
-- If `runtime_state.json` is empty, do not infer that there is no active work. Rebuild the live picture from the newest persisted submissions by `status_updated_at`, plus the newest review and growth artifacts.
+Before carrying forward any active case or blocker:
+- re-read `WellnessBot/data/runtime_state.json`
+- re-check the newest `WellnessBot/data/submissions/*.json` and latest review artifacts
+- prefer fresh persisted evidence over yesterday's narrative
+- if the live story changed, write the correction explicitly into `PROJECT_PULSE_LOG.md`
+- if `runtime_state.json` is empty, rebuild the live picture from the newest persisted submissions and review artifacts instead of inferring no active work
+- if `runtime_state.json` points to a `submission_id` with no matching JSON file, treat that session as provisional only and log a persistence regression
+
+## Single Active Paid Path Rule
+Before carrying execution forward for any Telegram user:
+- verify the same user is not simultaneously holding a live `week`, `premium`, or `vip` runtime session plus unresolved older paid submissions
+- if multiple paid paths coexist, log the conflict immediately in `PROJECT_PULSE_LOG.md` with owner and next fix action
+- explicitly declare one active paid path and freeze, archive, or merge the others before calling the state coherent
 
 ## Safety Gate Validation Rule
 Before confirming a premium case as active or delivery-safe:
-- Verify whether `lab_quality_check.requires_resubmission` is `true`
-- Verify whether draft/PDF generation happened despite an unsafe lab gate
-- If a safety gate was bypassed, log it immediately in `PROJECT_PULSE_LOG.md` as a regression with owner and next fix action
+- verify whether `lab_quality_check.requires_resubmission` is `true`
+- verify whether draft or PDF generation happened despite an unsafe lab gate
+- if a safety gate was bypassed, log it immediately in `PROJECT_PULSE_LOG.md` as a regression with owner and next fix action
