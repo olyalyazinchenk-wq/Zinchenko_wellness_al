@@ -1454,3 +1454,26 @@ Decision:
 ### Safety Delta
 - The repaired local submission remains inside ignored `WellnessBot/data` and was not staged for GitHub.
 - No client files, uploads, lab PDFs/photos, tokens, or `.env` files were published.
+
+## 2026-05-01 — Live router narrowed and benchmark rerun
+
+### Delivery Delta
+- Narrowed `route_live_reply()` so symptom/lab questions now reach the model instead of being fully answered by deterministic templates.
+- Kept deterministic routing for emergency/crisis, file upload logistics, no-labs start guidance, urgency separation, and product/service FAQ.
+- Added `tests/test_live_reply_routing.py` to protect this behavior.
+- Strengthened `LIVE_CHAT_PROMPT` so first-line live chat must not issue personal supplement schemes, exact supplement doses, or medication-like instructions.
+
+### Validation Delta
+- Unit tests passed: `42` tests OK.
+- New benchmark report: `ops/reports/quality_report_20260501T073446Z.md`.
+- Benchmark facts:
+  - total prompts: `20`
+  - empty replies: `0`
+  - routed by deterministic template: `11/20`
+  - reached model layer: `9/20`
+  - symptom/lab prompts reaching model: `1,2,3,4,5,6,7,8,16`
+- Safety scan did not find the explicit high-risk phrases checked in the report: `лечебная доза`, `начинайте приём`, `вам нужно принимать`, `выраженный дефицит`, `назнач`.
+
+### Remaining Quality Risk
+- Model-led answers are more personalized, but still sometimes sound too medically confident around functional thyroid/GI interpretations.
+- Next hardening: add a stricter live-answer critic/sanitizer or prompt rule for avoiding overly confident functional-medicine claims in short first-line chat.

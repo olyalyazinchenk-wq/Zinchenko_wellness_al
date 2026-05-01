@@ -80,10 +80,10 @@ Updated: 2026-05-01 09:17 MSK
   - manual payment confirmed
   - review verdict remains `must_rewrite_with_high_caution`
   - remains the only realistic premium rewrite candidate if proof closure is attempted
-- first-touch chat quality is still not actually model-led:
-  - symptom prompts are being answered by deterministic templates
-  - duplicate-pattern clusters remain visible
-  - unsupported detail risk remains present
+- first-touch chat quality improved but still needs hardening:
+  - symptom/lab prompts now reach the model layer in the latest benchmark (`9/20` model-led)
+  - deterministic routing remains for safety/logistics/product FAQ (`11/20`)
+  - remaining risk: some model-led answers can still sound too medically confident around functional thyroid/GI claims
 - landing and mini-app still align to the Telegram-first premium funnel:
   - no new execution-critical surface shift was found in `landing/index.html` or `mini-app/index.html`
 - governance memory remains bloated:
@@ -96,9 +96,9 @@ Updated: 2026-05-01 09:17 MSK
 ## Next
 
 1. Reduce the same-user case to one active paid path across `week` and `premium`.
-2. Shrink `route_live_reply()` so symptom prompts stop being fully template-owned.
-3. Remove unsupported router details and add clarifying-question behavior for symptom-first replies.
-4. Rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
+2. Harden model-led live answers against overly confident functional-medicine claims.
+3. Add or verify a live-answer critic/sanitizer for diagnosis-like and prescription-like wording.
+4. Rerun the benchmark after the next safety hardening pass.
 5. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
 
 ## Must-Not-Change Rules
