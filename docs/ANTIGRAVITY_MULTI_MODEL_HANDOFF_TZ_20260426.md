@@ -1,4 +1,4 @@
-﻿# ТЗ для Antigravity: подключение дополнительных моделей и вход в контекст проекта
+# ТЗ для Antigravity: подключение дополнительных моделей и вход в контекст проекта
 
 Дата: 2026-04-26
 Статус: готово к передаче исполнителю / модели в Antigravity
@@ -311,11 +311,11 @@ powershell -ExecutionPolicy Bypass -File .\ops\bot-status.ps1
 
 Актуальные активные точки из `AGENT_CONTEXT_HUB.md`:
 
-- canonical active premium case: `20260425T212847Z_1084557944`
-- источник: `C:\Users\HP\Desktop\Новая папка\WellnessBot\data\submissions\20260425T212847Z_1084557944.json`
+- canonical active premium case: `20260425T212847Z_<REDACTED_ID>`
+- источник: `C:\Users\HP\Desktop\Новая папка\WellnessBot\data\submissions\20260425T212847Z_<REDACTED_ID>.json`
 - review verdict: `must_rewrite_with_high_caution`
-- review source: `C:\Users\HP\Desktop\Новая папка\WellnessBot\data\drafts\20260425T212847Z_1084557944.review.json`
-- paused runtime branch: `20260425T214914Z_1084557944`
+- review source: `C:\Users\HP\Desktop\Новая папка\WellnessBot\data\drafts\20260425T212847Z_<REDACTED_ID>.review.json`
+- paused runtime branch: `20260425T214914Z_<REDACTED_ID>`
 - source: `C:\Users\HP\Desktop\Новая папка\WellnessBot\data\runtime_state.json`
 - current block: `requires_lab_resubmission=true`
 

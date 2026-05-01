@@ -205,7 +205,7 @@ Still not allowed:
 
 ### Immediate Next Step
 
-Review latest live case `20260422T202504Z_1084557944` in admin Telegram and decide:
+Review latest live case `20260422T202504Z_<REDACTED_ID>` in admin Telegram and decide:
 
 - approve and send to client,
 - or mark as draft requiring edits.

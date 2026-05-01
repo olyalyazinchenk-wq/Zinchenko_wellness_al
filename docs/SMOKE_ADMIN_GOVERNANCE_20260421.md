@@ -1,4 +1,4 @@
-# Smoke Report: Admin / Governance / Digest
+﻿# Smoke Report: Admin / Governance / Digest
 
 ## Scope
 - real saved submission used as fixture
@@ -13,31 +13,31 @@
 ```text
 Review Dashboard:
 
-- 20260424T204700Z_1084557944
+- 20260424T204700Z_<REDACTED_ID>
   Клиент: Ольга
   Статус: review_priority_quality_and_market
   Флаги: quality_rework, market_rework
   Judge: reject_with_major_rewrite | Market: needs_stronger_value_packaging
 
-- 20260424T190738Z_1084557944
+- 20260424T190738Z_<REDACTED_ID>
   Клиент: Тест
   Статус: awaiting_human_review
   Флаги: quality_rework, market_rework
   Judge: pass_with_minor_edits | Market: needs_stronger_value_packaging
 
-- 20260424T133022Z_1084557944
+- 20260424T133022Z_<REDACTED_ID>
   Клиент: Тест
   Статус: review_priority_market_rework
   Флаги: market_rework
   Judge: pass_with_minor_edits | Market: needs_stronger_value_packaging
 
-- 20260423T195452Z_1084557944
+- 20260423T195452Z_<REDACTED_ID>
   Клиент: Зинченко Денис
   Статус: delivered_to_client
   Флаги: market_rework
   Judge: pass_with_minor_edits | Market: needs_stronger_value_packaging
 
-- 20260422T210234Z_1084557944
+- 20260422T210234Z_<REDACTED_ID>
   Клиент: Тест
   Статус: review_priority_market_rework
   Флаги: market_rework
@@ -82,7 +82,7 @@ Product Insights:
 - x1: Протестировать более конкретный оффер с акцентом на персональный план действий
 
 Последние кейсы в памяти:
-- 20260413T205558Z_1084557944: stronger_positioning_needed; quality_rework, market_rework
+- 20260413T205558Z_<REDACTED_ID>: stronger_positioning_needed; quality_rework, market_rework
 ```
 
 ## Governance Summary
@@ -216,7 +216,7 @@ Weekly Summary (7d):
 - Что тестировать дальше:
   - x1: Протестировать более конкретный оффер с акцентом на персональный план действий
 - Последние кейсы в окне:
-  - 20260413T205558Z_1084557944: stronger_positioning_needed; quality_rework, market_rework
+  - 20260413T205558Z_<REDACTED_ID>: stronger_positioning_needed; quality_rework, market_rework
 
 Weekly Summary (30d):
 - Кейсов в окне: 1
@@ -236,7 +236,7 @@ Weekly Summary (30d):
 - Что тестировать дальше:
   - x1: Протестировать более конкретный оффер с акцентом на персональный план действий
 - Последние кейсы в окне:
-  - 20260413T205558Z_1084557944: stronger_positioning_needed; quality_rework, market_rework
+  - 20260413T205558Z_<REDACTED_ID>: stronger_positioning_needed; quality_rework, market_rework
 
 Governance Summary:
 - Decisions: 1

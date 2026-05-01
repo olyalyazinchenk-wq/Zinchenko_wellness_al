@@ -1,16 +1,17 @@
-﻿# Agent Context Hub
+# Agent Context Hub
 
-Updated: 2026-05-01  (регулярная синхронизация)
+Updated: 2026-05-01 09:17 MSK
 
 ## Краткий статус (RU)
 
 - Режим: controlled concierge pilot. Public launch по-прежнему заблокирован до отдельного решения.
 - Активная оплата в пилоте: `PAYMENT_MODE=manual`. Human review обязателен перед любой выдачей клиенту.
-- Изменения этого прогона: добавлен безопасный «пример результата» для кнопки в боте (текстовый демо‑фрагмент), и зафиксирован аудит внешнего UI‑макета Google AI Studio как **не‑backend** (только UX‑референс/бэклог).
+- Изменения этого прогона: добавлен безопасный «пример результата» для кнопки в боте (текстовый демо-фрагмент), и зафиксирован аудит внешнего UI-макета Google AI Studio как **не-backend** (только UX-референс/бэклог).
+- Новый критический риск среды: свободное место на `C:` просело до `2.69 GB`, поэтому тяжелые артефакты и новый PDF-поток нельзя считать безопасными до очистки диска.
 
 ## Stage
 
-- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and disk headroom risk
+- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and critical disk headroom risk
 
 ## Objective
 
@@ -50,7 +51,7 @@ Updated: 2026-05-01  (регулярная синхронизация)
   - `WellnessBot/data/submissions/20260425T214914Z_<REDACTED_ID>.json`
   - both premium review artifacts
 - runtime is currently up:
-  - clean bot start logged at `2026-04-29 09:35 MSK`
+  - clean bot start logged at `2026-05-01 00:45:55 MSK`
   - no new local crash loop was observed in `bot.stderr.log`
 - admin digest delivery hardened:
   - product digest text is now split into Telegram-safe chunks before sending (`WellnessBot/main.py`)
@@ -79,21 +80,24 @@ Updated: 2026-05-01  (регулярная синхронизация)
   - symptom prompts are being answered by deterministic templates
   - duplicate-pattern clusters remain visible
   - unsupported detail risk remains present
+- landing and mini-app still align to the Telegram-first premium funnel:
+  - no new execution-critical surface shift was found in `landing/index.html` or `mini-app/index.html`
 - governance memory remains bloated:
   - `115` experiments
   - `4` duplicate title groups
 - disk pressure remains active:
-  - free space should be rechecked each run; last recorded signal was below the `10 GB` safety floor
+  - `C:` free space is `2.69 GB`
+  - the `10 GB` safety floor is critically unmet
 
 ## Next
 
-1. Resolve `week_runtime_20260427T173913Z`: persist it properly or clear it.
-2. Reduce the same-user case to one active paid path across `week` and `premium`.
-3. Shrink `route_live_reply()` so symptom prompts stop being fully template-owned.
-4. Remove unsupported router details and add clarifying-question behavior for symptom-first replies.
-5. Rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
-6. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
-7. Restore disk free space above `10 GB`.
+1. Restore `C:` above `10 GB` free before more PDF or batch-artifact work.
+2. Resolve `week_runtime_20260427T173913Z`: persist it properly or clear it.
+3. Reduce the same-user case to one active paid path across `week` and `premium`.
+4. Shrink `route_live_reply()` so symptom prompts stop being fully template-owned.
+5. Remove unsupported router details and add clarifying-question behavior for symptom-first replies.
+6. Rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
+7. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
 
 ## Must-Not-Change Rules
 
@@ -112,7 +116,7 @@ Updated: 2026-05-01  (регулярная синхронизация)
 
 Stage:
 
-- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and disk headroom risk
+- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and critical disk headroom risk
 
 Objective:
 
@@ -130,15 +134,15 @@ Constraints:
 - no diagnosis or treatment framing
 - no unreadable or unconfirmed lab facts
 - no invented symptoms or unsupported condition claims
-- no new growth or UI work until state truth, router scope, and lab gating are fixed
+- no new growth or UI work until disk headroom, state truth, router scope, and lab gating are fixed
 
 Immediate next actions:
 
-1. Verify whether `week_runtime_20260427T173913Z` should be persisted as the live `week` path or cleared as an orphaned runtime session.
-2. Declare exactly one active paid path for the same-user case, then freeze, archive, or merge the others.
-3. Cut `route_live_reply()` back to safety/logistics coverage, then rerun the benchmark so symptom prompts can actually test model quality.
-4. Do not deliver the current premium PDF; first obtain readable labs or manual biomarker text and regenerate from confirmed facts only.
-5. Clear the disk-space risk before the environment degrades further.
+1. Free disk space back above the `10 GB` floor before more PDF or batch-artifact work.
+2. Verify whether `week_runtime_20260427T173913Z` should be persisted as the live `week` path or cleared as an orphaned runtime session.
+3. Declare exactly one active paid path for the same-user case, then freeze, archive, or merge the others.
+4. Cut `route_live_reply()` back to safety/logistics coverage, then rerun the benchmark so symptom prompts can actually test model quality.
+5. Do not deliver the current premium PDF; first obtain readable labs or manual biomarker text and regenerate from confirmed facts only.
 
 Reference benchmark:
 

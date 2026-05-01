@@ -1,4 +1,4 @@
-﻿# Project Pulse Log
+# Project Pulse Log
 
 ## 2026-04-13 12:55 MSK
 ### Delivery Delta
@@ -1322,3 +1322,110 @@ Decision:
 - В боте усилен «пример результата»: `PRODUCT_EXAMPLES_TEXT` теперь отдаёт конкретный безопасный демо‑фрагмент со структурой результата (без диагнозов/лечения) — `WellnessBot/texts.py`.
 - Добавлены защитные исключения в `.gitignore`, чтобы не коммитить внешние клоны и локальные артефакты синхронизации (`external/`, `docs/external_sync/`, `docs/obsidian_mirror/RUN_NOTE_*.md`).
 - Санитизация: из статусных документов удалены длинные идентификаторы (Telegram ID и связанные артефакт‑ID), чтобы не публиковать персональные данные в GitHub.
+
+## 2026-05-01 09:17 MSK — Регулярная синхронизация (github-notion-12)
+
+### State Read Delta
+- Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`.
+- `WellnessBot/data/runtime_state.json` still holds `week_runtime_20260427T173913Z_<REDACTED_ID>` at `consent`, and there is still no matching persisted submission JSON.
+- The same Telegram user still spans one unresolved runtime-only `week` path plus two unresolved `premium` branches.
+- `premium_fresh_20260425T214914Z` still has `requires_lab_resubmission=true` and remains unsafe for delivery even though draft/PDF artifacts already exist.
+- `premium_legacy_20260425T212847Z` still has review verdict `must_rewrite_with_high_caution` and remains the only realistic premium rewrite candidate if proof closure is attempted.
+- `landing/index.html` and `mini-app/index.html` still align to the Telegram-first premium funnel; no new execution-critical surface shift was found.
+- The external repo audit in `docs/GOOGLE_AI_STUDIO_MOY_PROJEKT_AUDIT_20260501.md` confirmed `moy-projekt` is a UI mockup only, not a backend replacement plan.
+- `WellnessBot/texts.py` now returns a concrete safe demo-result fragment in `PRODUCT_EXAMPLES_TEXT`.
+- Runtime is up with a clean start logged at `2026-05-01 00:45:55 MSK`.
+
+### Benchmark Delta
+- Latest benchmark reference remains `ops/reports/quality_report_20260429T080345Z.md`.
+- Current benchmark truth remains unchanged:
+  - `20/20` replies were non-empty
+  - `20/20` prompts were intercepted by `route_live_reply()`
+  - `0/20` prompts reached the model
+  - clarifying-question count remains `0/20`
+
+### Regression Delta
+- Disk headroom has become a critical ops regression.
+  - source: live disk check on `C:` during this sync
+  - owner: Ops
+  - next fix action: clear large delete candidates from `docs/DISK_HYGIENE_STATUS.md` and restore free space above `10 GB` before more PDF or batch-artifact work
+- Runtime-to-storage mismatch remains unresolved.
+  - source: `WellnessBot/data/runtime_state.json`
+  - owner: Lead Developer
+  - next fix action: persist `week_runtime_20260427T173913Z_<REDACTED_ID>` before or at `consent`, or explicitly invalidate and restart it cleanly
+- Same-user multi-path drift remains unresolved.
+  - source: `WellnessBot/data/runtime_state.json` plus `WellnessBot/data/submissions/20260425T212847Z_<REDACTED_ID>.json` and `WellnessBot/data/submissions/20260425T214914Z_<REDACTED_ID>.json`
+  - owner: Operator + Lead Developer
+  - next fix action: declare exactly one active paid path across `week` and `premium`, then freeze, archive, or merge the rest
+- Unsafe lab-gate bypass remains active in the freshest premium branch.
+  - source: `WellnessBot/data/submissions/20260425T214914Z_<REDACTED_ID>.json`
+  - owner: Lead Developer
+  - next fix action: keep the current artifacts delivery-frozen and hard-block draft/PDF generation while `requires_lab_resubmission=true`
+- Router overreach remains the dominant live-chat quality regression.
+  - source: `ops/reports/quality_report_20260429T080345Z.md`
+  - owner: Lead Developer + Product Strategist
+  - next fix action: cut deterministic routing back to emergency, crisis, upload guidance, and a narrow logistics FAQ set; then rerun the benchmark
+- Governance duplication remains active.
+  - source: `WellnessBot/data/product_governance.json`
+  - owner: Lead Developer
+  - next fix action: deduplicate the `115` experiment list and remove the `4` repeated title groups before the next digest
+
+### Plan Delta
+- Disk recovery is now an immediate blocker and moves ahead of nonessential artifact generation or sync churn.
+- Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
+- Persist or clear `week_runtime_20260427T173913Z_<REDACTED_ID>` before carrying the current paid-path story forward again.
+- Reduce the same-user stack to one active paid path before any delivery or growth claim.
+- Use GitHub connector artifacts as the official external-contributor snapshot even when local `git remote -v` is empty.
+
+### Strategy Delta
+- Strategic direction remains Telegram-first wellness intake with manual concierge payment, human review, and premium dossier delivery in the same operating thread.
+- New evidence changes execution order:
+  - environment reliability is now as urgent as state coherence because `C:` free space is only `2.69 GB`
+  - Google AI Studio stays a UI reference only and must not divert backend execution
+  - the safe demo-result text helps trust, but it is not product proof
+- The next proof target is now:
+  - one stable environment
+  - one coherent paid path
+  - one benchmark rerun where symptom prompts actually reach the model
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` safety floor.
+- Goal 2: resolve the runtime-versus-storage mismatch and choose one active paid path.
+- Goal 3: narrow router scope and rerun the benchmark from a real model-reaching baseline.
+- Goal 4: keep the freshest premium branch frozen until readable labs or manual biomarker text clear the gate.
+
+### Connector Status
+- Obsidian: done - refreshed `docs/obsidian_mirror/AGENT_CONTEXT_HUB.md` and created a new run-note mirror.
+- Notion: done - created a new run note with a concise `Context For New Model` block.
+- GitHub: done - synced a sanitized status artifact and context snapshot for external contributors via the GitHub connector.
+- Google Drive: blocked - no Google Drive file upload/create or share tools are exposed in the current Codex session.
+- Exact Google Drive access request: enable the Google Drive connector with file upload/create and share permissions so the run snapshot can be uploaded directly from Codex.
+
+### Next 12h Focus
+1. Free enough disk space to restore `C:` above `10 GB`.
+2. Persist or clear `week_runtime_20260427T173913Z_<REDACTED_ID>`.
+3. Declare one active paid path across the same-user `week` and `premium` stack.
+4. Cut `route_live_reply()` back to safety/logistics coverage, add clarifying-question behavior, and rerun the benchmark.
+5. Keep `premium_fresh_20260425T214914Z` frozen until readable labs or manual biomarker text arrive.
+
+### Context For New Model
+- Stage: controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and critical disk headroom risk
+- Objective: restore one coherent paid-path truth, stop unsafe premium delivery from unreadable labs, reduce deterministic router capture, and stabilize the environment enough to keep the pilot reliable
+- Constraints: Telegram-first only; one active paid path per Telegram user; manual concierge remains official pilot mode; human review required before delivery; no diagnosis/treatment framing; no unreadable or unconfirmed lab facts; no invented symptoms or unsupported condition claims; no new growth or UI work until disk headroom, state truth, router scope, and lab gating are fixed
+- Immediate next actions:
+  1. Free disk space back above the `10 GB` floor before more PDF or batch-artifact work.
+  2. Persist or clear `week_runtime_20260427T173913Z_<REDACTED_ID>` so runtime and storage stop disagreeing.
+  3. Declare exactly one active paid path for the same-user case, then freeze, archive, or merge the others.
+  4. Cut `route_live_reply()` back to safety/logistics coverage and rerun the benchmark so symptom prompts can actually test model quality.
+  5. Keep the current premium PDF frozen until readable labs or manual biomarker text exist and the dossier is regenerated from confirmed facts only.
+
+## 2026-05-01 — GitHub single source of truth
+
+### Delivery Delta
+- Создан единый безопасный центр разработки для GitHub: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`.
+- В документ сведены: цель проекта, продуктовая линейка, текущий этап, архитектура, безопасность, ручная оплата, AI/Antigravity, хранение данных, блокеры, pilot-ready/public-launch критерии и ссылки на опорные документы.
+- `docs/AGENT_CONTEXT_HUB.md` обновлён ссылкой на единый source of truth.
+
+### Safety Delta
+- В GitHub не переносятся секреты, `.env`, токены, клиентские анализы/PDF/фото, `WellnessBot/data`, runtime-данные и персональные идентификаторы.
+- Документ предназначен для передачи разработчикам/аудиторам без раскрытия чувствительных данных.

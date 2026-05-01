@@ -18,7 +18,7 @@ Confirmed:
 
 Latest live case:
 
-- submission_id: `20260422T202504Z_1084557944`
+- submission_id: `20260422T202504Z_<REDACTED_ID>`
 - payment_status: `manual_payment_confirmed`
 - intake_status: `review_priority_quality_and_market`
 - PDF exists: `yes`

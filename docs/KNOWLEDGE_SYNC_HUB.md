@@ -35,6 +35,7 @@ Each sync cycle creates or refreshes:
 ## Connector Discovery Rule
 At the start of every run:
 - verify which connector tools are exposed in the current session
+- treat plugin presence alone as insufficient; required write tools must be actually exposed by tool discovery or the connector is blocked for that capability
 - treat GitHub as connector-first when the repository name is known; a missing local `git remote` is a CLI gap, not by itself a GitHub sync blocker
 - treat Google Drive as available only when file create/upload and share tools are exposed
 - if a connector is partially available, use the working surface and log the missing capability precisely
@@ -45,6 +46,12 @@ If any connector is unavailable:
 - mark the connector as `Blocked` with the exact reason
 - write the exact access request needed for the next run
 - repeat that same access request in the inbox summary
+
+## External Sanitization Rule
+Before syncing status artifacts outside the local workspace:
+- redact Telegram user IDs and case identifiers that embed personal identifiers
+- keep secrets, tokens, and private local paths out of shared artifacts
+- allow internal local docs to retain operational identifiers only when they are required for execution
 
 ## State Validation Rule
 Before carrying forward any active case or blocker:

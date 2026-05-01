@@ -197,3 +197,49 @@
   - `%TEMP%` still contains locked items that were skipped safely
   - Recycle Bin may still contain locked or protected items
   - the biggest immediate recovery opportunity is manual review of the two `.crdownload` files in `Downloads`
+
+## 2026-05-01 09:17:53 +03:00
+
+- Before C:: `220.38 GB used / 2.68 GB free`
+- After C:: `220.38 GB used / 2.68 GB free`
+- Delta free space: `+0.00 GB` (`0.00 MB` net change after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `26` locked/in-use deletions skipped
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned a path error
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Large-folder triage because free space is below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.20 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\04_Веб_Прототипы` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Академия Эксперт BIO_часть 2.7z.crdownload` — `13.00 GB` incomplete download file
+  - `C:\Users\HP\Downloads\Академия Эксперт BIO_часть 1.7z.crdownload` — `11.47 GB` incomplete download file
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521`
+  - `C:\Users\HP\Downloads\wps_download`
+  - `C:\Users\HP\Downloads\Telegram Desktop`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked items that were skipped safely
+  - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
+  - the biggest immediate recovery opportunity is manual review of the two `.crdownload` files in `Downloads`

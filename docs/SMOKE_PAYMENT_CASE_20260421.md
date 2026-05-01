@@ -1,4 +1,4 @@
-# Smoke Report: Payment / Case Flow
+﻿# Smoke Report: Payment / Case Flow
 
 ## Scope
 - built a fresh submission payload from session data
@@ -12,9 +12,9 @@
   "amount_rub": 6900,
   "amount_kop": 690000,
   "currency": "RUB",
-  "invoice_payload": "premium:smoke_case_payment_001:1084557944",
+  "invoice_payload": "premium:smoke_case_payment_001:<REDACTED_ID>",
   "invoice_sent_at": "2026-04-21T00:25:00Z",
-  "expected_telegram_user_id": 1084557944
+  "expected_telegram_user_id": <REDACTED_ID>
 }
 ```
 
@@ -29,7 +29,7 @@
   "submission_id": "smoke_case_payment_001",
   "offer": "premium",
   "profile": {
-    "telegram_user_id": 1084557944,
+    "telegram_user_id": <REDACTED_ID>,
     "telegram_username": "Olgazinchenko1186",
     "telegram_full_name": "Ольга",
     "full_name": "Ольга",
@@ -79,9 +79,9 @@
     "amount_rub": 6900,
     "amount_kop": 690000,
     "currency": "RUB",
-    "invoice_payload": "premium:smoke_case_payment_001:1084557944",
+    "invoice_payload": "premium:smoke_case_payment_001:<REDACTED_ID>",
     "invoice_sent_at": "2026-04-21T00:25:00Z",
-    "expected_telegram_user_id": 1084557944
+    "expected_telegram_user_id": <REDACTED_ID>
   },
   "enrichment_updated_at": "2026-04-21T00:26:00Z"
 }
@@ -94,7 +94,7 @@
   "offer": "premium",
   "tier": "premium",
   "step": "done",
-  "telegram_user_id": 1084557944,
+  "telegram_user_id": <REDACTED_ID>,
   "telegram_username": "Olgazinchenko1186",
   "telegram_full_name": "Ольга",
   "full_name": "Ольга",
@@ -138,6 +138,6 @@
 
 ## Invoice Roundtrip
 - payload_submission_id: smoke_case_payment_001
-- payload_user_id: 1084557944
+- payload_user_id: <REDACTED_ID>
 - premium_price_rub: 6900
 - premium_price_kop: 690000
