@@ -1,4 +1,4 @@
-# Agent Context Hub
+﻿# Agent Context Hub
 
 Updated: 2026-05-01 09:17 MSK
 
@@ -83,7 +83,7 @@ Updated: 2026-05-01 09:17 MSK
 - first-touch chat quality improved but still needs hardening:
   - symptom/lab prompts now reach the model layer in the latest benchmark (`9/20` model-led)
   - deterministic routing remains for safety/logistics/product FAQ (`11/20`)
-  - remaining risk: some model-led answers can still sound too medically confident around functional thyroid/GI claims
+  - a post-model live-answer sanitizer now softens prescription-like and direct diagnosis-like phrases before sending
 - landing and mini-app still align to the Telegram-first premium funnel:
   - no new execution-critical surface shift was found in `landing/index.html` or `mini-app/index.html`
 - governance memory remains bloated:
@@ -96,9 +96,8 @@ Updated: 2026-05-01 09:17 MSK
 ## Next
 
 1. Reduce the same-user case to one active paid path across `week` and `premium`.
-2. Harden model-led live answers against overly confident functional-medicine claims.
-3. Add or verify a live-answer critic/sanitizer for diagnosis-like and prescription-like wording.
-4. Rerun the benchmark after the next safety hardening pass.
+2. Rerun the benchmark after the sanitizer pass and review residual model-led tone.
+3. Reduce the same-user case to one active paid path if still needed before the next live client test.
 5. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
 
 ## Must-Not-Change Rules
@@ -148,3 +147,4 @@ Reference benchmark:
 
 - `ops/reports/quality_report_20260429T080345Z.md`
 - current truth: `20/20` routed, `0/20` model reached, `0/20` clarifying questions
+

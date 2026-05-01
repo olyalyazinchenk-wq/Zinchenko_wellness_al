@@ -358,6 +358,32 @@ def looks_english_heavy(reply: str | None) -> bool:
     return latin_count >= 40 and latin_count > cyrillic_count * 1.5
 
 
+def sanitize_live_reply(reply: str) -> str:
+    sanitized = reply
+    replacements = (
+        ("лечебная доза", "дозировка, которую стоит подбирать после оценки данных"),
+        ("выраженный дефицит", "зона возможного дефицитного риска"),
+        ("вам нужно принимать", "можно обсудить возможность поддержки"),
+        ("добавление железа может дать прилив энергии", "коррекция железа обсуждается только после уточнения причин и безопасности"),
+    )
+    for source, target in replacements:
+        sanitized = re.sub(re.escape(source), target, sanitized, flags=re.IGNORECASE)
+
+    sanitized = re.sub(
+        r"\bнач(?:ните|инайте|инаете)\s+при[её]м\b",
+        "не начинайте самостоятельный приём; сначала уточните данные для безопасного подбора",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    sanitized = re.sub(
+        r"\bу\s+вас\s+(анемия|гипотиреоз|тиреоидит|сахарный диабет)\b",
+        r"это может быть похоже на \1, но точную оценку стоит обсудить с врачом",
+        sanitized,
+        flags=re.IGNORECASE,
+    )
+    return sanitized
+
+
 def finalize_live_reply(reply: str | None, user_text: str) -> str:
     if looks_like_refusal(reply):
         logger.warning("Model returned empty or refusal-style reply. Using local fallback.")
@@ -366,6 +392,7 @@ def finalize_live_reply(reply: str | None, user_text: str) -> str:
     if looks_english_heavy(final_reply):
         logger.warning("Model returned English-heavy live reply. Using Russian fallback.")
         return build_live_fallback(user_text)
+    final_reply = sanitize_live_reply(final_reply)
     return append_premium_cta(final_reply, user_text)
 
 

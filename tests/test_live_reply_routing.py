@@ -10,7 +10,7 @@ BOT_DIR = PROJECT_ROOT / "WellnessBot"
 if str(BOT_DIR) not in sys.path:
     sys.path.insert(0, str(BOT_DIR))
 
-from ai_drafting import route_live_reply  # noqa: E402
+from ai_drafting import finalize_live_reply, route_live_reply, sanitize_live_reply  # noqa: E402
 
 
 class LiveReplyRoutingTests(unittest.TestCase):
@@ -36,6 +36,28 @@ class LiveReplyRoutingTests(unittest.TestCase):
         for prompt in symptom_prompts:
             with self.subTest(prompt=prompt):
                 self.assertIsNone(route_live_reply(prompt))
+
+    def test_live_reply_sanitizer_softens_prescriptive_phrases(self) -> None:
+        raw_reply = (
+            "Это выраженный дефицит. Начинайте приём D3, это лечебная доза. "
+            "Вам нужно принимать магний. У вас гипотиреоз."
+        )
+
+        sanitized = sanitize_live_reply(raw_reply)
+
+        self.assertNotIn("выраженный дефицит", sanitized.lower())
+        self.assertNotIn("начинайте приём", sanitized.lower())
+        self.assertNotIn("лечебная доза", sanitized.lower())
+        self.assertNotIn("вам нужно принимать", sanitized.lower())
+        self.assertNotIn("у вас гипотиреоз", sanitized.lower())
+        self.assertIn("дефицитного риска", sanitized)
+        self.assertIn("обсудить с врачом", sanitized)
+
+    def test_finalize_live_reply_sanitizes_before_cta(self) -> None:
+        reply = finalize_live_reply("Начните приём железа.", "Ферритин 14, что делать?")
+
+        self.assertNotIn("Начните приём", reply)
+        self.assertIn("хочу разбор", reply.lower())
 
 
 if __name__ == "__main__":

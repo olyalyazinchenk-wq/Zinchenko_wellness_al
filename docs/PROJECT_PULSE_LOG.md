@@ -1477,3 +1477,16 @@ Decision:
 ### Remaining Quality Risk
 - Model-led answers are more personalized, but still sometimes sound too medically confident around functional thyroid/GI interpretations.
 - Next hardening: add a stricter live-answer critic/sanitizer or prompt rule for avoiding overly confident functional-medicine claims in short first-line chat.
+
+## 2026-05-01 — Live answer sanitizer added
+
+### Delivery Delta
+- Added `sanitize_live_reply()` as a post-model safety guard for first-line live chat answers.
+- The sanitizer softens prescription-like and diagnosis-like wording before CTA is appended.
+- Covered sanitizer behavior with tests in `tests/test_live_reply_routing.py`.
+
+### Validation Delta
+- Unit tests passed: `44` tests OK.
+
+### Safety Delta
+- Guarded phrases include examples like `лечебная доза`, `выраженный дефицит`, `вам нужно принимать`, `начните/начинайте приём`, and direct diagnosis-like `у вас гипотиреоз` patterns.
