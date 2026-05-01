@@ -696,7 +696,7 @@
 ### Live E2E Delta
 - Ran post-Russian-fix live operational check.
 - Preflight passed and bot polling stayed active.
-- Live case `20260422T202504Z_1084557944` reached `manual_payment_confirmed` and generated a PDF.
+- Live case `20260422T202504Z_<REDACTED_ID>` reached `manual_payment_confirmed` and generated a PDF.
 - Found a real launch-blocking admin delivery bug: Telegram rejected PDF notification because caption was too long.
 - Fixed admin PDF delivery by using a short document caption and sending detailed summaries as separate Telegram-safe chunks.
 - Resent the latest admin notification after the fix.
@@ -731,7 +731,7 @@
 
 ## 2026-04-23 00:32 MSK
 ### Live Intake Quality Hardening Delta
-- Fresh 12-step intake case `20260422T210234Z_1084557944` completed and generated a PDF.
+- Fresh 12-step intake case `20260422T210234Z_<REDACTED_ID>` completed and generated a PDF.
 - Verified that all new intake fields were saved: complaint pattern, nutrition, digestion, sleep/stress, activity, background, red flags, lab notes.
 - Found a PDF schema mismatch: the LLM generated the newer dossier JSON schema while the HTML PDF template expected legacy fields.
 - Added `normalize_dossier_pdf_data()` to map the generated dossier schema into the PDF template fields.
@@ -857,7 +857,7 @@ Next gate:
 equires_lab_resubmission=true, parsed biomarkers remained empty.
 - Found orchestration bug: dossier case could stay stuck in dossier_generation_in_progress after draft/review creation when later review/growth/PDF flow did not complete cleanly.
 - Added timeouts to generation steps: draft 120s, judge 90s, growth 90s, so growth cannot hang the entire case.
-- Recovered live smoke case 20260424T190738Z_1084557944: rendered PDF from draft, set pdf_path, updated status to waiting_human_review.
+- Recovered live smoke case 20260424T190738Z_<REDACTED_ID>: rendered PDF from draft, set pdf_path, updated status to waiting_human_review.
 - Sent recovered test PDF to admin Telegram chat via bot proxy.
 - Current product signal: safe behavior on uncertain labs is correct; PDF quality still requires human review and later structure redesign.
 
@@ -955,12 +955,12 @@ Decision:
 - Premium dossier compression is still below the premium bar: the judge continues to flag repetition, weak executive summarization, and unclear doctor-route priority in `ops/reports/complex_case_judge_report.json`.
   - Owner: Product Strategist + Lead Developer
   - Next fix action: deliver the next live case, then compress the first page into an executive map, first-week action card, and grouped doctor route.
-- Active pilot proof is stalled at `20260424T224714Z_1084557944`: payment is manually confirmed and labs are client-confirmed, but the case has no draft/PDF/delivery artifact yet.
+- Active pilot proof is stalled at `20260424T224714Z_<REDACTED_ID>`: payment is manually confirmed and labs are client-confirmed, but the case has no draft/PDF/delivery artifact yet.
   - Owner: Operator + Lead Developer
   - Next fix action: finish generation, review, delivery, and first follow-up capture before the next sync cycle.
 
 ### Plan Delta
-- Promote `20260424T224714Z_1084557944` to the top execution item until it reaches delivery.
+- Promote `20260424T224714Z_<REDACTED_ID>` to the top execution item until it reaches delivery.
 - Use the active benchmark plus complex-case judge output as the only approved input for the next dossier revision.
 - Keep payment-mode drift closed: either prove `PAYMENT_TOKEN` live or keep the next `3-5` pilot cases explicitly manual by policy.
 
@@ -982,7 +982,7 @@ Decision:
 - Exact Google Drive access request: enable the Google Drive connector with file upload/create and share permissions so the run snapshot can be uploaded directly from Codex
 
 ### Next 12h Focus
-- Finish `20260424T224714Z_1084557944` through draft, review, delivery, and first follow-up capture.
+- Finish `20260424T224714Z_<REDACTED_ID>` through draft, review, delivery, and first follow-up capture.
 - Record operator friction and client reaction in the pulse log.
 - Make one evidence-backed dossier-compression revision from the delivered case.
 - Keep the payment mode explicit before the next pilot case starts.
@@ -992,7 +992,7 @@ Decision:
 - Objective: deliver the current paid-confirmed case, preserve benchmark stability, and improve premium compression only after live evidence
 - Constraints: Telegram-first only; human review required; no diagnosis/treatment framing; no unconfirmed lab facts; no speculative prompt churn
 - Immediate next actions:
-  1. Inspect `20260424T224714Z_1084557944` and move it to draft/review/delivery completion.
+  1. Inspect `20260424T224714Z_<REDACTED_ID>` and move it to draft/review/delivery completion.
   2. Capture operator friction and client reaction in `docs/PROJECT_PULSE_LOG.md`.
   3. Use the delivered case to redesign the first page and doctor-route structure once.
 
@@ -1032,8 +1032,8 @@ Decision:
 - Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`.
 - Revalidated the live execution story from `WellnessBot/data/runtime_state.json` instead of carrying forward the previous sync narrative.
 - Current premium execution is split across:
-  - `20260425T212847Z_1084557944`: freshest complete premium artifact, but review verdict is `must_rewrite_with_high_caution`
-  - `20260425T214914Z_1084557944`: newest runtime branch, blocked at `requires_lab_resubmission=true`
+  - `20260425T212847Z_<REDACTED_ID>`: freshest complete premium artifact, but review verdict is `must_rewrite_with_high_caution`
+  - `20260425T214914Z_<REDACTED_ID>`: newest runtime branch, blocked at `requires_lab_resubmission=true`
 
 ### Benchmark Delta
 - Latest benchmark reference remains `ops/reports/quality_report_20260421T183148Z.md`.
@@ -1041,22 +1041,22 @@ Decision:
 - Older complex-case safety proof in `ops/reports/complex_case_judge_report.json` is still useful as a benchmark, but it is no longer the main active blocker.
 
 ### Regression Delta
-- Latest dossier regression is now `20260425T212847Z_1084557944`.
-  - Source: `WellnessBot/data/drafts/20260425T212847Z_1084557944.review.json`
+- Latest dossier regression is now `20260425T212847Z_<REDACTED_ID>`.
+  - Source: `WellnessBot/data/drafts/20260425T212847Z_<REDACTED_ID>.review.json`
   - Owner: Product Strategist + Lead Developer
   - Next fix action: rewrite from intake facts only, remove invented symptoms and unsupported condition claims, remove unjustified brand insertion, then rerun judge before any delivery.
 - Current runtime intake is blocked by unreadable lab evidence.
   - Source: `WellnessBot/data/runtime_state.json`
   - Owner: Operator + Client
-  - Next fix action: obtain a clear PDF/photo or manual typed biomarkers for `20260425T214914Z_1084557944`, then reopen the dossier path.
+  - Next fix action: obtain a clear PDF/photo or manual typed biomarkers for `20260425T214914Z_<REDACTED_ID>`, then reopen the dossier path.
 - Governance memory is accumulating duplicate proposed experiments.
   - Source: `WellnessBot/data/product_governance.json`
   - Owner: Lead Developer
   - Next fix action: deduplicate experiment seeding before the next digest so repeated ideas do not distort priorities.
 
 ### Plan Delta
-- Use `20260425T212847Z_1084557944` as the canonical active premium case until it is rewritten, reviewed, and either delivered or explicitly archived.
-- Keep `20260425T214914Z_1084557944` paused until readable lab evidence arrives.
+- Use `20260425T212847Z_<REDACTED_ID>` as the canonical active premium case until it is rewritten, reviewed, and either delivered or explicitly archived.
+- Keep `20260425T214914Z_<REDACTED_ID>` paused until readable lab evidence arrives.
 - Preserve the benchmark fixed to `ops/reports/quality_report_20260421T183148Z.md` while the rewrite lands.
 
 ### Strategy Delta
@@ -1065,8 +1065,8 @@ Decision:
 - The next meaningful proof is one fact-safe rewritten premium dossier plus one clean lab-resubmission unblock, not another uncontrolled branch.
 
 ### Goals Delta
-- Goal 1: recover one fact-safe premium dossier from `20260425T212847Z_1084557944`.
-- Goal 2: clear the lab resubmission gate for `20260425T214914Z_1084557944`.
+- Goal 1: recover one fact-safe premium dossier from `20260425T212847Z_<REDACTED_ID>`.
+- Goal 2: clear the lab resubmission gate for `20260425T214914Z_<REDACTED_ID>`.
 - Goal 3: keep the benchmark baseline unchanged during the correction cycle.
 
 ### Next 12h Focus
@@ -1078,21 +1078,21 @@ Decision:
 ## 2026-04-26 13:05 MSK
 ### State Read Delta
 - Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`, plus the newest runtime, review, and governance artifacts.
-- Live runtime still points to `20260425T214914Z_1084557944` at the `labs` step with `requires_lab_resubmission=true`.
-- Canonical premium artifact remains `20260425T212847Z_1084557944`; draft, PDF, judge, and growth outputs exist, but the review verdict is still `must_rewrite_with_high_caution`.
+- Live runtime still points to `20260425T214914Z_<REDACTED_ID>` at the `labs` step with `requires_lab_resubmission=true`.
+- Canonical premium artifact remains `20260425T212847Z_<REDACTED_ID>`; draft, PDF, judge, and growth outputs exist, but the review verdict is still `must_rewrite_with_high_caution`.
 - Landing and mini-app still align to the Telegram-first premium funnel. No new branch-expansion change was found in the current web surfaces.
 
 ### Benchmark Delta
 - Latest benchmark reference remains `ops/reports/quality_report_20260421T183148Z.md`.
 - Benchmark baseline still holds at `20` prompts and `0` empty replies.
-- The live premium rewrite brief now comes from `WellnessBot/data/drafts/20260425T212847Z_1084557944.review.json`; `ops/reports/complex_case_judge_report.json` remains supporting structure evidence, not the main active blocker.
+- The live premium rewrite brief now comes from `WellnessBot/data/drafts/20260425T212847Z_<REDACTED_ID>.review.json`; `ops/reports/complex_case_judge_report.json` remains supporting structure evidence, not the main active blocker.
 
 ### Regression Delta
-- Canonical premium dossier `20260425T212847Z_1084557944` is still not delivery-safe.
-  - Source: `WellnessBot/data/drafts/20260425T212847Z_1084557944.review.json`
+- Canonical premium dossier `20260425T212847Z_<REDACTED_ID>` is still not delivery-safe.
+  - Source: `WellnessBot/data/drafts/20260425T212847Z_<REDACTED_ID>.review.json`
   - Owner: Product Strategist + Lead Developer
   - Next fix action: rewrite from confirmed intake facts only, remove invented symptoms and unsupported condition framing, remove unjustified brand insertion, then rerun judge before any delivery.
-- Live runtime branch `20260425T214914Z_1084557944` is still blocked on unreadable lab evidence.
+- Live runtime branch `20260425T214914Z_<REDACTED_ID>` is still blocked on unreadable lab evidence.
   - Source: `WellnessBot/data/runtime_state.json`
   - Owner: Operator + Client
   - Next fix action: obtain a readable PDF/photo or manual typed biomarkers, then rerun the lab confirmation path.
@@ -1102,8 +1102,8 @@ Decision:
   - Next fix action: deduplicate repeated experiment seeding before the next digest so governance reflects live evidence instead of repeated AI drift.
 
 ### Plan Delta
-- Keep `20260425T212847Z_1084557944` as the only canonical active premium case for user `1084557944` until rewrite, review, delivery, or explicit archive.
-- Keep `20260425T214914Z_1084557944` paused until lab evidence is readable and confirmed.
+- Keep `20260425T212847Z_<REDACTED_ID>` as the only canonical active premium case for user `<REDACTED_ID>` until rewrite, review, delivery, or explicit archive.
+- Keep `20260425T214914Z_<REDACTED_ID>` paused until lab evidence is readable and confirmed.
 - Hold the benchmark anchor fixed to `ops/reports/quality_report_20260421T183148Z.md` while the correction cycle lands.
 - Defer new landing or mini-app growth work until case closure and governance dedupe stop outrunning live evidence.
 
@@ -1113,8 +1113,8 @@ Decision:
 - The highest-value proof for the next cycle is one fact-safe delivered dossier and one clean lab-resubmission recovery, not more branching or more experiment generation.
 
 ### Goals Delta
-- Goal 1: close `20260425T212847Z_1084557944` into a fact-safe, human-reviewed deliverable.
-- Goal 2: unblock `20260425T214914Z_1084557944` with readable and confirmed lab data.
+- Goal 1: close `20260425T212847Z_<REDACTED_ID>` into a fact-safe, human-reviewed deliverable.
+- Goal 2: unblock `20260425T214914Z_<REDACTED_ID>` with readable and confirmed lab data.
 - Goal 3: deduplicate governance experiment memory before the next digest.
 - Goal 4: preserve the benchmark baseline unchanged while corrections land.
 
@@ -1126,18 +1126,18 @@ Decision:
 - Exact Google Drive access request: enable the Google Drive connector with file upload/create and share permissions so the run snapshot can be uploaded directly from Codex.
 
 ### Next 12h Focus
-- Rewrite `20260425T212847Z_1084557944` strictly from confirmed intake facts and rerun judge.
-- Request readable PDF/photo or manual typed biomarkers for `20260425T214914Z_1084557944`.
+- Rewrite `20260425T212847Z_<REDACTED_ID>` strictly from confirmed intake facts and rerun judge.
+- Request readable PDF/photo or manual typed biomarkers for `20260425T214914Z_<REDACTED_ID>`.
 - Deduplicate governance proposals before the next digest.
 - Log operator friction and delivery outcome once the canonical case is either delivered or archived.
 
 ### Context For New Model
 - Stage: controlled concierge pilot with canonical-case freeze and lab-resubmission pressure
-- Objective: close `20260425T212847Z_1084557944` safely, unblock `20260425T214914Z_1084557944`, and stop governance duplication from outrunning live proof
+- Objective: close `20260425T212847Z_<REDACTED_ID>` safely, unblock `20260425T214914Z_<REDACTED_ID>`, and stop governance duplication from outrunning live proof
 - Constraints: Telegram-first only; human review required; manual concierge remains official pilot mode; one active premium case per user; no diagnosis/treatment framing; no unreadable or unconfirmed lab facts; no invented symptoms; no new growth/UI branches until the canonical case closes
 - Immediate next actions:
-  1. Rewrite `20260425T212847Z_1084557944` from confirmed intake facts only and rerun judge.
-  2. Obtain readable lab evidence or manual biomarker text for `20260425T214914Z_1084557944`.
+  1. Rewrite `20260425T212847Z_<REDACTED_ID>` from confirmed intake facts only and rerun judge.
+  2. Obtain readable lab evidence or manual biomarker text for `20260425T214914Z_<REDACTED_ID>`.
   3. Deduplicate repeated governance proposals and log the result in `docs/PROJECT_PULSE_LOG.md`.
 
 ## 2026-04-26 Antigravity Multi-Model Handoff TZ
@@ -1175,9 +1175,9 @@ Decision:
 ### State Read Delta
 - Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`, plus the newest persisted submissions, review artifacts, governance memory, and prior external sync notes.
 - `WellnessBot/data/runtime_state.json` is empty at sync time, so no in-memory session is authoritative for current execution.
-- Corrected the previous carry-forward narrative: the freshest persisted premium branch is `20260425T214914Z_1084557944` by `status_updated_at=2026-04-26T21:25:18Z`, not the older `20260425T212847Z_1084557944`-only story.
-- `20260425T214914Z_1084557944` already has manual payment confirmation, uploaded documents, draft/PDF/judge/growth artifacts, but its lab gate still says `needs_resubmission`.
-- `20260425T212847Z_1084557944` remains unresolved with review verdict `must_rewrite_with_high_caution`, so the intended one-active-branch rule is currently violated in persisted data.
+- Corrected the previous carry-forward narrative: the freshest persisted premium branch is `20260425T214914Z_<REDACTED_ID>` by `status_updated_at=2026-04-26T21:25:18Z`, not the older `20260425T212847Z_<REDACTED_ID>`-only story.
+- `20260425T214914Z_<REDACTED_ID>` already has manual payment confirmation, uploaded documents, draft/PDF/judge/growth artifacts, but its lab gate still says `needs_resubmission`.
+- `20260425T212847Z_<REDACTED_ID>` remains unresolved with review verdict `must_rewrite_with_high_caution`, so the intended one-active-branch rule is currently violated in persisted data.
 - Landing and mini-app still align to the Telegram-first premium funnel; no new branch-expansion move is visible in the current web surfaces.
 
 ### Benchmark Delta
@@ -1187,15 +1187,15 @@ Decision:
 
 ### Regression Delta
 - Unsafe lab-gate bypass in the freshest premium branch:
-  - source: `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
+  - source: `WellnessBot/data/submissions/20260425T214914Z_<REDACTED_ID>.json`
   - owner: Lead Developer
   - next fix action: block draft/PDF generation and delivery while `lab_quality_check.requires_resubmission=true`, or explicitly invalidate the current artifacts until readable labs or manual biomarkers arrive.
 - Multi-branch drift for the same Telegram user:
-  - source: `WellnessBot/data/submissions/20260425T214914Z_1084557944.json` and `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
+  - source: `WellnessBot/data/submissions/20260425T214914Z_<REDACTED_ID>.json` and `WellnessBot/data/submissions/20260425T212847Z_<REDACTED_ID>.json`
   - owner: Operator + Lead Developer
   - next fix action: declare one active branch by persisted freshness and archive or merge the other in docs, state, and operator workflow.
 - Freshest premium dossier is not delivery-safe:
-  - source: `WellnessBot/data/drafts/20260425T214914Z_1084557944.review.json`
+  - source: `WellnessBot/data/drafts/20260425T214914Z_<REDACTED_ID>.review.json`
   - owner: Product Strategist + Lead Developer
   - next fix action: regenerate from confirmed intake facts and readable evidence only, then rerun judge before any delivery decision.
 - Governance duplication remains an execution regression:
@@ -1204,9 +1204,9 @@ Decision:
   - next fix action: deduplicate repeated proposals before the next digest; current memory stores `115` experiments with `4` repeated titles still duplicated `2-6` times.
 
 ### Plan Delta
-- Stop carrying forward a `20260425T212847Z_1084557944`-only canonical story when runtime memory is empty.
-- Use the freshest persisted branch `20260425T214914Z_1084557944` as the operational truth for triage, but treat its current draft/PDF as unsafe working artifacts until the lab gate is resolved.
-- Freeze any new premium starts for Telegram user `1084557944` until one of the two open premium branches is explicitly archived or merged.
+- Stop carrying forward a `20260425T212847Z_<REDACTED_ID>`-only canonical story when runtime memory is empty.
+- Use the freshest persisted branch `20260425T214914Z_<REDACTED_ID>` as the operational truth for triage, but treat its current draft/PDF as unsafe working artifacts until the lab gate is resolved.
+- Freeze any new premium starts for Telegram user `<REDACTED_ID>` until one of the two open premium branches is explicitly archived or merged.
 - Keep the benchmark anchor fixed to `ops/reports/quality_report_20260421T183148Z.md` while branch reconciliation and lab-gate correction land.
 
 ### Strategy Delta
@@ -1215,7 +1215,7 @@ Decision:
 - Pilot proof now requires one branch that is both fact-safe and operationally clean. A generated PDF is not proof if it was produced after unreadable-lab resubmission was already required.
 
 ### Goals Delta
-- Goal 1: restore one active premium branch for user `1084557944`.
+- Goal 1: restore one active premium branch for user `<REDACTED_ID>`.
 - Goal 2: stop `requires_lab_resubmission=true` from progressing to delivery artifacts.
 - Goal 3: close one fact-safe, human-reviewed premium dossier from confirmed evidence only.
 - Goal 4: deduplicate governance memory without disturbing the stable dialogue benchmark.
@@ -1228,8 +1228,8 @@ Decision:
 - Exact Google Drive access request: enable the Google Drive connector with file upload/create and share permissions so the run snapshot can be uploaded directly from Codex.
 
 ### Next 12h Focus
-- Reconcile `20260425T214914Z_1084557944` and `20260425T212847Z_1084557944` to one active premium branch.
-- Obtain readable labs or manual biomarker text for `20260425T214914Z_1084557944`, then regenerate and rerun judge from confirmed facts only.
+- Reconcile `20260425T214914Z_<REDACTED_ID>` and `20260425T212847Z_<REDACTED_ID>` to one active premium branch.
+- Obtain readable labs or manual biomarker text for `20260425T214914Z_<REDACTED_ID>`, then regenerate and rerun judge from confirmed facts only.
 - Add or enforce a hard lab-gate block before draft/PDF generation.
 - Deduplicate governance proposals before the next digest.
 
@@ -1238,8 +1238,8 @@ Decision:
 - Objective: restore one active premium branch, stop unsafe dossier progression from unreadable labs, and close one fact-safe human-reviewed client cycle
 - Constraints: Telegram-first only; human review required; manual concierge remains official pilot mode; one active premium branch per Telegram user; no diagnosis/treatment framing; no unreadable or unconfirmed lab facts; no invented symptoms; no new growth/UI branches until branch truth and lab gating are fixed
 - Immediate next actions:
-  1. Use `status_updated_at` to declare `20260425T214914Z_1084557944` or `20260425T212847Z_1084557944` the single active branch, then archive or merge the other.
-  2. Do not deliver the current `20260425T214914Z_1084557944` PDF; first obtain readable labs or manual biomarkers and regenerate from confirmed facts only.
+  1. Use `status_updated_at` to declare `20260425T214914Z_<REDACTED_ID>` or `20260425T212847Z_<REDACTED_ID>` the single active branch, then archive or merge the other.
+  2. Do not deliver the current `20260425T214914Z_<REDACTED_ID>` PDF; first obtain readable labs or manual biomarkers and regenerate from confirmed facts only.
   3. Add or verify a hard lab-gate block before draft/PDF generation, then deduplicate governance memory and log the correction outcome.
 
 ## 2026-04-27 12:20 MSK — Регулярная синхронизация (github-notion-12)
@@ -1279,7 +1279,7 @@ Decision:
 
 ### Блокеры / риски
 
-1. Одна активная ветка на пользователя `1084557944` (иначе риск «двух правд»).
+1. Одна активная ветка на пользователя `<REDACTED_ID>` (иначе риск «двух правд»).
 2. Lab-gate: нельзя выдавать/считать готовыми артефакты при `requires_lab_resubmission=true`.
 3. GitHub push заблокирован: `git remote -v` пусто (remote не настроен).
 4. Диск `C:` ниже `10 GB` свободного места — риск деградации среды.
@@ -1314,3 +1314,11 @@ Decision:
 1. Починить/сбросить `week_runtime_20260427T173913Z`, чтобы runtime и storage совпали.
 2. Зафиксировать одну активную ветку (week или premium) для текущего пользователя, остальные — заморозить/архивировать.
 3. Сузить роутер: оставить детерминизм только для emergency/crisis/узких FAQ, всё остальное — отдавать модели с проверкой на «не выдумывать факты».
+
+## 2026-05-01 — Регулярная синхронизация (github-notion-12)
+
+### Итог
+- Зафиксирован аудит внешнего проекта Google AI Studio `moy-projekt`: это UI/UX‑макет (React/Vite), **не** замена backend‑бота. Док: `docs/GOOGLE_AI_STUDIO_MOY_PROJEKT_AUDIT_20260501.md`.
+- В боте усилен «пример результата»: `PRODUCT_EXAMPLES_TEXT` теперь отдаёт конкретный безопасный демо‑фрагмент со структурой результата (без диагнозов/лечения) — `WellnessBot/texts.py`.
+- Добавлены защитные исключения в `.gitignore`, чтобы не коммитить внешние клоны и локальные артефакты синхронизации (`external/`, `docs/external_sync/`, `docs/obsidian_mirror/RUN_NOTE_*.md`).
+- Санитизация: из статусных документов удалены длинные идентификаторы (Telegram ID и связанные артефакт‑ID), чтобы не публиковать персональные данные в GitHub.

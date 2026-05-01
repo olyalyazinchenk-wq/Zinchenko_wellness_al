@@ -1,6 +1,12 @@
-# Agent Context Hub
+﻿# Agent Context Hub
 
-Updated: 2026-04-29 21:16 MSK
+Updated: 2026-05-01  (регулярная синхронизация)
+
+## Краткий статус (RU)
+
+- Режим: controlled concierge pilot. Public launch по-прежнему заблокирован до отдельного решения.
+- Активная оплата в пилоте: `PAYMENT_MODE=manual`. Human review обязателен перед любой выдачей клиенту.
+- Изменения этого прогона: добавлен безопасный «пример результата» для кнопки в боте (текстовый демо‑фрагмент), и зафиксирован аудит внешнего UI‑макета Google AI Studio как **не‑backend** (только UX‑референс/бэклог).
 
 ## Stage
 
@@ -40,19 +46,23 @@ Updated: 2026-04-29 21:16 MSK
   - clarifying-question count remains `0/20`
 - latest case truth has been re-read from raw artifacts:
   - `WellnessBot/data/runtime_state.json`
-  - `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
-  - `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T212847Z_<REDACTED_ID>.json`
+  - `WellnessBot/data/submissions/20260425T214914Z_<REDACTED_ID>.json`
   - both premium review artifacts
 - runtime is currently up:
   - clean bot start logged at `2026-04-29 09:35 MSK`
   - no new local crash loop was observed in `bot.stderr.log`
 - admin digest delivery hardened:
   - product digest text is now split into Telegram-safe chunks before sending (`WellnessBot/main.py`)
+- product example experience improved:
+  - `PRODUCT_EXAMPLES_TEXT` now contains a concrete safe demo structure (`WellnessBot/texts.py`)
+- external UI audit captured:
+  - `docs/GOOGLE_AI_STUDIO_MOY_PROJEKT_AUDIT_20260501.md`
 
 ## Current Truth
 
 - one live `week` runtime session still exists at `consent`:
-  - `submission_id = 20260427T173913Z_1084557944`
+  - `submission_id = 20260427T173913Z_<REDACTED_ID>`
   - there is still no matching persisted submission JSON
 - the same user still has two unresolved `premium` branches:
   - `premium_fresh_20260425T214914Z`
@@ -73,7 +83,7 @@ Updated: 2026-04-29 21:16 MSK
   - `115` experiments
   - `4` duplicate title groups
 - disk pressure remains active:
-  - `C:` free space is `8.53 GB`
+  - free space should be rechecked each run; last recorded signal was below the `10 GB` safety floor
 
 ## Next
 

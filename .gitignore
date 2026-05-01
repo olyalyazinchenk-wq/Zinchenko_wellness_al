@@ -9,5 +9,8 @@ bot.stderr.log
 WellnessBot/data/
 infra/keys/
 infra/runtime/
+external/
+docs/external_sync/
+docs/obsidian_mirror/RUN_NOTE_*.md
 ops/reports/*
 !ops/reports/.gitkeep
