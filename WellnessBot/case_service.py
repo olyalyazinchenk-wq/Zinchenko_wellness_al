@@ -53,6 +53,14 @@ def build_submission_payload(session: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_initial_submission_payload(session: dict[str, Any], *, now_iso: str) -> dict[str, Any]:
+    submission = build_submission_payload(session)
+    submission["intake_status"] = "consent_pending"
+    submission["status_updated_at"] = now_iso
+    submission["created_at"] = now_iso
+    return submission
+
+
 def save_submission_state(submissions_dir: Path, submission: dict[str, Any]) -> None:
     save_submission(submissions_dir, submission["submission_id"], submission)
 

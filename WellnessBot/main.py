@@ -30,6 +30,7 @@ from ai_drafting import (
     generate_live_reply,
 )
 from case_service import (
+    build_initial_submission_payload,
     build_session_from_submission,
     build_submission_payload,
     persist_submission_enrichment,
@@ -326,6 +327,10 @@ def start_session(user: types.User, tier: str = "premium") -> dict[str, Any]:
         "lab_notes": "",
     }
     user_sessions[user.id] = session
+    save_submission_state(
+        settings.submissions_dir,
+        build_initial_submission_payload(session, now_iso=utc_now_iso()),
+    )
     persist_runtime_state()
     return session
 

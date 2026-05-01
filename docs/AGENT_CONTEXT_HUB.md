@@ -13,11 +13,11 @@ Updated: 2026-05-01 09:17 MSK
 - Режим: controlled concierge pilot. Public launch по-прежнему заблокирован до отдельного решения.
 - Активная оплата в пилоте: `PAYMENT_MODE=manual`. Human review обязателен перед любой выдачей клиенту.
 - Изменения этого прогона: добавлен безопасный «пример результата» для кнопки в боте (текстовый демо-фрагмент), и зафиксирован аудит внешнего UI-макета Google AI Studio как **не-backend** (только UX-референс/бэклог).
-- Новый критический риск среды: свободное место на `C:` просело до `2.69 GB`, поэтому тяжелые артефакты и новый PDF-поток нельзя считать безопасными до очистки диска.
+- Среда восстановлена: `C:` поднят выше безопасного порога (`~26.98 GB` free после удаления двух старых `.crdownload`), поэтому disk-headroom больше не главный блокер.
 
 ## Stage
 
-- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and critical disk headroom risk
+- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and recently cleared disk headroom risk
 
 ## Objective
 
@@ -68,9 +68,7 @@ Updated: 2026-05-01 09:17 MSK
 
 ## Current Truth
 
-- one live `week` runtime session still exists at `consent`:
-  - `submission_id = 20260427T173913Z_<REDACTED_ID>`
-  - there is still no matching persisted submission JSON
+- live `week` runtime session still exists at `consent`, and now has a matching persisted submission JSON with `intake_status=consent_pending`
 - the same user still has two unresolved `premium` branches:
   - `premium_fresh_20260425T214914Z`
   - `premium_legacy_20260425T212847Z`
@@ -91,19 +89,17 @@ Updated: 2026-05-01 09:17 MSK
 - governance memory remains bloated:
   - `115` experiments
   - `4` duplicate title groups
-- disk pressure remains active:
-  - `C:` free space is `2.69 GB`
-  - the `10 GB` safety floor is critically unmet
+- disk pressure has been cleared:
+  - `C:` free space is now approximately `26.98 GB`
+  - the `10 GB` safety floor is restored
 
 ## Next
 
-1. Restore `C:` above `10 GB` free before more PDF or batch-artifact work.
-2. Resolve `week_runtime_20260427T173913Z`: persist it properly or clear it.
-3. Reduce the same-user case to one active paid path across `week` and `premium`.
-4. Shrink `route_live_reply()` so symptom prompts stop being fully template-owned.
-5. Remove unsupported router details and add clarifying-question behavior for symptom-first replies.
-6. Rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
-7. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
+1. Reduce the same-user case to one active paid path across `week` and `premium`.
+2. Shrink `route_live_reply()` so symptom prompts stop being fully template-owned.
+3. Remove unsupported router details and add clarifying-question behavior for symptom-first replies.
+4. Rerun the benchmark and record routed share, duplicate clusters, unsupported-detail failures, and clarifying-question count.
+5. Keep `premium_fresh_20260425T214914Z` frozen for delivery until readable labs or manual biomarker text clear the gate.
 
 ## Must-Not-Change Rules
 
@@ -122,7 +118,7 @@ Updated: 2026-05-01 09:17 MSK
 
 Stage:
 
-- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and critical disk headroom risk
+- controlled concierge pilot with same-user state drift, router-overreach quality blockage, lab-gate enforcement pressure, and recently cleared disk headroom risk
 
 Objective:
 
@@ -144,11 +140,9 @@ Constraints:
 
 Immediate next actions:
 
-1. Free disk space back above the `10 GB` floor before more PDF or batch-artifact work.
-2. Verify whether `week_runtime_20260427T173913Z` should be persisted as the live `week` path or cleared as an orphaned runtime session.
-3. Declare exactly one active paid path for the same-user case, then freeze, archive, or merge the others.
-4. Cut `route_live_reply()` back to safety/logistics coverage, then rerun the benchmark so symptom prompts can actually test model quality.
-5. Do not deliver the current premium PDF; first obtain readable labs or manual biomarker text and regenerate from confirmed facts only.
+1. Declare exactly one active paid path for the same-user case, then freeze, archive, or merge the others.
+2. Cut `route_live_reply()` back to safety/logistics coverage, then rerun the benchmark so symptom prompts can actually test model quality.
+3. Do not deliver the current premium PDF; first obtain readable labs or manual biomarker text and regenerate from confirmed facts only.
 
 Reference benchmark:
 

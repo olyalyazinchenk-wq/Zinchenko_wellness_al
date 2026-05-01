@@ -1429,3 +1429,28 @@ Decision:
 ### Safety Delta
 - В GitHub не переносятся секреты, `.env`, токены, клиентские анализы/PDF/фото, `WellnessBot/data`, runtime-данные и персональные идентификаторы.
 - Документ предназначен для передачи разработчикам/аудиторам без раскрытия чувствительных данных.
+
+## 2026-05-01 — Disk blocker cleared
+
+### Ops Delta
+- Restored C: free space above the project safety floor: now approximately $freeGb GB free.
+- Removed only two old incomplete .crdownload files from Downloads, total recovery approximately 24.47 GB.
+
+### Safety Delta
+- No project code, secrets, .env, client files, analysis uploads, PDF/photo data, or WellnessBot/data were deleted.
+- Disk pressure is no longer the immediate blocker for PDF/batch-artifact work.
+
+## 2026-05-01 — Runtime/storage mismatch fix
+
+### Delivery Delta
+- Fixed the root cause of orphan intake sessions: `start_session()` now persists an initial submission immediately with `intake_status=consent_pending`.
+- Added `build_initial_submission_payload()` in `WellnessBot/case_service.py`.
+- Added a unit test for the initial consent-pending submission state.
+- Repaired the existing local runtime-only `week` session by creating its missing local submission JSON.
+
+### Validation Delta
+- `python -m unittest discover -s tests` passed: `39` tests OK.
+
+### Safety Delta
+- The repaired local submission remains inside ignored `WellnessBot/data` and was not staged for GitHub.
+- No client files, uploads, lab PDFs/photos, tokens, or `.env` files were published.

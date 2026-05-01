@@ -243,3 +243,18 @@
   - `%TEMP%` still contains locked items that were skipped safely
   - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
   - the biggest immediate recovery opportunity is manual review of the two `.crdownload` files in `Downloads`
+
+## 2026-05-01 10:20:00 +03:00
+
+- Before C:: 220.51 GB used / 2.51 GB free
+- After C:: $usedGb GB used / 26.98 GB free
+- Delta free space: approximately +24.47 GB
+- Safe cleanup performed:
+  - Deleted two old incomplete Chrome download files from C:\Users\HP\Downloads:
+    - Академия Эксперт BIO_часть 2.7z.crdownload — 13.00 GB, last modified 2026-04-25 00:51
+    - Академия Эксперт BIO_часть 1.7z.crdownload — 11.47 GB, last modified 2026-04-25 00:51
+- Safety notes:
+  - No project code, .env, tokens, client analyses, WellnessBot/data, PDF/photo uploads, or runtime data were deleted.
+  - Paths were resolved and verified inside C:\Users\HP\Downloads before deletion.
+- Result:
+  - Disk C: is back above the 10 GB safety floor.

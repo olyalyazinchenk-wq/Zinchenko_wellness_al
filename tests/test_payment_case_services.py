@@ -13,6 +13,7 @@ if str(BOT_DIR) not in sys.path:
     sys.path.insert(0, str(BOT_DIR))
 
 from case_service import (  # noqa: E402
+    build_initial_submission_payload,
     build_session_from_submission,
     build_submission_payload,
     persist_submission_enrichment,
@@ -73,6 +74,19 @@ def build_session_fixture() -> dict:
 
 
 class PaymentCaseServiceTests(unittest.TestCase):
+    def test_initial_submission_payload_marks_consent_pending(self) -> None:
+        session = build_session_fixture()
+        session["consent_given"] = False
+
+        submission = build_initial_submission_payload(session, now_iso="2026-05-01T07:20:00Z")
+
+        self.assertEqual(submission["submission_id"], session["submission_id"])
+        self.assertEqual(submission["offer"], "premium")
+        self.assertEqual(submission["intake_status"], "consent_pending")
+        self.assertEqual(submission["status_updated_at"], "2026-05-01T07:20:00Z")
+        self.assertEqual(submission["created_at"], "2026-05-01T07:20:00Z")
+        self.assertFalse(submission["consent_given"])
+
     def test_invoice_payload_roundtrip_and_invalid_cases(self) -> None:
         payload = build_invoice_payload("case_001", 12345)
         self.assertEqual(parse_invoice_payload(payload), ("case_001", 12345))
