@@ -6,9 +6,11 @@ import json
 import os
 import re
 import secrets
+import socket
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from types import SimpleNamespace
+from urllib.parse import urlsplit
 from typing import Any
 
 from aiohttp import web
@@ -132,6 +134,69 @@ logging.basicConfig(
 )
 logger = logging.getLogger("wellness_bot")
 
+
+def _format_proxy_for_logs(proxy_url: str) -> str:
+    """Return a safe proxy string for logs (no credentials)."""
+    try:
+        proxy_to_parse = proxy_url if "://" in proxy_url else f"http://{proxy_url}"
+        parts = urlsplit(proxy_to_parse)
+        if not parts.hostname:
+            return "<invalid>"
+        scheme_prefix = f"{parts.scheme}://" if "://" in proxy_url and parts.scheme else ""
+        port_part = f":{parts.port}" if parts.port else ""
+        return f"{scheme_prefix}{parts.hostname}{port_part}"
+    except Exception:
+        return "<invalid>"
+
+
+def _extract_proxy_host_port(proxy_url: str) -> tuple[str, int] | None:
+    try:
+        proxy_to_parse = proxy_url if "://" in proxy_url else f"http://{proxy_url}"
+        parts = urlsplit(proxy_to_parse)
+        if not parts.hostname:
+            return None
+        if parts.port:
+            port = int(parts.port)
+        else:
+            scheme = (parts.scheme or "").lower()
+            if scheme in {"https"}:
+                port = 443
+            elif scheme in {"socks5", "socks5h", "socks4", "socks4a"}:
+                port = 1080
+            else:
+                port = 80
+        return parts.hostname, port
+    except Exception:
+        return None
+
+
+def _test_proxy_connectivity(proxy_url: str, timeout: float = 3.0) -> bool:
+    """Quick TCP check if the proxy host:port is reachable."""
+    target = _extract_proxy_host_port(proxy_url)
+    if not target:
+        return False
+    try:
+        sock = socket.create_connection(target, timeout=timeout)
+        sock.close()
+        return True
+    except (OSError, socket.error):
+        return False
+
+
+def _create_bot_session(proxy_url: str | None) -> AiohttpSession | None:
+    """Create an AiohttpSession with optional proxy and connectivity check."""
+    if not proxy_url:
+        return None
+    if not _test_proxy_connectivity(proxy_url):
+        logger.warning(
+            "Proxy %s unreachable — falling back to direct connection.",
+            _format_proxy_for_logs(proxy_url),
+        )
+        return None
+    logger.info("Using proxy: %s", _format_proxy_for_logs(proxy_url))
+    return AiohttpSession(proxy=proxy_url)
+
+
 settings = load_settings()
 
 if not settings.bot_token:
@@ -139,7 +204,14 @@ if not settings.bot_token:
         "BOT_TOKEN is not configured. Copy .env.example to .env and set BOT_TOKEN."
     )
 
-bot_session = AiohttpSession(proxy=settings.bot_proxy_url) if settings.bot_proxy_url else None
+logger.info(
+    "Bot config: proxy=%s, llm_provider=%s, llm_model=%s",
+    _format_proxy_for_logs(settings.bot_proxy_url) if settings.bot_proxy_url else "disabled",
+    settings.llm_provider,
+    settings.llm_model,
+)
+
+bot_session = _create_bot_session(settings.bot_proxy_url)
 bot = Bot(token=settings.bot_token, session=bot_session)
 dp = Dispatcher()
 
@@ -2299,7 +2371,7 @@ async def cmd_queue(message: types.Message) -> None:
             status = "⏳ В обработке"
              
         lines.append(
-            f"вЂў <code>{case.get('submission_id')}</code>\n"
+            f"• <code>{case.get('submission_id')}</code>\n"
             f"  👤 {profile.get('full_name') or profile.get('telegram_full_name')}\n"
             f"  🚩 {status}\n"
         )
@@ -2322,7 +2394,7 @@ async def cmd_health(message: types.Message) -> None:
     decision_count = len(product_governance.get("decisions") or [])
     lines = [
         "Bot runtime health:",
-        f"- Proxy: {settings.bot_proxy_url or 'disabled'}",
+        f"- Proxy: {_format_proxy_for_logs(settings.bot_proxy_url) if settings.bot_proxy_url else 'disabled'}",
         f"- LLM provider: {settings.llm_provider}",
         f"- LLM mode: {settings.llm_api_mode}",
         f"- Submissions: {submission_count}",
