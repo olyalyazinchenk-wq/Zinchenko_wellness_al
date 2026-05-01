@@ -51,7 +51,7 @@ def load_submission(submissions_dir: Path, submission_id: str) -> dict | None:
     if not target_path.exists():
         return None
     try:
-        return json.loads(target_path.read_text(encoding="utf-8"))
+        return json.loads(target_path.read_text(encoding="utf-8-sig"))
     except (json.JSONDecodeError, OSError):
         return None
 
@@ -154,7 +154,7 @@ def load_runtime_state(runtime_state_path: Path) -> dict[str, Any]:
         return {"user_sessions": {}, "chat_sessions": {}}
 
     try:
-        payload = json.loads(runtime_state_path.read_text(encoding="utf-8"))
+        payload = json.loads(runtime_state_path.read_text(encoding="utf-8-sig"))
     except (json.JSONDecodeError, OSError):
         return {"user_sessions": {}, "chat_sessions": {}}
 

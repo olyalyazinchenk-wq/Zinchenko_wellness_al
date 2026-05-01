@@ -215,6 +215,17 @@ class PaymentCaseServiceTests(unittest.TestCase):
             self.assertEqual(restored["risk_details"], session["risk_details"])
             self.assertTrue(restored["consent_given"])
 
+    def test_load_submission_accepts_utf8_bom_files(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            submissions_dir = Path(tmp_dir)
+            target = submissions_dir / "bom_case.json"
+            target.write_text('{"submission_id": "bom_case"}', encoding="utf-8-sig")
+
+            loaded = load_submission(submissions_dir, "bom_case")
+
+            assert loaded is not None
+            self.assertEqual(loaded["submission_id"], "bom_case")
+
 
 if __name__ == "__main__":
     unittest.main()

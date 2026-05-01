@@ -1490,3 +1490,17 @@ Decision:
 
 ### Safety Delta
 - Guarded phrases include examples like `лечебная доза`, `выраженный дефицит`, `вам нужно принимать`, `начните/начинайте приём`, and direct diagnosis-like `у вас гипотиреоз` patterns.
+
+## 2026-05-01 — Verification pass and TMA local route fixed
+
+### Verification Delta
+- Bot runtime is running and polling `@zinchenko_wellness_ai_1_bot`.
+- TMA static page now responds locally: `http://localhost:8000/static/tma.html` -> `200 OK`.
+- `/api/session` returns `400` without Telegram session data, which is expected for a direct empty request.
+- Runtime orphan repair was verified: the active `week` runtime session has matching persisted submission JSON with `intake_status=consent_pending`.
+- Unit tests passed: `45` tests OK.
+
+### Delivery Delta
+- `load_submission()` and `load_runtime_state()` now tolerate UTF-8 BOM files via `utf-8-sig` reading.
+- Added a regression test for BOM-backed submission JSON.
+- Enabled local `ENABLE_TMA=true` in ignored `.env` files for convenient local mini-app testing.
