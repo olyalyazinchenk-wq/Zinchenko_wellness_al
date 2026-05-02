@@ -222,3 +222,81 @@ Rolling log for strategy and plan corrections between major strategy documents.
 3. Declare one active paid path across the same-user `week` and `premium` stack.
 4. Cut `route_live_reply()` back to safety/logistics coverage, add clarifying-question behavior, and rerun the benchmark.
 5. Keep `premium_fresh_20260425T214914Z` frozen until readable labs or manual biomarker text arrive.
+
+## 2026-05-01 21:18 MSK
+### Artifact Delta
+- Re-read the current execution artifacts before refreshing strategy:
+  - `docs/PROJECT_PULSE_LOG.md`
+  - `docs/KNOWLEDGE_SYNC_HUB.md`
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260501.md`
+  - `ops/reports/quality_report_20260501T080509Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - `WellnessBot/data/drafts/20260501T162705Z_1084557944.review.json`
+  - `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
+  - `mini-app/index.html`
+  - `landing/index.html`
+  - `bot.stderr.log`
+- New evidence since the 2026-05-01 morning refresh:
+  - `runtime_state.json` is now empty
+  - a new `week` case has reached `delivered_to_client` and already has follow-up activity
+  - the same user still also holds two unresolved `premium` branches
+  - the latest QA truth moved to `ops/reports/quality_report_20260501T080509Z.md` with `11/20` deterministic replies and `9/20` model-path replies
+  - the mini-app result screen still contains unsafe hardcoded diagnosis-like and supplement-style demo content
+
+### Product Direction Delta
+- Core product direction does not change:
+  - Telegram-first only
+  - manual concierge payment remains the official pilot mode
+  - `premium` remains the flagship proof path
+  - human review remains mandatory before delivery
+- What changes is the current center of gravity:
+  - the system is no longer blocked by router total capture
+  - it is now blocked by delivery-gate integrity and conflicting paid-path truth for one user
+- The mini-app should stay a supporting intake surface only:
+  - it must not invent a polished medical-style result screen that outruns the reviewed backend product
+
+### Operating Delta
+- Runtime/storage coherence improved:
+  - the old orphan `week` runtime mismatch is no longer the main blocker
+- Delivery coherence worsened:
+  - a `week` case has been delivered despite an unresolved internal review verdict
+  - the same user now spans one delivered `week` path plus two unresolved `premium` branches
+- Live quality improved but remains risky:
+  - model reach is now real
+  - false specificity, invented personalization, and tone discipline are now the main live-chat risks
+- Surface safety remains uneven:
+  - landing still matches the Telegram-first funnel
+  - mini-app demo content still violates the intended safety and review posture
+
+### Plan Delta
+- Move delivery-gate enforcement ahead of further growth, packaging, or surface polish.
+- Canonicalize the current same-user case stack before telling a stable commercial story.
+- Replace unsafe mini-app demo content before relying on TMA as a live-adjacent proof surface.
+- Keep GitHub and Notion artifacts fresh; keep the Google Drive access request unchanged until upload/create and share tools are exposed.
+
+### Strategy Delta
+- The main strategy correction is this:
+  - restoring model reach was necessary
+  - protecting what gets delivered is now more urgent
+- The next proof target is therefore:
+  - one review-safe delivered case
+  - one canonical paid path per user
+  - one safe intake/demo surface
+  - one tighter model-path response style
+- If those four items are not true, more growth or UI work just scales confusion.
+
+### Goals Delta
+- Goal 1: enforce a hard review gate before `delivered_to_client`.
+- Goal 2: collapse the same-user `week`/`premium` sprawl into one canonical commercial path.
+- Goal 3: remove unsafe hardcoded result content from the mini-app surface.
+- Goal 4: harden model-path tone and specificity without losing the current `9/20` model reach baseline.
+
+### Next 12h Priorities
+1. Add a hard delivery guard so unresolved internal-review verdicts cannot be sent to the client without an explicit manual override record.
+2. Decide the canonical path for the current same-user stack and freeze/archive the extra paid branches.
+3. Review the delivered `week` case and determine whether a correction or follow-up intervention is required.
+4. Replace the mini-app demo-result mock with a safe placeholder or reviewed backend-fed state.
+5. Extend `sanitize_live_reply()` and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like language.

@@ -73,3 +73,9 @@ Before confirming a premium case as active or delivery-safe:
 - verify whether `lab_quality_check.requires_resubmission` is `true`
 - verify whether draft or PDF generation happened despite an unsafe lab gate
 - if a safety gate was bypassed, log it immediately in `PROJECT_PULSE_LOG.md` as a regression with owner and next fix action
+
+## Delivery Review Gate Rule
+Before confirming any paid case as delivered:
+- verify the latest internal review verdict is no longer `needs_revision`, `must_rewrite_with_high_caution`, or otherwise flagged for rewrite
+- if delivery still proceeds, record an explicit manual override note with who approved it and why
+- if a case reaches `delivered_to_client` without a cleared review verdict or override note, log it immediately in `PROJECT_PULSE_LOG.md` as a P0 regression with owner and next fix action

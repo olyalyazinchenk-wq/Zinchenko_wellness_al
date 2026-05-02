@@ -1,136 +1,133 @@
 # Agent Context Hub
 
-Updated: 2026-05-01 21:18 MSK
+Updated: 2026-05-02 09:18 MSK
 
-## Single Source Of Truth
+## Unified GitHub Source Of Truth
 
-- Main developer handoff doc: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`
-- This file is the fast operational handoff for new contributors and new models.
+- Main public handoff document: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`
+- Use the local hub files for live operating truth and the GitHub source-of-truth doc for sanitized contributor onboarding.
+
+## Quick Status
+
+- Mode: controlled concierge pilot. Public launch remains blocked.
+- Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
+- New top regression: the `week` case `20260501T162705Z_1084557944` reached `delivered_to_client` even though its attached judge verdict is still `needs_revision`.
+- `WellnessBot/data/runtime_state.json` is now empty, so runtime/storage mismatch is no longer the main blocker.
+- Latest benchmark reference: `ops/reports/quality_report_20260501T080509Z.md`
+  - `20/20` non-empty replies
+  - `11/20` deterministic replies
+  - `9/20` model-handled replies
+  - clarifying questions in `7/9` model-handled symptom prompts
+- Disk headroom is healthy again: `C:` free space is approximately `24.58 GB`.
+- Bot runtime is up and recovered from a short network interruption on `2026-05-01`.
+
+## Run Note (2026-05-02)
+
+- Regular sync completed: controlling artifacts re-read; no code changes detected in this run (docs-only updates pending).
+- Pilot posture unchanged: controlled concierge only; manual payment is active; human review required; public launch remains blocked.
 
 ## Stage
 
-- controlled concierge pilot with one delivered paid `week` case, unresolved stale premium branches, and model-path quality hardening as the main current blocker
+- controlled concierge pilot with restored live-model reach, but unresolved delivery-gate integrity, same-user paid-path duplication, and unsafe mini-app demo copy
 
 ## Objective
 
-- preserve one coherent Telegram-first paid-case story
-- turn the delivered `week` proof into a repeatable operating pattern
-- harden live model answers so first-touch quality earns more trust
-- reset the premium proof path on clean evidence instead of stale same-user branches
+- make the next delivered case review-safe and auditable
+- collapse the same-user `week`/`premium` sprawl into one canonical path
+- remove unsafe hardcoded result content from TMA/mini-app surfaces
+- improve model-path discipline without losing the current model reach baseline
 
 ## Product Direction
 
 - Telegram-first only
 - service ladder remains:
   - `demo` builds trust
-  - `week` is the low-friction paid entry rail
-  - `premium` remains the flagship offer
-  - `vip` stays parked
+  - `week` is the low-friction entry rail
+  - `premium` remains the flagship proof path
+  - `vip` stays parked until operator-load evidence exists
 - official pilot payment mode: `PAYMENT_MODE=manual`
-- human review is mandatory before delivery
-
-## Done
-
-- disk pressure is no longer the active blocker:
-  - `C:` free space is `24.58 GB`
-- runtime-storage mismatch is no longer the active blocker:
-  - `WellnessBot/data/runtime_state.json` is currently empty
-- one paid `week` case has already completed end-to-end:
-  - `20260501T162705Z_1084557944`
-  - `offer = week`
-  - `payment_status = manual_payment_confirmed`
-  - `intake_status = delivered_to_client`
-  - follow-up message already exists after delivery
-- live-chat routing is no longer the blanket blocker:
-  - latest benchmark source: `ops/reports/quality_report_20260501T080509Z.md`
-  - `20/20` replies non-empty
-  - `11/20` deterministic routed
-  - `9/20` model-handled
-  - clarifying questions now appear in `7/9` model-handled symptom prompts
-- trust surface work already added:
-  - safe example-result text is live
-  - live-answer sanitizer exists
-- external UI audit already decided:
-  - `docs/GOOGLE_AI_STUDIO_MOY_PROJEKT_AUDIT_20260501.md` is UI backlog only, not backend truth
+- human review is mandatory before any client delivery
 
 ## Current Truth
 
-- canonical current proof case:
-  - `20260501T162705Z_1084557944`
-  - treat this as the main live proof anchor
-- stale same-user branches still exist and need explicit classification:
-  - `20260427T173913Z_1084557944`
-    - repaired `week` placeholder
-    - `consent_pending`
-    - not a current runtime session
-    - should be archived or downgraded to inactive history
-  - `20260425T214914Z_1084557944`
-    - `premium`
-    - `requires_lab_resubmission=true`
-    - evidence-only and unsafe for delivery
-  - `20260425T212847Z_1084557944`
-    - `premium`
-    - review verdict `must_rewrite_with_high_caution`
-    - rewrite-or-archive decision pending
-- live-chat quality has moved to a new bottleneck:
-  - router overreach is reduced
-  - current failures are unsupported personalization, duplicated service copy, and overly confident endocrine/GI framing
-- governance remains bloated:
-  - `120` experiments
-  - `4` duplicate title groups
-  - largest duplicate group repeats `7` times
+- `WellnessBot/data/runtime_state.json` is empty.
+- A new `week` case now exists and is marked `delivered_to_client`:
+  - `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - follow-up already started after delivery
+  - internal review on the same case still says `needs_revision`
+- The same user still also has two older unresolved `premium` branches:
+  - `20260425T214914Z_1084557944` remains lab-gated and unsafe for delivery
+  - `20260425T212847Z_1084557944` remains rewrite-only with `must_rewrite_with_high_caution`
+- Landing still matches the Telegram-first funnel.
+- Mini-app still uses a single-path intake, but its hardcoded result demo contains unsafe supplement-dose and diagnosis-like content.
+- Latest QA synthesis:
+  - router overreach is no longer the main blocker
+  - false specificity, invented personalization, and tone discipline are the live quality risks
+- Bot runtime is currently up and processing updates after the recovered afternoon network interruption.
+
+## Regressions To Fix Now
+
+- Delivery gate bypass:
+  - delivered `week` case despite unresolved internal-review verdict
+- Same-user paid-path drift:
+  - one delivered `week` case plus two unresolved `premium` branches
+- Mini-app demo safety:
+  - hardcoded result screen contradicts no-diagnosis and no-unsafe-supplement rules
+- Model-path response discipline:
+  - invented names, over-familiar tone, and early diagnosis-like labels still leak through QA
 
 ## Next
 
-1. Mark the delivered `week` case as canonical and downgrade stale branches.
-2. Add anti-hallucination rules for invented names, over-familiar tone, and unsupported personalization.
-3. Tighten symptom replies to `answer first -> max 2 hypotheses -> max 2 questions -> one next step`.
-4. Split emergency templates by risk type and rerun the benchmark.
-5. Use delivered `week` evidence plus follow-up to define the next clean premium-upgrade path.
+1. Enforce a hard delivery gate between internal review and client delivery.
+2. Declare one canonical paid path for the same-user stack and freeze/archive the rest.
+3. Replace unsafe mini-app demo content with a safe placeholder or reviewed backend-fed state.
+4. Tighten live-answer sanitization and benchmark assertions around personalization hallucination and false specificity.
 
 ## Must-Not-Change Rules
 
 - Telegram-first only
-- one active paid path per Telegram user
 - manual concierge remains the official pilot mode
+- one canonical paid path per Telegram user at a time
 - human review required before delivery
 - no diagnosis or treatment framing
-- no unreadable or unconfirmed lab facts
-- no invented symptoms, names, or intimacy cues
-- do not let stale same-user branches compete with the canonical delivered case
-- do not present model-path improvement as solved while personalization and false-specificity failures remain
-- do not spend the next cycle on landing, mini-app, dashboard, pricing, or public-launch expansion
+- no unsafe supplement instructions without confirmed context and review
+- no hardcoded medical-style demo results on TMA or public-facing surfaces
+- do not treat a delivered status as trustworthy if the internal-review verdict still demands revision
+- do not let landing, mini-app, or growth work outrun delivery safety and state coherence
 
 ## Context For New Model
 
 Stage:
 
-- controlled concierge pilot with one delivered paid `week` proof and unresolved same-user premium leftovers
+- controlled concierge pilot with live model reach restored, but delivery-gate integrity, canonical case ownership, and demo-surface safety still unstable
 
-Done:
+Objective:
 
-- disk and runtime-state blockers are cleared
-- one `week` case delivered with follow-up
-- model reach improved from `0/20` to `9/20`
+- make the next delivered result review-safe
+- collapse the same-user paid-path drift
+- remove unsafe hardcoded demo/result copy
+- keep improving model-path quality from the new `9/20` reach baseline
 
-Main problem now:
+Constraints:
 
-- first-touch model quality is good enough to expose new trust failures:
-  - invented names or intimacy
-  - repeated service copy
-  - too-confident endocrine or GI framing
-
-Case hierarchy:
-
-- canonical: `20260501T162705Z_1084557944`
-- inactive history: `20260427T173913Z_1084557944`
-- evidence-only: `20260425T214914Z_1084557944`
-- rewrite-or-archive: `20260425T212847Z_1084557944`
+- Telegram-first only
+- manual concierge remains official pilot mode
+- human review required before delivery
+- one canonical paid path per Telegram user
+- no diagnosis or treatment framing
+- no unsafe supplement instructions or hardcoded medical protocols on TMA/public surfaces
+- Google Drive upload/share is unavailable in the current Codex session
 
 Immediate next actions:
 
-1. Canonicalize the case stack and archive or downgrade stale branches.
-2. Harden model-path trust against unsupported personalization and false specificity.
-3. Split emergency handling by risk type.
-4. Rerun the benchmark.
-5. Define one premium-upgrade experiment from delivered `week` evidence instead of reusing stale premium artifacts.
+1. Add a guard so unresolved internal-review verdicts cannot move to `delivered_to_client` without an explicit manual override record.
+2. Decide the canonical path for the current same-user stack and freeze/archive the other paid branches.
+3. Replace unsafe mini-app result-demo content with a safe placeholder or reviewed backend-fed state.
+4. Tighten `sanitize_live_reply()` and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like language.
+5. Keep the benchmark reference anchored to `ops/reports/quality_report_20260501T080509Z.md` and the QA readout to `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
+
+Reference benchmark:
+
+- `ops/reports/quality_report_20260501T080509Z.md`
+- QA synthesis: `docs/WELLNESS_DIALOGUE_QA_20260501.md`
+- current truth: `20/20` non-empty, `11/20` deterministic, `9/20` model-handled, `7/9` clarifying-question coverage on model-handled symptom prompts

@@ -1,5 +1,12 @@
 # Project Pulse Log
 
+## 2026-05-02 09:18 MSK
+### Регулярная синхронизация (12h)
+- Перечитаны управляющие артефакты: `AGENT_CONTEXT_HUB`, `PROJECT_PULSE_LOG`, `STRATEGY_LIVE_DELTA`, `PRODUCT_LINE_V2`, `MANUAL_PAYMENT_MODE`, `ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL`, `PROJECT_SKILL_REGISTRY`.
+- Изменений в коде не выявлено; рабочие изменения текущего прогона — только в `docs` (актуализация статуса/правил).
+- Пилотный режим без изменений: controlled concierge pilot; public launch по-прежнему заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
+- Текущий P0-риск без изменений: нельзя допускать `delivered_to_client`, пока внутренний вердикт review не очищен или нет явного manual override.
+
 ## 2026-05-01 21:19 MSK
 ### Delivery Delta
 - Добавлен RU-отчёт QA диалогов: `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
@@ -1527,3 +1534,91 @@ Decision:
 - `load_submission()` and `load_runtime_state()` now tolerate UTF-8 BOM files via `utf-8-sig` reading.
 - Added a regression test for BOM-backed submission JSON.
 - Enabled local `ENABLE_TMA=true` in ignored `.env` files for convenient local mini-app testing.
+
+## 2026-05-01 21:18 MSK
+### State Read Delta
+- Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, latest draft/review artifacts, and `bot.stderr.log`.
+- `WellnessBot/data/runtime_state.json` is now empty, so the earlier runtime-versus-storage mismatch is no longer the live blocker.
+- A new `week` case (`20260501T162705Z_1084557944`) exists, is marked `delivered_to_client`, and already has follow-up activity after delivery.
+- The same user still also has two older unresolved `premium` branches, so the paid-path story is still not canonical.
+- `landing/index.html` still matches the Telegram-first funnel; `mini-app/index.html` still shows a single-path intake, but its result demo remains a hardcoded unsafe mock.
+- Bot runtime is up; transient Telegram network errors at `2026-05-01 14:49-14:52 MSK` recovered and later updates were processed successfully.
+
+### Benchmark Delta
+- Latest benchmark reference: `ops/reports/quality_report_20260501T080509Z.md`
+- QA synthesis: `docs/WELLNESS_DIALOGUE_QA_20260501.md`
+- Current benchmark truth:
+  - `20/20` non-empty replies
+  - `11/20` deterministic replies
+  - `9/20` model-path replies
+  - clarifying questions now appear in `7/9` model-handled symptom prompts
+  - exact duplicate clusters are down to `2`
+- Main quality shift: router overreach is no longer the main blocker; model-path response discipline is.
+
+### Regression Delta
+- Human-review gate bypass:
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json` + `WellnessBot/data/drafts/20260501T162705Z_1084557944.review.json`
+  - owner: Lead Developer + Operator
+  - next fix action: block `delivered_to_client` unless the judge verdict is cleared or a manual override note is recorded; review the delivered `week` case before any further follow-up promises
+- Same-user multi-path drift remains active:
+  - source: delivered `week` case plus unresolved `premium` submissions `20260425T212847Z_1084557944` and `20260425T214914Z_1084557944`
+  - owner: Operator + Lead Developer
+  - next fix action: declare one canonical paid path, freeze/archive the other branches, and stop mixing `week` and `premium` narratives for the same user
+- Mini-app demo safety regression:
+  - source: `mini-app/index.html`
+  - owner: Frontend / Lead Developer
+  - next fix action: remove the hardcoded diagnostic/supplement/LCHF demo result and replace it with a safe placeholder or reviewed server-fed result only
+- Model-path false-specificity risk remains active:
+  - source: `docs/WELLNESS_DIALOGUE_QA_20260501.md`
+  - owner: Lead Developer
+  - next fix action: extend `sanitize_live_reply()` and prompt rules to block invented names, over-familiar address, and early quasi-diagnostic labels
+- Google Drive sync remains blocked:
+  - source: current Codex session tool discovery
+  - owner: Tooling / Access
+  - next fix action: enable Google Drive create/upload and share tools
+
+### Plan Delta
+- Move delivery-gate integrity ahead of growth and documentation churn: the top failure is no longer orphan state, it is reviewed-but-still-delivered output.
+- Rebuild the live paid-path story around the delivered `week` case and explicitly resolve what happens to the two older `premium` branches.
+- Treat mini-app demo content as production-adjacent copy risk because local TMA testing is enabled.
+- Keep GitHub and Notion syncs current, but do not treat Google Drive as available until upload/create and share tools are actually exposed.
+
+### Strategy Delta
+- The strategy has shifted from `make the model reachable` to `protect delivery truth once the model is reachable`.
+- Telegram-first manual concierge remains the wedge, but the next proof is now:
+  - one review-safe delivered case
+  - one canonical paid path per user
+  - one safer TMA/demo surface
+  - one tighter model-path answer style
+- The router is no longer hiding all model behavior, so response discipline is now the leverage point, not more routing surgery alone.
+
+### Goals Delta
+- Goal 1: enforce a hard delivery gate between internal review verdicts and `delivered_to_client`.
+- Goal 2: collapse the same-user `week`/`premium` stack into one canonical commercial path.
+- Goal 3: remove unsafe hardcoded result copy from the mini-app surface.
+- Goal 4: tighten live-model answer discipline while preserving the `9/20` model reach baseline.
+
+### Connector Status
+- Obsidian: done - refreshed onboarding mirror and created a new run-note mirror.
+- Notion: done - created a new run note under the Antigravity context hub with a concise `Context For New Model` section.
+- GitHub: done - synced a sanitized status artifact and context snapshot for external contributors.
+- Google Drive: blocked - no Google Drive create/upload or share tool is exposed in the current Codex session.
+- Exact Google Drive access request: enable the Google Drive connector with file create/upload and share permissions so the run snapshot can be uploaded directly from Codex.
+
+### Next 12h Focus
+1. Stop delivery-gate bypass: block `delivered_to_client` unless internal review is cleared or an explicit manual override is recorded.
+2. Review the delivered `week` case and decide whether it stays canonical or is rolled into one of the premium branches.
+3. Freeze or archive the two stale premium branches so one user no longer carries three competing paid narratives.
+4. Replace the unsafe hardcoded mini-app result with a safe placeholder or reviewed backend-fed result.
+5. Extend live-answer sanitization and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like labels.
+
+### Context For New Model
+- Stage: controlled concierge pilot with live model reach restored, but delivery-gate integrity and canonical case ownership still unstable
+- Objective: make the next delivered result review-safe, collapse the same-user paid-path drift, and remove unsafe demo/result copy from live-adjacent surfaces
+- Constraints: Telegram-first only; manual concierge remains official pilot mode; human review is mandatory before delivery; one canonical paid path per Telegram user; no diagnosis/treatment framing; no unsafe supplement instructions or hardcoded medical protocols on public/TMA surfaces; Google Drive upload/share is unavailable in the current Codex session
+- Immediate next actions:
+  1. Add a hard guard so unresolved internal-review verdicts cannot transition to `delivered_to_client` without an explicit manual override record.
+  2. Decide the canonical path for the current same-user stack and freeze/archive the other paid branches.
+  3. Replace unsafe mini-app demo-result copy with a safe placeholder or reviewed backend-fed state.
+  4. Tighten `sanitize_live_reply()` and benchmark assertions around invented names, intimacy hallucinations, and false specificity.
+  5. Keep the latest benchmark reference anchored to `ops/reports/quality_report_20260501T080509Z.md` and the QA readout to `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
