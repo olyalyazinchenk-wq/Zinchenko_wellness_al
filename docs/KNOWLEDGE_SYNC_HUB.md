@@ -79,3 +79,10 @@ Before confirming any paid case as delivered:
 - verify the latest internal review verdict is no longer `needs_revision`, `must_rewrite_with_high_caution`, or otherwise flagged for rewrite
 - if delivery still proceeds, record an explicit manual override note with who approved it and why
 - if a case reaches `delivered_to_client` without a cleared review verdict or override note, log it immediately in `PROJECT_PULSE_LOG.md` as a P0 regression with owner and next fix action
+
+## Transient Runtime Failure Rule
+Before declaring the bot runtime stable in a sync:
+- read the recent tail of `bot.stderr.log`
+- if Telegram, proxy, or local-network failures recovered automatically, log them as transient ops regressions with exact timestamps and recovery evidence
+- do not call the runtime fully healthy if a local proxy endpoint is intermittently unavailable without a documented fallback path
+- include owner and next fix action whenever the bot depends on a local listener such as `127.0.0.1:12334`
