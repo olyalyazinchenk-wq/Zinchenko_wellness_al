@@ -46,10 +46,9 @@ Updated: 2026-05-03 09:20 MSK
 ## Objective
 
 - make the next delivered result review-safe and auditable
-- collapse the same-user `week` / `premium` sprawl into one canonical path
-- remove unsafe hardcoded price/result content from TMA / mini-app surfaces
+- collapse the same-user `week`/`premium` sprawl into one canonical path
+- remove unsafe hardcoded price/result content from TMA/mini-app surfaces
 - prove a stable polling path for the next safe proof cycle without losing the current reach baseline
-- improve model-path discipline without losing the current reach baseline
 
 ## Product Direction
 
@@ -96,22 +95,22 @@ Updated: 2026-05-03 09:20 MSK
 - Delivery gate bypass:
   - delivered `week` case despite unresolved internal-review verdict
 - Same-user paid-path drift:
-  - one delivered `week` case plus one stale `week` placeholder plus two unresolved `premium` branches
+  - one delivered `week` case, one stale `week` placeholder, and two unresolved `premium` branches
 - Mini-app price and demo safety drift:
-  - off-policy `2990` price and hardcoded medical-style result content
-- Runtime polling fragility:
-  - repeated same-day recovered failures, including proxy refusal on `127.0.0.1:12334`
+  - off-policy `2990` pricing and hardcoded supplement/diet result content
+- Runtime resilience regression:
+  - repeated same-day polling failures plus proxy refusal mean the bot is recoverable, but not yet stable
 - Model-path response discipline:
   - invented names, over-familiar tone, and early diagnosis-like labels still leak through QA
 
 ## Next
 
 1. Enforce a hard delivery gate between internal review and client delivery.
-2. Declare one canonical paid path for the current same-user stack and freeze / archive the rest.
+2. Declare one canonical paid path for the current same-user stack and freeze/archive the rest.
 3. Replace unsafe mini-app price/result demo content with a safe placeholder or reviewed backend-fed state.
-4. Verify whether polling really needs `127.0.0.1:12334`, add a documented no-proxy fallback if not, and require one clean post-fix verification before calling runtime stable.
+4. Remove or stabilize the fragile proxy dependency behind polling and prove one clean post-fix verification path.
 5. Tighten live-answer sanitization and benchmark assertions around invented personalization and false specificity.
-6. Turn the delivered `week` follow-up into one explicit premium-upgrade hypothesis after review truth is repaired.
+6. Convert the delivered `week` follow-up plus fresh labs into one explicit premium-upgrade brief only after the review contradiction is resolved.
 
 ## Must-Not-Change Rules
 
@@ -124,10 +123,10 @@ Updated: 2026-05-03 09:20 MSK
 - no unsafe supplement instructions without confirmed context and review
 - no hardcoded medical-style or supplement-style demo results on TMA or public-facing surfaces
 - no off-policy pricing on TMA or public-facing surfaces
-- do not treat a delivered status as trustworthy if the internal-review verdict still demands revision and no override note exists
-- do not call runtime stability solved while polling still depends on a flapping proxy path without a documented fallback
-- do not call runtime stability solved before one clean post-fix verification
-- do not let landing, mini-app, growth work, or benchmark churn outrun delivery safety, canonical state truth, and Telegram runtime resilience
+- do not treat a delivered status as trustworthy if the internal-review verdict still demands revision
+- do not treat a recovered multi-minute outage or proxy refusal loop as a solved runtime issue
+- do not call polling resilience fixed before one clean post-fix verification passes
+- do not let landing, mini-app, or growth work outrun delivery safety and canonical state truth
 
 ## Context For New Model
 
@@ -149,7 +148,7 @@ Next:
 3. Remove `2990` pricing and unsafe hardcoded result content from `mini-app/index.html`.
 4. Verify the proxy dependency on `127.0.0.1:12334`, choose the stable path, and require one clean post-fix verification before calling runtime stable.
 5. Tighten `sanitize_live_reply()` and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like language.
-6. Convert the delivered `week` follow-up plus fresh labs into one explicit premium-upgrade brief.
+6. Convert the delivered `week` follow-up plus fresh labs into one explicit premium-upgrade brief after the delivery-review contradiction is resolved.
 
 Must-Not-Change:
 
