@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-05-03 09:19 MSK
+Updated: 2026-05-03 09:20 MSK
 
 ## Unified GitHub Source Of Truth
 
@@ -12,21 +12,22 @@ Updated: 2026-05-03 09:19 MSK
 - Mode: controlled concierge pilot. Public launch remains blocked.
 - Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
 - Official pilot prices remain `3900 / 6900 / 14900 RUB`.
-- Top live defect: the `week` case `20260501T162705Z_1084557944` still shows `delivered_to_client` even though its attached review verdict is `needs_revision`.
+- Top live defect: the `week` case `20260501T162705Z_1084557944` still shows `delivered_to_client` even though its attached review verdict is `needs_revision`, and no explicit override note is recorded.
 - `WellnessBot/data/runtime_state.json` is empty, so runtime/storage mismatch is not the active blocker.
-- Disk headroom is healthy: `C:` free space is approximately `22.98 GB` as of `2026-05-03 09:19 MSK`.
+- Disk headroom is healthy: `C:` free space is approximately `22.97 GB` as of `2026-05-03 09:20 MSK`.
 - Latest benchmark reference: `ops/reports/quality_report_20260501T080509Z.md`
   - `20/20` non-empty replies
   - `11/20` deterministic replies
   - `9/20` model-handled replies
   - clarifying questions in `7/9` model-handled symptom prompts
-- Bot runtime is currently up, but it recovered from two same-day outage windows:
-  - `2026-05-02 15:09:39-15:17:57 MSK` repeated `WinError 64` polling failures
-  - `2026-05-02 20:26:15-20:27:14 MSK` server disconnect and proxy refusal on `127.0.0.1:12334`
+- Bot runtime is currently up, but polling resilience is still unresolved:
+  - recovered outage window `2026-05-02 15:09:39-15:17:57 MSK` with repeated `WinError 64`
+  - recovered outage window `2026-05-02 20:26:15-20:27:14 MSK` with server disconnects and proxy refusal on `127.0.0.1:12334`
+  - recovered outage window `2026-05-02 21:38:36-21:38:48 MSK` with `ServerDisconnectedError`
 
 ## Stage
 
-- controlled concierge pilot with validated paid `week` demand and restored live-model reach, but unresolved delivery-gate integrity, same-user paid-path duplication, unsafe mini-app price/result drift, and unstable polling resilience
+- controlled concierge pilot with validated paid `week` demand and restored live-model reach, but unresolved delivery-gate integrity, same-user paid-path duplication, unsafe mini-app price/result drift, and three same-day polling recovery windows that still block runtime confidence
 
 ## Done
 
@@ -37,13 +38,17 @@ Updated: 2026-05-03 09:19 MSK
 - Router overreach is no longer the main quality blocker:
   - benchmark moved from full routing capture to `9/20` model-handled replies
   - clarifying-question behavior now appears in `7/9` model-handled symptom prompts
+- Governance pressure is quantified and unchanged:
+  - `120` experiments
+  - `4` duplicate title groups
+  - largest duplicate group `x7`
 
 ## Objective
 
 - make the next delivered result review-safe and auditable
 - collapse the same-user `week`/`premium` sprawl into one canonical path
 - remove unsafe hardcoded price/result content from TMA/mini-app surfaces
-- stabilize bot polling enough for the next safe proof cycle without losing the current reach baseline
+- prove a stable polling path for the next safe proof cycle without losing the current reach baseline
 
 ## Product Direction
 
@@ -67,23 +72,23 @@ Updated: 2026-05-03 09:19 MSK
   - status: `delivered_to_client`
   - follow-up already started after delivery
   - internal review on the same case still says `needs_revision`
-- The same user still also has one stale `week` placeholder:
-  - `20260427T173913Z_1084557944`
-  - `consent_pending`
-  - no active runtime session points to it now
-- The same user still also has two older unresolved `premium` branches:
-  - `20260425T214914Z_1084557944` remains evidence-only because `requires_lab_resubmission = true`
-  - `20260425T212847Z_1084557944` remains rewrite-only with `must_rewrite_with_high_caution`
+  - no explicit delivery override note is present
+- The same user still also has three non-canonical branches:
+  - `20260427T173913Z_1084557944` = stale `week` placeholder at `consent_pending`
+  - `20260425T214914Z_1084557944` = evidence-only premium branch because `requires_lab_resubmission = true`
+  - `20260425T212847Z_1084557944` = parked rewrite-only premium branch with `must_rewrite_with_high_caution`
 - Landing still matches the Telegram-first funnel.
 - Mini-app still drifts from backend truth:
   - shows off-policy `2990` pricing
-  - hardcodes supplement-dose and LCHF-style result content
+  - hardcodes ferritin / vitamin D / cortisol findings
+  - hardcodes supplement-dose and `LCHF` result content
 - Latest QA synthesis:
   - router overreach is no longer the main blocker
   - false specificity, invented personalization, over-familiar tone, and early diagnosis-like labels are the live quality risks
-- Current runtime evidence is worse than the morning snapshot:
+- Current runtime evidence remains worse than the fallback-improvement narrative:
   - one recovered outage window lasted more than 8 minutes
-  - a second recovered outage window later included direct proxy refusal on `127.0.0.1:12334`
+  - a second recovered outage window included direct proxy refusal on `127.0.0.1:12334`
+  - a third same-day recovered disconnect happened later that evening
 
 ## Regressions To Fix Now
 
@@ -103,14 +108,9 @@ Updated: 2026-05-03 09:19 MSK
 1. Enforce a hard delivery gate between internal review and client delivery.
 2. Declare one canonical paid path for the current same-user stack and freeze/archive the rest.
 3. Replace unsafe mini-app price/result demo content with a safe placeholder or reviewed backend-fed state.
-4. Remove or stabilize the fragile proxy dependency behind polling and prove one clean reconnect path.
+4. Remove or stabilize the fragile proxy dependency behind polling and prove one clean post-fix verification path.
 5. Tighten live-answer sanitization and benchmark assertions around invented personalization and false specificity.
-
-## Sync Note (2026-05-03 09:19 MSK)
-
-- No new code changes detected since the last sync; current uncommitted edits are limited to `docs/*` governance text updates.
-- Added a sustained runtime interruption escalation rule to `docs/KNOWLEDGE_SYNC_HUB.md` and corrected wording/metrics in `docs/STRATEGY_LIVE_DELTA.md`.
-- Public launch remains blocked; controlled concierge pilot rules remain unchanged (manual payment + mandatory human review).
+6. Convert the delivered `week` follow-up plus fresh labs into one explicit premium-upgrade brief only after the review contradiction is resolved.
 
 ## Must-Not-Change Rules
 
@@ -125,22 +125,32 @@ Updated: 2026-05-03 09:19 MSK
 - no off-policy pricing on TMA or public-facing surfaces
 - do not treat a delivered status as trustworthy if the internal-review verdict still demands revision
 - do not treat a recovered multi-minute outage or proxy refusal loop as a solved runtime issue
+- do not call polling resilience fixed before one clean post-fix verification passes
 - do not let landing, mini-app, or growth work outrun delivery safety and canonical state truth
 
 ## Context For New Model
 
 Stage:
 
-- controlled concierge pilot with validated paid `week` demand, restored live-model reach, but unstable delivery-gate integrity, same-user case ownership, mini-app truth, and polling resilience
+- controlled concierge pilot with validated paid `week` demand and restored live-model reach, but unstable delivery-gate integrity, same-user case ownership, mini-app truth, and polling resilience
 
-Objective:
+Done:
 
-- make the next delivered result review-safe
-- collapse the same-user paid-path drift
-- remove unsafe mini-app price/result drift
-- keep polling reliable enough for the next safe proof cycle
+- `week` is commercially validated as a paid entry rail
+- runtime-state mismatch is cleared
+- benchmark baseline improved to `9/20` model-path replies with `7/9` clarifying-question coverage on model-handled symptom prompts
+- governance pressure is measured and unchanged instead of being mistaken for progress
 
-Constraints:
+Next:
+
+1. Add a guard so unresolved internal-review verdicts cannot move to `delivered_to_client` without an explicit manual override record.
+2. Decide the canonical path for the current same-user stack and retire `20260427T173913Z_1084557944` plus the non-canonical premium branches.
+3. Remove `2990` pricing and unsafe hardcoded result content from `mini-app/index.html`.
+4. Verify the proxy dependency on `127.0.0.1:12334`, choose the stable path, and require one clean post-fix verification before calling runtime stable.
+5. Tighten `sanitize_live_reply()` and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like language.
+6. Convert the delivered `week` follow-up plus fresh labs into one explicit premium-upgrade brief after the delivery-review contradiction is resolved.
+
+Must-Not-Change:
 
 - Telegram-first only
 - manual concierge remains official pilot mode
@@ -148,16 +158,10 @@ Constraints:
 - human review required before delivery
 - one canonical paid path per Telegram user
 - no diagnosis or treatment framing
-- no unsafe supplement instructions or hardcoded medical protocols on TMA/public surfaces
-- Google Drive upload/share is unavailable in the current Codex session
-
-Immediate next actions:
-
-1. Add a guard so unresolved internal-review verdicts cannot move to `delivered_to_client` without an explicit manual override record.
-2. Decide the canonical path for the current same-user stack and explicitly retire the stale `week` placeholder plus the non-canonical premium branches.
-3. Remove `2990` pricing and unsafe hardcoded result content from `mini-app/index.html`.
-4. Verify whether polling should depend on the local proxy at `127.0.0.1:12334`, and add a direct no-proxy fallback if not.
-5. Tighten `sanitize_live_reply()` and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like language.
+- no unsafe supplement instructions or hardcoded medical protocols on TMA / public surfaces
+- no off-policy pricing on TMA / public surfaces
+- no silent proxy dependency without a documented fallback
+- no claim of runtime stability before one clean post-fix verification
 
 Reference benchmark:
 

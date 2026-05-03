@@ -1,6 +1,6 @@
 # Project Pulse Log
 
-## 2026-05-03 09:19 MSK
+## 2026-05-03 09:20 MSK
 ### Регулярная синхронизация (12h)
 - Перепроверены управляющие артефакты и ключевые директории: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
 - Новых изменений в коде/тестах/лендинге/mini-app не обнаружено; текущие рабочие изменения — только в `docs/*` (правила/формулировки синхронизации).
@@ -25,7 +25,7 @@
   - unresolved `premium` branch `20260425T212847Z_1084557944` with `must_rewrite_with_high_caution`
   - unresolved `premium` branch `20260425T214914Z_1084557944` with `requires_lab_resubmission=true`
 - `mini-app/index.html` still exposes off-policy `2990` pricing plus hardcoded ferritin / vitamin D / cortisol findings and supplement / `LCHF` protocol output.
-- Current free space on `C:` is approximately `25.18 GB` as measured at `2026-05-02 21:19 MSK`.
+- Current free space on `C:` is approximately `22.97 GB` as measured at `2026-05-03 09:20 MSK`.
 
 ### Benchmark Delta
 - Latest benchmark reference remains `ops/reports/quality_report_20260501T080509Z.md`.
@@ -51,13 +51,14 @@
   - source: `mini-app/index.html`
   - owner: Frontend / Lead Developer
   - next fix action: remove off-policy pricing and hardcoded medical-style result content; replace with a safe placeholder or reviewed backend-fed state only
-- Repeated runtime proxy resilience regression is now same-day confirmed:
+- Runtime polling resilience regression is now stronger than the prior refresh:
   - source: `bot.stderr.log`
   - evidence:
     - `2026-05-02 15:09:39-15:17:57 MSK` repeated `ClientOSError [WinError 64]` before recovery
     - `2026-05-02 20:26:15-20:27:14 MSK` `ServerDisconnectedError` plus proxy refusal on `127.0.0.1:12334`, then recovery
+    - `2026-05-02 21:38:36-21:38:48 MSK` another `ServerDisconnectedError`, then recovery
   - owner: Ops + Lead Developer
-  - next fix action: verify whether the local proxy listener is intentionally required; add and document a no-proxy fallback if not
+  - next fix action: verify whether the local proxy listener is intentionally required; add and prove a no-proxy fallback if not, and do not call runtime stable before one clean post-fix verification
 - Governance loop pressure remains active:
   - source: `WellnessBot/data/product_governance.json`
   - evidence: `120` experiments, `4` duplicate title groups, largest duplicate group `x7`
@@ -67,14 +68,15 @@
 ### Plan Delta
 - Keep delivery-gate integrity as the top priority; no new proof claim matters while a `needs_revision` case can still be marked delivered.
 - Collapse the same-user stack more explicitly than the morning refresh by classifying the stale `week` placeholder and both premium leftovers into non-active roles.
-- Treat proxy instability as an ongoing workstream rather than a closed transient because the failure repeated later the same day.
+- Treat runtime resilience as unresolved until a chosen transport path is proven clean after the fix.
 - Keep benchmark reruns behind gate, surface, and runtime resilience fixes.
 
 ### Strategy Delta
 - Strategy still does not move toward new surfaces or new packaging.
 - The important correction is:
-  - model reach is already good enough to expose operational truth failures
-  - the highest leverage remains delivery control, canonical path ownership, mini-app truth discipline, and polling resilience
+  - repeated reconnects are evidence of recoverability, not of stability
+  - doc refresh without product truth changes is not progress
+  - the highest leverage remains delivery control, canonical path ownership, mini-app truth discipline, and polling transport clarity
 - The next proof target remains:
   - one review-safe delivered case
   - one canonical paid path per user
@@ -85,25 +87,25 @@
 - Goal 1: enforce a hard review gate before `delivered_to_client`.
 - Goal 2: collapse the same-user `week` and `premium` sprawl into one canonical commercial path and explicitly retire stale placeholders.
 - Goal 3: remove unsafe hardcoded result content and off-policy pricing from the mini-app surface.
-- Goal 4: make runtime polling resilient to repeated network / proxy interruptions.
+- Goal 4: prove a stable polling transport path that does not silently depend on a fragile local proxy.
 - Goal 5: preserve the current `9/20` model reach baseline while hardening tone and specificity only after truth and resilience fixes land.
 
 ### Next 12h Focus
 1. Block `delivered_to_client` unless internal review is cleared or an explicit manual override note is recorded.
 2. Decide the canonical path for the current same-user stack, then archive or freeze the stale `week` placeholder and extra `premium` branches.
 3. Replace the unsafe mini-app result mock and `2990` pricing with a safe placeholder aligned to the Telegram-first reviewed backend.
-4. Verify whether polling truly needs the local proxy on `127.0.0.1:12334`, and add a stable fallback if not.
-5. Keep the next benchmark rerun anchored to `ops/reports/quality_report_20260501T080509Z.md` until the delivery gate, surface safety, and runtime resilience fixes land.
+4. Verify whether polling truly needs the local proxy on `127.0.0.1:12334`, and prefer a stable direct fallback if not.
+5. Prove the chosen polling path with one clean post-fix verification before calling runtime stable.
 
 ### Context For New Model
 - Stage: controlled concierge pilot with validated paid `week` demand and restored model reach, but delivery-gate integrity, same-user case ownership, mini-app truth, and polling resilience still unstable
-- Objective: restore delivery truth, collapse the same-user branch sprawl to one canonical path, neutralize unsafe mini-app output, and remove silent proxy fragility before the next proof cycle
+- Objective: restore delivery truth, collapse the same-user branch sprawl to one canonical path, neutralize unsafe mini-app output, and prove the runtime transport path before the next proof cycle
 - Constraints: Telegram-first only; manual concierge remains official pilot mode; human review is mandatory before delivery; one canonical paid path per Telegram user; no diagnosis/treatment framing; no unsafe supplement instructions or hardcoded medical protocols on public/TMA surfaces
 - Immediate next actions:
   1. Add a hard guard so unresolved internal-review verdicts cannot transition to `delivered_to_client` without an explicit manual override record.
   2. Decide the canonical path for the current same-user stack and explicitly retire `20260427T173913Z_1084557944` plus the non-canonical premium branches.
   3. Replace unsafe mini-app demo-result copy and `2990` pricing with a safe placeholder or reviewed backend-fed state.
-  4. Verify the proxy dependency on `127.0.0.1:12334` and add a documented no-proxy fallback if the listener is not guaranteed.
+  4. Verify the proxy dependency on `127.0.0.1:12334` and require one clean post-fix verification before calling the runtime stable.
   5. Keep the latest benchmark reference anchored to `ops/reports/quality_report_20260501T080509Z.md` and the QA readout to `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
 
 ## 2026-05-02 09:18 MSK

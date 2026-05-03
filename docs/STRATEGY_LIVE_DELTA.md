@@ -2,6 +2,147 @@
 
 Rolling log for strategy and plan corrections between major strategy documents.
 
+## 2026-05-03 09:20 MSK
+### Artifact Delta
+- Re-read the current source-of-truth artifacts before refreshing strategy:
+  - `docs/PROJECT_PULSE_LOG.md`
+  - `docs/KNOWLEDGE_SYNC_HUB.md`
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260501.md`
+  - `ops/reports/quality_report_20260501T080509Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - `WellnessBot/data/drafts/20260501T162705Z_1084557944.review.json`
+  - `WellnessBot/data/submissions/20260427T173913Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
+  - `WellnessBot/data/product_governance.json`
+  - `mini-app/index.html`
+  - `bot.stderr.log`
+- New controlling evidence since the `2026-05-02 21:19 MSK` refresh:
+  - no newer benchmark artifact exists than `ops/reports/quality_report_20260501T080509Z.md`
+  - no new code, test, landing, or mini-app changes landed since the last refresh; live repo deltas remain documentation-only
+  - `WellnessBot/data/runtime_state.json` is still empty, so runtime/storage mismatch remains cleared
+  - the delivered `week` case still shows `intake_status = delivered_to_client` while its attached review still says `needs_revision`, and there is still no explicit override note
+  - the same user still also carries:
+    - stale `week` placeholder `20260427T173913Z_1084557944` at `consent_pending`
+    - paid `premium` branch `20260425T212847Z_1084557944` with `must_rewrite_with_high_caution`
+    - paid `premium` branch `20260425T214914Z_1084557944` with `requires_lab_resubmission = true`
+  - the mini-app still advertises off-policy `2990` pricing and still renders hardcoded ferritin / vitamin D / cortisol claims plus supplement-dose and `LCHF` protocol output
+  - governance pressure remains unchanged at `120` experiments, `4` duplicate title groups, and a largest duplicate group of `x7`
+  - bot polling showed a third same-day recovered instability window on `2026-05-02 21:38:36-21:38:48 MSK` with `ServerDisconnectedError`
+  - this third window means the earlier fallback improvement claim is not yet enough to call runtime resilience solved
+  - disk headroom remains healthy at approximately `22.97 GB` free on `C:` as measured at `2026-05-03 09:20 MSK`
+
+### Product Direction Delta
+- Core direction still holds:
+  - Telegram-first only
+  - manual concierge payment remains the official pilot mode
+  - `week` remains the validated paid entry rail
+  - `premium` remains the flagship offer
+  - `vip` remains parked
+- The stronger correction now is executional:
+  - the next strategy win is not new packaging or new surface work
+  - the next strategy win is making the existing paid path review-safe, singular, and operationally reliable
+- Therefore the immediate product story tightens to:
+  - `Telegram-first clarity -> review-cleared delivery -> follow-up -> premium upgrade from fresh labs`
+  - not `mini-app proof`
+  - not `stale premium proof`
+  - not `ops recovery as a substitute for runtime stability`
+
+### Value Proposition Delta
+- The clearest current value proposition remains:
+  - `one Telegram thread that turns symptom chaos into a reviewed next-step map and follow-up`
+- The trust gap is now more specific:
+  - reviewed truth is still weaker than delivery status because the current `week` case was delivered before review clearance
+  - mini-app truth is still weaker than the backend safety posture because it shows hardcoded pseudo-medical output and off-policy price framing
+  - runtime trust is still weaker than operator intuition because repeated reconnects happened after the prior fallback improvement
+- The next trust win is therefore still operational:
+  - clear the delivery-review contradiction
+  - neutralize the unsafe mini-app surface
+  - prove a stable polling path instead of inferring one
+
+### Monetization Delta
+- Official monetization posture remains unchanged:
+  - `week` -> `3900 RUB`
+  - `premium` -> `6900 RUB`
+  - `vip` -> `14900 RUB`
+  - payment mode stays manual concierge
+- No packaging or pricing expansion is justified by the latest evidence:
+  - the mini-app `2990` display is still off-policy and must not be treated as a live offer
+  - the delivered `week` case still validates demand, but not yet reusable hero proof because delivery outran review
+- Near-term monetization path:
+  - keep `week` as the validated paid entry
+  - use the existing follow-up plus fresh labs to define one premium-upgrade brief
+  - do not start new pricing tests, new offers, or new acquisition narratives before review truth and runtime resilience are repaired
+
+### Operating Delta
+- Runtime/storage truth remains materially better than the April blocker set:
+  - runtime state is empty
+  - disk headroom is healthy
+  - the old orphan runtime blocker remains cleared
+- The active blocker order sharpens to:
+  - delivery-gate integrity
+  - canonical same-user path retirement
+  - mini-app copy / price coherence
+  - runtime resilience with proven fallback behavior
+  - model-path discipline
+  - one fresh premium-upgrade brief
+- Current same-user commercial stack should still be treated as:
+  - `20260501T162705Z_1084557944` = only candidate canonical path, but blocked by review/delivery contradiction
+  - `20260427T173913Z_1084557944` = archive candidate stale placeholder
+  - `20260425T214914Z_1084557944` = evidence-only premium branch until readable labs exist
+  - `20260425T212847Z_1084557944` = parked rewrite-only premium branch unless explicitly reactivated later
+
+### Safety Delta
+- Legal and safety posture remains unchanged:
+  - no diagnosis framing
+  - no treatment framing
+  - urgent-care routing remains mandatory
+  - human review remains mandatory before delivery
+  - unreadable or unconfirmed labs cannot become product truth
+- The active regressions remain:
+  - delivered-state truth still outruns internal review truth
+  - mini-app demo still contains hardcoded supplement instructions and disease-adjacent biomarker claims
+  - runtime is still described by recoveries rather than by a proven stable transport path
+- This keeps the main safety job unchanged:
+  - protect what can be shown or sent as if it were reviewed truth
+  - protect Telegram operations from silent transport fragility
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - doc refreshes and status motion without code or operator changes that close delivery truth or branch ownership
+- Repeated low-impact loop:
+  - treating a partial proxy-fallback improvement as closure even after a third same-day polling failure window
+- Repeated low-impact loop:
+  - discussing stale premium branches instead of explicitly retiring them into `archive / parked / evidence-only`
+- Repeated low-impact loop:
+  - benchmark and tone work before delivery truth, mini-app truth, and transport resilience are repaired
+- Repeated low-impact loop:
+  - governance accumulation while `120` experiments and `4` duplicate title groups already exist
+
+### Higher-Impact Replacement Action
+- Run one P0 truth-and-transport sweep, in this order:
+  1. add a hard guard so `delivered_to_client` cannot happen while review still requires revision unless an explicit manual override note is recorded
+  2. classify the same-user stack into `canonical / archive / parked / evidence-only` and stop all ambiguity around the stale `week` branch plus the two older `premium` branches
+  3. replace the mini-app hardcoded result output and `2990` price drift with a safe placeholder aligned to Telegram-first reviewed truth
+  4. prove whether polling actually can run without `127.0.0.1:12334`; if yes, prefer and document that path, and if no, treat proxy uptime as an explicit ops dependency
+  5. define exactly one premium-upgrade brief from the delivered `week` follow-up plus fresh labs, while freezing every other experiment
+
+### Must-Hold Rules
+- Keep Telegram as the only live operating channel.
+- Keep manual concierge as the official pilot payment mode.
+- Keep official pilot prices locked at `3900 / 6900 / 14900 RUB` unless a strategy doc explicitly changes them.
+- Keep `week` as the validated paid entry rail.
+- Keep `premium` as the flagship offer, but prove it from fresh post-`week` evidence rather than stale same-user branches.
+- Keep exactly one canonical paid path per Telegram user.
+- Keep human review mandatory before delivery.
+- Keep no-diagnosis, no-treatment, urgent-care, and lab-quality rules explicit.
+- Do not let the mini-app show hardcoded supplement protocols, hardcoded diet protocols, or off-policy pricing as if they were live truth.
+- Do not treat `delivered_to_client` as trustworthy if the internal review verdict still demands revision and no override note exists.
+- Do not call runtime stable just because polling eventually reconnects; repeated same-day recovery windows still count as an active ops issue until the path is proven.
+- Do not let governance, docs, benchmarks, or UI polish outrun delivery truth, canonical path control, and Telegram runtime resilience.
+
 ## 2026-05-02 21:19 MSK
 ### Artifact Delta
 - Re-read the current source-of-truth artifacts before refreshing strategy:

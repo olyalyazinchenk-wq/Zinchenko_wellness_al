@@ -315,3 +315,22 @@
   - `%TEMP%` still contains locked items that were skipped safely
   - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
   - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
+## 2026-05-03 09:26:11 +03:00
+
+- Before C:: `199.81 GB used / 23.21 GB free`
+- After C:: `199.81 GB used / 23.21 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB` net change after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `28` locked/in-use deletions skipped
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned a path error
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked items that were skipped safely
+  - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
+  - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
