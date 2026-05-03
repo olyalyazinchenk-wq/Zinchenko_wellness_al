@@ -27,10 +27,10 @@ Rolling log for strategy and plan corrections between major strategy documents.
     - stale `week` placeholder `20260427T173913Z_1084557944` at `consent_pending`
     - paid `premium` branch `20260425T212847Z_1084557944` with `must_rewrite_with_high_caution`
     - paid `premium` branch `20260425T214914Z_1084557944` with `requires_lab_resubmission = true`
-  - the mini-app still advertises `РѕС‚ 2 990 в‚Ѕ` and still renders hardcoded ferritin / vitamin D / cortisol claims plus supplement-dose and `LCHF` protocol output
+  - the mini-app still advertises off-policy `2990` pricing and still renders hardcoded ferritin / vitamin D / cortisol claims plus supplement-dose and `LCHF` protocol output
   - governance pressure is unchanged at `120` experiments, `4` duplicate title groups, and a largest duplicate group of `x7`
   - bot polling suffered a second recovered same-day instability window on `2026-05-02 20:26:15-20:27:14 MSK` with `ServerDisconnectedError` and proxy refusal on `127.0.0.1:12334`
-  - disk headroom remains healthy at approximately `25.18 GB` free on `C:` as measured at `2026-05-02 21:19 MSK`
+  - disk headroom remains healthy at approximately `23.45 GB` free on `C:` as measured at `2026-05-02 21:19 MSK`
 
 ### Product Direction Delta
 - Core direction still holds:

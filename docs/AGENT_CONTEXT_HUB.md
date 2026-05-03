@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-05-02 21:19 MSK
+Updated: 2026-05-03 09:19 MSK
 
 ## Unified GitHub Source Of Truth
 
@@ -14,7 +14,7 @@ Updated: 2026-05-02 21:19 MSK
 - Official pilot prices remain `3900 / 6900 / 14900 RUB`.
 - Top live defect: the `week` case `20260501T162705Z_1084557944` still shows `delivered_to_client` even though its attached review verdict is `needs_revision`.
 - `WellnessBot/data/runtime_state.json` is empty, so runtime/storage mismatch is not the active blocker.
-- Disk headroom is healthy: `C:` free space is approximately `23.45 GB` as of `2026-05-02 21:19 MSK`.
+- Disk headroom is healthy: `C:` free space is approximately `22.98 GB` as of `2026-05-03 09:19 MSK`.
 - Latest benchmark reference: `ops/reports/quality_report_20260501T080509Z.md`
   - `20/20` non-empty replies
   - `11/20` deterministic replies
@@ -105,6 +105,12 @@ Updated: 2026-05-02 21:19 MSK
 3. Replace unsafe mini-app price/result demo content with a safe placeholder or reviewed backend-fed state.
 4. Remove or stabilize the fragile proxy dependency behind polling and prove one clean reconnect path.
 5. Tighten live-answer sanitization and benchmark assertions around invented personalization and false specificity.
+
+## Sync Note (2026-05-03 09:19 MSK)
+
+- No new code changes detected since the last sync; current uncommitted edits are limited to `docs/*` governance text updates.
+- Added a sustained runtime interruption escalation rule to `docs/KNOWLEDGE_SYNC_HUB.md` and corrected wording/metrics in `docs/STRATEGY_LIVE_DELTA.md`.
+- Public launch remains blocked; controlled concierge pilot rules remain unchanged (manual payment + mandatory human review).
 
 ## Must-Not-Change Rules
 

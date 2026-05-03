@@ -86,3 +86,10 @@ Before declaring the bot runtime stable in a sync:
 - if Telegram, proxy, or local-network failures recovered automatically, log them as transient ops regressions with exact timestamps and recovery evidence
 - do not call the runtime fully healthy if a local proxy endpoint is intermittently unavailable without a documented fallback path
 - include owner and next fix action whenever the bot depends on a local listener such as `127.0.0.1:12334`
+
+## Sustained Runtime Interruption Rule
+If the same-day runtime evidence is worse than a short single recovery:
+- if polling failures last more than 5 minutes or recover in more than one separate window in the same local day, escalate from `transient note` to an active ops regression
+- record each outage window and the exact recovery timestamp in `PROJECT_PULSE_LOG.md`
+- require an explicit owner, next fix action, and whether a direct no-proxy polling path exists
+- do not describe runtime as stable again until one clean post-fix verification passes without repeated proxy refusals or disconnect loops
