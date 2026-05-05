@@ -418,7 +418,11 @@ def finalize_review_reply(reply: str | None, review_text: str, score: int | None
 
 
 def build_client(settings: Settings) -> OpenAI:
-    client_kwargs: dict = {"api_key": settings.llm_api_key}
+    client_kwargs: dict = {
+        "api_key": settings.llm_api_key,
+        "timeout": settings.llm_timeout_seconds,
+        "max_retries": 1,
+    }
 
     if settings.llm_base_url:
         client_kwargs["base_url"] = settings.llm_base_url
@@ -466,7 +470,7 @@ def generate_case_draft_yandex_foundation(settings: Settings, submission: dict, 
         settings.llm_base_url or YANDEX_FOUNDATION_URL,
         headers=headers,
         json=payload,
-        timeout=60,
+        timeout=settings.llm_timeout_seconds,
         trust_env=False,
     )
     response.raise_for_status()
@@ -518,7 +522,7 @@ def generate_live_reply_yandex_foundation(
         settings.llm_base_url or YANDEX_FOUNDATION_URL,
         headers=headers,
         json=payload,
-        timeout=60,
+        timeout=settings.llm_timeout_seconds,
         trust_env=False,
     )
     response.raise_for_status()
@@ -639,7 +643,7 @@ def generate_case_judge_report_yandex_foundation(
         settings.llm_base_url or YANDEX_FOUNDATION_URL,
         headers=headers,
         json=payload,
-        timeout=60,
+        timeout=settings.llm_timeout_seconds,
         trust_env=False,
     )
     response.raise_for_status()
@@ -759,7 +763,7 @@ def generate_case_growth_report_yandex_foundation(
         settings.llm_base_url or YANDEX_FOUNDATION_URL,
         headers=headers,
         json=payload,
-        timeout=60,
+        timeout=settings.llm_timeout_seconds,
         trust_env=False,
     )
     response.raise_for_status()
@@ -806,7 +810,7 @@ def generate_review_reply_yandex_foundation(
         settings.llm_base_url or YANDEX_FOUNDATION_URL,
         headers=headers,
         json=payload,
-        timeout=60,
+        timeout=settings.llm_timeout_seconds,
         trust_env=False,
     )
     response.raise_for_status()

@@ -43,6 +43,7 @@ class Settings:
     llm_api_mode: str
     llm_base_url: str | None
     llm_project_id: str | None
+    llm_timeout_seconds: float
     llm_disable_server_logging: bool
     llm_use_iam_token: bool
     stt_provider: str
@@ -70,6 +71,16 @@ def parse_bool(raw_value: str | None, default: bool = False) -> bool:
     if raw_value is None:
         return default
     return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def parse_float(raw_value: str | None, default: float) -> float:
+    if raw_value is None:
+        return default
+    try:
+        value = float(raw_value.strip())
+    except (TypeError, ValueError):
+        return default
+    return value if value > 0 else default
 
 
 def read_windows_system_proxy() -> str | None:
@@ -203,6 +214,7 @@ def load_settings() -> Settings:
         llm_api_mode=os.getenv("LLM_API_MODE", "responses").strip().lower(),
         llm_base_url=os.getenv("LLM_BASE_URL", "").strip() or None,
         llm_project_id=llm_project_id,
+        llm_timeout_seconds=parse_float(os.getenv("LLM_TIMEOUT_SECONDS"), default=90.0),
         llm_disable_server_logging=parse_bool(
             os.getenv("LLM_DISABLE_SERVER_LOGGING"),
             default=True,
