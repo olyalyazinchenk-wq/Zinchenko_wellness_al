@@ -1,7 +1,7 @@
 # Sprint Board
 
-Date: 2026-05-03
-Status: Active refresh after unchanged truth gaps and a third same-day recovered polling failure
+Date: 2026-05-05
+Status: Active refresh after strategy-drift artifacts and a newer recovered proxy-refusal outage window
 Sprint owner: Chief Orchestrator
 Operating mode: controlled Telegram-first pilot truth hardening
 
@@ -102,6 +102,7 @@ Task:
 Concrete changes:
 
 - treat the recovered failures on `2026-05-02 15:09:39-15:17:57 MSK`, `20:26:15-20:27:14 MSK`, and `21:38:36-21:38:48 MSK` as live evidence of fragility
+- treat the newer recovered failure window on `2026-05-03 14:20:44-14:30:12 MSK` as the current leading ops signal because it combines `WinError 64` with explicit proxy refusal on `127.0.0.1:12334`
 - verify whether polling truly requires `127.0.0.1:12334`
 - if proxy is optional, document and prefer a no-proxy fallback path
 - if proxy is required, treat proxy availability as a first-class ops dependency with startup checks and operator visibility
@@ -113,6 +114,39 @@ Done when:
 - polling has a documented stable fallback or an explicit required dependency
 - runtime health is no longer inferred only from eventual reconnect
 - one clean post-fix verification passes without repeated proxy refusal or disconnect loops
+
+## P0. Parallel Architecture Containment
+
+Owner:
+
+- Product Strategist
+- Lead Developer
+- Chief Orchestrator
+
+Task:
+
+- stop new May architecture and master-plan artifacts from hijacking the active Telegram pilot roadmap
+
+Concrete changes:
+
+- classify `docs/2026-05-04_nutrition-bot-architecture.md`, `docs/2026-05-04_nutrition-bot-context-document.md`, and `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md` as reference-only inputs
+- block any critical-path move toward:
+  - Telegram/YooKassa automated payments
+  - PostgreSQL migration
+  - Docker/compose deployment work
+  - separate admin/WebApp buildout
+  - broader service-catalog expansion
+- extract only bounded reusable assets from those docs:
+  - prompts
+  - OCR approach
+  - service-boundary ideas
+- keep those extractions blocked from implementation until delivery truth, canonical path truth, mini-app truth, and polling resilience are repaired
+
+Done when:
+
+- the team has one live roadmap and one reference backlog instead of two competing product stories
+- off-policy payment, pricing, and automation ideas are no longer treated as current product truth
+- only one bounded extraction package remains eligible for later implementation
 
 ## P1. Model-Path Discipline
 
@@ -206,6 +240,8 @@ Blocked for now:
 - keeping `2990` pricing on the mini-app surface
 - showing hardcoded supplement, diet, or pseudo-medical result protocols on TMA / mini-app surfaces
 - calling the runtime stable while polling still silently depends on a flapping proxy path
+- treating the May `nutrition_bot` and strategic-master-plan documents as the live execution plan
+- starting Telegram Payments/YooKassa migration, PostgreSQL migration, Docker deployment, or new admin/WebApp work on the pilot critical path
 - rerunning the benchmark before delivery truth, mini-app truth, and polling resilience are repaired
 - more growth, landing, or UI polish before delivery truth and path truth are repaired
 - governance expansion before one clean canonical path exists
@@ -218,13 +254,14 @@ Repeated low-impact tasks to stop:
 - status and doc motion that does not change delivery truth or branch ownership
 - repeating the same runtime-resilience claim without proving the transport path is actually fixed
 - stale premium-branch debate without a canonical-path declaration
+- alternate architecture/master-plan drafting that creates a second product story before the first one is safe and coherent
 - benchmark and tone work before mini-app truth and delivery gate are repaired
 - treating recovered proxy failures as solved because the bot eventually reconnects
 - experiment accumulation while `120` governance items already exist
 
 Replacement action:
 
-- harden delivery truth first, classify the same-user branch stack second, neutralize the mini-app third, prove the polling path fourth, then run one fresh premium-upgrade brief
+- harden delivery truth first, classify the same-user branch stack second, neutralize the mini-app third, prove the polling path fourth, contain the May architecture docs as reference-only fifth, then run one fresh premium-upgrade brief
 
 ## Next 12h Command Set
 
@@ -238,7 +275,8 @@ Replacement action:
 8. Replace the hardcoded ferritin / vitamin D / cortisol / supplement / `LCHF` result demo with a safe placeholder or reviewed backend-fed state.
 9. Verify whether bot polling should depend on the local proxy at `127.0.0.1:12334`, prefer a direct path if possible, and document the startup rule either way.
 10. Prove the chosen polling path with one clean post-fix verification instead of treating reconnect alone as success.
-11. Extend `sanitize_live_reply()` and benchmark checks for invented names, over-familiar tone, and early diagnosis-like labels.
-12. Rerun the quality benchmark only after steps `1-10` land and confirm model reach stays near the current `9/20` baseline.
-13. Create exactly one premium-upgrade brief from the delivered `week` follow-up and new labs.
-14. Keep Telegram-first operations, manual concierge payment, and official prices at `3900 / 6900 / 14900 RUB`.
+11. Classify the `2026-05-04` and `2026-05-05` nutrition/master-plan docs as reference-only; extract only prompts, OCR ideas, or service-boundary ideas into backlog.
+12. Extend `sanitize_live_reply()` and benchmark checks for invented names, over-familiar tone, and early diagnosis-like labels.
+13. Rerun the quality benchmark only after steps `1-11` land and confirm model reach stays near the current `9/20` baseline.
+14. Create exactly one premium-upgrade brief from the delivered `week` follow-up and new labs.
+15. Keep Telegram-first operations, manual concierge payment, and official prices at `3900 / 6900 / 14900 RUB`.

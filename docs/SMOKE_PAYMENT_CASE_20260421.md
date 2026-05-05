@@ -1,4 +1,4 @@
-﻿# Smoke Report: Payment / Case Flow
+# Smoke Report: Payment / Case Flow
 
 ## Scope
 - built a fresh submission payload from session data
@@ -9,12 +9,16 @@
 ## Payment Context
 ```json
 {
+  "offer_code": "premium",
+  "offer_name": "Персональный разбор на 30 дней",
+  "invoice_title": "Персональный разбор на 30 дней",
+  "invoice_description": "Глубокий нутрициологический разбор: анкета, анализы, гипотезы, план действий и 30 дней вопросов в Telegram.",
   "amount_rub": 6900,
   "amount_kop": 690000,
   "currency": "RUB",
-  "invoice_payload": "premium:smoke_case_payment_001:<REDACTED_ID>",
+  "invoice_payload": "premium:smoke_case_payment_001:1084557944",
   "invoice_sent_at": "2026-04-21T00:25:00Z",
-  "expected_telegram_user_id": <REDACTED_ID>
+  "expected_telegram_user_id": 1084557944
 }
 ```
 
@@ -29,7 +33,7 @@
   "submission_id": "smoke_case_payment_001",
   "offer": "premium",
   "profile": {
-    "telegram_user_id": <REDACTED_ID>,
+    "telegram_user_id": 1084557944,
     "telegram_username": "Olgazinchenko1186",
     "telegram_full_name": "Ольга",
     "full_name": "Ольга",
@@ -76,12 +80,16 @@
   "payment_status": "paid",
   "status_updated_at": "2026-04-21T00:27:00Z",
   "payment_context": {
+    "offer_code": "premium",
+    "offer_name": "Персональный разбор на 30 дней",
+    "invoice_title": "Персональный разбор на 30 дней",
+    "invoice_description": "Глубокий нутрициологический разбор: анкета, анализы, гипотезы, план действий и 30 дней вопросов в Telegram.",
     "amount_rub": 6900,
     "amount_kop": 690000,
     "currency": "RUB",
-    "invoice_payload": "premium:smoke_case_payment_001:<REDACTED_ID>",
+    "invoice_payload": "premium:smoke_case_payment_001:1084557944",
     "invoice_sent_at": "2026-04-21T00:25:00Z",
-    "expected_telegram_user_id": <REDACTED_ID>
+    "expected_telegram_user_id": 1084557944
   },
   "enrichment_updated_at": "2026-04-21T00:26:00Z"
 }
@@ -94,7 +102,7 @@
   "offer": "premium",
   "tier": "premium",
   "step": "done",
-  "telegram_user_id": <REDACTED_ID>,
+  "telegram_user_id": 1084557944,
   "telegram_username": "Olgazinchenko1186",
   "telegram_full_name": "Ольга",
   "full_name": "Ольга",
@@ -138,6 +146,6 @@
 
 ## Invoice Roundtrip
 - payload_submission_id: smoke_case_payment_001
-- payload_user_id: <REDACTED_ID>
+- payload_user_id: 1084557944
 - premium_price_rub: 6900
 - premium_price_kop: 690000

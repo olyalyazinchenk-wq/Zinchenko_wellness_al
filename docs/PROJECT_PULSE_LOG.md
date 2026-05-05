@@ -1,6 +1,15 @@
 # Project Pulse Log
 
-## 2026-05-05 23:05 MSK
+## 2026-05-05 21:31 MSK
+### Регулярная синхронизация (12h)
+- Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Проверено состояние репозитория: изменений в `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` нет; текущие изменения локально — только `docs/*` (планирование Hermes/отчёты/таски) + обновления хаба/пульса/стратегии.
+- Runtime-статус уточнён: по `bot.stderr.log` бот и polling подняты `2026-05-05 17:15-17:16 MSK`, TMA сервер стартовал на `http://localhost:8000`, прокси настроен `http://127.0.0.1:12334` (устойчивость и fallback требуют проверки).
+- Исправлена битая кодировка в `docs/hermes_os/self_audit_protocol.md` (теперь русский текст читабелен).
+- Политика без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
+- Блокеры без изменений: P0 delivery-gate (нельзя `delivered_to_client` при `needs_revision`/`must_rewrite_with_high_caution` без явного manual override); multi-path drift одного пользователя; mini-app содержит off-policy цену/хардкод результата и не готов к публичному запуску.
+
+## 2026-05-05 09:33 MSK
 ### Регулярная синхронизация (12h)
 - Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
 - Проверены директории и история: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` — новых коммитов после `b6010bb` нет; изменения локально только документальные + dev-инфраструктура.

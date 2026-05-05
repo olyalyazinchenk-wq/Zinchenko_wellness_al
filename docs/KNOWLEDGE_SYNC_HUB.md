@@ -47,6 +47,12 @@ If any connector is unavailable:
 - write the exact access request needed for the next run
 - repeat that same access request in the inbox summary
 
+## Timestamp Integrity Rule
+Before writing the new run entry:
+- resolve the current local run time explicitly
+- if the latest sync artifact is future-dated relative to the current run, correct that entry instead of stacking a second contradictory timestamp
+- keep the pulse log, agent hub, Obsidian mirror, and outward-sync artifacts aligned to the same absolute run timestamp
+
 ## External Sanitization Rule
 Before syncing status artifacts outside the local workspace:
 - redact Telegram user IDs and case identifiers that embed personal identifiers
