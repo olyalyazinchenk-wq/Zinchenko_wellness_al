@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-05-03 09:20 MSK
+Updated: 2026-05-05 23:05 MSK
 
 ## Unified GitHub Source Of Truth
 
@@ -14,7 +14,9 @@ Updated: 2026-05-03 09:20 MSK
 - Official pilot prices remain `3900 / 6900 / 14900 RUB`.
 - Top live defect: the `week` case `20260501T162705Z_1084557944` still shows `delivered_to_client` even though its attached review verdict is `needs_revision`, and no explicit override note is recorded.
 - `WellnessBot/data/runtime_state.json` is empty, so runtime/storage mismatch is not the active blocker.
-- Disk headroom is healthy: `C:` free space is approximately `22.97 GB` as of `2026-05-03 09:20 MSK`.
+- Disk headroom is acceptable: `C:` free space is approximately `18.97 GB` as of `2026-05-05 23:05 MSK` (watch trend; escalation threshold remains `10 GB`).
+- Repo state: no new WellnessBot core code/test/landing/mini-app deltas since last sync commit; current local changes are docs + optional Docker dev artifacts pending commit.
+- New artifacts staged locally (sanitized docs, no secrets): `docs/2026-05-04_nutrition-bot-architecture.md`, `docs/2026-05-04_nutrition-bot-context-document.md`, `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`, plus `WellnessBot/Dockerfile` and `WellnessBot/docker-compose.yml` for reproducible local runs (still `.env`-driven).
 - Latest benchmark reference: `ops/reports/quality_report_20260501T080509Z.md`
   - `20/20` non-empty replies
   - `11/20` deterministic replies

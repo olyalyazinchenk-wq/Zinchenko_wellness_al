@@ -334,3 +334,50 @@
   - `%TEMP%` still contains locked items that were skipped safely
   - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
   - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
+## 2026-05-03 21:27:06 +03:00
+
+- Before C:: `197.17 GB used / 25.84 GB free`
+- After C:: `197.17 GB used / 25.84 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB` net change after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `14` locked/in-use deletions skipped
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned a path error
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked items that were skipped safely
+  - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
+  - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
+## 2026-05-05 09:30:28 +03:00
+
+- Before C:: `204.36 GB used / 18.65 GB free`
+- After C:: `204.05 GB used / 18.97 GB free`
+- Delta free space: `+0.32 GB` (`+327.68 MB` net gain across the run)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: stale temp data was removed on the first cleanup pass; a verification pass then found no further removable stale items and `11` locked/in-use items still skipped safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned a path error
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - moved `Antigravity.lnk` to `C:\Users\HP\Desktop\00_Ярлыки\Antigravity (1).lnk`
+  - moved `Cursor.lnk` to `C:\Users\HP\Desktop\00_Ярлыки\Cursor.lnk`
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked items that were skipped safely
+  - `Clear-RecycleBin` returned a path error even though the Recycle Bin was empty before and after verification
+  - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
+## 2026-05-05 23:05:00 +03:00
+
+- Snapshot C:: `204.04 GB used / 18.97 GB free`
+- Action: no cleanup executed during this sync run (documentation-only maintenance).
+- Risk flags:
+  - free space decreased since the previous snapshot; keep watching the trend
+  - still above the `10 GB` escalation threshold, so no large-folder triage was required

@@ -1,5 +1,20 @@
 # Project Pulse Log
 
+## 2026-05-05 23:05 MSK
+### Регулярная синхронизация (12h)
+- Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Проверены директории и история: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` — новых коммитов после `b6010bb` нет; изменения локально только документальные + dev-инфраструктура.
+- Добавлены/актуализированы (без секретов): стратегический пакет `docs/2026-05-04_*` + `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`; Docker-артефакты для воспроизводимого локального запуска `WellnessBot/Dockerfile`, `WellnessBot/docker-compose.yml` (использует `.env`, который не коммитится).
+- Режим без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
+- Блокеры без изменений: P0 delivery-gate (нельзя `delivered_to_client` при `needs_revision`/`must_rewrite_with_high_caution` без явного manual override); нестабильность polling; mini-app содержит off-policy цену/хардкод результата и не готов к публичному запуску.
+
+## 2026-05-03 21:26 MSK
+### Регулярная синхронизация (12h)
+- Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Проверены директории и git-история: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` — новых коммитов после утреннего sync-пакета нет; рабочее дерево чистое.
+- Режим без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
+- Блокеры без изменений: P0 delivery-gate (нельзя `delivered_to_client` при `needs_revision`/`must_rewrite_with_high_caution` без явного manual override); нестабильность polling; mini-app содержит off-policy цену/хардкод результата и не готов к публичному запуску.
+
 ## 2026-05-03 09:20 MSK
 ### Регулярная синхронизация (12h)
 - Перепроверены управляющие артефакты и ключевые директории: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
