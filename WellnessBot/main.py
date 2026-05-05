@@ -1512,6 +1512,41 @@ def apply_internal_review_signals(
     return signals
 
 
+DELIVERY_BLOCKING_JUDGE_VERDICTS = {
+    "needs_revision",
+    "must_rewrite",
+    "must_rewrite_with_high_caution",
+    "reject",
+    "fail",
+    "unsafe",
+    "blocked",
+}
+
+
+def build_delivery_block_reason(submission: dict[str, Any]) -> dict[str, Any] | None:
+    internal_review = submission.get("internal_review") or {}
+    judge_verdict = str(internal_review.get("judge_verdict") or "").strip().lower()
+    review_flags = {
+        str(flag).strip().lower()
+        for flag in (internal_review.get("review_flags") or [])
+        if str(flag).strip()
+    }
+    needs_quality_rework = bool(internal_review.get("needs_quality_rework"))
+
+    if not (
+        judge_verdict in DELIVERY_BLOCKING_JUDGE_VERDICTS
+        or needs_quality_rework
+        or "quality_rework" in review_flags
+    ):
+        return None
+
+    return {
+        "judge_verdict": judge_verdict or None,
+        "review_flags": sorted(review_flags),
+        "needs_quality_rework": needs_quality_rework,
+    }
+
+
 def build_judge_preview_lines(report_text: str | None) -> list[str]:
     if not report_text:
         return []
@@ -1793,6 +1828,42 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
     if not client_id or not pdf_path or not Path(pdf_path).exists():
         await bot.answer_callback_query(callback_query.id, "Не могу отправить: нет ID клиента или PDF-файла.")
         return
+
+    delivery_block_reason = build_delivery_block_reason(submission)
+    if delivery_block_reason:
+        override_note = str(submission.get("manual_override_note") or "").strip()
+        override_by = str(submission.get("manual_override_by") or "").strip()
+        if not (override_note and override_by):
+            now_iso = utc_now_iso()
+            update_submission_status(
+                submission,
+                intake_status="delivery_blocked_needs_revision",
+                now_iso=now_iso,
+            )
+            submission["delivery_blocked_at"] = now_iso
+            submission["delivery_blocked_reason"] = delivery_block_reason
+            save_submission_state(settings.submissions_dir, submission)
+            await bot.answer_callback_query(
+                callback_query.id,
+                "Доставка заблокирована: внутренний критик требует доработки.",
+                show_alert=True,
+            )
+            await bot.send_message(
+                callback_query.from_user.id,
+                (
+                    f"⚠️ Досье {submission_id} не отправлено клиенту.\n"
+                    "Причина: внутренний критик отметил риск качества/безопасности. "
+                    "Сначала доработайте досье или оформите отдельный manual override."
+                ),
+            )
+            return
+        submission["manual_override_applied_at"] = utc_now_iso()
+        logger.warning(
+            "Delivery override for %s by %s: %s",
+            submission_id,
+            override_by,
+            override_note,
+        )
 
     from aiogram.types import FSInputFile
     pdf_doc = FSInputFile(pdf_path)

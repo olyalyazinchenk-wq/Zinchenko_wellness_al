@@ -53,8 +53,9 @@ PAYMENT_STATUSES_CONFIRMED_FOR_DOSSIER = {
 }
 
 
-def build_invoice_payload(submission_id: str, telegram_user_id: int) -> str:
-    return f"premium:{submission_id}:{telegram_user_id}"
+def build_invoice_payload(submission_id: str, telegram_user_id: int, offer_code: str = "premium") -> str:
+    normalized_offer_code = normalize_product_code(offer_code)
+    return f"{normalized_offer_code}:{submission_id}:{telegram_user_id}"
 
 
 def parse_invoice_payload(payload: str | None) -> tuple[str | None, int | None]:
@@ -62,7 +63,8 @@ def parse_invoice_payload(payload: str | None) -> tuple[str | None, int | None]:
         return None, None
 
     parts = payload.split(":")
-    if len(parts) != 3 or parts[0] != "premium":
+    raw_offer_code = parts[0].strip().lower() if parts else ""
+    if len(parts) != 3 or raw_offer_code not in {*PRODUCT_OFFERS, *PRODUCT_ALIASES}:
         return None, None
 
     submission_id = parts[1].strip() or None
@@ -88,7 +90,11 @@ def build_payment_context(
         "amount_rub": offer["price_rub"],
         "amount_kop": offer["amount_kop"],
         "currency": "RUB",
-        "invoice_payload": build_invoice_payload(session["submission_id"], telegram_user_id),
+        "invoice_payload": build_invoice_payload(
+            session["submission_id"],
+            telegram_user_id,
+            offer_code=offer["code"],
+        ),
         "invoice_sent_at": now_iso,
         "expected_telegram_user_id": telegram_user_id,
     }
