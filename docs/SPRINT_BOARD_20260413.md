@@ -1,7 +1,7 @@
 # Sprint Board
 
-Date: 2026-05-05
-Status: Active refresh after a same-day clean bot restart, fresh follow-up lab evidence, and higher governance/draft pressure
+Date: 2026-05-06
+Status: Active refresh after OCR auth recovery, new execution-plan artifacts, and unchanged P0 delivery/path/surface truth gaps
 Sprint owner: Chief Orchestrator
 Operating mode: controlled Telegram-first pilot truth hardening
 
@@ -116,6 +116,42 @@ Done when:
 - polling has a documented stable fallback or an explicit required dependency
 - runtime health is no longer inferred only from eventual reconnect
 - one clean post-fix verification passes after the `2026-05-05` restart without repeated proxy refusal or disconnect loops
+
+## P0. File/Lab Functional Verification
+
+Owner:
+
+- Lead Developer
+- Operator
+- Quality Auditor
+
+Task:
+
+- turn OCR auth recovery into verified, safe client file behavior
+
+Concrete changes:
+
+- treat `docs/OCR_PREFLIGHT_STATUS_20260506.md` as proof that the auth path is no longer the blocker:
+  - preflight moved from `401` to `auth_path_ok`
+  - synthetic `400` is acceptable for auth validation
+- do not treat that preflight as proof that real lab ingestion is ready
+- verify four real file/lab paths:
+  - PDF with text layer
+  - readable photo
+  - poor photo
+  - manual biomarker text
+- confirm client-facing fallback behavior when OCR or parsing is weak:
+  - ask for a better photo or PDF
+  - ask for manual biomarker text when needed
+  - do not invent values from weak OCR
+- keep deterministic biomarker alias expansion active
+- keep DeepSeek extraction blocked as a fact source until confidence / merge / audit rules exist
+
+Done when:
+
+- the team has one verified result for PDF, good photo, poor photo, and manual text
+- OCR failure produces a safe fallback instead of invented product truth
+- file/lab reliability is described from measured behavior, not from auth recovery alone
 
 ## P0. Parallel Architecture Containment
 
@@ -270,7 +306,7 @@ Repeated low-impact tasks to stop:
 
 Replacement action:
 
-- harden delivery truth first, keep all fresh follow-up evidence on the same canonical case second, neutralize the mini-app third, prove the polling path fourth, freeze new draft/task swarm fifth, then run one fresh premium-upgrade brief
+- harden delivery truth first, keep all fresh follow-up evidence on the same canonical case second, neutralize the mini-app third, prove the polling path fourth, verify real file fallback fifth, freeze new draft/task swarm sixth, then run one fresh premium-upgrade brief
 
 ## Next 12h Command Set
 
