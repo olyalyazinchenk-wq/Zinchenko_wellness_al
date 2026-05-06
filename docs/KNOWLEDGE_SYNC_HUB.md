@@ -40,6 +40,13 @@ At the start of every run:
 - treat Google Drive as available only when file create/upload and share tools are exposed
 - if a connector is partially available, use the working surface and log the missing capability precisely
 
+## Connector Startup Health Rule
+After tool discovery and before claiming connector success:
+- run at least one real connector call on every connector that must write in the current cycle
+- if the call fails with `failed to get client`, `MCP startup failed`, or another startup-timeout error, mark the connector as blocked even if its tools were discoverable
+- write the local fallback artifact anyway so the sync payload can be replayed later without redoing the analysis
+- include the exact startup error and the exact access request in `PROJECT_PULSE_LOG.md` and the inbox summary
+
 ## Connector Fallback Rule
 If any connector is unavailable:
 - complete the full local refresh first

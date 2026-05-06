@@ -1,5 +1,140 @@
 # Project Pulse Log
 
+## 2026-05-06 09:30 MSK
+### Sync Run Snapshot
+- Repo: `master` on commit `4cd1396` (`docs: add global execution plan and ocr preflight`); working tree has docs-only status refresh pending sync.
+- New core motion since 2026-05-05: OCR preflight scaffolding (`ops/yandex_ocr_preflight.py`) and safer biomarker alias coverage (`WellnessBot/lab_ocr.py`) are landed as commits (already in Git history).
+- Pilot posture remains unchanged: controlled concierge pilot only; public launch blocked; manual payment mode is active; human review remains mandatory.
+- P0 still unchanged: delivery-gate integrity (`delivered_to_client` vs `needs_revision`) + governing-case lab-state coherence + same-user canonical path + unsafe mini-app hardcoded result/price copy.
+- External sync: will attempt GitHub push and Notion status page refresh in this run; last known Notion connector state was `blocked` by MCP startup timeout.
+
+## 2026-05-05 21:34 MSK
+### Sync Correction Delta
+- Re-read the latest local state across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, `docs/external_sync`, the active same-user submissions, `WellnessBot/data/product_governance.json`, `git status`, and the current `bot.stderr.log` tail.
+- Corrected the same-day runtime story:
+  - the bot is currently running again
+  - local Python processes from the `2026-05-05 17:15:53 MSK` restart window are visible
+  - `bot.stderr.log` shows `Start polling` at `17:15:59-17:16:00 MSK`
+  - the TMA server answered local requests at `17:58:39` and `17:59:23 MSK`
+  - the runtime is still not proven stable because this path explicitly uses `http://127.0.0.1:12334` and has no clean no-proxy verification yet
+- `WellnessBot/data/runtime_state.json` is still empty, so the earlier runtime-versus-storage mismatch remains cleared.
+- The governing `week` case `20260501T162705Z_1084557944` picked up fresh follow-up evidence on `2026-05-05`:
+  - new PDF upload
+  - two new photo uploads
+  - ferritin clarification from the client
+- The same governing `week` case still carries the P0 contradiction:
+  - `intake_status = delivered_to_client`
+  - `internal_review.judge_verdict = needs_revision`
+  - no explicit manual override note is present
+- A new internal state mismatch is now visible on the same governing `week` case:
+  - `lab_quality_check.status = ok`
+  - `requires_lab_resubmission = true`
+  - this must be normalized before the follow-up state can be called coherent
+- The same user still also carries:
+  - stale `week` placeholder `20260427T173913Z_1084557944` at `consent_pending`
+  - paid `premium` branch `20260425T212847Z_1084557944` with `must_rewrite_with_high_caution`
+  - paid `premium` branch `20260425T214914Z_1084557944` with `lab_quality_check.requires_resubmission = true`
+- `mini-app/index.html` still exposes off-policy `2990` pricing plus hardcoded ferritin / vitamin D / cortisol findings and supplement / `LCHF` protocol output.
+- Disk headroom remains acceptable at approximately `19.37 GB` free on `C:` as measured at `2026-05-05 21:34 MSK`.
+- Latest local commit is now `2cecec2`, but the fresh repo motion remains docs/hermes-heavy rather than core pilot-fix heavy.
+
+### Benchmark Delta
+- Latest benchmark reference remains `ops/reports/quality_report_20260501T080509Z.md`.
+- QA synthesis remains `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
+- Current benchmark truth remains unchanged:
+  - `20/20` non-empty replies
+  - `11/20` deterministic replies
+  - `9/20` model-path replies
+  - clarifying questions in `7/9` model-handled symptom prompts
+  - exact duplicate clusters at `2`
+- No newer benchmark artifact exists, so no new quality claim should outrun the current 2026-05-01 evidence set.
+
+### Regression Delta
+- P0 delivery-gate bypass remains active:
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json` + `WellnessBot/data/drafts/20260501T162705Z_1084557944.review.json`
+  - owner: Lead Developer + Operator
+  - next fix action: block `delivered_to_client` unless the judge verdict is cleared or an explicit manual override note is recorded; re-review the delivered `week` case before any new follow-up promise
+- Governing-case lab-state mismatch is active:
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - owner: Lead Developer
+  - next fix action: reconcile `lab_quality_check` with `requires_lab_resubmission` after the new ferritin correction and uploaded files, then re-run case-state validation before any further dossier or follow-up claim
+- Same-user multi-path drift remains unresolved:
+  - source: delivered `week` case `20260501T162705Z_1084557944`, stale `week` placeholder `20260427T173913Z_1084557944`, and unresolved `premium` branches `20260425T212847Z_1084557944` and `20260425T214914Z_1084557944`
+  - owner: Operator + Lead Developer
+  - next fix action: classify the stack into one canonical path plus explicit archive / parked / evidence-only roles
+- Mini-app demo safety regression remains active:
+  - source: `mini-app/index.html`
+  - owner: Frontend / Lead Developer
+  - next fix action: remove off-policy pricing and hardcoded medical-style result content; replace with a safe placeholder or reviewed backend-fed state only
+- Runtime transport dependency remains active:
+  - source: `bot.stderr.log`, active local process state, and current bot config lines
+  - owner: Ops + Lead Developer
+  - next fix action: verify whether the bot can run cleanly without `127.0.0.1:12334`; if not, document proxy uptime as an explicit requirement and prove one clean post-fix verification
+- External connector outage is active:
+  - Notion source: direct tool call failed with `tool call error: failed to get client` -> `MCP startup failed: timed out awaiting tools/list after 30s`
+  - GitHub source: direct tool call failed with `tool call error: failed to get client` -> `MCP startup failed: timed out awaiting tools/list after 30s`
+  - Google Drive source: tool discovery exposed no Google Drive file create/upload or share tools in the current session
+  - owner: Tooling / Access
+  - next fix action: restore healthy connector startup for Notion and GitHub, and expose Google Drive upload/share tools before the next sync replay
+
+### Plan Delta
+- Keep delivery-gate integrity as the top priority; the runtime restart does not reduce the severity of a delivered case that still fails review.
+- Move governing-case normalization directly behind the delivery gate: the new ferritin follow-up created fresh product value, but the mixed lab-state flags make the case internally incoherent.
+- Treat runtime work as transport-proof work now, not just restart work:
+  - the bot is up
+  - the missing proof is a stable path with explicit proxy or no-proxy expectations
+- Keep benchmark reruns behind gate, case-state, surface, and transport fixes.
+- Keep local outward-sync artifacts current even while Notion/GitHub/Google Drive are blocked, so replay is cheap once access is restored.
+
+### Strategy Delta
+- Strategy still does not move toward new surfaces or new packaging.
+- The important correction since the `21:31 MSK` entry is:
+  - the runtime is not down
+  - the runtime is now a live but still proxy-dependent path
+  - the highest leverage remains delivery truth, case-state coherence, mini-app truth discipline, and explicit transport dependency management
+- The next proof target remains:
+  - one review-safe delivered case
+  - one normalized canonical paid path per user
+  - one safe Telegram-adjacent intake/demo surface
+  - one polling path whose proxy dependency is either removed or explicitly proven
+
+### Goals Delta
+- Goal 1: enforce a hard review gate before `delivered_to_client`.
+- Goal 2: normalize the current `week` follow-up case so lab-state flags match the latest evidence.
+- Goal 3: collapse the same-user `week` and `premium` sprawl into one canonical commercial path and explicitly retire stale placeholders.
+- Goal 4: remove unsafe hardcoded result content and off-policy pricing from the mini-app surface.
+- Goal 5: preserve the current `9/20` model reach baseline while proving a stable runtime transport path.
+
+### Connector Status
+- Obsidian: done - refreshed onboarding mirror and created a new local run-note mirror.
+- Notion: blocked - direct connector call failed with `tool call error: failed to get client` -> `MCP startup failed: timed out awaiting tools/list after 30s`.
+- GitHub: blocked - direct connector call failed with `tool call error: failed to get client` -> `MCP startup failed: timed out awaiting tools/list after 30s`.
+- Google Drive: blocked - no Google Drive file create/upload or share tools are exposed in the current Codex session.
+- Exact access requests:
+  - Notion: restore the Notion connector so MCP startup completes and page search/fetch/create calls succeed in this session
+  - GitHub: restore the GitHub connector so MCP startup completes and repository content calls succeed in this session
+  - Google Drive: enable the Google Drive connector with file create/upload and share permissions so the run snapshot can be uploaded directly from Codex
+
+### Next 12h Focus
+1. Block `delivered_to_client` unless internal review is cleared or an explicit manual override note is recorded.
+2. Normalize `lab_quality_check` versus `requires_lab_resubmission` on `20260501T162705Z_1084557944` after the new follow-up evidence.
+3. Decide the canonical path for the current same-user stack, then archive or freeze the stale `week` placeholder and extra `premium` branches.
+4. Replace the unsafe mini-app result mock and `2990` pricing with a safe placeholder aligned to the Telegram-first reviewed backend.
+5. Verify whether polling can run cleanly without `127.0.0.1:12334`, and require one clean post-fix verification before calling runtime stable.
+6. Replay the pending Notion, GitHub, and Google Drive outward-sync artifacts as soon as connector access is restored.
+
+### Context For New Model
+- Stage: controlled concierge pilot with runtime restored on a proxy-backed path, but delivery-gate integrity, same-user case ownership, mini-app truth, and connector availability still unstable
+- Objective: restore delivery truth, normalize the active `week` follow-up state, collapse the same-user branch sprawl to one canonical path, and prove or replace the current proxy-backed runtime path before the next proof cycle
+- Constraints: Telegram-first only; manual concierge remains official pilot mode; human review is mandatory before delivery; one canonical paid path per Telegram user; no diagnosis/treatment framing; no unsafe supplement instructions or hardcoded medical protocols on public/TMA surfaces; Notion and GitHub connector startups currently time out; Google Drive upload/share tools are unavailable in the current session
+- Immediate next actions:
+  1. Add a hard guard so unresolved internal-review verdicts cannot transition to `delivered_to_client` without an explicit manual override record.
+  2. Normalize `lab_quality_check` and `requires_lab_resubmission` on `20260501T162705Z_1084557944` after the new ferritin correction and uploads.
+  3. Decide the canonical path for the current same-user stack and explicitly retire `20260427T173913Z_1084557944` plus the non-canonical premium branches.
+  4. Replace unsafe mini-app demo-result copy and `2990` pricing with a safe placeholder or reviewed backend-fed state.
+  5. Verify the proxy dependency on `127.0.0.1:12334` and require one clean post-fix verification before calling the runtime stable.
+  6. Restore connector availability and replay the pending outward-sync artifacts from `docs/external_sync/`.
+
 ## 2026-05-05 21:31 MSK
 ### Регулярная синхронизация (12h)
 - Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.

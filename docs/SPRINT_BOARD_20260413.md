@@ -1,7 +1,7 @@
 # Sprint Board
 
 Date: 2026-05-05
-Status: Active refresh after strategy-drift artifacts and a newer recovered proxy-refusal outage window
+Status: Active refresh after a same-day clean bot restart, fresh follow-up lab evidence, and higher governance/draft pressure
 Sprint owner: Chief Orchestrator
 Operating mode: controlled Telegram-first pilot truth hardening
 
@@ -103,17 +103,19 @@ Concrete changes:
 
 - treat the recovered failures on `2026-05-02 15:09:39-15:17:57 MSK`, `20:26:15-20:27:14 MSK`, and `21:38:36-21:38:48 MSK` as live evidence of fragility
 - treat the newer recovered failure window on `2026-05-03 14:20:44-14:30:12 MSK` as the current leading ops signal because it combines `WinError 64` with explicit proxy refusal on `127.0.0.1:12334`
+- treat the clean restart on `2026-05-05 17:15:59 MSK` plus active Python processes at `21:30 MSK` as evidence that the runtime is currently back up
+- do not treat that clean restart as proof of resilience yet because the active path still logs `proxy=http://127.0.0.1:12334`
 - verify whether polling truly requires `127.0.0.1:12334`
 - if proxy is optional, document and prefer a no-proxy fallback path
 - if proxy is required, treat proxy availability as a first-class ops dependency with startup checks and operator visibility
-- stop treating the earlier fallback improvement claim as sufficient until one clean post-fix verification passes
+- stop treating startup or reconnect alone as sufficient until one clean post-fix verification passes
 
 Done when:
 
 - the team knows whether proxy is required or optional
 - polling has a documented stable fallback or an explicit required dependency
 - runtime health is no longer inferred only from eventual reconnect
-- one clean post-fix verification passes without repeated proxy refusal or disconnect loops
+- one clean post-fix verification passes after the `2026-05-05` restart without repeated proxy refusal or disconnect loops
 
 ## P0. Parallel Architecture Containment
 
@@ -194,6 +196,10 @@ Task:
 Concrete changes:
 
 - use the delivered `week` follow-up as the only live trigger for the next premium-upgrade design
+- use the fresh `2026-05-05` follow-up artifacts on `20260501T162705Z_1084557944` as the concrete input set:
+  - PDF upload
+  - two photo uploads
+  - ferritin `8 мкг/л` correction
 - keep that brief blocked from launch until the delivery-review contradiction on the same case is explicitly resolved
 - do not use stale `premium` artifacts as the current flagship proof story
 - draft one concrete premium-upgrade hypothesis:
@@ -219,8 +225,10 @@ Task:
 
 Concrete changes:
 
-- treat `120` experiments, `4` duplicate title groups, and a largest duplicate group of `x7` as a loop signal
+- treat `127` experiments, `4` duplicate title groups, and a largest duplicate group of `x8` as a loop signal
+- treat the `29` `docs/tasks/HERMES-20260505-*` files as execution-diffusion evidence, not as shipped progress
 - add no new experiment burst before delivery truth, canonical-path truth, and polling resilience are repaired
+- add no new task-packet burst before at least one P0 delivery, surface, or runtime fix lands
 - keep only one next experiment active:
   - premium upgrade from reviewed `week` follow-up and labs
 
@@ -255,28 +263,30 @@ Repeated low-impact tasks to stop:
 - repeating the same runtime-resilience claim without proving the transport path is actually fixed
 - stale premium-branch debate without a canonical-path declaration
 - alternate architecture/master-plan drafting that creates a second product story before the first one is safe and coherent
+- task-packet and readiness-draft generation that restates delivery gate, client path, OCR, or launch themes without shipping the corresponding fix
 - benchmark and tone work before mini-app truth and delivery gate are repaired
 - treating recovered proxy failures as solved because the bot eventually reconnects
-- experiment accumulation while `120` governance items already exist
+- experiment accumulation while `127` governance items already exist
 
 Replacement action:
 
-- harden delivery truth first, classify the same-user branch stack second, neutralize the mini-app third, prove the polling path fourth, contain the May architecture docs as reference-only fifth, then run one fresh premium-upgrade brief
+- harden delivery truth first, keep all fresh follow-up evidence on the same canonical case second, neutralize the mini-app third, prove the polling path fourth, freeze new draft/task swarm fifth, then run one fresh premium-upgrade brief
 
 ## Next 12h Command Set
 
 1. Add a hard guard so `needs_revision` or `must_rewrite_with_high_caution` cannot transition to `delivered_to_client` without an explicit manual override note.
 2. Review `20260501T162705Z_1084557944` and record whether client correction / clarification follow-up is required.
 3. Declare `20260501T162705Z_1084557944` either canonical or corrected-and-replaced; do not leave it ambiguous.
-4. Archive or explicitly retire stale `week` placeholder `20260427T173913Z_1084557944`.
-5. Freeze `20260425T214914Z_1084557944` as evidence-only until readable labs exist.
-6. Park `20260425T212847Z_1084557944` unless a fresh premium reactivation decision is made.
-7. Remove off-policy `2990` pricing from `mini-app/index.html`.
-8. Replace the hardcoded ferritin / vitamin D / cortisol / supplement / `LCHF` result demo with a safe placeholder or reviewed backend-fed state.
-9. Verify whether bot polling should depend on the local proxy at `127.0.0.1:12334`, prefer a direct path if possible, and document the startup rule either way.
-10. Prove the chosen polling path with one clean post-fix verification instead of treating reconnect alone as success.
-11. Classify the `2026-05-04` and `2026-05-05` nutrition/master-plan docs as reference-only; extract only prompts, OCR ideas, or service-boundary ideas into backlog.
-12. Extend `sanitize_live_reply()` and benchmark checks for invented names, over-familiar tone, and early diagnosis-like labels.
-13. Rerun the quality benchmark only after steps `1-11` land and confirm model reach stays near the current `9/20` baseline.
-14. Create exactly one premium-upgrade brief from the delivered `week` follow-up and new labs.
-15. Keep Telegram-first operations, manual concierge payment, and official prices at `3900 / 6900 / 14900 RUB`.
+4. Keep the fresh `2026-05-05` PDF/photo/ferritin follow-up on the same canonical case; do not create a second active case from it.
+5. Archive or explicitly retire stale `week` placeholder `20260427T173913Z_1084557944`.
+6. Freeze `20260425T214914Z_1084557944` as evidence-only until readable labs exist.
+7. Park `20260425T212847Z_1084557944` unless a fresh premium reactivation decision is made.
+8. Remove off-policy `от 2 990 ₽` pricing from `mini-app/index.html`.
+9. Replace the hardcoded ferritin / vitamin D / cortisol / `Витамин D3 5000 МЕ` / `LCHF` result demo with a safe placeholder or reviewed backend-fed state.
+10. Verify whether bot polling should depend on the local proxy at `127.0.0.1:12334`, using the clean `2026-05-05` restart as the verification baseline rather than as proof.
+11. Prove the chosen polling path with one clean post-fix verification instead of treating startup or reconnect alone as success.
+12. Freeze net-new strategy/task packet generation unless it directly lands a delivery, surface, or runtime fix.
+13. Extend `sanitize_live_reply()` and benchmark checks for invented names, over-familiar tone, and early diagnosis-like labels.
+14. Rerun the quality benchmark only after steps `1-12` land and confirm model reach stays near the current `9/20` baseline.
+15. Create exactly one premium-upgrade brief from the delivered `week` follow-up and new labs.
+16. Keep Telegram-first operations, manual concierge payment, and official prices at `3900 / 6900 / 14900 RUB`.

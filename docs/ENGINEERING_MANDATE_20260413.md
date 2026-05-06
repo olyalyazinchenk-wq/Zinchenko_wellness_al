@@ -2,7 +2,7 @@
 
 Date: 2026-05-05
 Issued by: Chief Orchestrator
-Status: Active refresh after strategy-drift artifacts and a newer recovered proxy-refusal outage window
+Status: Active refresh after a same-day clean bot restart, fresh follow-up lab evidence, and higher governance/draft pressure
 
 ## Mission
 
@@ -30,6 +30,7 @@ The Chief Engineer owns delivery truth, canonical same-user path control, surfac
 10. Improve model-path response discipline without losing the current model reach baseline.
 11. Prevent governance churn, offer expansion, or UI polish from replacing paid-cycle truth hardening.
 12. Prevent May reference artifacts from creating a second live roadmap, second payment posture, or second product surface before the current pilot is coherent.
+13. Prevent task-packet and readiness-draft accumulation from outrunning the actual delivery, surface, and runtime fixes already identified.
 
 ### Immediate engineering sequence
 
@@ -47,22 +48,25 @@ The Chief Engineer owns delivery truth, canonical same-user path control, surfac
 12. Inspect `bot.stderr.log`.
 13. Treat repeated recovered failures on `2026-05-02 15:09:39-15:17:57 MSK`, `20:26:15-20:27:14 MSK`, and `21:38:36-21:38:48 MSK` as an active ops dependency question.
 14. Treat the newer recovered failure window on `2026-05-03 14:20:44-14:30:12 MSK` as the latest leading signal because it combines `WinError 64` with explicit proxy refusal on `127.0.0.1:12334`.
-15. Verify whether polling truly requires `127.0.0.1:12334`; if not, add and document a no-proxy fallback path.
-16. Require one clean post-fix verification pass before runtime can be called stable again.
-17. Inspect `docs/WELLNESS_DIALOGUE_QA_20260501.md` and `ops/reports/quality_report_20260501T080509Z.md`.
-18. Extend `sanitize_live_reply()` and prompt rules to block invented names, over-familiar address, early diagnosis-like labels, and false specificity.
-19. Preserve the current routing gain:
+15. Treat the clean restart on `2026-05-05 17:15:59 MSK` plus active Python processes at `21:30 MSK` as evidence that the runtime is currently back up.
+16. Do not treat that clean restart as proof of resilience while the path still logs `proxy=http://127.0.0.1:12334`.
+17. Verify whether polling truly requires `127.0.0.1:12334`; if not, add and document a no-proxy fallback path.
+18. Require one clean post-fix verification pass after the `2026-05-05` restart before runtime can be called stable again.
+19. Inspect `docs/WELLNESS_DIALOGUE_QA_20260501.md` and `ops/reports/quality_report_20260501T080509Z.md`.
+20. Extend `sanitize_live_reply()` and prompt rules to block invented names, over-familiar address, early diagnosis-like labels, and false specificity.
+21. Preserve the current routing gain:
     - `11/20` deterministic
     - `9/20` model-path
     - `7/9` clarifying-question coverage on model-handled symptom prompts
-20. Rerun the benchmark only after delivery-gate, surface-safety, and runtime-resilience fixes land.
-21. Inspect `docs/2026-05-04_nutrition-bot-architecture.md`, `docs/2026-05-04_nutrition-bot-context-document.md`, and `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`.
-22. Classify those May docs as reference-only and extract only bounded reusable assets:
+22. Rerun the benchmark only after delivery-gate, surface-safety, and runtime-resilience fixes land.
+23. Inspect `docs/2026-05-04_nutrition-bot-architecture.md`, `docs/2026-05-04_nutrition-bot-context-document.md`, `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`, and the current `docs/tasks/HERMES-20260505-*` draft swarm.
+24. Classify those May docs as reference-only and extract only bounded reusable assets:
     - prompts
     - OCR approach
     - service-boundary ideas
-23. Block any implementation of Telegram Payments/YooKassa automation, PostgreSQL migration, Docker deployment work, or separate admin/WebApp expansion until the live Telegram pilot truth gaps are closed.
-24. Promote only one next product experiment:
+25. Block any implementation of Telegram Payments/YooKassa automation, PostgreSQL migration, Docker deployment work, or separate admin/WebApp expansion until the live Telegram pilot truth gaps are closed.
+26. Freeze net-new task-packet generation unless it directly closes a delivery, surface, or runtime gap already proven by artifacts.
+27. Promote only one next product experiment:
     - premium upgrade from reviewed `week` follow-up and fresh labs
 
 ### Things the Chief Engineer must block
@@ -74,11 +78,12 @@ The Chief Engineer owns delivery truth, canonical same-user path control, surfac
 - any mini-app or TMA surface that shows off-policy pricing
 - any mini-app or TMA surface that shows hardcoded supplement protocols, diet protocols, or pseudo-diagnostic conclusions
 - any runtime setup that silently requires an intermittently unavailable proxy listener without a documented fallback
-- any claim that polling resilience is fixed before one clean post-fix verification passes
+- any claim that polling resilience is fixed before one clean post-fix verification passes after the `2026-05-05` restart baseline
 - any prompt or sanitizer pass that collapses model reach back toward template capture
 - any symptom reply that invents names, uses unwarranted familiarity, or applies an early diagnostic label without evidence
 - any treatment of the May `nutrition_bot` and strategic-master-plan docs as current product truth rather than reference-only backlog
 - any critical-path move toward Telegram Payments/YooKassa automation, PostgreSQL migration, Docker deployment, or separate admin/WebApp work before the current pilot is coherent
+- any accumulation of new task packets, launch plans, or readiness reports that restates already known P0 work without closing it
 - any active `vip` selling
 - any pricing or packaging drift before one clean canonical path exists
 - any governance expansion that is not anchored to fresh delivered-case evidence
@@ -98,8 +103,9 @@ The Lead Developer / Executor owns the concrete repo and runtime behaviors that 
 5. Make polling resilient enough that reconnects are not mistaken for stability.
 6. Preserve model reach while tightening specificity and tone discipline.
 7. Keep manual payment behavior and official prices consistent across all active surfaces.
-8. Convert the delivered `week` follow-up into one explicit premium-upgrade hypothesis instead of a new experiment burst.
+8. Convert the delivered `week` follow-up into one explicit premium-upgrade hypothesis instead of a new experiment burst or a second active case.
 9. Reflect live evidence in strategy docs without creating documentation-only motion.
+10. Compress task/report churn when live artifacts already point to the next engineering action.
 
 ### Definition of done
 
