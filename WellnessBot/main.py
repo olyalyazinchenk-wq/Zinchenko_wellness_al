@@ -43,6 +43,7 @@ from config import load_settings
 from lab_ocr import (
     build_biomarker_confirmation_message,
     build_lab_resubmission_message,
+    build_manual_biomarker_rewrite_message,
     parse_biomarkers,
     parse_manual_biomarkers,
     recognize_text,
@@ -3423,6 +3424,16 @@ async def handle_message(message: types.Message) -> None:
                 "issues": [],
             }
             session["requires_lab_resubmission"] = False
+        elif re.search(r"\d", text):
+            session["lab_quality_check"] = {
+                "status": manual_structured.get("quality_status", "manual_text_no_clear_biomarkers"),
+                "requires_resubmission": True,
+                "issues": manual_structured.get("issues", ["no_clear_biomarker_lines_in_manual_text"]),
+            }
+            session["requires_lab_resubmission"] = True
+            touch_session()
+            await message.answer(build_manual_biomarker_rewrite_message())
+            return
         session["contact"] = "telegram_current_chat"
         session["step"] = "done"
         touch_session()
