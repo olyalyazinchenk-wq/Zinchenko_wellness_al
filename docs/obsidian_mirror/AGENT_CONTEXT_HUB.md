@@ -22,13 +22,13 @@ Updated: 2026-05-06 09:30 MSK
   - latest local requests are visible at `2026-05-05 17:58-17:59 MSK`
   - the active path is still unproven because no clean no-proxy fallback verification exists yet
 - Disk headroom remains acceptable: `C:` free space is approximately `19.37 GB` as of `2026-05-05 21:34 MSK` (escalation threshold remains `10 GB`).
-- Repo state: latest local commit is `4cd1396` (`docs: add global execution plan and ocr preflight`); current local changes are docs-only status refresh pending sync.
+- Repo state: latest local commit is `883228b` (`docs: refresh sprint board + disk hygiene (2026-05-06)`); working tree is clean after sync.
 - New local artifacts present for review/sync: `docs/2026-05-04_nutrition-bot-architecture.md`, `docs/2026-05-04_nutrition-bot-context-document.md`, `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`, `WellnessBot/Dockerfile`, and `WellnessBot/docker-compose.yml`.
 - New Hermes planning artifacts are present locally (docs-only): `docs/hermes_os/*`, `docs/hermes_skills/*`, `docs/reports/*`, `docs/tasks/HERMES-20260505-*.md` (ensure no secrets before syncing).
 - External sync surface:
   - Obsidian local mirror is available
-  - Notion connector status: last known `blocked` (needs re-test in this run)
-  - GitHub sync status: pending (will attempt push in this run; do not assume connector availability)
+  - Notion connector status: OK (status page created for `2026-05-06 09:30 MSK`)
+  - GitHub sync status: OK (pushed `883228b` to `master`)
   - Google Drive upload/share tools are unavailable in the current session
 - Latest benchmark reference: `ops/reports/quality_report_20260501T080509Z.md`
   - `20/20` non-empty replies

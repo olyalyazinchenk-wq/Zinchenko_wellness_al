@@ -2,11 +2,11 @@
 
 ## 2026-05-06 09:30 MSK
 ### Sync Run Snapshot
-- Repo: `master` on commit `4cd1396` (`docs: add global execution plan and ocr preflight`); working tree has docs-only status refresh pending sync.
+- Repo: `master` synced to GitHub on commit `883228b`; working tree clean after sync.
 - New core motion since 2026-05-05: OCR preflight scaffolding (`ops/yandex_ocr_preflight.py`) and safer biomarker alias coverage (`WellnessBot/lab_ocr.py`) are landed as commits (already in Git history).
 - Pilot posture remains unchanged: controlled concierge pilot only; public launch blocked; manual payment mode is active; human review remains mandatory.
 - P0 still unchanged: delivery-gate integrity (`delivered_to_client` vs `needs_revision`) + governing-case lab-state coherence + same-user canonical path + unsafe mini-app hardcoded result/price copy.
-- External sync: will attempt GitHub push and Notion status page refresh in this run; last known Notion connector state was `blocked` by MCP startup timeout.
+- External sync: GitHub push completed; Notion status page created: `Antigravity Sync Run - 2026-05-06 09:30 MSK`.
 
 ## 2026-05-05 21:34 MSK
 ### Sync Correction Delta
