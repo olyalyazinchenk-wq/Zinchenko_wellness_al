@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import asyncio
 import logging
@@ -43,6 +43,7 @@ from config import load_settings
 from lab_ocr import (
     build_biomarker_confirmation_message,
     build_lab_resubmission_message,
+    build_manual_biomarker_input_message,
     build_manual_biomarker_rewrite_message,
     parse_biomarkers,
     parse_manual_biomarkers,
@@ -311,6 +312,7 @@ def consent_keyboard() -> InlineKeyboardMarkup:
 def labs_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
+            [InlineKeyboardButton(text="Ввести показатели вручную", callback_data="manual_labs_help")],
             [InlineKeyboardButton(text="Готово, перейти дальше", callback_data="labs_done")],
             [InlineKeyboardButton(text="Пропустить анализы", callback_data="skip_labs")],
         ]
@@ -2849,6 +2851,16 @@ async def process_consent_no(callback_query: types.CallbackQuery) -> None:
     await bot.answer_callback_query(callback_query.id)
 
 
+@dp.callback_query(lambda c: c.data == "manual_labs_help")
+async def process_manual_labs_help(callback_query: types.CallbackQuery) -> None:
+    session = get_session(callback_query.from_user.id)
+    if not session or session.get("step") != "labs":
+        await bot.answer_callback_query(callback_query.id, text="Сначала начните разбор заново через /start", show_alert=True)
+        return
+
+    await callback_query.message.answer(build_manual_biomarker_input_message(), reply_markup=labs_keyboard())
+    await bot.answer_callback_query(callback_query.id)
+
 @dp.callback_query(lambda c: c.data == "skip_labs")
 async def process_skip_labs(callback_query: types.CallbackQuery) -> None:
     session = get_session(callback_query.from_user.id)
@@ -3658,7 +3670,7 @@ async def nurture_engine_loop():
                         name = session.get("full_name", "Здравствуйте").split(" ")[0]
                         await bot.send_message(
                             user_id,
-                            f"{name}, я жду ваши результаты анализов, чтобы начать собирать стратегию. Если у вас возникли трудности с PDF-форматом — просто сфотографируйте бланки, и мой Vision AI всё распознает."
+                            f"{name}, я жду ваши результаты анализов, чтобы начать собирать стратегию. Если у вас возникли трудности с PDF-форматом — можно отправить фото бланков или написать показатели вручную. Я проверю читаемость и не буду делать выводы по сомнительным цифрам."
                         )
                         session["nurture_sent"] = True
                         touch_session()
