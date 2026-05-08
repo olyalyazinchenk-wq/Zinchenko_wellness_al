@@ -62,7 +62,7 @@ Updated: 2026-05-08 16:40 MSK
 
 ## Stage
 
-- controlled concierge pilot with validated paid `week` demand, validated paid `premium` demand, restored live-model reach, runtime up again, and manual-lab fallback now present in code, but unstable delivery-gate integrity, same-user case ownership, mini-app truth, polling resilience, end-to-end file-fallback proof, and connector availability
+- controlled concierge pilot with validated paid `week` demand, validated paid `premium` demand, restored live-model reach, runtime up again, and manual-lab fallback now present in code, but the active bottleneck is now execution compression: delivery-gate integrity, same-user case ownership, mini-app truth, polling resilience, and end-to-end file-fallback proof still have not converted into direct fixes
 
 ## Done
 
@@ -83,6 +83,11 @@ Updated: 2026-05-08 16:40 MSK
   - typed biomarker examples are shown
   - a manual-entry button exists in the labs step
   - malformed typed biomarker text now gets a rewrite prompt
+- Product direction and monetization path were re-confirmed in this run:
+  - Telegram-first still holds
+  - `week` remains the entry rail
+  - `premium` remains the flagship offer only as a same-case continuation
+  - no new channel, pricing, or checkout branch is justified
 - Governance pressure is still high:
   - `127` experiments
   - `4` duplicate title groups
@@ -200,7 +205,8 @@ Updated: 2026-05-08 16:40 MSK
 8. Replace unsafe mini-app result demo content with a safe placeholder or reviewed backend-fed state.
 9. Prove whether the currently running polling path is proxy-backed or no-proxy, and fix or document the `/health` check.
 10. Tighten live-answer sanitization and benchmark assertions around invented personalization, duplicated emergency templates, false specificity, and overlong replies.
-11. Restore Notion, GitHub, and Google Drive availability, then replay the pending outward-sync artifacts from `docs/external_sync/`.
+11. Freeze net-new strategy/task packet generation until at least one direct P0 fix lands.
+12. Keep GitHub on the last proven good path, re-check Notion before writing, and restore Google Drive availability before the next outward-sync replay.
 
 ## Must-Not-Change Rules
 
@@ -220,12 +226,13 @@ Updated: 2026-05-08 16:40 MSK
 - do not use AI-assisted biomarker extraction as a fact source without confidence, merge, and audit controls
 - do not accept malformed typed biomarker text as confirmed evidence
 - do not let task/report generation outrun delivery safety, runtime health, manual-fallback proof, and canonical state truth
+- do not write another strategy refresh from the same evidence set before a direct P0 fix lands
 
 ## Context For New Model
 
 Stage:
 
-- controlled concierge pilot with validated paid `week` demand, validated paid `premium` demand, restored live-model reach, runtime up again, and manual-lab fallback now present in code, but unstable delivery-gate integrity, same-user case ownership, mini-app truth, polling resilience, end-to-end file-fallback proof, and connector availability
+- controlled concierge pilot with demand already validated and direction already clear, but execution compression is now required because delivery truth, same-user ownership, mini-app truth, runtime proof, and manual-fallback proof remain open on the same unchanged artifact set
 
 Done:
 
@@ -235,6 +242,7 @@ Done:
 - OCR auth path recovered
 - manual typed-lab fallback landed in code
 - router/model split held at `11/20` deterministic and `9/20` model-path
+- strategy direction and monetization path re-confirmed with no need for a new surface, new price, or a second active paid storyline
 
 Next:
 
@@ -243,6 +251,7 @@ Next:
 - prove manual-lab fallback end-to-end
 - remove hardcoded mini-app result content
 - prove or replace the current proxy-backed runtime path
+- freeze new planning churn until one direct P0 fix lands
 
 Must-Not-Change Rules:
 
@@ -255,6 +264,7 @@ Must-Not-Change Rules:
 - no diagnosis/treatment framing
 - no hardcoded supplement or protocol output on surfaces
 - no claiming file reliability is solved before PDF/photo/manual-text proof exists
+- no new strategy/task packet churn from the same evidence set before a direct fix lands
 
 Immediate next actions:
 
@@ -266,7 +276,8 @@ Immediate next actions:
 6. Remove the hardcoded mini-app `Premium Wellness-Досье` result demo and replace it with a safe placeholder or reviewed backend-fed state.
 7. Verify the proxy dependency on `127.0.0.1:12334` from the current running baseline and fix or document the `/health` check.
 8. Tighten `sanitize_live_reply()` and benchmark assertions for invented names, duplicated emergency templates, false specificity, and overlong first-touch replies.
-9. Restore Notion, GitHub, and Google Drive availability, then replay pending outward-sync artifacts.
+9. Freeze net-new strategy/task packet generation until one of actions `1-8` lands.
+10. Keep GitHub on the last proven good path, re-check Notion before writing, and restore Google Drive availability before the next outward-sync replay.
 
 Reference benchmark:
 
