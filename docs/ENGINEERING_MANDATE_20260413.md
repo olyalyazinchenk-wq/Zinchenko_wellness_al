@@ -2,7 +2,7 @@
 
 Date: 2026-05-08
 Issued by: Chief Orchestrator
-Status: Active refresh after a second paid premium path appeared, manual lab-entry fallback landed in code, latest QA stayed flat-to-worse, and runtime restarted on the same proxy-backed path
+Status: Execution-compression refresh after no new product proof landed beyond the early-morning May 8 artifact set; engineering mandate now biases toward direct fixes and away from more plan churn
 
 ## Mission
 
@@ -79,6 +79,10 @@ The Chief Engineer owns delivery truth, canonical same-user path control, surfac
 
 ### 2026-05-08 correction set
 
+- Treat the absence of new product proof after `2026-05-08 04:38 MSK` as a loop signal:
+  - direction is already clear enough
+  - execution truth is not
+  - the next meaningful artifact must be a direct P0 fix or verification result
 - Treat `20260505T131604Z_1084557944` as both:
   - real monetization proof
   - active canonical-path regression
@@ -94,6 +98,7 @@ The Chief Engineer owns delivery truth, canonical same-user path control, surfac
   - bot is up again
   - proxy dependency remains active
   - health signaling remains incomplete
+- Treat `127` experiments, `4` duplicate title groups, `x8` largest duplicate group, and `29` same-day HERMES task files as evidence that new strategy/task output must now be blocked unless it lands a direct fix
 
 ### Things the Chief Engineer must block
 
@@ -113,6 +118,7 @@ The Chief Engineer owns delivery truth, canonical same-user path control, surfac
 - any treatment of the May `nutrition_bot` and strategic-master-plan docs as current product truth rather than reference-only backlog
 - any critical-path move toward Telegram Payments/YooKassa automation, PostgreSQL migration, Docker deployment, or separate admin/WebApp work before the current pilot is coherent
 - any accumulation of new task packets, launch plans, or readiness reports that restates already known P0 work without closing it
+- any new strategy refresh written from the same evidence set before at least one direct fix lands on delivery truth, case ownership, mini-app truth, manual-lab proof, or runtime health
 - any active `vip` selling
 - any pricing or packaging drift before one clean canonical path exists
 - any governance expansion that is not anchored to fresh delivered-case evidence
@@ -190,6 +196,10 @@ Bring mini-app result copy back inside the Telegram-first safety boundary.
 Make polling resilient enough that runtime stability is explicit, verified, and not inferred from reconnects.
 
 ### Focus 6
+
+Compress loops so the next artifact is a shipped fix, not another plan layer.
+
+### Focus 7
 
 Improve live-model discipline while preserving the current `9/20` model-path reach.
 
