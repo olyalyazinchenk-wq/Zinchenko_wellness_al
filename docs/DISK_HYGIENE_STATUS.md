@@ -401,6 +401,25 @@
   - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
   - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
 
+## 2026-05-08 16:38:34 +03:00
+
+- Before C:: `211.66 GB used / 11.36 GB free`
+- After C:: `211.66 GB used / 11.35 GB free`
+- Delta free space: `-0.00 GB` (`+182.56 MB` reclaimed from stale temp items, but background disk activity offset the net free-space change)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `2` stale files, reclaimed `182.56 MB`, skipped `9` locked/in-use items, and left `6` additional error cases untouched safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked or access-restricted items that were skipped safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
 ## 2026-05-06 09:32:40 +03:00
 
 - Before C:: `205.70 GB used / 17.31 GB free`
@@ -408,6 +427,25 @@
 - Delta free space: `+0.04 GB` (`+43.68 MB` net gain across the run)
 - Safe cleanup performed:
   - `C:\Users\HP\AppData\Local\Temp`: removed `79` stale files and `3` stale directories, reclaimed `43.44 MB`, skipped `31` locked/in-use items, and left `2` additional error cases untouched safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked or access-restricted items that were skipped safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
+## 2026-05-08 04:37:19 +03:00
+
+- Before C:: `207.38 GB used / 15.63 GB free`
+- After C:: `206.65 GB used / 16.36 GB free`
+- Delta free space: `+0.73 GB` (`+750.94 MB` net gain across the run)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `30` stale files and `24` stale directories, reclaimed `750.94 MB`, skipped `15` locked/in-use items safely
   - `C:\Windows\Temp`: no stale items removed
   - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
   - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`

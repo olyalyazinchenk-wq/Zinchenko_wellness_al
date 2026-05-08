@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мотивация — Сахарный диабет 2 типа | Ольга Зинченко</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: #0a0a0a;
+    color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .poster {
+    max-width: 800px;
+    width: 100%;
+    background: linear-gradient(160deg, #0f0f0f 0%, #1a1412 40%, #1e1414 70%, #121212 100%);
+    border-radius: 32px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 25px 60px -16px rgba(0,0,0,0.9);
+  }
+
+  .hero {
+    position: relative;
+    padding: 80px 56px 60px;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* subtle decorative circle */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -120px;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(192,132,122,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(90,158,111,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero .label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero .big-number {
+    font-size: 96px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: transparent;
+    background: linear-gradient(135deg, #c0847a 30%, #d4a89e 70%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 .em {
+    color: #c0847a;
+  }
+
+  .hero p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.5);
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ─── SVG GRAPHIC ─── */
+  .graphic {
+    padding: 0 56px 20px;
+    text-align: center;
+  }
+
+  .graphic svg {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+  }
+
+  /* ─── PRINCIPLES ─── */
+  .principles {
+    padding: 40px 56px 48px;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .principle-card {
+    text-align: center;
+    padding: 24px 16px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.2s ease;
+  }
+
+  .principle-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .principle-card .p-icon {
+    font-size: 36px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .principle-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+    color: #f0f0f0;
+  }
+
+  .principle-card p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.45);
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    padding: 0 56px 48px;
+    text-align: center;
+  }
+
+  .cta-line {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #c0847a;
+    border: 1px solid rgba(192, 132, 122, 0.2);
+    padding: 10px 28px;
+    border-radius: 30px;
+    background: rgba(192, 132, 122, 0.06);
+  }
+
+  /* ─── QUOTE ─── */
+  .quote-block {
+    padding: 36px 56px 40px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.15);
+  }
+
+  .quote-block blockquote {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+    max-width: 520px;
+    margin: 0 auto 20px;
+  }
+
+  .quote-block .author {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .quote-block .author strong {
+    color: #c0847a;
+    font-weight: 600;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 20px 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.3);
+  }
+
+  .footer .name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+
+  .footer .name small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.3);
+    margin-top: 1px;
+  }
+
+  .footer .promo {
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  .footer .promo code {
+    color: #c0847a;
+    background: rgba(192,132,122,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 720px) {
+    .hero { padding: 48px 28px 36px; }
+    .hero .big-number { font-size: 60px; }
+    .hero h1 { font-size: 28px; }
+    .graphic { padding: 0 28px 16px; }
+    .principles { padding: 28px; }
+    .principles-grid { grid-template-columns: 1fr; gap: 10px; }
+    .cta-section { padding: 0 28px 32px; }
+    .quote-block { padding: 28px; }
+    .footer { padding: 16px 28px; flex-direction: column; text-align: center; gap: 6px; }
+    .footer .promo { text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .hero .big-number { font-size: 44px; }
+    .hero h1 { font-size: 22px; }
+    .hero p { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="label">Сахарный диабет 2 типа</div>
+    <div class="big-number">ТИП 2</div>
+    <h1>Твой сахар — <span class="em">под твоим контролем</span></h1>
+    <p>Диабет 2 типа — не приговор, а вызов. Питание, режим и поддержка возвращают тебе управление. Каждый день — шаг к стабильности.</p>
+  </div>
+
+  <!-- GRAPHIC -->
+  <div class="graphic">
+    <svg viewBox="0 0 500 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- arrows / path -->
+      <path d="M60 70 L250 70 L250 35 L350 70 L250 105 L250 70" stroke="#c0847a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+      <path d="M350 70 L440 70" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-dasharray="4 4" stroke-linecap="round"/>
+      <circle cx="60" cy="70" r="8" fill="#c0847a" opacity="0.2"/>
+      <circle cx="60" cy="70" r="4" fill="#c0847a"/>
+      <circle cx="440" cy="70" r="8" fill="#5a9e6f" opacity="0.2"/>
+      <circle cx="440" cy="70" r="4" fill="#5a9e6f"/>
+      <!-- labels -->
+      <text x="60" y="108" font-family="Inter, sans-serif" font-size="11" fill="rgba(255,255,255,0.3)" text-anchor="middle" letter-spacing="2">СЕГОДНЯ</text>
+      <text x="440" y="108" font-family="Inter, sans-serif" font-size="11" fill="#5a9e6f" text-anchor="middle" letter-spacing="2">СТАБИЛЬНОСТЬ</text>
+      <text x="195" y="30" font-family="Inter, sans-serif" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" letter-spacing="1">ПИТАНИЕ + РЕЖИМ + ПОДДЕРЖКА</text>
+      <text x="195" y="120" font-family="Inter, sans-serif" font-size="10" fill="rgba(255,255,255,0.2)" text-anchor="middle" letter-spacing="1">→ ежедневная работа</text>
+    </svg>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <div class="principles">
+    <div class="principles-grid">
+      <div class="principle-card">
+        <span class="p-icon">🥩</span>
+        <h3>Белковое утро</h3>
+        <p>Яйца, рыба, творог — без скачка сахара с утра и сытость до обеда.</p>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">🚶</span>
+        <h3>15 минут после еды</h3>
+        <p>Прогулка снижает постпрандиальную глюкозу эффективнее лекарств.</p>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">😴</span>
+        <h3>Сон 7–8 часов</h3>
+        <p>Кортизол падает — инсулин работает лучше. Сон лечит инсулинорезистентность.</p>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">💧</span>
+        <h3>Вода 1,5–2 л</h3>
+        <p>Почки выводят избыток глюкозы. Вода — топливо метаболизма.</p>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">📉</span>
+        <h3>Глюкоза ~5,6</h3>
+        <p>Цель — стабильная глюкоза натощак. Каждый приём пищи — инструмент.</p>
+      </div>
+      <div class="principle-card">
+        <span class="p-icon">💪</span>
+        <h3>Не идеально — достаточно</h3>
+        <p>Срыв — не провал. Следующий приём — новая возможность. Без чувства вины.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-section">
+    <div class="cta-line">✦ Старт программы — питание + нутрицевтическая поддержка ✦</div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="quote-block">
+    <blockquote>«Твой диагноз — не история болезни. Это история выздоровления, которую ты пишешь каждым приёмом пищи, каждой прогулкой, каждой ночью здорового сна.»</blockquote>
+    <div class="author">— <strong>Ольга Зинченко</strong>, нутрициолог</div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>
+      <div class="name">Ольга Зинченко <small>нутрициолог</small></div>
+    </div>
+    <div class="promo">
+      Промокод Витамакс: <code>844131</code><br>
+      <span style="font-size:10px;color:rgba(255,255,255,0.2)">СЗ: ru.siberianhealth.com · referral: 2663395625</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

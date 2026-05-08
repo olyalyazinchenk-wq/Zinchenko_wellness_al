@@ -60,6 +60,12 @@ Before writing the new run entry:
 - if the latest sync artifact is future-dated relative to the current run, correct that entry instead of stacking a second contradictory timestamp
 - keep the pulse log, agent hub, Obsidian mirror, and outward-sync artifacts aligned to the same absolute run timestamp
 
+## Same-Day Partial Entry Correction Rule
+If the same local day already contains a fresh but partial sync entry:
+- update that same-day entry in place instead of stacking a second near-duplicate block
+- carry forward the final connector status from the completed run, not the stale status from an earlier failed probe
+- distinguish connector-backed outward sync from local `git push`; a proxy-blocked local push does not by itself mean GitHub external sync is blocked if GitHub app writes succeeded
+
 ## External Sanitization Rule
 Before syncing status artifacts outside the local workspace:
 - redact Telegram user IDs and case identifiers that embed personal identifiers

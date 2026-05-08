@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Программа питания — Сахарный диабет 2 типа | Ольга Зинченко</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    background: #0f0f0f;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  .poster {
+    max-width: 1080px;
+    width: 100%;
+    background: #161616;
+    border-radius: 32px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    padding: 48px 56px 36px;
+    background: linear-gradient(135deg, #1a1a1a 0%, #1e1414 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #c0847a;
+    border: 1px solid rgba(192, 132, 122, 0.3);
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: #f0f0f0;
+  }
+
+  .header h1 span {
+    color: #c0847a;
+  }
+
+  .header p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.55);
+    max-width: 65ch;
+  }
+
+  /* ─── GRID ─── */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .module {
+    background: #161616;
+    padding: 40px 48px;
+  }
+
+  .module-wide {
+    grid-column: 1 / -1;
+  }
+
+  .module-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #c0847a;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(192, 132, 122, 0.15);
+  }
+
+  /* ─── FOOD GROUPS ─── */
+  .food-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .food-grid.two-col { grid-template-columns: 1fr 1fr; }
+
+  .food-card {
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .food-card.green {
+    border-left: 3px solid #5a9e6f;
+  }
+
+  .food-card.red {
+    border-left: 3px solid #c07a7a;
+  }
+
+  .food-card .icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+    line-height: 1;
+  }
+
+  .food-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #f0f0f0;
+    letter-spacing: -0.01em;
+  }
+
+  .food-card ul {
+    list-style: none;
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .food-card ul li::before {
+    content: "·";
+    margin-right: 6px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* ─── MEAL STRUCTURE ─── */
+  .meal-steps {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .meal-step {
+    flex: 1;
+    min-width: 160px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+  }
+
+  .meal-step .step-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .meal-step h4 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #f0f0f0;
+    margin-bottom: 6px;
+  }
+
+  .meal-step p {
+    font-size: 12px;
+    line-height: 1.5;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ─── SUPPLEMENTS ─── */
+  .supplement-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .supplement-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 16px 20px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .supplement-item .s-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .s-icon.sw { background: rgba(80, 160, 120, 0.15); }
+  .s-icon.vm { background: rgba(100, 140, 200, 0.15); }
+
+  .supplement-item .s-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+
+  .supplement-item .s-brand {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .supplement-item .s-desc {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-left: auto;
+    text-align: right;
+    max-width: 200px;
+  }
+
+  /* ─── TIPS ─── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .tip-item {
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid rgba(255,255,255,0.05);
+    text-align: center;
+  }
+
+  .tip-item .tip-icon { font-size: 28px; margin-bottom: 10px; display: block; }
+  .tip-item h4 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; color: #f0f0f0; }
+  .tip-item p { font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.5); }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    grid-column: 1 / -1;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.2);
+  }
+
+  .footer .name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f0f0f0;
+  }
+
+  .footer .name small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.35);
+    margin-top: 2px;
+  }
+
+  .footer .ref {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    text-align: right;
+    line-height: 1.5;
+  }
+
+  .footer .ref a {
+    color: #c0847a;
+    text-decoration: none;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 720px) {
+    .header { padding: 32px 24px; }
+    .header h1 { font-size: 32px; }
+    .module { padding: 24px; }
+    .grid { grid-template-columns: 1fr; }
+    .food-grid.two-col { grid-template-columns: 1fr; }
+    .tips-grid { grid-template-columns: 1fr 1fr; }
+    .footer { flex-direction: column; text-align: center; gap: 8px; }
+    .footer .ref { text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .tips-grid { grid-template-columns: 1fr; }
+    .meal-steps { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="poster">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="badge">Программа нутрициолога</div>
+    <h1>Сахарный диабет <span>2 типа</span></h1>
+    <p>Питание, образ жизни и нутрицевтическая поддержка для стабильного уровня глюкозы, чувствительности к инсулину и профилактики осложнений.</p>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid">
+
+    <!-- FOOD: WHAT TO EAT -->
+    <div class="module">
+      <div class="module-title">🍽 Что есть регулярно</div>
+      <div class="food-grid">
+        <div class="food-card green">
+          <span class="icon">🥩</span>
+          <h4>Белковая опора</h4>
+          <ul>
+            <li>Яйца, рыба, птица</li>
+            <li>Творог, греческий йогурт</li>
+            <li>Бобовые (нут, чечевица)</li>
+            <li>Тофу, темпе</li>
+          </ul>
+        </div>
+        <div class="food-card green">
+          <span class="icon">🥦</span>
+          <h4>Овощи и клетчатка</h4>
+          <ul>
+            <li>Листовые: шпинат, руккола</li>
+            <li>Капуста всех видов</li>
+            <li>Кабачки, огурцы, перец</li>
+            <li>Авокадо — источник жиров</li>
+          </ul>
+        </div>
+        <div class="food-card green">
+          <span class="icon">🌾</span>
+          <h4>Сложные углеводы (низкий ГИ)</h4>
+          <ul>
+            <li>Гречка, киноа, булгур</li>
+            <li>Чечевица, нут</li>
+            <li>Цельнозерновой хлеб</li>
+            <li>Ягоды (черника, смородина)</li>
+          </ul>
+        </div>
+        <div class="food-card green">
+          <span class="icon">🥜</span>
+          <h4>Полезные жиры</h4>
+          <ul>
+            <li>Оливковое масло extra virgin</li>
+            <li>Орехи, семена (лен, чиа)</li>
+            <li>Жирная рыба (скумбрия, сельдь)</li>
+            <li>Масло авокадо, кокоса</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOD: WHAT TO LIMIT -->
+    <div class="module">
+      <div class="module-title">⚠ Ограничить / исключить</div>
+      <div class="food-grid">
+        <div class="food-card red">
+          <span class="icon">🧃</span>
+          <h4>Быстрые углеводы</h4>
+          <ul>
+            <li>Сахар, мёд, сиропы</li>
+            <li>Сладкие напитки, соки</li>
+            <li>Выпечка, белый хлеб</li>
+            <li>Конфеты, десерты</li>
+          </ul>
+        </div>
+        <div class="food-card red">
+          <span class="icon">🍟</span>
+          <h4>Ультра-обработанные продукты</h4>
+          <ul>
+            <li>Фастфуд, полуфабрикаты</li>
+            <li>Чипсы, снеки</li>
+            <li>Колбасы, сосиски</li>
+            <li>Соусы с сахаром (кетчуп)</li>
+          </ul>
+        </div>
+        <div class="food-card red">
+          <span class="icon">🍚</span>
+          <h4>Рафинированные крупы</h4>
+          <ul>
+            <li>Белый рис</li>
+            <li>Манка, кускус</li>
+            <li>Белые макароны</li>
+            <li>Быстрые каши</li>
+          </ul>
+        </div>
+        <div class="food-card red">
+          <span class="icon">🍷</span>
+          <h4>Прочее</h4>
+          <ul>
+            <li>Алкоголь (особенно пиво, ликёры)</li>
+            <li>Трансжиры (маргарин)</li>
+            <li>Избыток красного мяса</li>
+            <li>Пропуск приёмов пищи</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEAL STRUCTURE -->
+    <div class="module module-wide">
+      <div class="module-title">🏗 Структура каждого приёма</div>
+      <div class="meal-steps">
+        <div class="meal-step">
+          <span class="step-icon">🥩</span>
+          <h4>Белок</h4>
+          <p>Основа тарелки. Стабилизирует глюкозу и даёт сытость на 3–4 ч.</p>
+        </div>
+        <div class="meal-step">
+          <span class="step-icon">🥦</span>
+          <h4>Клетчатка</h4>
+          <p>Овощи — ½ тарелки. Замедляет всасывание углеводов.</p>
+        </div>
+        <div class="meal-step">
+          <span class="step-icon">🥑</span>
+          <h4>Жиры</h4>
+          <p>Здоровые жиры снижают гликемический скачок после еды.</p>
+        </div>
+        <div class="meal-step">
+          <span class="step-icon">🌾</span>
+          <h4>Углеводы</h4>
+          <p>Только сложные, ¼ тарелки. Порция ~½ стакана в готовом виде.</p>
+        </div>
+        <div class="meal-step">
+          <span class="step-icon">⏰</span>
+          <h4>Режим</h4>
+          <p>3 основных + 1 перекус. Интервал 3–5 ч. Без пропусков.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUPPLEMENTS -->
+    <div class="module">
+      <div class="module-title">💊 Нутрицевтическая поддержка</div>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px;line-height:1.5;">
+        Нутрицевтики — поддержка, не замена лечению. Согласовывать с врачом.
+      </p>
+      <div class="supplement-list">
+        <div class="supplement-item">
+          <div class="s-icon sw">🐟</div>
+          <div>
+            <div class="s-name">Омега-3 Ультра</div>
+            <div class="s-brand">Siberian Wellness</div>
+          </div>
+          <div class="s-desc">Снижение воспаления, поддержка липидного профиля</div>
+        </div>
+        <div class="supplement-item">
+          <div class="s-icon sw">🧂</div>
+          <div>
+            <div class="s-name">Органический магний</div>
+            <div class="s-brand">Siberian Wellness</div>
+          </div>
+          <div class="s-desc">Чувствительность к инсулину, сон, стресс</div>
+        </div>
+        <div class="supplement-item">
+          <div class="s-icon sw">☀️</div>
+          <div>
+            <div class="s-name">Витамин D3</div>
+            <div class="s-brand">Siberian Wellness</div>
+          </div>
+          <div class="s-desc">Иммунитет, глюкозный обмен</div>
+        </div>
+        <div class="supplement-item">
+          <div class="s-icon vm">💊</div>
+          <div>
+            <div class="s-name">D3 Активатор</div>
+            <div class="s-brand">Vitamax</div>
+          </div>
+          <div class="s-desc">D3 + K2 + Mg + Zn + Se (альтернатива)</div>
+        </div>
+        <div class="supplement-item">
+          <div class="s-icon vm">🫒</div>
+          <div>
+            <div class="s-name">Вита Омега-3 600</div>
+            <div class="s-brand">Vitamax</div>
+          </div>
+          <div class="s-desc">Омега-3 ПНЖК 600 мг (альтернатива)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIFESTYLE TIPS -->
+    <div class="module">
+      <div class="module-title">🏃 Образ жизни</div>
+      <div class="tips-grid">
+        <div class="tip-item">
+          <span class="tip-icon">🚶</span>
+          <h4>Движение</h4>
+          <p>10–15 мин ходьбы после еды снижают глюкозу. Минимум 30 мин/день.</p>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">😴</span>
+          <h4>Сон</h4>
+          <p>7–8 часов. Недосып повышает кортизол → растёт глюкоза и инсулинорезистентность.</p>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">💧</span>
+          <h4>Вода</h4>
+          <p>1,5–2 л чистой воды. Обезвоживание сгущает кровь и ухудшает метаболизм.</p>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🧘</span>
+          <h4>Стресс</h4>
+          <p>Хронический стресс = высокий сахар. Дыхательные практики, прогулки.</p>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">📊</span>
+          <h4>Глюкометр</h4>
+          <p>Измерять натощак и через 2 ч после еды. Вести дневник.</p>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">👨‍⚕️</span>
+          <h4>Врач</h4>
+          <p>Контроль HbA1c раз в 3 мес. Коррекция терапии — только с врачом.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="divider"></div>
+
+    <!-- KEY MESSAGE -->
+    <div class="module module-wide" style="text-align:center;padding:32px 48px;">
+      <p style="font-size:24px;font-weight:600;letter-spacing:-0.01em;margin-bottom:8px;line-height:1.3;">
+        Стабильный сахар — это <span style="color:#c0847a;">не голодание</span>, а умный выбор
+      </p>
+      <p style="font-size:14px;color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;line-height:1.6;">
+        Белок + клетчатка + жиры + умеренные сложные углеводы в каждом приёме.  
+        Режим, движение, сон и правильные нутрицевтики — четырёхугольник контроля.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>
+      <div class="name">Ольга Зинченко <small>нутрициолог</small></div>
+    </div>
+    <div class="ref">
+      Программа — Siberian Wellness + Витамакс<br>
+      Промокод: <strong style="color:#c0847a;">844131</strong><br>
+      <a href="https://ru.siberianhealth.com/ru/shop/catalog/product/500659/?referral=2663395625">Референсная ссылка СЗ</a>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

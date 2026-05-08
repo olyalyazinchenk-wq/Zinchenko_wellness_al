@@ -2,6 +2,296 @@
 
 Rolling log for strategy and plan corrections between major strategy documents.
 
+## 2026-05-08 16:36 MSK
+### Artifact Delta
+- Re-read the latest controlling artifacts for a dedicated strategy refresh:
+  - `docs/PROJECT_PULSE_LOG.md`
+  - `docs/KNOWLEDGE_SYNC_HUB.md`
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260506.md`
+  - `ops/reports/quality_report_20260506T080435Z.md`
+  - `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260505T131604Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260427T173913Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T214914Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260425T212847Z_1084557944.json`
+  - `WellnessBot/data/product_governance.json`
+  - `mini-app/index.html`
+  - `bot.stderr.log`
+- No new shipping proof landed after the earlier `2026-05-08 04:38 MSK` refresh:
+  - repo head is still `fe7a358` (`feat: guide manual lab entry`)
+  - the last product-shaping code commits are still `fe7a358` and `176ac82`
+  - governance/task pressure is unchanged:
+    - `127` experiments
+    - `4` duplicate title groups
+    - largest duplicate group `x8`
+    - `29` `docs/tasks/HERMES-20260505-*` files
+  - the governing delivered `week` case still shows:
+    - `intake_status = delivered_to_client`
+    - `judge_verdict = needs_revision`
+    - `lab_quality_check.status = missing`
+    - `requires_lab_resubmission = true`
+  - the fresh paid `premium` case is still parallel rather than normalized:
+    - `20260505T131604Z_1084557944`
+    - `manual_payment_confirmed`
+    - `intake_status = review_priority_quality_and_market`
+    - `judge_verdict = pass_with_minor_edits`
+  - runtime evidence is unchanged:
+    - active path still logs `proxy=http://127.0.0.1:12334`
+    - local `GET /health` still last shows `404` at `2026-05-08 00:35:06 +0300`
+- The new evidence in this refresh is therefore not a product-direction change.
+- The new evidence is that the project is now at risk of repeating a strategy/planning loop on top of an unchanged artifact set.
+
+### Product Direction Delta
+- Product direction does not need expansion.
+- Product direction now needs enforcement:
+  - one canonical reviewed Telegram thread per user
+  - `week` as the paid entry rail
+  - `premium` only as a same-case continuation from that thread
+- The team should stop treating `premium` demand, manual-lab UX landing, or mini-app presence as permission to run parallel commercial narratives.
+
+### Value Proposition Delta
+- The strongest live value proposition is still:
+  - `one Telegram thread that keeps moving even when labs arrive as PDF, photo, or structured manual text, with human review before any client-facing conclusion`
+- The current credibility ceiling is not a missing feature.
+- The current credibility ceiling is:
+  - unresolved review-safe delivery
+  - unresolved same-user case ownership
+  - unresolved mini-app truth drift
+
+### Monetization Delta
+- Monetization posture stays:
+  - `week` -> `3900 RUB`
+  - `premium` -> `6900 RUB`
+  - `vip` -> `14900 RUB`
+  - manual concierge payment only
+- Monetization demand is now validated twice on the same user stack:
+  - one paid `week`
+  - one paid `premium`
+- The monetization path is still blocked by execution truth, not by pricing, checkout, or packaging.
+- Commercial rule for the next cycle:
+  - no second active paid storyline
+  - `premium` must be explicitly merged into the canonical case or frozen
+
+### Operating Delta
+- The next 12h should produce proof, not more strategic interpretation of the same facts.
+- The only high-leverage order remains:
+  1. hard delivery gate
+  2. canonical-case classification across the five same-user branches
+  3. mini-app result-surface neutralization
+  4. manual-lab fallback verification plus tests
+  5. proxy / health-check decision
+  6. only then benchmark or premium-conversion refinement
+- Until one of those lands, new strategy notes, readiness drafts, or task packets are execution-negative.
+
+### Safety Delta
+- Legal and safety posture does not change:
+  - no diagnosis framing
+  - no treatment framing
+  - urgent-care routing stays mandatory
+  - human review stays mandatory
+  - typed lab text remains fallback input, not confirmed medical fact
+- Strategy refresh itself is now a safety issue if it delays resolution of the live delivery defect and the unsafe mini-app surface.
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - rereading the same May 8 artifact set and producing another status artifact without landing a delivery, branch, surface, file-fallback, or runtime fix
+- Repeated low-impact loop:
+  - continuing HERMES task-packet / readiness-draft generation while `127` experiments and `29` same-day task files already exist
+- Repeated low-impact loop:
+  - debating premium growth while the same user still carries one unresolved delivered `week` plus a fresh paid `premium` branch
+- Repeated low-impact loop:
+  - quality-discussion motion before delivery truth, mini-app truth, and runtime truth are repaired
+
+### Higher-Impact Replacement Action
+- Replace net-new planning churn for the next 12h with one bounded canonical-case collapse packet:
+  1. enforce the delivery gate and override audit trail
+  2. classify all five same-user branches as `canonical / merge-into-canonical / evidence-only / parked / archive`
+  3. replace the hardcoded mini-app result surface with a safe placeholder
+  4. run manual-lab fallback verification on PDF, readable photo, poor photo, and structured manual text, with tests
+  5. decide whether proxy is required and wire or document the real health check
+  6. write the next strategy note only after at least one of the above lands
+
+### Must-Hold Rules
+- Keep Telegram as the only live operating channel.
+- Keep manual concierge as the official pilot payment mode.
+- Keep official pilot prices locked at `3900 / 6900 / 14900 RUB` unless a strategy doc explicitly changes them.
+- Keep `week` as the validated paid entry rail.
+- Keep `premium` as the flagship offer only as a same-case continuation, not as a second active storyline.
+- Keep exactly one canonical paid path per Telegram user.
+- Keep human review mandatory before delivery.
+- Keep no-diagnosis, no-treatment, urgent-care, and lab-quality rules explicit.
+- Do not let new strategy refreshes, readiness drafts, or task packets outrun direct P0 fixes on delivery truth, case ownership, mini-app truth, file-fallback proof, or runtime health.
+
+## 2026-05-08 04:38 MSK
+### Artifact Delta
+- Re-read the current source-of-truth artifacts before refreshing strategy:
+  - `docs/PROJECT_PULSE_LOG.md`
+  - `docs/KNOWLEDGE_SYNC_HUB.md`
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260506.md`
+  - `ops/reports/quality_report_20260506T080435Z.md`
+  - `docs/GLOBAL_EXECUTION_MASTER_PLAN_20260506.md`
+  - `docs/OCR_PREFLIGHT_STATUS_20260506.md`
+  - `docs/BIOMARKER_EXTRACTION_DECISION_20260506.md`
+  - `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - `WellnessBot/data/drafts/20260501T162705Z_1084557944.review.json`
+  - `WellnessBot/data/submissions/20260505T131604Z_1084557944.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/main.py`
+  - `WellnessBot/lab_ocr.py`
+  - `WellnessBot/texts.py`
+  - `mini-app/index.html`
+  - `bot.stderr.log`
+- New controlling evidence since the `2026-05-06 09:31 MSK` refresh:
+  - a second paid path now exists for the same Telegram user:
+    - `20260505T131604Z_1084557944`
+    - offer `premium`
+    - `manual_payment_confirmed`
+    - `intake_status = review_priority_quality_and_market`
+    - `judge_verdict = pass_with_minor_edits`
+  - this materially worsens canonical-path drift:
+    - one user now spans one delivered `week`, one fresh paid `premium`, one stale `week` placeholder, and two older `premium` branches
+    - monetization demand is stronger, but commercial truth is less coherent
+  - file fallback improved in code on `2026-05-06` and `2026-05-07`:
+    - commit `176ac82` adds clearer resubmission guidance plus a rewrite prompt for malformed manual lab text
+    - commit `fe7a358` adds a manual-entry button in the labs flow, stronger nurture copy, and explicit structured examples for typed biomarker input
+    - this is a real product affordance, not just a strategy idea
+    - it is still not proven end-to-end on a reviewed live case
+  - the governing `week` case remains the P0 truth failure:
+    - `intake_status = delivered_to_client`
+    - attached review still says `needs_revision`
+    - no explicit override note is recorded
+    - lab state is now clearly unresolved rather than merely inconsistent:
+      - `lab_quality_check.status = missing`
+      - `requires_lab_resubmission = true`
+      - client follow-up keeps arriving anyway, including `2026-05-07T20:46:50Z`
+  - the mini-app still drifts from policy:
+    - `mini-app/index.html` still hardcodes `Витамин D3: 5000 МЕ + K2`
+    - still hardcodes `LCHF`
+    - still uses a hardcoded `Premium Wellness-Досье` result screen
+  - current quality truth is now `2026-05-06`, not `2026-05-01`:
+    - router/model split held at `11/20` deterministic and `9/20` model-path
+    - clarifying-question coverage slipped to `6/9`
+    - unsupported name hallucination appears twice
+    - `5/9` model-path replies are longer than `2000` characters
+    - emergency templates are still duplicated across materially different risk classes
+  - runtime evidence updated again:
+    - bot restarted cleanly on `2026-05-07 23:46:49-23:46:50 MSK`
+    - active path still logs `proxy=http://127.0.0.1:12334`
+    - local `GET /health` at `2026-05-08 00:35:06 +0300` returned `404`
+    - runtime is up again, but health signaling and no-proxy proof are still absent
+  - governance/task-loop pressure is unchanged and still negative:
+    - `127` experiments
+    - `4` duplicate title groups
+    - largest duplicate group `x8`
+    - `29` `docs/tasks/HERMES-20260505-*` files
+
+### Product Direction Delta
+- Core direction still holds:
+  - Telegram-first only
+  - manual concierge payment remains the official pilot mode
+  - `week` remains the validated paid entry rail
+  - `premium` remains the flagship offer
+  - `vip` remains parked
+- The important correction today is structural:
+  - the product is not `week` plus a separate premium branch for the same user
+  - the product is `one reviewed Telegram thread that can continue with PDF, photo, or structured manual lab text`
+  - premium must be a same-case upgrade from that thread, not a second active commercial storyline
+- Therefore the immediate product story becomes:
+  - `Telegram-first clarity -> review-safe week delivery -> same-case follow-up with file or manual labs -> one premium upgrade from the same canonical case`
+  - not `spawn another paid case when follow-up evidence arrives`
+  - not `mini-app result proof`
+  - not `manual-lab UX shipped therefore file reliability solved`
+
+### Value Proposition Delta
+- The clearest current value proposition is now:
+  - `one Telegram thread that still moves forward when lab files are imperfect, because the client can send PDF, photo, or structured manual biomarkers and still get a reviewed next-step map`
+- This is stronger than the prior OCR-auth story because it matches actual landed UX.
+- The trust gap is also sharper:
+  - the same user already paid twice while the original delivered case still fails review
+  - manual lab entry exists, but there is still no end-to-end proof artifact showing safe reviewed behavior from typed labs
+  - the mini-app still shows a more autonomous medical-style product than the reviewed backend
+
+### Monetization Delta
+- Official monetization posture remains unchanged:
+  - `week` -> `3900 RUB`
+  - `premium` -> `6900 RUB`
+  - `vip` -> `14900 RUB`
+  - payment mode stays manual concierge
+- The monetization correction today is sequence and packaging:
+  - the new paid `premium` case proves willingness to pay beyond `week`
+  - but it does not justify parallel same-user case creation or faster scaling
+  - the actual monetization unlock is:
+    - same-case premium conversion discipline
+    - reviewed follow-up evidence
+    - safe manual-lab fallback when files are weak
+- So the next revenue move is not a new package or payment rail.
+- The next revenue move is:
+  - merge or explicitly relate `20260505T131604Z_1084557944` to the canonical `week` follow-up story
+  - then prove one clean premium-upgrade flow from the same case
+
+### Operating Delta
+- Active blocker order now sharpens to:
+  - delivery-gate integrity
+  - same-user commercial stack normalization including the new `20260505` premium case
+  - manual-lab fallback proof on a real reviewed flow
+  - mini-app result-surface truth
+  - proxy dependency and health-check truth
+  - model-path discipline
+  - connector recovery
+- The real operational gain is narrow but useful:
+  - manual biomarker entry is now a coded fallback path
+  - the team can stop pretending that only clean OCR can move a case forward
+- The real operational limit is still explicit:
+  - this path has not yet been proven end-to-end with reviewed output, tests around the new callbacks, or a benchmarked live case artifact
+
+### Safety Delta
+- Legal and safety posture remains unchanged:
+  - no diagnosis framing
+  - no treatment framing
+  - urgent-care routing remains mandatory
+  - human review remains mandatory before delivery
+  - unclear labs cannot become product facts
+- The new safety clarification is specific:
+  - manual biomarker text is acceptable only when structure is clear enough to avoid value/name/unit confusion
+  - typed labs are a fallback path, not permission to infer or fill gaps
+  - a second paid case must not be used to outrun the unresolved safety state of the original delivered case
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - creating or debating more premium experiments while the same user already has parallel paid paths
+- Repeated low-impact loop:
+  - treating landed manual-lab UX as if end-to-end file reliability were already proven
+- Repeated low-impact loop:
+  - rerunning quality narratives off the `2026-05-01` benchmark while `2026-05-06` QA already shows the next real discipline problems
+- Repeated low-impact loop:
+  - status and planning motion while the mini-app still ships hardcoded result content and the proxy-backed runtime still lacks a clean health proof
+
+### Higher-Impact Replacement Action
+- Run one canonical follow-up conversion hardening sweep, in this order:
+  1. add or verify the hard delivery guard so unresolved review verdicts cannot move to `delivered_to_client` without an explicit override note
+  2. normalize `20260501T162705Z_1084557944` so follow-up state, lab state, and delivery truth match
+  3. classify the same-user stack into `canonical / merge-into-canonical / evidence-only / parked / archive`, with `20260505T131604Z_1084557944` explicitly handled rather than left floating
+  4. prove the manual-text fallback on one real reviewed flow and add tests around the new callbacks / rewrite prompts
+  5. replace the hardcoded mini-app result surface with a safe placeholder
+  6. prove whether proxy is required and add a real health endpoint or documented equivalent
+  7. only then shape one premium-upgrade brief from the canonical same-case follow-up
+
+### Must-Hold Rules
+- Keep Telegram as the only live operating channel.
+- Keep manual concierge as the official pilot payment mode.
+- Keep official pilot prices locked at `3900 / 6900 / 14900 RUB` unless a strategy doc explicitly changes them.
+- Keep `week` as the validated paid entry rail.
+- Keep `premium` as the flagship offer, but express it as a same-case upgrade from fresh follow-up evidence rather than as a parallel branch.
+- Keep exactly one canonical paid path per Telegram user.
+- Keep human review mandatory before delivery.
+- Keep no-diagnosis, no-treatment, urgent-care, and lab-quality rules explicit.
+- Do not treat manual-lab UX landing as proof that file/lab reliability is solved.
+- Do not let the same user carry both an unresolved delivered `week` truth defect and a separate active premium proof story.
+- Do not let the mini-app show hardcoded supplement protocols or medical-style result copy as if it were reviewed truth.
+- Do not let governance, task swarms, or premium experiment churn outrun delivery truth, canonical-case truth, manual-fallback proof, and runtime proof.
+
 ## 2026-05-06 09:31 MSK
 ### Artifact Delta
 - Re-read the current source-of-truth artifacts before refreshing strategy:

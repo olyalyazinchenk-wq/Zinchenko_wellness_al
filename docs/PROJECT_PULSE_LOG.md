@@ -1,5 +1,134 @@
 # Project Pulse Log
 
+## 2026-05-08 04:38 MSK
+### State Read Delta
+- Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, `bot.stderr.log`, prior outward-sync artifacts, repo state, and the active same-user submission/review stack.
+- Branch state:
+  - local `master` is ahead of `origin/master` by `2`
+  - latest local commit is `fe7a358` (`feat: guide manual lab entry`)
+  - current working tree still contains docs refresh changes plus `docs/WELLNESS_DIALOGUE_QA_20260506.md`
+- `WellnessBot/data/runtime_state.json` remains empty, so runtime-versus-storage mismatch is still not the live blocker.
+- The governing `week` case `20260501T162705Z_1084557944` still carries the P0 contradiction:
+  - `intake_status = delivered_to_client`
+  - `internal_review.judge_verdict = needs_revision`
+  - no explicit manual override note is recorded
+- The same governing case is still unsafe on file/lab truth:
+  - `lab_quality_check.status = missing`
+  - `lab_quality_check.requires_resubmission = true`
+  - `requires_lab_resubmission = true`
+  - latest follow-up arrived at `2026-05-07T20:46:50Z`
+- The same user now spans five paid-path branches:
+  - governing delivered `week` case `20260501T162705Z_1084557944`
+  - stale `week` placeholder `20260427T173913Z_1084557944`
+  - rewrite-only `premium` branch `20260425T212847Z_1084557944`
+  - evidence-only / resubmission `premium` branch `20260425T214914Z_1084557944`
+  - fresh paid `premium` branch `20260505T131604Z_1084557944` with `manual_payment_confirmed`, `intake_status = review_priority_quality_and_market`, and `judge_verdict = pass_with_minor_edits`
+- Latest runtime evidence is fresher than the prior sync:
+  - bot restarted at `2026-05-07 23:46:49-23:46:50 MSK`
+  - TMA server started at `http://localhost:8000`
+  - polling is active for `@zinchenko_wellness_ai_1_bot`
+  - latest local probe is visible at `2026-05-08 00:35:06 MSK`
+  - the active path still depends on `http://127.0.0.1:12334`
+
+### Benchmark Delta
+- Latest benchmark reference is now `ops/reports/quality_report_20260506T080435Z.md`.
+- Latest QA synthesis is `docs/WELLNESS_DIALOGUE_QA_20260506.md`.
+- Current benchmark truth:
+  - `20/20` non-empty replies
+  - `11/20` deterministic replies
+  - `9/20` model-path replies
+  - clarifying-question coverage fell to `6/9` on model-path symptom prompts
+  - exact duplicate groups remain `2` (`9/15`, `17/18`)
+  - invented-name hallucination appears twice (`1`, `8`)
+- Quality conclusion: model reach held, but response discipline regressed enough that anti-personalization and tighter symptom answers are now the active quality blocker.
+
+### Regression Delta
+- P0 delivery-gate bypass remains active:
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json` + `WellnessBot/data/drafts/20260501T162705Z_1084557944.review.json`
+  - owner: Lead Developer + Operator
+  - next fix action: block `delivered_to_client` unless the review verdict is cleared or a manual override note is recorded; re-review the delivered `week` case before more follow-up claims
+- Governing-case lab-state incoherence remains active:
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
+  - owner: Lead Developer
+  - next fix action: keep the case in resubmission-needed mode, reconcile the new files plus ferritin correction, and rerun case-state validation before treating any new lab fact as reliable
+- Same-user multi-path drift remains unresolved:
+  - source: one delivered `week`, one stale `week`, and three unresolved `premium` branches for the same Telegram user
+  - owner: Operator + Lead Developer
+  - next fix action: declare one canonical paid path and explicitly mark the other branches `merge-into-canonical`, `archive`, `parked`, or `evidence-only`
+- Mini-app price/result drift remains active:
+  - source: `mini-app/index.html`
+  - owner: Frontend / Lead Developer
+  - next fix action: remove off-policy `2990` pricing and hardcoded ferritin / vitamin D / cortisol / supplement / `LCHF` result copy; replace it with a safe placeholder or reviewed backend-fed state
+- Model-path response-discipline regression is now current:
+  - source: `docs/WELLNESS_DIALOGUE_QA_20260506.md`
+  - owner: Lead Developer
+  - next fix action: add a hard anti-personalization guard, cap symptom-reply breadth, split service/emergency templates, and add benchmark assertions for invented names, intimate salutations, and overlong answers
+- Google Drive capability gap remains active:
+  - source: current Codex session tool discovery
+  - owner: Tooling / Access
+  - next fix action: expose Google Drive file create/upload and share tools in Codex
+
+### Plan Delta
+- Refresh the pilot proof order again around the newest evidence:
+  1. hard review gate before any new delivery claim
+  2. normalize the governing `week` case into one coherent follow-up state
+  3. collapse the same-user paid-path sprawl, including the fresh `20260505` premium case
+  4. remove mini-app truth drift
+  5. prove whether proxy-backed polling is an accepted dependency or a defect
+  6. harden model-path reply discipline against the `2026-05-06` QA regressions
+- Keep benchmark reruns behind these fixes; the current issue is not model reach, it is what the model says once reached.
+- Treat external sync as two separate surfaces now:
+  - Notion and GitHub connector writes succeeded in this run
+  - local `git push` remains proxy-sensitive and does not define GitHub artifact availability
+- Keep Google Drive in blocked status until upload/create/share tools are actually exposed.
+
+### Strategy Delta
+- Strategy does not expand to new channels, payment automation, or dashboard work.
+- The important correction since the `2026-05-06 09:31 MSK` refresh is:
+  - OCR auth recovery and model reach are not the leading story anymore
+  - the live blocker is operational truth: delivery integrity, canonical case ownership, response discipline, and explicit proxy dependency management
+- The next meaningful proof is now:
+  - one review-safe delivered case
+  - one canonical paid path per Telegram user
+  - one safe Telegram-adjacent intake/demo surface
+  - one proxy policy that is either removed or explicitly accepted
+  - one tighter model-path answer style that does not invent names or overreach
+
+### Goals Delta
+- Goal 1: enforce a hard review gate before `delivered_to_client`.
+- Goal 2: keep the governing `week` case clearly in lab-resubmission flow until the new evidence is reconciled.
+- Goal 3: collapse the same-user `week`/`premium` sprawl into one canonical commercial path.
+- Goal 4: remove unsafe hardcoded result copy and off-policy pricing from the mini-app surface.
+- Goal 5: preserve the `9/20` model reach baseline while tightening the model-path answer contract.
+- Goal 6: keep Notion and GitHub outward sync live while explicitly logging Google Drive capability gaps.
+
+### Connector Status
+- Obsidian: done - refreshed onboarding mirror and created a new local run-note mirror.
+- Notion: done - workspace search succeeded and a new run note was written under the Antigravity context hub.
+- GitHub: done - repository lookup succeeded and new sanitized status/context artifacts were written to `olyalyazinchenk-wq/Zinchenko_wellness_al`.
+- Google Drive: blocked - tool discovery in this session exposes no Google Drive file create/upload or share tools.
+- Exact Google Drive access request: enable the Google Drive connector with file create/upload and share permissions so the run snapshot can be uploaded directly from Codex.
+
+### Next 12h Focus
+1. Block `delivered_to_client` unless internal review is cleared or an explicit manual override note is recorded.
+2. Keep `20260501T162705Z_1084557944` in one coherent resubmission-needed follow-up state until the new files and ferritin correction are validated.
+3. Decide the canonical path for the current same-user stack, then retire or merge the stale `week` placeholder and non-canonical `premium` branches, including the fresh `20260505` premium case.
+4. Replace the unsafe mini-app `2990` pricing and hardcoded result demo with a safe placeholder or reviewed backend-fed state.
+5. Decide whether `127.0.0.1:12334` is an accepted runtime dependency; if not, add a fallback and prove one clean post-fix polling window.
+6. Add anti-personalization and tighter symptom-answer assertions before the next benchmark rerun.
+
+### Context For New Model
+- Stage: controlled concierge pilot with live runtime up again, but delivery-gate integrity, same-user case ownership, mini-app truth, model-path discipline, and Google Drive capability are still unstable
+- Objective: restore delivery truth, keep the active `week` case coherent and resubmission-safe, collapse the same-user branch sprawl to one canonical path, and tighten first-line model replies before the next proof cycle
+- Constraints: Telegram-first only; manual concierge remains official pilot mode; human review is mandatory before delivery; one canonical paid path per Telegram user; no diagnosis/treatment framing; no unsafe supplement instructions or hardcoded medical protocols on public/TMA surfaces; runtime still uses `http://127.0.0.1:12334`; Google Drive upload/share is unavailable in the current Codex session
+- Immediate next actions:
+  1. Add or verify the hard delivery guard and manual override audit trail.
+  2. Reconcile `lab_quality_check` and follow-up evidence on `20260501T162705Z_1084557944` before treating the case as a success story.
+  3. Canonicalize the same-user `week`/`premium` stack and explicitly handle `20260505T131604Z_1084557944` as `merge-into-canonical`, `parked`, or the new canonical path.
+  4. Remove off-policy and hardcoded result copy from `mini-app/index.html`.
+  5. Harden `sanitize_live_reply()` / prompt rules / templates against invented names, over-familiar tone, duplicate emergency replies, and overlong symptom answers.
+  6. Keep Notion and GitHub synced; request Google Drive upload/create/share access.
+
 ## 2026-05-06 09:30 MSK
 ### Sync Run Snapshot
 - Repo: `master` synced to GitHub on commit `883228b`; working tree clean after sync.
@@ -1938,3 +2067,23 @@ Decision:
   3. Replace unsafe mini-app demo-result copy with a safe placeholder or reviewed backend-fed state.
   4. Verify the proxy dependency on `127.0.0.1:12334` and add a documented no-proxy fallback if the listener is not guaranteed.
   5. Keep the latest benchmark reference anchored to `ops/reports/quality_report_20260501T080509Z.md` and the QA readout to `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
+
+## 2026-05-08 16:40 MSK — Регулярная синхронизация (12h)
+
+### Что изменилось
+- Актуализирован `docs/AGENT_CONTEXT_HUB.md` (добавлен короткий RU-статус; GitHub remote снова достижим).
+- Переписан на русский внутренний QA-отчёт `docs/WELLNESS_DIALOGUE_QA_20260506.md` (без клиентских данных).
+- Обнаружены новые артефакты для синка: `docs/posters/*` (плакаты/стандарты, общий контент).
+
+### Состояние репозитория
+- Изменения в рабочем дереве: только `docs/*` (код в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` не тронут).
+- Внешние коннекторы: GitHub — доступен; Notion — требует проверки/авторизации; Google Drive — недоступен в текущей Codex-сессии.
+
+### Текущий этап / блокеры
+- Этап: controlled concierge pilot; публичный запуск заблокирован.
+- P0 блокер: «delivery gate» — нельзя допускать `delivered_to_client` при `needs_revision` без явного override.
+- P0 риск: параллельные платные ветки у одного пользователя — нужен один канонический paid-path на Telegram user.
+
+### Следующие шаги (до следующего 12h окна)
+1. Зафиксировать docs-снимок аккуратным коммитом и отправить в GitHub (без секретов/PII).
+2. Проверить доступ к Notion и обновить страницу статуса (только санитизированный executive summary).
