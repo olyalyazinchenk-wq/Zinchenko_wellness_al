@@ -208,14 +208,15 @@ Improve live-model discipline while preserving the current `9/20` model-path rea
 If delivery bypass appears again, same-user path sprawl persists, manual-lab fallback remains unproven, the mini-app keeps off-policy output, or proxy failures continue without a documented fallback:
 
 1. stop
-2. inspect the canonical case artifact and attached review artifact
-3. classify each case item as canonical, merge-into-canonical, evidence-only, parked, or archive
-4. classify each surface element as reviewed truth, safe placeholder, or off-policy copy
-5. classify each lab input path as proven, partially proven, or unproven
-6. classify polling as proxy-required or proxy-optional with an explicit fallback path and health signal
-7. prove the chosen polling path with one clean post-fix verification
-8. keep exactly one canonical paid path
-9. remove off-policy surface output
-10. rerun the benchmark only after the truth and resilience fixes land
+2. freeze net-new strategy/task packet generation until a direct P0 fix lands
+3. inspect the canonical case artifact and attached review artifact
+4. classify each case item as canonical, merge-into-canonical, evidence-only, parked, or archive
+5. classify each surface element as reviewed truth, safe placeholder, or off-policy copy
+6. classify each lab input path as proven, partially proven, or unproven
+7. classify polling as proxy-required or proxy-optional with an explicit fallback path and health signal
+8. prove the chosen polling path with one clean post-fix verification
+9. keep exactly one canonical paid path
+10. remove off-policy surface output
+11. rerun the benchmark only after the truth and resilience fixes land
 
 No silent delivery bypass, silent same-user multiplication, silent typed-lab ambiguity, silent frontend truth drift, silent proxy fragility, or silent roadmap drift is allowed.
