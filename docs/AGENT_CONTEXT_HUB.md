@@ -1,108 +1,86 @@
 # Agent Context Hub
 
-Updated: 2026-05-08 16:40 MSK
+Updated: 2026-05-14 16:56 MSK
 
 ## Unified GitHub Source Of Truth
 
 - Main public handoff document: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`
-- Use the local hub files for live operating truth and `docs/external_sync/*.md` as the sanitized outward-sync fallback while external connectors are blocked.
+- Use the local hub files for live operating truth and `docs/external_sync/*.md` as sanitized replay payloads for external contributors when connectors recover.
 
 ## Quick Status
 
 - Mode: controlled concierge pilot. Public launch remains blocked.
 - Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
 - Official pilot prices remain `3900 / 6900 / 14900 RUB`.
-- Top product-truth defect: the `week` case `20260501T162705Z_1084557944` still shows `delivered_to_client` even though its attached review verdict is `needs_revision`, and no explicit override note is recorded.
-- New commercial regression: a second paid path now exists for the same user:
-  - `20260505T131604Z_1084557944`
-  - offer `premium`
-  - `manual_payment_confirmed`
-  - `intake_status = review_priority_quality_and_market`
-  - `judge_verdict = pass_with_minor_edits`
-- `WellnessBot/data/runtime_state.json` is empty, so runtime/storage mismatch is not the active blocker.
-- OCR auth path is still partially cleared:
-  - `docs/OCR_PREFLIGHT_STATUS_20260506.md` records the earlier `401`
-  - the safe preflight now returns `auth_path_ok` with `400` on a synthetic `1x1 PNG`
-  - real PDF/photo/manual-text verification is still pending
-- Manual lab-entry fallback is now a real coded affordance:
-  - commit `176ac82` improves file-resubmission and typed-lab rewrite guidance
-  - commit `fe7a358` adds a manual-entry button in the labs flow and stronger typed-lab instructions
-  - this is still unproven end-to-end on a reviewed live case
-- Bot runtime is evidenced as running again:
-  - `bot.stderr.log` shows a fresh start at `2026-05-07 23:46:49 MSK`
-  - polling started at `2026-05-07 23:46:49-23:46:50 MSK`
+- Top product-truth defect: the governing `week` case `20260501T162705Z_1084557944` is correctly blocked instead of falsely delivered, but the same user still carries a fresh paid `premium` branch that should be treated as parked until explicitly merged, and the live runtime is still showing sustained duplicate polling plus stale health/proxy narration.
+- `WellnessBot/data/runtime_state.json` is still empty, so runtime memory is not the live storage blocker.
+- No newer positive runtime or QA proof landed after the May 13 refresh:
+  - latest benchmark reference is still `ops/reports/quality_report_20260506T080435Z.md`
+  - the newest runtime artifact is sustained negative proof:
+    - startup proxy is `http://127.0.0.1:10808`
+    - one reconnect landed at `2026-05-14 16:47:03 +0300`
+    - polling resumed repeated `TelegramConflictError` from `2026-05-14 16:48:04 +0300` through `2026-05-14 16:50:53 +0300`
+    - the latest visible local health result is still `GET /health -> 404` at `2026-05-13 21:24:04 +0300`
+- Disk hygiene remains above the floor but with thin margin:
+  - actual `C:` free space is `10.55 GB` at `2026-05-14 16:50:50 +03:00`
+- Sync/connector truth updated in this run (`2026-05-14 16:56 MSK`):
+  - Notion MCP still fails during initialize handshake (`https://chatgpt.com/backend-api/wham/apps`)
+  - GitHub MCP still fails during initialize handshake (`https://chatgpt.com/backend-api/wham/apps`)
+  - Git over HTTPS is reachable (fail-fast probe: `git -c http.lowSpeedLimit=1 -c http.lowSpeedTime=5 ls-remote origin` succeeds)
+- Bot runtime is now evidenced as live-but-conflicted:
+  - latest visible startup is `2026-05-13 21:22:17-21:22:18 MSK`
   - TMA server started at `http://localhost:8000`
-  - proxy is configured as `http://127.0.0.1:12334`
-  - `GET /health` returned `404` at `2026-05-08 00:35:06 +0300`
-  - the active path is still unproven because no clean no-proxy fallback verification exists yet
-- Repo state: latest local commit is `fe7a358` (`feat: guide manual lab entry`); local branch is ahead of `origin/master` and has docs-only status refresh pending sync.
-- New QA artifact present for review/sync (internal only, no client data): `docs/WELLNESS_DIALOGUE_QA_20260506.md`.
+  - live startup proxy is `http://127.0.0.1:10808`
+  - polling conflicts imply more than one bot instance is active through `2026-05-14 16:50 MSK`
+  - one reconnect at `2026-05-14 16:47:03 MSK` did not hold
+  - latest local probe is still `GET /health -> 404` at `2026-05-13 21:24:04 +0300`
+  - no clean single-instance or healthy-endpoint proof exists yet
+- Repo state:
+  - latest local commit is `3f9f35e` (`docs: define project result vision`)
+  - local `master` is ahead of `origin/master` by `1`
+  - the earlier `.git/index.lock` blocker did not reproduce in this run; local git status is readable again
+  - current working tree still contains operationally relevant dirty changes in `WellnessBot/main.py`, `WellnessBot/lab_ocr.py`, `WellnessBot/supplement_product_catalog.py`, `mini-app/index.html`, and the sync docs
 - External sync surface:
   - Obsidian local mirror is available
-  - Notion connector status: blocked
-  - GitHub sync status: available (remote reachable); docs sync pending push
-  - Google Drive upload/share tools are unavailable in the current session
-- Latest QA / benchmark reference is now `2026-05-06`, not `2026-05-01`:
+  - Notion tools are discoverable, but a real search call still fails during MCP startup handshake against `https://chatgpt.com/backend-api/wham/apps`
+  - GitHub tools are discoverable, but a real file fetch call still fails during MCP startup handshake against `https://chatgpt.com/backend-api/wham/apps`
+  - Google Drive file create/upload/share tools are unavailable in the current session
+- Latest benchmark reference remains `ops/reports/quality_report_20260506T080435Z.md`
   - `20/20` non-empty replies
   - `11/20` deterministic replies
   - `9/20` model-handled replies
-  - clarifying questions in `6/9` model-handled symptom prompts
-  - invented names in `2` prompts
-  - `5/9` model-path replies longer than `2000` characters
-
-## Кратко (RU)
-
-- Режим: controlled concierge pilot; публичный запуск заблокирован до отдельного решения.
-- Оплата: активный пилот `PAYMENT_MODE=manual`; human review обязателен перед выдачей клиенту.
-- Текущее состояние: бот и проект функционально «живы», но продуктовая правда (delivery gate + канонический кейс на пользователя) остаётся нестабильной.
-- Главный дефект: кейс `20260501T162705Z_1084557944` отмечен как `delivered_to_client`, при этом внутренний вердикт `needs_revision` и нет явной записи override.
-- Коммерческий риск: у одного пользователя зафиксированы параллельные платные ветки (`week` и `premium`), нужно свести к одному каноническому пути.
-- Качество ответов: на ветке модели сохраняются выдуманные имена/обращения и «полированная ложная точность»; QA отчёт за 2026-05-06 актуализирован.
-- Внешняя синхронизация: GitHub remote сейчас доступен; Notion всё ещё под вопросом; Google Drive в Codex-сессии недоступен.
+  - clarifying questions remain `6/9` on model-path symptom prompts
+  - invented-name hallucination still appears twice
+  - `5/9` model-path replies still exceed `2000` characters
+- Loop pressure is still visible:
+  - `127` proposed experiments remain in `WellnessBot/data/product_governance.json`
+  - `29` `docs/tasks/HERMES-20260505-*` packets remain open as backlog inventory
 
 ## Stage
 
-- controlled concierge pilot with validated paid `week` demand, validated paid `premium` demand, restored live-model reach, runtime up again, and manual-lab fallback now present in code, but the active bottleneck is now execution compression: delivery-gate integrity, same-user case ownership, mini-app truth, polling resilience, and end-to-end file-fallback proof still have not converted into direct fixes
+- controlled concierge pilot with delivery-blocked state preserved on the governing case, but no fresh positive proof artifact; canonical case ownership, sustained runtime-instance conflict, working-tree safety drift, benchmark freshness, and external connectors remain unstable
 
 ## Done
 
-- `week` is still validated as a paid entry rail because `20260501T162705Z_1084557944` reached payment, delivery, and follow-up.
-- Paid `premium` demand is also now validated:
-  - `20260505T131604Z_1084557944` reached payment confirmation
-  - this is commercial proof, but not coherent path proof
-- Runtime-state mismatch is still cleared:
-  - `WellnessBot/data/runtime_state.json` is empty
-  - there is no active runtime-only session drift
-- Router overreach is no longer the main quality blocker:
-  - benchmark held at `9/20` model-handled replies
-- OCR auth path is still recovered as an environment issue:
-  - safe preflight moved from `401` to `auth_path_ok`
-  - Yandex IAM token was refreshed earlier
-- Deterministic biomarker alias coverage was expanded safely for standard lab groups.
-- Manual lab-entry UX is now landed in code:
-  - typed biomarker examples are shown
-  - a manual-entry button exists in the labs step
-  - malformed typed biomarker text now gets a rewrite prompt
-- Product direction and monetization path were re-confirmed in this run:
-  - Telegram-first still holds
-  - `week` remains the entry rail
-  - `premium` remains the flagship offer only as a same-case continuation
-  - no new channel, pricing, or checkout branch is justified
-- Governance pressure is still high:
-  - `127` experiments
-  - `4` duplicate title groups
-  - largest duplicate group `x8`
+- The governing `week` case is blocked instead of silently delivered.
+- Three stale same-user branches are archived instead of pretending to be live proof.
+- Disk free space is still above the `10 GB` floor.
+- The mini-app no longer shows the old hardcoded diagnosis/supplement-style demo result.
+- The connector outcomes for Notion and GitHub were verified by real calls in the completed `2026-05-14 04:54 MSK` run.
+- Encoding readability for `docs/PROJECT_PULSE_LOG.md` was repaired (`UTF-8 with BOM`) so RU log sections no longer degrade into mojibake.
+- Replay-ready outward-sync artifacts were refreshed locally.
+- The same-day strategy baseline is current; no stale blocker narrative from May 8 is needed to explain the live state.
+- The runtime conflict is now documented as a sustained same-day regression rather than a startup-only artifact.
 
 ## Objective
 
-- restore delivery truth
-- normalize the active `week` follow-up state
-- collapse the same-user `week`/`premium` sprawl into one canonical path
-- prove manual PDF/photo/typed-lab fallback behavior end-to-end
-- remove unsafe hardcoded result content from TMA/mini-app surfaces
-- prove the currently running polling path before calling runtime healthy again
-- compress execution loops so task/report generation stops outrunning live fixes
-- restore external connector sync
+- keep one canonical reviewed Telegram case coherent
+- preserve the now-blocked delivery state until review truth and lab truth align
+- collapse the same-user `week` / `premium` sprawl into one canonical path
+- resolve unsafe working-tree drift around voice/audio intake, supplement recommendations, and OCR parsing
+- prove or explicitly accept the current proxy-backed polling path
+- tighten first-line model replies before the next proof cycle
+- keep local and replay-ready outward-sync context aligned even while connectors are blocked
 
 ## Product Direction
 
@@ -114,99 +92,75 @@ Updated: 2026-05-08 16:40 MSK
   - `vip` stays parked until operator-load evidence exists
 - official pilot payment mode: `PAYMENT_MODE=manual`
 - human review is mandatory before any client delivery
-- premium should be expressed as a same-case upgrade from fresh post-`week` evidence, not as a separate parallel case for the same user
-- manual lab entry is now an allowed fallback path, but only when the input is structured clearly enough to avoid fact confusion
+- `premium` must be expressed as a same-case continuation, not as a second active branch for the same Telegram user
 
 ## Current Truth
 
 - `WellnessBot/data/runtime_state.json` is empty.
-- The current governing case is:
-  - `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`
-  - offer: `week`
+- The governing case remains `WellnessBot/data/submissions/20260501T162705Z_1084557944.json`:
   - payment confirmed
-  - status: `delivered_to_client`
-  - follow-up already started after delivery
-  - internal review on the same case still says `needs_revision`
+  - status: `delivery_blocked_needs_revision`
+  - internal review still says `needs_revision`
+  - `delivery_blocked_at = 2026-05-11T06:56:00Z`
   - no explicit delivery override note is present
-  - lab state is still unresolved:
+  - active lab-state remains unsafe:
     - `lab_quality_check.status = missing`
+    - `lab_quality_check.requires_resubmission = true`
     - `requires_lab_resubmission = true`
-  - fresh follow-up artifacts arrived on `2026-05-05`
-  - latest follow-up currently recorded is `2026-05-07T20:46:50Z`
-- The same user also has four non-canonical branches:
-  - `20260505T131604Z_1084557944` = fresh paid `premium` branch with `pass_with_minor_edits`, but unclear relation to the canonical `week` path
-  - `20260427T173913Z_1084557944` = stale `week` placeholder at `consent_pending`
-  - `20260425T214914Z_1084557944` = evidence-only premium branch because `requires_lab_resubmission = true`
-  - `20260425T212847Z_1084557944` = parked rewrite-only premium branch with `must_rewrite_with_high_caution`
-- Landing still matches the Telegram-first funnel.
-- Mini-app still drifts from backend truth:
-  - hardcoded `Premium Wellness-Досье` result screen
-  - hardcoded `Витамин D3: 5000 МЕ + K2`
-  - hardcoded `LCHF`
-- File/lab truth is improved but still incomplete:
-  - OCR auth is no longer failing on the safe preflight path
-  - manual typed-lab input is now a product affordance
-  - real PDF/photo/manual-text verification is still not proven
-  - DeepSeek biomarker extraction is explicitly candidate-only, not a fact source
-- Latest QA synthesis:
+    - current parsed biomarker set still mixes real markers with narrative/protocol-like lines
+- The same user now has one governing `week` branch plus one unresolved fresh paid `premium` branch:
+  - `20260501T162705Z_1084557944` = governing blocked `week`
+  - `20260505T131604Z_1084557944` = fresh paid `premium` with `pass_with_minor_edits`; treat as parked non-canonical until explicit merge
+  - `20260427T173913Z_1084557944` = archived test run
+  - `20260425T214914Z_1084557944` = archived test run with resubmission history
+  - `20260425T212847Z_1084557944` = archived test run with rewrite-only history
+- Landing still matches the Telegram-first funnel, but it uses hardcoded proof-style case-copy and biomarker deltas that should be treated as unverified marketing debt.
+- Mini-app local drift improved:
+  - `2990` pricing is gone
+  - result output is now a safer placeholder
+  - it still does not count as backend-fed reviewed proof
+- Working-tree runtime/product drift is now materially relevant:
+  - voice and audio intake are disabled in `WellnessBot/main.py`
+  - supplement catalog changes now allow a discontinued iron product to surface as recommendable
+  - OCR filtering is broader and should be revalidated against noisy text
+- Latest QA synthesis still says:
   - router overreach is no longer the main blocker
-  - current live quality risks are invented personalization, duplicated emergency templates, overlong first-touch replies, and false specificity
-  - current QA reference is `docs/WELLNESS_DIALOGUE_QA_20260506.md`, not the May 1 report
-- Current runtime evidence is mixed rather than absent:
-  - the leading unresolved outage window still exists in the history at `2026-05-03 14:20:44-14:30:12 MSK`
-  - a clean restart occurred on `2026-05-07 23:46:49-23:46:50 MSK`
-  - the bot is currently up again
-  - the stable-vs-fragile transport question is still open because the active path uses the same local proxy
-  - current health signaling is incomplete because `/health` returned `404`
+  - invented names, over-familiar tone, broad early mechanism stacking, duplicated emergency/service templates, and overlong replies remain the live quality risks
+- Current runtime evidence is still live-but-fragile:
+  - the bot now proves startup on a proxy-backed path logged as `127.0.0.1:10808`
+  - the active polling path is not trustworthy yet because duplicate instances are still colliding in the latest same-day log tail
+  - one reconnect at `2026-05-14 16:47:03 +0300` did not stabilize polling
+  - the stable-vs-fragile transport question remains open because the health path still returns `404`
 - Current external-sync evidence:
-  - Notion is blocked
-  - GitHub is blocked / remote currently unreachable
-  - Google Drive file create/upload/share tools are unavailable in this session
+  - Notion search last failed in the completed `2026-05-14 04:54 MSK` run during MCP initialize handshake
+  - GitHub file fetch last failed in the completed `2026-05-14 04:54 MSK` run during MCP initialize handshake
+  - Google Drive file tools are not exposed in the session
+  - replay-ready local artifacts were created instead
 
 ## Regressions To Fix Now
 
-- Delivery gate bypass:
-  - delivered `week` case despite unresolved internal-review verdict
-- Same-user paid-path drift worsened:
-  - one delivered `week` case
-  - one fresh paid `premium` case
-  - one stale `week` placeholder
-  - two older `premium` branches
-- Governing-case lab-state mismatch:
-  - the same `week` case still requires lab resubmission while follow-up activity keeps accumulating
-- Manual-lab proof gap:
-  - fallback UX exists, but there is still no end-to-end reviewed proof artifact
-- Mini-app result-surface drift:
-  - hardcoded supplement/diet result content
-- Runtime resilience regression:
-  - the bot is back up, but the active path still depends on `127.0.0.1:12334` and `/health` is not wired cleanly
-- External connector outage:
-  - Notion and GitHub are blocked
-  - Google Drive upload/share remains unavailable
-- Execution diffusion / draft swarm:
-  - `127` experiments
-  - duplicate-title pressure at `x8`
-  - `29` same-day HERMES task or draft files
-- Model-path response discipline:
-  - invented names
-  - duplicated emergency handling
-  - overlong first-touch replies
-  - early diagnosis-like language pressure
+- Governing-case review/lab block: owner `Lead Developer + Operator`; next action keep `20260501T162705Z_1084557944` blocked until review truth, override truth, and follow-up lab truth align.
+- Same-user commercial stack drift: owner `Operator + Lead Developer`; next action record whether `20260505T131604Z_1084557944` is `merge-into-canonical` or parked.
+- Voice/audio intake capability regression: owner `Lead Developer`; next action decide whether voice/audio intake is intentionally removed and update product/docs, or restore a safe STT path.
+- Supplement catalog safety/availability regression: owner `Lead Developer`; next action stop recommending discontinued iron products as active options and reinstate hard exclusions around self-directed iron use.
+- OCR parsing drift risk: owner `Lead Developer`; next action validate the softer filter against obvious non-marker noise before trusting broader extraction.
+- Runtime instance conflict and transport ambiguity: owner `Ops + Lead Developer`; next action stop duplicate polling, decide whether proxy is mandatory, and prove one clean health path that does not end in `404` after the sustained conflict window logged through `2026-05-14 16:50 MSK`.
+- Model-path response discipline: owner `Lead Developer`; next action harden prompt + sanitizer + template separation + benchmark assertions.
+- Disk headroom regression: owner `Ops`; next action keep free space above `10 GB` and trigger another hygiene pass before artifact generation pushes the workstation back under margin.
+- Connector recovery: owner `Tooling / Access`; next action restore Notion and GitHub MCP handshake and expose Google Drive file operations in-session.
 
 ## Next
 
-1. Enforce a hard delivery gate between internal review and client delivery.
-2. Normalize the governing `week` case so lab state and follow-up state match the latest truth.
-3. Record whether the current delivered `week` case needs correction before more follow-up output is treated as proof.
-4. Explicitly classify `20260505T131604Z_1084557944` as either merge-into-canonical premium continuation or frozen non-canonical premium branch.
-5. Keep the fresh follow-up uploads on the same canonical case; do not let a second active same-user paid story persist.
-6. Run real file/lab verification on a text PDF, a readable photo, a poor photo, and structured manual biomarker text.
-7. Add or extend tests around the new manual-entry button and rewrite prompt behavior.
-8. Replace unsafe mini-app result demo content with a safe placeholder or reviewed backend-fed state.
-9. Prove whether the currently running polling path is proxy-backed or no-proxy, and fix or document the `/health` check.
-10. Tighten live-answer sanitization and benchmark assertions around invented personalization, duplicated emergency templates, false specificity, and overlong replies.
-11. Freeze net-new strategy/task packet generation until at least one direct P0 fix lands.
-12. Keep GitHub on the last proven good path, re-check Notion before writing, and restore Google Drive availability before the next outward-sync replay.
+1. Keep the governing `week` case blocked until review and lab truth align.
+2. Decide how `20260505T131604Z_1084557944` relates to the governing `week` case; until then, treat it as parked and non-canonical.
+3. Stop duplicate polling and decide which bot instance is canonical.
+4. Decide whether to restore or formally retire voice/audio intake.
+5. Roll back discontinued-iron recommendation drift and revalidate OCR parsing.
+6. Decide whether the runtime may depend on `127.0.0.1:10808`; if not, add a fallback and prove one clean post-fix path.
+7. Tighten live-answer sanitization, prompt rules, and template separation against the `2026-05-06` QA regressions.
+8. Freeze net-new experiment / task-packet churn until the runtime and canonical-path proof bundle lands.
+9. Produce one fresh runtime or QA proof artifact before spending another cycle on strategy churn.
+10. Replay Notion, GitHub, and Google Drive sync once connector access is fixed.
 
 ## Must-Not-Change Rules
 
@@ -218,66 +172,72 @@ Updated: 2026-05-08 16:40 MSK
 - no diagnosis or treatment framing
 - no unsafe supplement instructions without confirmed context and review
 - no hardcoded medical-style or supplement-style demo results on TMA or public-facing surfaces
-- do not treat a delivered status as trustworthy if the internal-review verdict still demands revision
-- do not let `20260505T131604Z_1084557944` remain a silent second active paid path
-- do not treat the clean `2026-05-07` restart as proof that polling resilience is fixed
+- no off-policy pricing on TMA or public-facing surfaces
+- do not treat `delivery_blocked_needs_revision` as solved until the governing case itself is coherent
+- do not let the same user carry both a blocked `week` truth defect and an active unclassified premium storyline
+- do not count the standalone paid `premium` branch as traction before canonical merge
+- do not silently retire voice/audio intake without aligning docs and offer truth
+- do not let broadened OCR parsing or broadened supplement recommendability silently become client truth
+- do not allow multiple live polling instances or stale proxy assumptions to become accepted runtime truth
 - do not call polling resilience fixed before one clean post-fix verification passes
-- do not treat OCR auth recovery or manual-lab UX landing as proof that file/lab reliability is solved
-- do not use AI-assisted biomarker extraction as a fact source without confidence, merge, and audit controls
-- do not accept malformed typed biomarker text as confirmed evidence
-- do not let task/report generation outrun delivery safety, runtime health, manual-fallback proof, and canonical state truth
-- do not write another strategy refresh from the same evidence set before a direct P0 fix lands
+- do not treat connector recovery as proof that delivery truth, file truth, or runtime resilience are solved
+- do not describe progress without a fresh proof artifact when the latest runtime and QA evidence are still May 8 / May 6
+- do not spend another same-day strategy loop before one fresh proof artifact lands
+- do not add more experiment or task-packet inventory while the runtime and canonical-path proof bundle is still open
+- do not let planning or governance churn outrun delivery safety, lab truth, and canonical state truth
 
 ## Context For New Model
 
 Stage:
 
-- controlled concierge pilot with demand already validated and direction already clear, but execution compression is now required because delivery truth, same-user ownership, mini-app truth, runtime proof, and manual-fallback proof remain open on the same unchanged artifact set
+- controlled concierge pilot with delivery-gate repair partly landed, but no fresh positive proof artifact; lab truth, supplement safety, intake-modality truth, sustained runtime-instance conflict, model-path response discipline, and external connectors still unstable
 
 Done:
 
-- `week` demand validated
-- `premium` willingness to pay validated
-- runtime-state mismatch cleared
-- OCR auth path recovered
-- manual typed-lab fallback landed in code
-- router/model split held at `11/20` deterministic and `9/20` model-path
-- strategy direction and monetization path re-confirmed with no need for a new surface, new price, or a second active paid storyline
+- `20260501T162705Z_1084557944` is blocked instead of silently delivered
+- three stale same-user branches are archived
+- disk free space is still above the `10 GB` floor
+- mini-app hardcoded diagnosis/supplement demo content is largely removed
+- runtime conflict is now explicitly documented through `2026-05-14 16:50 MSK`
 
-Next:
+Objective:
 
-- enforce delivery truth
-- collapse same-user path sprawl
-- prove manual-lab fallback end-to-end
-- remove hardcoded mini-app result content
-- prove or replace the current proxy-backed runtime path
-- freeze new planning churn until one direct P0 fix lands
+- keep one canonical reviewed Telegram case coherent
+- preserve the blocked delivery state until review and lab truth align
+- collapse the same-user branch sprawl to one canonical path
+- resolve unsafe runtime/product drift around voice/audio intake, supplement recommendations, and OCR parsing
+- prove or explicitly accept the current proxy-backed polling path
+- tighten first-line model replies before the next proof cycle
+- keep replay-ready outward sync current while connectors are unavailable
 
-Must-Not-Change Rules:
+Constraints:
 
 - Telegram-first only
-- manual concierge only
-- official prices `3900 / 6900 / 14900 RUB`
-- human review before delivery
-- one canonical paid path per user
-- no second active same-user paid storyline
-- no diagnosis/treatment framing
-- no hardcoded supplement or protocol output on surfaces
-- no claiming file reliability is solved before PDF/photo/manual-text proof exists
-- no new strategy/task packet churn from the same evidence set before a direct fix lands
+- manual concierge remains official pilot mode
+- official pilot prices remain `3900 / 6900 / 14900 RUB`
+- human review required before delivery
+- one canonical paid path per Telegram user
+- one active polling instance
+- no diagnosis or treatment framing
+- no unsafe supplement instructions or hardcoded medical protocols on TMA / public surfaces
+- do not silently disable intake modalities without updating pilot truth
+- latest runtime artifact uses `http://127.0.0.1:10808`, briefly reconnects, and still collides with another poller
+- disk free space is only `10.55 GB`
+- Notion connector is blocked by the MCP handshake failure last verified in the completed `2026-05-14 04:54 MSK` run
+- GitHub connector is blocked by the MCP handshake failure last verified in the completed `2026-05-14 04:54 MSK` run
+- Google Drive file create/upload/share tools are unavailable in the current Codex session
 
 Immediate next actions:
 
-1. Add or verify a guard so unresolved internal-review verdicts cannot move to `delivered_to_client` without an explicit manual override record.
-2. Normalize `20260501T162705Z_1084557944` so its lab state matches the latest follow-up truth.
-3. Decide how `20260505T131604Z_1084557944` relates to the canonical `week` path and stop same-user commercial ambiguity.
-4. Run real file verification on a text PDF, a readable photo, a poor photo, and structured manual biomarker text; confirm safe fallback if OCR or typed input is weak.
-5. Add or extend tests around the new manual-lab button and rewrite prompt behavior.
-6. Remove the hardcoded mini-app `Premium Wellness-Досье` result demo and replace it with a safe placeholder or reviewed backend-fed state.
-7. Verify the proxy dependency on `127.0.0.1:12334` from the current running baseline and fix or document the `/health` check.
-8. Tighten `sanitize_live_reply()` and benchmark assertions for invented names, duplicated emergency templates, false specificity, and overlong first-touch replies.
-9. Freeze net-new strategy/task packet generation until one of actions `1-8` lands.
-10. Keep GitHub on the last proven good path, re-check Notion before writing, and restore Google Drive availability before the next outward-sync replay.
+1. Keep `20260501T162705Z_1084557944` blocked until review truth and lab truth align.
+2. Explicitly classify the same-user `week` / `premium` stack; until then, treat `20260505T131604Z_1084557944` as parked.
+3. Stop duplicate polling and prove one clean runtime path.
+4. Decide whether to restore or formally retire voice/audio intake.
+5. Roll back discontinued-iron recommendation drift and revalidate OCR parsing.
+6. Prove runtime health without ambiguous proxy assumptions.
+7. Freeze net-new experiment / task-packet churn until the runtime and canonical-path proof bundle lands.
+8. Produce one fresh runtime or QA proof artifact after the safety-sensitive path is verified.
+9. Replay Notion / GitHub / Google Drive sync when connector access is fixed.
 
 Reference benchmark:
 
