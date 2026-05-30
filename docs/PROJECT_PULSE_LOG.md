@@ -1,5 +1,184 @@
 ﻿# Project Pulse Log
 
+## 2026-05-30 11:33 MSK — Регулярная синхронизация (12h)
+
+### Что изменилось с последней зафиксированной записи (2026-05-14)
+- GitHub remote доступен через git HTTPS (`git ls-remote origin` — OK).
+- Notion connector доступен (fetch страницы статуса — OK).
+- Свободное место на `C:` упало до `5.85 GB` (`2026-05-30 11:33:39 +03:00`), ниже проектного порога `10 GB`.
+- Рабочее дерево остаётся «грязным»: незакоммиченные изменения в `WellnessBot/*`, `mini-app/index.html`, плюс untracked артефакты (`.venv_wsl/`, `WellnessBot/.bot.lock`, `WellnessBot/main_backup_2026-05-17*.py`, `run_bot_wsl.sh`).
+
+### Текущий этап
+- Controlled concierge pilot: Telegram-first, `PAYMENT_MODE=manual`, human review обязателен. Публичный запуск по-прежнему заблокирован.
+
+### Блокеры / риски (P0)
+1. Диск ниже пола: риск падения рантайма/логов/индекса git и деградации рабочего окружения.
+2. Runtime конфликт: нет нового «позитивного» proof-артефакта после 2026-05-14; ранее фиксировались duplicate polling + нестабильный proxy/health.
+3. Незавершённый safety-дрифт в working tree (без тестов/ревью): ослабление OCR-фильтрации, расширение рекомендуемости нутрицевтиков (включая ранее снятое с производства железо), перепаковка анкеты/меню и отключение voice/audio intake.
+
+### Что готово к пилоту
+- Продолжение controlled concierge пилота в Telegram: ручная оплата + human review.
+- Mini-app: результатный экран в working tree приведён к безопасному плейсхолдеру (без hardcoded медицинских выводов), но публичный запуск всё равно запрещён.
+
+### Что нельзя запускать публично
+- Любые публичные поверхности с hardcoded «результатами», протоколами, дозировками, медицинскими обещаниями или «полированной» ложной точностью.
+- Любые изменения, которые расширяют OCR/нутрицевтики/интейк без явного safety review и proof-артефакта.
+
+### Следующие шаги (до следующего 12h окна)
+1. Срочно восстановить запас диска на `C:` выше `10 GB`.
+2. Остановить duplicate polling, зафиксировать один канонический инстанс и один проверенный proxy/no-proxy путь.
+3. Разделить «синхро-доки» и «кодовые изменения»: либо откатить риск-дрифт, либо добавить проверки/тесты и только затем мержить в канонический путь.
+
+## 2026-05-14 16:56 MSK — Full Sync Completion Pass
+
+### State Read Delta
+- Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, case/review artifacts, runtime evidence, repo state, and connector surfaces.
+- Current persisted state remains:
+  - `WellnessBot/data/runtime_state.json` is still empty
+  - governing `week` case `20260501T162705Z_1084557944` remains `delivery_blocked_needs_revision`
+  - the same case still carries `payment_status = manual_payment_confirmed`
+  - the same case still carries `internal_review.judge_verdict = needs_revision`
+  - lab truth is still unsafe: `lab_quality_check.status = missing` and `requires_lab_resubmission = true`
+  - the same-user `premium` branch `20260505T131604Z_1084557944` remains commercially unclassified and currently reads `payment_status = manual_payment_confirmed`, `intake_status = review_priority_quality_and_market`
+- Current working-tree truth is still materially relevant:
+  - `WellnessBot/main.py` disables voice/audio intake and accepts text only
+  - `WellnessBot/lab_ocr.py` softens OCR line filtering and no longer requires marker aliases
+  - `WellnessBot/supplement_product_catalog.py` makes a discontinued iron product recommendable again
+  - `mini-app/index.html` stays in safer placeholder territory at `3900 RUB`
+  - `landing/index.html` still carries hardcoded proof-style case copy and biomarker deltas, so it remains marketing debt rather than verified product truth
+- Runtime evidence is now worse than the earlier same-day partial note:
+  - duplicate polling is still active through `2026-05-14 16:55:57 +0300`
+  - one reconnect at `2026-05-14 16:47:03 +0300` did not hold
+  - live startup proxy is still `http://127.0.0.1:10808`
+  - the last visible health probe remains `GET /health -> 404` at `2026-05-13 21:24:04 +0300`
+- Latest benchmark anchor remains `ops/reports/quality_report_20260506T080435Z.md` with QA synthesis in `docs/WELLNESS_DIALOGUE_QA_20260506.md`:
+  - `20/20` non-empty replies
+  - `11/20` deterministic replies
+  - `9/20` model-path replies
+  - `6/9` clarifying-question coverage on model-path symptom prompts
+  - invented-name hallucination still appears twice
+  - `5/9` model-path replies still exceed `2000` characters
+- Disk headroom is now an active ops regression:
+  - actual `C:` free space is `9.82 GB` at `2026-05-14 16:56:05 +03:00`
+  - this is below the project floor of `10 GB`
+- Loop inventory remains inflated:
+  - `127` proposed experiments in `WellnessBot/data/product_governance.json`
+  - `29` `docs/tasks/HERMES-20260505-*` packets
+
+### Connector Delta
+- Obsidian local mirror: available and refreshed in this run.
+- Notion: blocked by a real connector call in this run:
+  - call: workspace search for `Antigravity`
+  - exact failure: `tool call error: failed to get client`
+  - exact reason: `MCP startup failed: handshaking with MCP server failed ... error sending request for url (https://chatgpt.com/backend-api/wham/apps), when send initialize request`
+  - exact access request: restore the Notion Codex app connector so MCP can complete the `https://chatgpt.com/backend-api/wham/apps` initialize handshake
+- GitHub: blocked by a real connector call in this run:
+  - call: installed repository search for `Zinchenko_wellness_al`
+  - exact failure: `tool call error: failed to get client`
+  - exact reason: `MCP startup failed: handshaking with MCP server failed ... error sending request for url (https://chatgpt.com/backend-api/wham/apps), when send initialize request`
+  - exact access request: restore the GitHub Codex app connector so MCP can complete the `https://chatgpt.com/backend-api/wham/apps` initialize handshake
+- Google Drive: blocked because no file discovery/create/upload/share tools are exposed in this Codex session.
+  - exact access request: enable Google Drive file discovery/create/upload/share permissions in this Codex session
+
+### Regression Delta
+- Governing-case review and lab mismatch remains P0.
+  - owner: `Lead Developer + Operator`
+  - next fix action: keep `20260501T162705Z_1084557944` blocked until review truth, override truth, and follow-up lab truth align in one coherent artifact set
+- Same-user commercial-path ambiguity remains P0.
+  - owner: `Operator + Lead Developer`
+  - next fix action: explicitly classify `20260505T131604Z_1084557944` as `merge-into-canonical` or parked non-canonical branch
+- Voice/audio intake regression remains P0.
+  - owner: `Lead Developer`
+  - next fix action: either restore a safe STT path or formally retire voice/audio from the pilot and align docs/product copy
+- OCR parsing drift remains P0.
+  - owner: `Lead Developer`
+  - next fix action: add verification coverage or tighten the filter so narrative/protocol lines cannot silently become biomarker facts
+- Supplement catalog safety and availability drift remains P0.
+  - owner: `Lead Developer`
+  - next fix action: stop recommending discontinued iron products as available choices and restore conservative exclusions around self-directed iron use
+- Runtime single-instance and transport proof gap remains P0.
+  - owner: `Ops + Lead Developer`
+  - next fix action: stop the extra poller, decide whether `127.0.0.1:10808` is mandatory, and prove one clean health path that does not end in `404`
+- Disk floor breach is now active.
+  - owner: `Ops`
+  - next fix action: free `C:` back above `10 GB` before more artifact generation or replay work expands the workspace
+- Benchmark freshness remains P1.
+  - owner: `Lead Developer`
+  - next fix action: produce one fresh runtime or QA artifact only after the runtime, disk, canonical-path, and safety-sensitive working-tree issues are coherent
+
+### Plan Delta
+- The next bounded execution packet should now be:
+  1. restore `C:` above the `10 GB` floor
+  2. stop duplicate polling and name one canonical runtime instance
+  3. record the real proxy/health path from a clean post-fix artifact
+  4. classify `20260505T131604Z_1084557944` as canonical merge or parked branch
+  5. decide `restore` vs `retire-and-document` for voice/audio intake
+  6. add proof or rollback for OCR filter relaxation
+  7. add proof or rollback for supplement recommendability widening
+  8. keep mini-app and landing inside placeholder / unverified-proof boundaries
+  9. capture one fresh runtime or QA artifact only after steps `1-8` are coherent
+
+### Strategy Delta
+- Strategy tightens again instead of expanding.
+- The live pilot now depends on five explicit truths:
+  - disk above the `10 GB` floor
+  - one canonical paid path per Telegram user
+  - one active polling instance
+  - one explicit intake modality
+  - one fresh proof artifact
+- Until those five truths are re-established, do not count the `premium` branch, the runtime, or the surfaces as product progress.
+
+### Goals Delta
+- Goal 1: restore disk margin above `10 GB`.
+- Goal 2: preserve one canonical same-user commercial story.
+- Goal 3: preserve one active runtime instance with one explicit health/proxy truth.
+- Goal 4: keep unverified intake/parser/catalog drift out of client truth.
+- Goal 5: produce one fresh proof artifact before another strategy loop starts.
+
+### Connector Status
+- Obsidian: done — refreshed onboarding mirror and created a new local run note.
+- Notion: blocked — real workspace search failed during MCP initialize handshake.
+- GitHub: blocked — real installed repository search failed during MCP initialize handshake.
+- Google Drive: blocked — file discovery/create/upload/share tools are not exposed in-session.
+- Local replay artifacts created for this run:
+  - `docs/external_sync/antigravity_sync_20260514T135605Z.md`
+  - `docs/external_sync/antigravity_context_snapshot_20260514T135605Z.md`
+  - `docs/external_sync/2026-05-14_1656_sync_blocked.md`
+  - `docs/obsidian_mirror/RUN_NOTE_20260514_1656_MSK.md`
+
+### Next 12h Focus
+1. Restore `C:` above the `10 GB` floor before more artifact churn.
+2. Stop the duplicate Telegram polling instance and prove one clean runtime start path.
+3. Decide and document the real proxy/health path because the live proxy is still `127.0.0.1:10808` and `/health` is still last seen as `404`.
+4. Classify `20260505T131604Z_1084557944` as canonical merge or parked branch.
+5. Decide whether voice/audio intake is restored safely or formally retired from the pilot.
+6. Add tests or roll back the OCR filter relaxation and supplement-catalog widening.
+7. Keep mini-app and landing copy inside placeholder / unverified-proof boundaries.
+8. Replay Notion, GitHub, and Google Drive sync when connector access is fixed.
+
+### Context For New Model
+- Stage: controlled concierge pilot with the governing `week` case still blocked, the same-user `premium` branch still commercially ambiguous, disk now below the safety floor, and the latest runtime artifact showing sustained duplicate polling through `2026-05-14 16:55 MSK`
+- Objective: restore environment and runtime coherence, preserve one canonical reviewed Telegram case, keep safety-sensitive drift out of client truth, and keep outward-sync replay material current while connectors remain blocked
+- Constraints:
+  - Telegram-first only
+  - manual concierge remains official pilot mode
+  - official pilot prices remain `3900 / 6900 / 14900 RUB`
+  - human review required before delivery
+  - one canonical paid path per Telegram user
+  - one active polling instance
+  - no diagnosis or treatment framing
+  - runtime currently starts behind `http://127.0.0.1:10808`
+  - latest local `/health` probe still returns `404`
+  - disk free space is only `9.82 GB`
+  - Notion and GitHub connectors fail during MCP initialize handshake in this run
+  - Google Drive file discovery/create/upload/share tools are unavailable in this run
+- Immediate next actions:
+  1. restore `C:` above the `10 GB` floor
+  2. stop duplicate polling and prove one clean runtime path
+  3. classify the same-user `premium` branch
+  4. decide voice/audio scope
+  5. verify or roll back OCR and supplement drift
+  6. create one fresh proof artifact after the safety-sensitive path is coherent
 ## 2026-05-14 16:56 MSK — Регулярная синхронизация (12h)
 
 ### Что изменилось

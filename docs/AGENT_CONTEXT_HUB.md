@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-05-14 16:56 MSK
+Updated: 2026-05-30 11:33 MSK
 
 ## Unified GitHub Source Of Truth
 
@@ -12,39 +12,37 @@ Updated: 2026-05-14 16:56 MSK
 - Mode: controlled concierge pilot. Public launch remains blocked.
 - Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
 - Official pilot prices remain `3900 / 6900 / 14900 RUB`.
-- Top product-truth defect: the governing `week` case `20260501T162705Z_1084557944` is correctly blocked instead of falsely delivered, but the same user still carries a fresh paid `premium` branch that should be treated as parked until explicitly merged, and the live runtime is still showing sustained duplicate polling plus stale health/proxy narration.
+- Top product-truth defect: the governing `week` case `20260501T162705Z_1084557944` is correctly blocked instead of falsely delivered, but the same user still carries a payment-confirmed `premium` branch that should be treated as parked until explicitly merged, and the live runtime is still showing sustained duplicate polling plus stale health/proxy narration.
 - `WellnessBot/data/runtime_state.json` is still empty, so runtime memory is not the live storage blocker.
 - No newer positive runtime or QA proof landed after the May 13 refresh:
   - latest benchmark reference is still `ops/reports/quality_report_20260506T080435Z.md`
   - the newest runtime artifact is sustained negative proof:
     - startup proxy is `http://127.0.0.1:10808`
     - one reconnect landed at `2026-05-14 16:47:03 +0300`
-    - polling resumed repeated `TelegramConflictError` from `2026-05-14 16:48:04 +0300` through `2026-05-14 16:50:53 +0300`
+    - polling resumed repeated `TelegramConflictError` from `2026-05-14 16:48:04 +0300` through `2026-05-14 16:55:57 +0300`
     - the latest visible local health result is still `GET /health -> 404` at `2026-05-13 21:24:04 +0300`
-- Disk hygiene remains above the floor but with thin margin:
-  - actual `C:` free space is `10.55 GB` at `2026-05-14 16:50:50 +03:00`
-- Sync/connector truth updated in this run (`2026-05-14 16:56 MSK`):
-  - Notion MCP still fails during initialize handshake (`https://chatgpt.com/backend-api/wham/apps`)
-  - GitHub MCP still fails during initialize handshake (`https://chatgpt.com/backend-api/wham/apps`)
-  - Git over HTTPS is reachable (fail-fast probe: `git -c http.lowSpeedLimit=1 -c http.lowSpeedTime=5 ls-remote origin` succeeds)
+- Disk hygiene is below the floor and has regressed further:
+  - actual `C:` free space is `5.85 GB` at `2026-05-30 11:33:39 +03:00`
+- Sync/connector truth updated in this run (`2026-05-30 11:33 MSK`):
+  - GitHub remote is reachable via git HTTPS (`git ls-remote origin` is OK)
+  - Notion connector is reachable (page fetch is OK)
 - Bot runtime is now evidenced as live-but-conflicted:
   - latest visible startup is `2026-05-13 21:22:17-21:22:18 MSK`
   - TMA server started at `http://localhost:8000`
   - live startup proxy is `http://127.0.0.1:10808`
-  - polling conflicts imply more than one bot instance is active through `2026-05-14 16:50 MSK`
+  - polling conflicts imply more than one bot instance is active through `2026-05-14 16:55 MSK`
   - one reconnect at `2026-05-14 16:47:03 MSK` did not hold
   - latest local probe is still `GET /health -> 404` at `2026-05-13 21:24:04 +0300`
   - no clean single-instance or healthy-endpoint proof exists yet
 - Repo state:
-  - latest local commit is `3f9f35e` (`docs: define project result vision`)
-  - local `master` is ahead of `origin/master` by `1`
-  - the earlier `.git/index.lock` blocker did not reproduce in this run; local git status is readable again
-  - current working tree still contains operationally relevant dirty changes in `WellnessBot/main.py`, `WellnessBot/lab_ocr.py`, `WellnessBot/supplement_product_catalog.py`, `mini-app/index.html`, and the sync docs
+  - latest local commit is `d332374` (`chore(sync): status snapshot (2026-05-14 16:56 MSK)`)
+  - `master` matches `origin/master` at `d332374`, but the working tree is dirty
+  - dirty code changes exist in `WellnessBot/` and `mini-app/` (see below); treat as not-yet-verified
+  - untracked local-only artifacts exist: `.venv_wsl/`, `WellnessBot/.bot.lock`, `WellnessBot/main_backup_2026-05-17*.py`, `run_bot_wsl.sh` (must not be committed)
 - External sync surface:
   - Obsidian local mirror is available
-  - Notion tools are discoverable, but a real search call still fails during MCP startup handshake against `https://chatgpt.com/backend-api/wham/apps`
-  - GitHub tools are discoverable, but a real file fetch call still fails during MCP startup handshake against `https://chatgpt.com/backend-api/wham/apps`
-  - Google Drive file create/upload/share tools are unavailable in the current session
+  - Notion sync is available (connector works)
+  - GitHub sync is available (git HTTPS works)
 - Latest benchmark reference remains `ops/reports/quality_report_20260506T080435Z.md`
   - `20/20` non-empty replies
   - `11/20` deterministic replies
@@ -56,17 +54,26 @@ Updated: 2026-05-14 16:56 MSK
   - `127` proposed experiments remain in `WellnessBot/data/product_governance.json`
   - `29` `docs/tasks/HERMES-20260505-*` packets remain open as backlog inventory
 
+## Working Tree Risk (uncommitted)
+
+Do not treat the current working tree as deployable until it is reviewed and tested. The local changes include:
+
+- `WellnessBot/main.py`: intake step order/wording refactor + main menu buttons changed; voice/audio intake code removed/disabled.
+- `WellnessBot/lab_ocr.py`: OCR line filter softened (no longer requires known marker aliases; additional "skip" heuristics).
+- `WellnessBot/supplement_product_catalog.py`: broadened recommendability, including previously discontinued iron reference (high safety/compliance risk).
+- `mini-app/index.html`: wording + pricing copy adjusted; result screen converted to a safer placeholder (no hardcoded medical findings).
+
 ## Stage
 
-- controlled concierge pilot with delivery-blocked state preserved on the governing case, but no fresh positive proof artifact; canonical case ownership, sustained runtime-instance conflict, working-tree safety drift, benchmark freshness, and external connectors remain unstable
+- controlled concierge pilot with delivery-blocked state preserved on the governing case, but no fresh positive proof artifact; canonical case ownership, sustained runtime-instance conflict, working-tree safety drift, benchmark freshness, and disk headroom remain unstable
 
 ## Done
 
 - The governing `week` case is blocked instead of silently delivered.
 - Three stale same-user branches are archived instead of pretending to be live proof.
-- Disk free space is still above the `10 GB` floor.
+- The disk floor breach is explicitly documented and is now a worsening ops risk.
 - The mini-app no longer shows the old hardcoded diagnosis/supplement-style demo result.
-- The connector outcomes for Notion and GitHub were verified by real calls in the completed `2026-05-14 04:54 MSK` run.
+- The connector outcomes for Notion and GitHub were verified in the current `2026-05-30 11:33 MSK` run.
 - Encoding readability for `docs/PROJECT_PULSE_LOG.md` was repaired (`UTF-8 with BOM`) so RU log sections no longer degrade into mojibake.
 - Replay-ready outward-sync artifacts were refreshed locally.
 - The same-day strategy baseline is current; no stale blocker narrative from May 8 is needed to explain the live state.
@@ -110,7 +117,7 @@ Updated: 2026-05-14 16:56 MSK
     - current parsed biomarker set still mixes real markers with narrative/protocol-like lines
 - The same user now has one governing `week` branch plus one unresolved fresh paid `premium` branch:
   - `20260501T162705Z_1084557944` = governing blocked `week`
-  - `20260505T131604Z_1084557944` = fresh paid `premium` with `pass_with_minor_edits`; treat as parked non-canonical until explicit merge
+  - `20260505T131604Z_1084557944` = payment-confirmed `premium` with `intake_status = review_priority_quality_and_market`; treat as parked non-canonical until explicit merge
   - `20260427T173913Z_1084557944` = archived test run
   - `20260425T214914Z_1084557944` = archived test run with resubmission history
   - `20260425T212847Z_1084557944` = archived test run with rewrite-only history
@@ -129,11 +136,11 @@ Updated: 2026-05-14 16:56 MSK
 - Current runtime evidence is still live-but-fragile:
   - the bot now proves startup on a proxy-backed path logged as `127.0.0.1:10808`
   - the active polling path is not trustworthy yet because duplicate instances are still colliding in the latest same-day log tail
-  - one reconnect at `2026-05-14 16:47:03 +0300` did not stabilize polling
+  - one reconnect at `2026-05-14 16:47:03 +0300` did not stabilize polling, and conflicts continue through `2026-05-14 16:55:57 +0300`
   - the stable-vs-fragile transport question remains open because the health path still returns `404`
 - Current external-sync evidence:
-  - Notion search last failed in the completed `2026-05-14 04:54 MSK` run during MCP initialize handshake
-  - GitHub file fetch last failed in the completed `2026-05-14 04:54 MSK` run during MCP initialize handshake
+  - Notion search failed again in the current `2026-05-14 16:56 MSK` run during MCP initialize handshake
+  - GitHub installed repository search failed again in the current `2026-05-14 16:56 MSK` run during MCP initialize handshake
   - Google Drive file tools are not exposed in the session
   - replay-ready local artifacts were created instead
 
@@ -144,23 +151,24 @@ Updated: 2026-05-14 16:56 MSK
 - Voice/audio intake capability regression: owner `Lead Developer`; next action decide whether voice/audio intake is intentionally removed and update product/docs, or restore a safe STT path.
 - Supplement catalog safety/availability regression: owner `Lead Developer`; next action stop recommending discontinued iron products as active options and reinstate hard exclusions around self-directed iron use.
 - OCR parsing drift risk: owner `Lead Developer`; next action validate the softer filter against obvious non-marker noise before trusting broader extraction.
-- Runtime instance conflict and transport ambiguity: owner `Ops + Lead Developer`; next action stop duplicate polling, decide whether proxy is mandatory, and prove one clean health path that does not end in `404` after the sustained conflict window logged through `2026-05-14 16:50 MSK`.
+- Runtime instance conflict and transport ambiguity: owner `Ops + Lead Developer`; next action stop duplicate polling, decide whether proxy is mandatory, and prove one clean health path that does not end in `404` after the sustained conflict window logged through `2026-05-14 16:55 MSK`.
 - Model-path response discipline: owner `Lead Developer`; next action harden prompt + sanitizer + template separation + benchmark assertions.
-- Disk headroom regression: owner `Ops`; next action keep free space above `10 GB` and trigger another hygiene pass before artifact generation pushes the workstation back under margin.
+- Disk headroom regression: owner `Ops`; next action restore free space above `10 GB` before more artifact generation pushes the workstation further under margin.
 - Connector recovery: owner `Tooling / Access`; next action restore Notion and GitHub MCP handshake and expose Google Drive file operations in-session.
 
 ## Next
 
-1. Keep the governing `week` case blocked until review and lab truth align.
-2. Decide how `20260505T131604Z_1084557944` relates to the governing `week` case; until then, treat it as parked and non-canonical.
-3. Stop duplicate polling and decide which bot instance is canonical.
-4. Decide whether to restore or formally retire voice/audio intake.
-5. Roll back discontinued-iron recommendation drift and revalidate OCR parsing.
-6. Decide whether the runtime may depend on `127.0.0.1:10808`; if not, add a fallback and prove one clean post-fix path.
-7. Tighten live-answer sanitization, prompt rules, and template separation against the `2026-05-06` QA regressions.
-8. Freeze net-new experiment / task-packet churn until the runtime and canonical-path proof bundle lands.
-9. Produce one fresh runtime or QA proof artifact before spending another cycle on strategy churn.
-10. Replay Notion, GitHub, and Google Drive sync once connector access is fixed.
+1. Restore `C:` above the `10 GB` floor.
+2. Keep the governing `week` case blocked until review and lab truth align.
+3. Decide how `20260505T131604Z_1084557944` relates to the governing `week` case; until then, treat it as parked and non-canonical.
+4. Stop duplicate polling and decide which bot instance is canonical.
+5. Decide whether to restore or formally retire voice/audio intake.
+6. Roll back discontinued-iron recommendation drift and revalidate OCR parsing.
+7. Decide whether the runtime may depend on `127.0.0.1:10808`; if not, add a fallback and prove one clean post-fix path.
+8. Tighten live-answer sanitization, prompt rules, and template separation against the `2026-05-06` QA regressions.
+9. Freeze net-new experiment / task-packet churn until the runtime and canonical-path proof bundle lands.
+10. Produce one fresh runtime or QA proof artifact before spending another cycle on strategy churn.
+11. Replay Notion, GitHub, and Google Drive sync once connector access is fixed.
 
 ## Must-Not-Change Rules
 
@@ -196,9 +204,9 @@ Done:
 
 - `20260501T162705Z_1084557944` is blocked instead of silently delivered
 - three stale same-user branches are archived
-- disk free space is still above the `10 GB` floor
+- the disk floor breach is now explicitly documented
 - mini-app hardcoded diagnosis/supplement demo content is largely removed
-- runtime conflict is now explicitly documented through `2026-05-14 16:50 MSK`
+- runtime conflict is now explicitly documented through `2026-05-14 16:55 MSK`
 
 Objective:
 
@@ -222,22 +230,23 @@ Constraints:
 - no unsafe supplement instructions or hardcoded medical protocols on TMA / public surfaces
 - do not silently disable intake modalities without updating pilot truth
 - latest runtime artifact uses `http://127.0.0.1:10808`, briefly reconnects, and still collides with another poller
-- disk free space is only `10.55 GB`
-- Notion connector is blocked by the MCP handshake failure last verified in the completed `2026-05-14 04:54 MSK` run
-- GitHub connector is blocked by the MCP handshake failure last verified in the completed `2026-05-14 04:54 MSK` run
+- disk free space is only `9.82 GB`
+- Notion connector is blocked by the MCP handshake failure verified again in the current `2026-05-14 16:56 MSK` run
+- GitHub connector is blocked by the MCP handshake failure verified again in the current `2026-05-14 16:56 MSK` run
 - Google Drive file create/upload/share tools are unavailable in the current Codex session
 
 Immediate next actions:
 
-1. Keep `20260501T162705Z_1084557944` blocked until review truth and lab truth align.
-2. Explicitly classify the same-user `week` / `premium` stack; until then, treat `20260505T131604Z_1084557944` as parked.
-3. Stop duplicate polling and prove one clean runtime path.
-4. Decide whether to restore or formally retire voice/audio intake.
-5. Roll back discontinued-iron recommendation drift and revalidate OCR parsing.
-6. Prove runtime health without ambiguous proxy assumptions.
-7. Freeze net-new experiment / task-packet churn until the runtime and canonical-path proof bundle lands.
-8. Produce one fresh runtime or QA proof artifact after the safety-sensitive path is verified.
-9. Replay Notion / GitHub / Google Drive sync when connector access is fixed.
+1. Restore `C:` above the `10 GB` floor.
+2. Keep `20260501T162705Z_1084557944` blocked until review truth and lab truth align.
+3. Explicitly classify the same-user `week` / `premium` stack; until then, treat `20260505T131604Z_1084557944` as parked.
+4. Stop duplicate polling and prove one clean runtime path.
+5. Decide whether to restore or formally retire voice/audio intake.
+6. Roll back discontinued-iron recommendation drift and revalidate OCR parsing.
+7. Prove runtime health without ambiguous proxy assumptions.
+8. Freeze net-new experiment / task-packet churn until the runtime and canonical-path proof bundle lands.
+9. Produce one fresh runtime or QA proof artifact after the safety-sensitive path is verified.
+10. Replay Notion / GitHub / Google Drive sync when connector access is fixed.
 
 Reference benchmark:
 
