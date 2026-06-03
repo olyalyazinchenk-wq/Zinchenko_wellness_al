@@ -1,4 +1,4 @@
-# Disk Hygiene Status
+﻿# Disk Hygiene Status
 
 ## 2026-04-25 23:35:58 +03:00
 
@@ -401,6 +401,24 @@
   - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
   - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
 
+## 2026-05-09 17:31:00 +03:00
+
+- Before C:: `212.17 GB used / 10.84 GB free`
+- After C:: `212.16 GB used / 10.85 GB free`
+- Delta free space: `+0.01 GB` (`+10.29 MB` net gain across the run)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `35` stale items, reclaimed `10.29 MB`, skipped `24` locked/in-use items safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before cleanup and cleared successfully
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders already exist
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked or access-restricted items that were skipped safely
+  - free space remains only `0.85 GB` above the `10 GB` escalation threshold, so continued monitoring is warranted
+
 ## 2026-05-08 16:38:34 +03:00
 
 - Before C:: `211.66 GB used / 11.36 GB free`
@@ -457,3 +475,570 @@
   - `%TEMP%` still contains locked or access-restricted items that were skipped safely
   - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
   - free space is above the `10 GB` escalation threshold, so no large-folder triage was required
+
+## 2026-05-12 16:48:40 +03:00
+
+- Before C:: `214.35 GB used / 8.66 GB free`
+- After C:: `212.06 GB used / 10.95 GB free`
+- Delta free space: `+2.29 GB` (`+2345.89 MB` net gain across the run)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `2` stale files and `2` stale directories, reclaimed `37.21 MB`, skipped `1` locked/in-use item, and left `14` additional error cases untouched safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - moved `Hermes Agent.lnk`, `Hermes Chat.lnk`, `Hermes Connection.lnk`, `Hermes Local.lnk`, `Hermes Status.lnk`, and `Visual Studio Code.lnk` into `C:\Users\HP\Desktop\00_Ярлыки`
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked or access-restricted items that were skipped safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - free space recovered from below the `10 GB` threshold to `10.95 GB`, so large-folder triage was not required after cleanup
+
+## 2026-05-13 04:49:57 +03:00
+
+- Before C:: `212.27 GB used / 10.75 GB free`
+- After C:: `212.27 GB used / 10.75 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB` net change after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `52` locked/in-use items were skipped safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders already exist
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains only locked or active items, so this run could not reclaim additional space safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - free space remains only `0.75 GB` above the `10 GB` escalation threshold, so continued monitoring is warranted
+
+## 2026-05-13 16:49:17 +03:00
+
+- Before C:: `212.35 GB used / 10.66 GB free`
+- After C:: `212.33 GB used / 10.68 GB free`
+- Delta free space: `+0.02 GB` (`+18.06 MB` net gain across the run)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `289` stale files and `7` stale directories, reclaimed `17.47 MB`, skipped `65` locked/in-use items safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders already exist
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains locked or active items that were skipped safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - free space remains only `0.68 GB` above the `10 GB` escalation threshold, so continued monitoring is warranted
+
+## 2026-05-14 04:49:43 +03:00
+
+- Before C:: `212.63 GB used / 10.39 GB free`
+- After C:: `212.63 GB used / 10.39 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB` net change after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `52` locked/in-use stale items were skipped safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders already exist
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Risk flags:
+  - `%TEMP%` still contains only locked or active stale items, so this run could not reclaim additional space safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - free space remains only `0.39 GB` above the `10 GB` escalation threshold, so continued monitoring is warranted
+
+## 2026-05-14 16:50:30 +03:00
+
+- Before C:: `213.17 GB used / 9.84 GB free`
+- After C:: `213.17 GB used / 9.84 GB free`
+- Delta free space: `-0.00 GB` (`-0.02 MB`; no measurable recovery after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `17` stale directories, but they were already effectively empty; `59` locked/in-use items were skipped safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders already exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\04_Веб_Прототипы` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0 (1).exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe.crdownload` — `0.12 GB`
+  - `C:\Users\HP\Downloads\setup-Happ.x64.exe` — `0.11 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked or active items that were skipped safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - meaningful recovery now requires manual review of user-owned installers or larger folders in `Downloads`
+
+## 2026-05-30 11:33:28 +03:00
+
+- Before C:: `217.85 GB used / 5.16 GB free`
+- After C:: `217.09 GB used / 5.92 GB free`
+- Delta free space: `+0.76 GB` (`+732.22 MB` net gain after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `488` stale files and `16` stale directories, reclaimed `732.22 MB`, skipped `5` locked/in-use items safely, and hit `39` non-fatal removal errors while leaving those items in place
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: cleared from `7` items to `0`; `Clear-RecycleBin` still returned `The system cannot find the path specified`, but COM verification confirmed it finished empty
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - moved `MAX.lnk` into `C:\Users\HP\Desktop\00_Ярлыки`
+  - moved `run_bot.bat`, `run_bot_v2.bat`, `run_bot_v3.bat`, and the zero-byte file `╨Э╨╛╨▓╨░╤П` into `C:\Users\HP\Desktop\06_Разное`
+  - verified there are now `0` loose files left on the Desktop root
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\04_Веб_Прототипы` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity (1).exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\Antigravity (2).exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+- Risk flags:
+  - drive `C:` remains well below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked or active items that were skipped safely
+  - `39` temp-removal errors were left untouched because the run stays non-destructive
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger `Downloads` folders
+
+## 2026-05-30 23:33:52 +03:00
+
+- Before C:: `213.43 GB used / 9.58 GB free`
+- After C:: `213.43 GB used / 9.58 GB free`
+- Delta free space: `-0.00 GB` (`-0.03 MB`; background disk activity offset any visible cleanup gain)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no removable stale items remained; `14` locked/in-use items were skipped safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` still returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - moved `Antigravity.lnk` into `C:\Users\HP\Desktop\00_Ярлыки\Antigravity (2).lnk`
+  - verified there are now `0` loose files left on the Desktop root
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин.mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains only locked or active items, so this run could not reclaim additional space safely
+  - `Clear-RecycleBin` still throws the recurring path error even when COM verification shows the Recycle Bin is empty
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`
+
+## 2026-05-31 11:35:22 +03:00
+
+- Before C:: `213.61 GB used / 9.40 GB free`
+- After C:: `213.61 GB used / 9.40 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB`; safe cleanup found no removable stale data)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `16` locked/in-use items were skipped safely
+  - `C:\Windows\Temp`: no stale items removed; this location was not accessible from the current session
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` still returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files needed moving
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин (1).mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains only locked or active items, so this run could not reclaim additional space safely
+  - `C:\Windows\Temp` could not be traversed from the current non-elevated session
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`
+
+## 2026-05-31 21:57:00 +03:00
+
+- Before C:: `213.63 GB used / 9.38 GB free`
+- After C:: `213.63 GB used / 9.38 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB` net visible change; safe cleanup reclaimed about `0.88 MB` from `%TEMP%`, but background disk activity offset it)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `1` stale file and `44` stale directories, reclaimed `0.88 MB`, skipped `15` locked/in-use items safely, and left `9` additional non-fatal removal errors untouched
+  - `C:\Windows\Temp`: no stale items removed; this location was not accessible from the current non-elevated session
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` still returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files were present on the Desktop root, so no recategorization move was needed
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\скан дядя Женя` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин.mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked or active items plus a few non-fatal removal errors that were left in place safely
+  - `C:\Windows\Temp` could not be traversed from the current non-elevated session
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`
+
+## 2026-06-01 23:36:33 +03:00
+
+- Before C:: `215.13 GB used / 7.88 GB free`
+- After C:: `214.92 GB used / 8.10 GB free`
+- Delta free space: `+0.22 GB` (`+220.22 MB` net gain after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `4` stale files and `2` stale directories, reclaimed `220.22 MB`, skipped `5` locked/in-use items safely, and left `9` additional non-fatal removal errors untouched
+  - `C:\Windows\Temp`: no stale items removed; this location was not accessible from the current non-elevated session
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` still returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files were present on the Desktop root, so no recategorization move was needed
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин.mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked or active items plus `9` non-fatal removal errors that were left in place safely
+  - `C:\Windows\Temp` could not be traversed from the current non-elevated session
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`
+
+## 2026-06-02 11:37:32 +03:00
+
+- Before C:: `215.70 GB used / 7.32 GB free`
+- After C:: `215.70 GB used / 7.32 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB`; cleanup reclaimed only `299 B`, so no visible change)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `1` stale file, reclaimed `299 B`, skipped `14` locked/in-use items safely
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: still showed `3` items before and after; `Clear-RecycleBin` did not complete cleanly from the current session
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files were present on the Desktop root, so no recategorization move was needed
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads/Desktop top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\wps_download\e6379f2126dd332a9afe1d9d8ca27cb6-15_setup_XA_mui_Free.exe.601.1092.exe` — `0.24 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Antigravity-x64 (1).exe` — `0.13 GB`
+  - `C:\Users\HP\Downloads\setup-Happ.x64.exe` — `0.11 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked or active items that were skipped safely
+  - Recycle Bin still contains `3` items because the non-elevated `Clear-RecycleBin` call did not complete cleanly
+  - meaningful recovery now requires manual review of user-owned installers, archives, or other large files in `Downloads`
+
+## 2026-06-02 23:39:07 +03:00
+
+- Before C:: `216.39 GB used / 6.62 GB free`
+- After C:: `216.39 GB used / 6.62 GB free`
+- Delta free space: `0.00 GB` (`0.00 MB`; safe cleanup found no removable visible space this run)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: no stale items removed; `14` locked/in-use items were skipped safely
+  - `C:\Windows\Temp`: no stale items removed; this location returned `Access to the path 'C:\Windows\Temp' is denied.`
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` still returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files were present on the Desktop root, so no recategorization move was needed
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин.mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains only locked or active items, so this run could not reclaim additional space safely
+  - `C:\Windows\Temp` remains inaccessible from the current non-elevated session
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`
+
+## 2026-06-03 11:38:49 +03:00
+
+- Before C:: `216.42 GB used / 6.59 GB free`
+- After C:: `216.43 GB used / 6.59 GB free`
+- Delta free space: `-0.00 GB` (`-0.95 MB`; background disk activity outweighed the small temp cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `14` stale items
+  - `C:\Windows\Temp`: no stale items removed
+  - Recycle Bin: still showed `30` filesystem entries before and after; `Clear-RecycleBin` did not complete cleanly from the current session
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files were present on the Desktop root, so no recategorization move was needed
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Downloads\соп админ` — `0.01 GB`
+    - `C:\Users\HP\Downloads\Antigravity_Unlocker-1.23.2` — `0.01 GB`
+    - `C:\Users\HP\Downloads\The Elder Scrolls V Skyrim Special Edition by xatab` — `0.00 GB`
+    - `C:\Users\HP\Downloads\Metro 2033 Redux` — `0.00 GB`
+  - Desktop top folders:
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+    - `C:\Users\HP\Desktop\01_Документы` — `0.01 GB`
+    - `C:\Users\HP\Desktop\Денис документы для военкомата` — `0.00 GB`
+    - `C:\Users\HP\Desktop\00_Ярлыки` — `0.00 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин.mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - the non-elevated Recycle Bin cleanup still does not fully clear or verify all entries from this session
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`
+
+## 2026-06-03 23:39:32 +03:00
+
+- Before C:: `216.35 GB used / 6.66 GB free`
+- After C:: `216.31 GB used / 6.70 GB free`
+- Delta free space: `+0.03 GB` (`+34.97 MB` net gain after safe cleanup)
+- Safe cleanup performed:
+  - `C:\Users\HP\AppData\Local\Temp`: removed `6` stale items, reclaimed `34.97 MB`, skipped `25` locked/in-use items safely
+  - `C:\Windows\Temp`: no stale items removed; this location returned `Access to the path 'C:\Windows\Temp' is denied.`
+  - Recycle Bin: confirmed empty before and after cleanup, although `Clear-RecycleBin` still returned `The system cannot find the path specified`
+  - Project-local pip cache: not present in `C:\Users\HP\Desktop\Новая папка`
+- Desktop hygiene:
+  - confirmed category folders exist: `00_Ярлыки`, `01_Документы`, `02_Таблицы`, `03_Изображения`, `04_Веб_Прототипы`, `05_Текст_Заметки`, `06_Разное`
+  - no loose user files were present on the Desktop root, so no recategorization move was needed
+  - left existing project/work folders in place
+- Large-folder triage because free space remains below `10 GB`:
+  - Downloads/Desktop top folders:
+    - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521` — `0.52 GB`
+    - `C:\Users\HP\Downloads\wps_download` — `0.24 GB`
+    - `C:\Users\HP\Desktop\Новая папка` — `0.23 GB`
+    - `C:\Users\HP\Desktop\hermes-agent` — `0.23 GB`
+    - `C:\Users\HP\Desktop\папины фото с тел` — `0.07 GB`
+    - `C:\Users\HP\Desktop\Codex` — `0.04 GB`
+    - `C:\Users\HP\Desktop\справка ндфл` — `0.04 GB`
+    - `C:\Users\HP\Desktop\03_Изображения` — `0.02 GB`
+    - `C:\Users\HP\Downloads\Telegram Desktop` — `0.02 GB`
+    - `C:\Users\HP\Desktop\дипломная работа` — `0.02 GB`
+- Recommended delete-review candidates:
+  - `C:\Users\HP\Downloads\Зинченко_Ольга_Викторовна_1521.zip` — `0.34 GB`
+  - `C:\Users\HP\Downloads\MAX+Yandex.msi` — `0.32 GB`
+  - `C:\Users\HP\Downloads\MAX.msi` — `0.30 GB`
+  - `C:\Users\HP\Downloads\Obsidian-1.12.7.exe` — `0.28 GB`
+  - `C:\Users\HP\Downloads\video1186202597.mp4` — `0.23 GB`
+  - `C:\Users\HP\Downloads\Antigravity.exe` — `0.20 GB`
+  - `C:\Users\HP\Downloads\CursorUserSetup-x64-3.2.16.exe` — `0.17 GB`
+  - `C:\Users\HP\Downloads\Разговор_с_экспертами：_Слизистые_оболочки_форпост_для_бактериальной.mp4` — `0.16 GB`
+  - `C:\Users\HP\Downloads\VSCodeUserSetup-x64-1.119.0.exe` — `0.15 GB`
+  - `C:\Users\HP\Downloads\Анна_Кициева_прямой_эфир_Холестерин.mp4` — `0.14 GB`
+- Risk flags:
+  - drive `C:` remains below the `10 GB` free-space threshold after safe cleanup
+  - `%TEMP%` still contains locked or active items that were skipped safely
+  - `C:\Windows\Temp` remains inaccessible from the current non-elevated session
+  - `Clear-RecycleBin` still returns a path error even when COM verification shows the Recycle Bin as empty
+  - meaningful recovery now requires manual review of user-owned installers, archives, videos, or larger folders in `Downloads`

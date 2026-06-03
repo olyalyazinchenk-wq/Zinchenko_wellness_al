@@ -9,21 +9,42 @@ function syncTelegramLinks() {
     });
 }
 
-function wireChecklistCopy() {
-    const button = document.getElementById("copyChecklistButton");
-    const checklist = document.getElementById("launchChecklist");
+function wireCtaModal() {
+    const modal = document.getElementById("ctaModal");
+    const openButtons = document.querySelectorAll(".js-cta-open-modal");
+    const closeButton = document.getElementById("closeModalButton");
 
-    if (!button || !checklist) {
-        return;
+    if (!modal) return;
+
+    const openModal = () => {
+        modal.classList.add("is-active");
+        document.body.style.overflow = "hidden"; // Prevent scrolling when modal is open
+    };
+
+    const closeModal = () => {
+        modal.classList.remove("is-active");
+        document.body.style.overflow = ""; // Restore scrolling
+    };
+
+    openButtons.forEach((btn) => {
+        btn.addEventListener("click", openModal);
+    });
+
+    if (closeButton) {
+        closeButton.addEventListener("click", closeModal);
     }
 
-    button.addEventListener("click", async () => {
-        try {
-            await navigator.clipboard.writeText(checklist.textContent.trim());
-            button.textContent = "Чек-лист скопирован";
-        } catch (error) {
-            button.textContent = "Скопируйте вручную ниже";
-            console.error(error);
+    // Close on click outside the card
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    // Close on Escape key press
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("is-active")) {
+            closeModal();
         }
     });
 }
@@ -47,7 +68,7 @@ function markActiveNav() {
 
                 links.forEach((link) => {
                     const active = link.getAttribute("href") === `#${entry.target.id}`;
-                    link.style.color = active ? "var(--accent-deep)" : "var(--muted)";
+                    link.style.color = active ? "var(--accent)" : "var(--muted)";
                 });
             });
         },
@@ -62,6 +83,6 @@ function markActiveNav() {
 
 document.addEventListener("DOMContentLoaded", () => {
     syncTelegramLinks();
-    wireChecklistCopy();
+    wireCtaModal();
     markActiveNav();
 });

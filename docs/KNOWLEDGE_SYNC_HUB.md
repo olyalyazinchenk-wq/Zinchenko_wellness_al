@@ -8,14 +8,14 @@ This hub defines what must be refreshed every run, how connector availability is
 - Obsidian local mirror: `C:\Users\HP\Desktop\Новая папка\docs\obsidian_mirror`
 - Notion workspace: connected workspace pages for run notes and model context
 - GitHub repo: `olyalyazinchenk-wq/Zinchenko_wellness_al`
-- Google Drive: required target only when upload/create and share tools are exposed in the current session
+- Google Drive: required target only when upload/create and share tools are actually exposed in the current session
 
 ## Every-Run Standard
 Every run must refresh:
 - key changes since the previous run
 - latest project state across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`
 - latest benchmark reference from `ops/reports` when one exists
-- runtime-versus-storage mismatches and delivery-safety regressions
+- current runtime evidence, latest paid-delivery evidence, and storage headroom
 - current blockers, risks, owners, and next fix actions
 - `Plan Delta`, `Strategy Delta`, `Goals Delta`, and next 12h priorities
 - a concise `Context For New Model` block
@@ -23,11 +23,11 @@ Every run must refresh:
 
 ## Run Output Contract
 Each sync cycle creates or refreshes:
-- one new timestamped entry in [PROJECT_PULSE_LOG.md](C:\Users\HP\Desktop\Новая папка\docs\PROJECT_PULSE_LOG.md)
-- one new strategy refresh section in [STRATEGY_LIVE_DELTA.md](C:\Users\HP\Desktop\Новая папка\docs\STRATEGY_LIVE_DELTA.md)
+- one new timestamped entry in `docs/PROJECT_PULSE_LOG.md`
+- one new strategy refresh section in `docs/STRATEGY_LIVE_DELTA.md`
 - refreshed onboarding hubs:
-  - [AGENT_CONTEXT_HUB.md](C:\Users\HP\Desktop\Новая папка\docs\AGENT_CONTEXT_HUB.md)
-  - [obsidian_mirror/AGENT_CONTEXT_HUB.md](C:\Users\HP\Desktop\Новая папка\docs\obsidian_mirror\AGENT_CONTEXT_HUB.md)
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/obsidian_mirror/AGENT_CONTEXT_HUB.md`
 - one run-note mirror in `docs/obsidian_mirror/`
 - one GitHub status artifact and one GitHub context snapshot for external contributors
 - one connector status map with `Done`, `Changed`, `Blocked`, and `Next 12h`
@@ -37,7 +37,7 @@ At the start of every run:
 - verify which connector tools are exposed in the current session
 - treat plugin presence alone as insufficient; required write tools must be actually exposed by tool discovery or the connector is blocked for that capability
 - treat GitHub as connector-first when the repository name is known; a missing local `git remote` is a CLI gap, not by itself a GitHub sync blocker
-- treat Google Drive as available only when file create/upload and share tools are exposed
+- treat Google Drive as available only when file discovery/create/upload/share tools are exposed
 - if a connector is partially available, use the working surface and log the missing capability precisely
 
 ## Connector Startup Health Rule
@@ -54,17 +54,38 @@ If any connector is unavailable:
 - write the exact access request needed for the next run
 - repeat that same access request in the inbox summary
 
+## Dirty Working Tree Truth Rule
+Before concluding a sync:
+- run `git status --short --branch` and inspect diffs for dirty files in `WellnessBot`, `mini-app`, `landing`, `ops`, and `docs`
+- if uncommitted changes materially alter runtime behavior, product surfaces, benchmark behavior, or safety rules, log them as current project truth even if no commit exists yet
+- separate `repo head` from `working tree truth` in `PROJECT_PULSE_LOG.md` and `AGENT_CONTEXT_HUB.md`
+- if a dirty change conflicts with the standing pilot, safety, or pricing rules, call it out immediately as a regression with owner and next fix action
+
 ## Timestamp Integrity Rule
 Before writing the new run entry:
 - resolve the current local run time explicitly
 - if the latest sync artifact is future-dated relative to the current run, correct that entry instead of stacking a second contradictory timestamp
 - keep the pulse log, agent hub, Obsidian mirror, and outward-sync artifacts aligned to the same absolute run timestamp
 
-## Same-Day Partial Entry Correction Rule
-If the same local day already contains a fresh but partial sync entry:
-- update that same-day entry in place instead of stacking a second near-duplicate block
-- carry forward the final connector status from the completed run, not the stale status from an earlier failed probe
-- distinguish connector-backed outward sync from local `git push`; a proxy-blocked local push does not by itself mean GitHub external sync is blocked if GitHub app writes succeeded
+## Runtime Artifact Precedence Rule
+Before carrying forward any runtime narrative:
+- compare `bot.stderr`, `bot.stderr.log`, and any newer runtime proof artifacts by actual file modification time
+- prefer the freshest successful or failed runtime artifact over older hub summaries
+- if fresh runtime evidence overturns the earlier same-day story, write the correction explicitly into `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and the outward-sync artifacts
+- do not keep a stale outage narrative active once a newer successful polling or model-call artifact exists
+
+## Benchmark Reference Precedence Rule
+Before carrying forward any benchmark or QA narrative:
+- compare the newest completed `ops/reports/quality_report_*.md` artifact against the latest `docs/WELLNESS_DIALOGUE_QA_*.md` synthesis by actual timestamp
+- if a newer completed quality report exists, treat that report as the latest benchmark reference even if the QA synthesis has not yet been refreshed
+- if the older QA synthesis still claims there is no fresh completed artifact, log it as stale and correct the benchmark reference explicitly in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
+- if benchmark-critical files changed between the stale QA synthesis and the fresh report, call out that the old QA interpretation is obsolete rather than silently carrying it forward
+
+## Storage Floor Escalation Rule
+If the current run measures `C:` below the `10 GB` floor:
+- log the exact free-space value and timestamp as an active ops regression, not a background hygiene note
+- move disk recovery into the current `Plan Delta`, `Goals Delta`, and `Next 12h` set before new artifact generation
+- do not describe the environment as back within margin until a later run re-measures above `10 GB`
 
 ## External Sanitization Rule
 Before syncing status artifacts outside the local workspace:
@@ -81,34 +102,34 @@ Before carrying forward any active case or blocker:
 - if `runtime_state.json` is empty, rebuild the live picture from the newest persisted submissions and review artifacts instead of inferring no active work
 - if `runtime_state.json` points to a `submission_id` with no matching JSON file, treat that session as provisional only and log a persistence regression
 
+## Active Continuity Thread Audit Rule
+Before describing `nutri_chat` or any paid continuity-chat rail as safe or commercially healthy:
+- inspect the latest assistant turns in `WellnessBot/data/runtime_state.json` chat memory
+- if a paid continuity thread exists, sample it for invented diagnoses, medication-like advice, unsupported names or ages, and continuity promises that exceed approved scope
+- if continuity behavior is the freshest product proof, treat that thread as benchmark-relevant product truth even when no new PDF or dossier artifact exists
+- log any false-specificity or escalation-boundary breach immediately in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts with owner and next fix action
+
 ## Single Active Paid Path Rule
 Before carrying execution forward for any Telegram user:
-- verify the same user is not simultaneously holding a live `week`, `premium`, or `vip` runtime session plus unresolved older paid submissions
+- verify the same user is not simultaneously holding a live `week`, `premium`, `basic`, `full`, or `vip` runtime session plus unresolved older paid submissions
 - if multiple paid paths coexist, log the conflict immediately in `PROJECT_PULSE_LOG.md` with owner and next fix action
 - explicitly declare one active paid path and freeze, archive, or merge the others before calling the state coherent
 
+## Paid Delivery Completion Rule
+Before describing a paid path as operationally healthy:
+- verify whether payment confirmation, draft generation, review generation, PDF export, and handoff all completed
+- if the paid path crashes after payment confirmation but before the final deliverable exists, log it as a P0 fulfilment regression with owner and next fix action
+- record the exact failing function or missing artifact when the failure is code-path specific
+
 ## Safety Gate Validation Rule
-Before confirming a premium case as active or delivery-safe:
+Before confirming a premium or full-depth case as active or delivery-safe:
 - verify whether `lab_quality_check.requires_resubmission` is `true`
 - verify whether draft or PDF generation happened despite an unsafe lab gate
 - if a safety gate was bypassed, log it immediately in `PROJECT_PULSE_LOG.md` as a regression with owner and next fix action
 
 ## Delivery Review Gate Rule
 Before confirming any paid case as delivered:
-- verify the latest internal review verdict is no longer `needs_revision`, `must_rewrite_with_high_caution`, or otherwise flagged for rewrite
+- verify the latest internal review verdict is no longer `needs_revision`, `must_rewrite_with_high_caution`, `fail_major_issues`, or otherwise flagged for rewrite
 - if delivery still proceeds, record an explicit manual override note with who approved it and why
 - if a case reaches `delivered_to_client` without a cleared review verdict or override note, log it immediately in `PROJECT_PULSE_LOG.md` as a P0 regression with owner and next fix action
-
-## Transient Runtime Failure Rule
-Before declaring the bot runtime stable in a sync:
-- read the recent tail of `bot.stderr.log`
-- if Telegram, proxy, or local-network failures recovered automatically, log them as transient ops regressions with exact timestamps and recovery evidence
-- do not call the runtime fully healthy if a local proxy endpoint is intermittently unavailable without a documented fallback path
-- include owner and next fix action whenever the bot depends on a local listener such as `127.0.0.1:12334`
-
-## Sustained Runtime Interruption Rule
-If the same-day runtime evidence is worse than a short single recovery:
-- if polling failures last more than 5 minutes or recover in more than one separate window in the same local day, escalate from `transient note` to an active ops regression
-- record each outage window and the exact recovery timestamp in `PROJECT_PULSE_LOG.md`
-- require an explicit owner, next fix action, and whether a direct no-proxy polling path exists
-- do not describe runtime as stable again until one clean post-fix verification passes without repeated proxy refusals or disconnect loops
+- do not infer delivery safety from the existence of a generated PDF alone; artifact existence cannot override a failing review verdict

@@ -1,5 +1,208 @@
 # Project Pulse Log
 
+## 2026-06-03 23:44 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные опорные документы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Подтверждена свежая дельта рабочего дерева: самые крупные неревьюенные изменения остаются в `WellnessBot/`, `ops/`, `index.html`, `app.js`, `styles.css`, `mini-app/index.html` и ряде `docs/*`; новых локальных диффов в `tests/` в этом окне не появилось.
+- GitHub remote `origin` читается по HTTPS (`refs/heads/main`, `refs/heads/master` доступны), но узкий docs-only commit/push из этой среды всё ещё блокируется локальной проблемой индексации `.git/index.lock`.
+- Notion connector доступен; в этом окне можно вынести только санитизированный статус без секретов, клиентских данных и runtime-чувствительных артефактов.
+- Disk hygiene остаётся P0 ops-риском: свободное место на `C:` сейчас `6.69 GB` (`2026-06-03 23:43:57 +03:00`).
+
+### Текущий этап / блокеры
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- Главный продуктовый блокер по-прежнему не runtime, а коммерческий и safety-контроль: у одного пользователя остаются конфликтующие платные ветки `premium/basic/standard/nutri_chat`, а кейс `20260531T183007Z_1084557944` всё ещё противоречив (`delivered_to_client` при `fail_major_issues`).
+- Публично нельзя запускать ни новый фронтовый оффер, ни расширенный пакетный каталог как источник продуктовой правды, пока крупные локальные диффы в `WellnessBot/`, `landing`/корневом фронте и `mini-app/` не прошли ручной разбор и safety-проверку.
+- Отдельный ops-блокер не снят: локальный git всё ещё не даёт безопасно сделать даже docs-only commit из-за ошибки прав на `.git/index.lock`.
+
+### Следующие шаги
+1. Держать sync в статусном/docs-слое, пока кодовые и фронтовые диффы не пройдут ручной разбор.
+2. Починить локальную индексацию git в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих изменений.
+3. Разобрать delivery-gate breach на `20260531T183007Z_1084557944` и запретить новые `delivered_to_client` при проваленном review.
+4. Схлопнуть same-user paid stack в один canonical path и только потом нормализовать одну продуктовую лестницу.
+5. Поднять `C:` выше `10 GB` до новых replay, PDF-экспортов и артефактной генерации.
+
+## 2026-06-03 11:43 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные опорные документы и снята свежая дельта по `docs`, `WellnessBot`, `ops`, корневому фронту и `mini-app`.
+- Состояние репозитория остаётся сильно грязным: локальные диффы есть в `WellnessBot/`, `ops/`, `index.html`, `app.js`, `styles.css`, `mini-app/index.html` и ряде `docs/*`; в `tests/` новых локальных диффов в этом окне нет.
+- Подтверждён доступ к GitHub remote `origin` по HTTPS (`refs/heads/main` и `refs/heads/master` читаются), но локальный `git add` по двум docs-файлам снова упирается в `Permission denied` на `.git/index.lock`.
+- Notion connector доступен в текущей сессии и может принять свежую sanitised status-note без секретов и клиентских данных.
+- Disk hygiene снова ухудшился: свободное место на `C:` сейчас `6.56 GB` (`2026-06-03 11:43:59 +03:00`).
+
+### Текущий этап / блокеры
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- Главный продуктовый блокер не runtime, а коммерческий контроль: у одного и того же пользователя остаются конфликтующие платные ветки `premium/basic/standard/nutri_chat`, а кейс `20260531T183007Z_1084557944` всё ещё противоречив: `delivered_to_client` при `fail_major_issues`.
+- Публично нельзя запускать ни широкий пакетный каталог, ни фронтовые / TMA-поверхности как источник продуктовой правды: в рабочем дереве лежат крупные неревьюенные изменения меню, копирайта, тарифов и UX.
+- Отдельный ops-блокер: локальная git-индексация по-прежнему сломана, поэтому даже узкий docs-only commit/push нельзя выполнить безопасно из этой среды.
+
+### Следующие шаги
+1. Держать sync в рамках status/docs-слоя, пока кодовые и фронтовые диффы не пройдут ручной разбор.
+2. Починить `.git/index.lock` / права записи в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих изменений.
+3. Разобрать delivery-gate breach на `20260531T183007Z_1084557944` и запретить новые `delivered_to_client` при проваленном review.
+4. Схлопнуть same-user paid stack в один canonical path и только потом нормализовать одну продуктовую лестницу.
+5. Поднять `C:` выше `10 GB` до новых replay, PDF-экспортов и артефактной генерации.
+
+## 2026-06-02 23:42 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные опорные документы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Состояние репозитория подтверждено повторно: в рабочем дереве остаются крупные неревьюенные диффы в `docs`, `WellnessBot`, `ops`, корневом фронте и `mini-app`; `landing/index.html` изменён, `tests/` в этом окне без новых локальных диффов.
+- GitHub remote доступен: `git ls-remote origin` успешен в `2026-06-02 23:42 MSK`.
+- Notion connector повторно доступен в текущей сессии и может принять свежую статусную заметку.
+- Попытка узкого docs-only commit/push заблокирована локально: `git add` не может создать `.git/index.lock` (`Permission denied`).
+- Disk hygiene ухудшился ещё раз: свободное место на `C:` снизилось до `6.62 GB`.
+
+### Текущий этап / блокеры
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- Главные блокеры не изменились: breach delivery-gate на кейсе `20260531T183007Z_1084557944`, размножение paid-веток одного пользователя, отсутствие единой продуктовой лестницы.
+- Новый ops-риск стал жёстче: запас по диску ушёл ещё ниже floor, поэтому любые тяжёлые replay/экспортные действия остаются рискованными до ручной очистки.
+- При доступном GitHub нельзя автоматически публиковать широкий снимок рабочего дерева: в нём есть большие неревьюенные кодовые, фронтовые и локальные runtime-артефакты.
+- Даже docs-only push сейчас требует ручного разбора прав на `.git/index.lock` или следующего прогона в исправленной среде.
+
+### Следующие шаги
+1. Держать auto-sync в границах status/docs-слоя, пока крупные диффы в `WellnessBot/`, `ops/`, `index.html`, `styles.css`, `app.js`, `mini-app/` не пройдут ручной разбор.
+2. Срочно поднять `C:` выше `10 GB` перед новыми replay, PDF-экспортами и артефактной генерацией.
+3. Разобрать `20260531T183007Z_1084557944` и запретить дальнейший `delivered_to_client` при `fail_major_issues`.
+4. Схлопнуть same-user paid stack в один canonical path и затем нормализовать единую продуктовую лестницу.
+
+## 2026-06-02 11:40 MSK - Verified Full Sync Completion Pass
+
+### State Read Delta
+- Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, runtime logs, current submissions, review artifacts, repo drift, and exposed connector surfaces.
+- Runtime is freshly re-proven on June 2:
+  - `bot.stderr` shows startup at `2026-06-02 00:13:24 +0300`
+  - proxy connectivity fails once against `127.0.0.1:10808`, then the bot falls back to direct connection
+  - polling and handled updates continue through `2026-06-02 10:24:09 +0300`
+  - DeepSeek calls return `200 OK` at `08:58:46`, `08:59:56`, `09:01:21`, `10:21:47`, and `10:23:51 +0300`
+- The same-user commercial stack widened again:
+  - active runtime state now points to a fresh `nutri_chat` path at `500 RUB`
+  - a fresh `14000 RUB` `basic` case from `2026-06-01` is in `needs_revision`
+  - a `14900 RUB` delivered case from `2026-05-31` carries review verdict `fail_major_issues`
+  - the same user now spans eight live-relevant commercial paths
+- Working-tree monetization drift is now also persisted-case truth:
+  - the workspace concurrently evidences `3900`, `500`, `6900`, `14000`, and `14900 RUB`
+- Disk floor breach worsened:
+  - actual `C:` free space is `7.31 GB` at `2026-06-02 11:40:43 +03:00`
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- `docs/WELLNESS_DIALOGUE_QA_20260530.md` remains stale relative to the latest benchmark and current benchmark-critical diffs.
+
+### Connector Delta
+- Obsidian local mirror: done in this run.
+- Notion: done in this run.
+  - real call: workspace search for `Antigravity context hub` and `Antigravity Sync Run - 2026-06-02`
+  - result: the hub page is reachable and no same-day run note exists
+  - sync action: created a fresh run note under the Antigravity context hub with a concise `Context For New Model` section
+- GitHub: done in this run.
+  - real surface: repository remote `olyalyazinchenk-wq/Zinchenko_wellness_al` is reachable locally and GitHub connector file-create primitives are exposed
+  - sync action: published a new sanitized status artifact and context snapshot for external contributors
+- Google Drive: blocked because no Google Drive file discovery/create/upload/share tools are exposed in this Codex session.
+  - exact access request: enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session
+
+### Regression Delta
+- P0 delivery review-gate breach.
+  - owner: `Lead Developer + Operator`
+  - source: `WellnessBot/data/submissions/20260531T183007Z_1084557944.json` plus `WellnessBot/data/drafts/20260531T183007Z_1084557944.review.json`
+  - next fix action: immediately stop treating that dossier as delivery-safe, record whether any manual override existed, and block further `delivered_to_client` transitions when review verdict is `fail_major_issues`
+- P0 commercial-path multiplication continues.
+  - owner: `Operator + Lead Developer`
+  - source: active runtime `nutri_chat` plus seven unresolved same-user persisted commercial branches
+  - next fix action: collapse the eight-path stack to one canonical commercial story before any new paid path is opened
+- Offer-governance drift is now proven by persisted cases, not just code.
+  - owner: `Product Strategist + Lead Developer`
+  - next fix action: explicitly approve or roll back the five-price commercial ladder now visible across `3900 / 500 / 6900 / 14000 / 14900 RUB`
+- Disk floor breach worsened.
+  - owner: `Ops`
+  - next fix action: restore `C:` above `10 GB` before more artifact-heavy work
+- Benchmark interpretation drift remains active.
+  - owner: `Lead Developer`
+  - next fix action: refresh QA synthesis around `ops/reports/quality_report_20260531T083403Z.md`
+
+### Plan Delta
+- The next bounded execution packet should now be:
+  1. audit and remediate the delivered `14900 RUB` case with failed review
+  2. collapse the eight-path same-user stack to one canonical commercial path
+  3. decide whether `nutri_chat` and the broader package catalog are approved direction or rollback targets
+  4. normalize one offer ladder across code, docs, mini-app, payment flow, prompts, and persisted case metadata
+  5. replay one paid case only after steps `1-4` land
+  6. restore `C:` above the `10 GB` floor
+  7. refresh QA synthesis around the latest completed benchmark
+
+### Strategy Delta
+- Strategy pressure changed again in this run:
+  - proxy instability is no longer the lead blocker because the bot now proves direct fallback and live polling on June 2
+  - the lead blockers are review-gate integrity, same-user path multiplication, and monetization sprawl
+- The live pilot now depends on seven explicit truths:
+  - one hard review gate before delivery
+  - one canonical commercial path per Telegram user
+  - one approved ladder
+  - one stable text-only runtime path
+  - one fresh QA interpretation anchored to the latest completed benchmark
+  - no invented symptoms or diagnoses in paid drafts
+  - disk above the `10 GB` floor
+
+### Goals Delta
+- Goal 1: stop paid delivery from bypassing failed review verdicts.
+- Goal 2: collapse the same-user commercial stack to one canonical path.
+- Goal 3: collapse monetization truth to one approved ladder.
+- Goal 4: preserve the newly re-proven direct runtime path while keeping proxy dependency non-governing.
+- Goal 5: refresh QA interpretation around the latest completed benchmark.
+
+### Next 12h Priorities
+1. Audit the delivered `20260531T183007Z_1084557944` case and block further delivery when verdict is `fail_major_issues`.
+2. Freeze creation of new same-user paid paths until canonical ownership is decided.
+3. Decide whether `nutri_chat` plus the broader package catalog is approved or rolled back.
+4. Normalize one commercial ladder across code, docs, prompts, payment flow, and mini-app.
+5. Restore `C:` above the `10 GB` floor.
+6. Refresh QA synthesis around `ops/reports/quality_report_20260531T083403Z.md`.
+
+### Context For New Model
+- Stage: controlled concierge pilot with runtime freshly re-proven on June 2, but delivery-gate integrity is broken on a `14900 RUB` delivered case, the same user now spans eight commercial paths, the commercial ladder is fragmented, and disk is at `7.31 GB`
+- Objective:
+  - stop review-gate bypass
+  - collapse the same-user commercial stack
+  - normalize one approved offer ladder
+  - keep the runtime on the now-proven direct text-only path
+  - refresh benchmark interpretation around the latest completed report
+- Constraints:
+  - Telegram-first only
+  - `PAYMENT_MODE=manual`
+  - human review required before delivery
+  - one canonical commercial path per Telegram user
+  - text-only intake is the only currently proven live modality
+  - disk free space is `7.31 GB`
+  - latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`
+  - the latest QA synthesis note is stale
+  - Google Drive file discovery/create/upload/share tools are unavailable in the current Codex session
+- Immediate next actions:
+  1. audit and remediate the delivered `14900 RUB` case with failed review
+  2. freeze same-user path creation until canonical ownership is decided
+  3. approve or roll back the current package ladder
+  4. normalize one ladder everywhere
+  5. restore disk above `10 GB`
+
+## 2026-06-02 11:40 MSK — Регулярная синхронизация (12h)
+
+### Что изменилось
+- Перепроверен live runtime: `bot.stderr` теперь даёт свежий proof-window от `2026-06-02 00:13` до `10:24 MSK`; после неуспешной proxy-проверки бот уходит в direct fallback и продолжает polling, DeepSeek отвечает `200 OK`.
+- Зафиксировано ухудшение disk hygiene: свободное место на `C:` упало до `7.31 GB`, что ниже обязательного порога `10 GB`.
+- GitHub remote доступен (`git ls-remote origin` успешен), Notion connector доступен в текущей сессии.
+- В рабочем дереве остаются крупные неревьюенные диффы в `WellnessBot/`, `ops/`, `index.html`, `styles.css`, `app.js`, `mini-app/` и связанных docs; их нельзя автоматически публиковать как часть регулярного sync.
+
+### Текущий этап / блокеры
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- P0: paid e2e после локального PDF-фикса всё ещё не доказан свежим replay-артефактом.
+- P0: продуктовая и ценовая карта по-прежнему расходится между standing docs (`3900 / 6900 / 14900` и `1000 / 6900 / 14900`) и текущим рабочим деревом (`500 / 6900 / 14000 / 14900 / 5000`).
+- P0: диск ниже порога и повышает риск новых сбоев при генерации артефактов.
+- P1: proxy `127.0.0.1:10808` больше не главный runtime blocker, но его политика всё ещё не нормализована: сейчас доказан только режим fallback-to-direct.
+
+### Следующие шаги (до следующего окна 12h)
+1. Прогнать один controlled paid replay на текущем коде: manual payment → draft/review → PDF export → доставка.
+2. Поднять `C:` выше `10 GB` и не генерировать тяжёлые артефакты до восстановления запаса.
+3. Принять решение по единой продуктовой лестнице и не выпускать наружу текущий catalog drift без ручного product review.
+4. Удержать auto-sync в границах status/docs-слоя, пока крупные кодовые и фронтовые изменения не пройдут ручной разбор.
+
 ## 2026-06-01 23:40 MSK — Регулярная синхронизация (12h)
 
 ### Что изменилось

@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import asyncio
 import logging
@@ -21,6 +21,9 @@ from aiogram.types import (
     InlineKeyboardMarkup,
     LabeledPrice,
     PreCheckoutQuery,
+    ReplyKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardRemove,
 )
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.client.session.aiohttp import AiohttpSession
@@ -30,6 +33,7 @@ from ai_drafting import (
     generate_case_growth_report,
     generate_case_judge_report,
     generate_live_reply,
+    generate_screening_reply,
 )
 from case_service import (
     build_initial_submission_payload,
@@ -40,13 +44,11 @@ from case_service import (
     update_submission_status,
 )
 from config import load_settings
+from html_pdf_engine import create_premium_pdf
 from lab_ocr import (
     build_biomarker_confirmation_message,
     build_lab_resubmission_message,
-    build_manual_biomarker_input_message,
-    build_manual_biomarker_rewrite_message,
     parse_biomarkers,
-    parse_manual_biomarkers,
     recognize_text,
 )
 from payment_flow import (
@@ -104,13 +106,7 @@ from storage import (
     sanitize_filename,
     load_submission,
 )
-from voice_processor import (
-    SYNC_STT_MAX_BYTES,
-    SYNC_STT_MAX_DURATION_SECONDS,
-    handle_audio_to_text,
-    handle_voice_to_text,
-)
-from html_pdf_engine import create_premium_pdf
+
 from texts import (
     ABOUT_TEXT,
     CONSENT_DECLINED_TEXT,
@@ -125,7 +121,7 @@ from texts import (
     RESET_TEXT,
     START_TEXT,
     TIER_DESCRIPTIONS,
-    TIER_PREMIUM_DESC,
+    TIER_BASIC_DESC,
     UNKNOWN_STATE_TEXT,
 )
 
@@ -191,8 +187,7 @@ def _create_bot_session(proxy_url: str | None) -> AiohttpSession | None:
         return None
     if not _test_proxy_connectivity(proxy_url):
         logger.warning(
-            "Proxy %s unreachable — falling back to direct connection.",
-            _format_proxy_for_logs(proxy_url),
+            "Proxy connectivity check failed — falling back to direct connection.",
         )
         return None
     logger.info("Using proxy: %s", _format_proxy_for_logs(proxy_url))
@@ -280,11 +275,13 @@ def restore_runtime_state() -> None:
 def start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Начать разбор", callback_data="choose_product")],
-            [InlineKeyboardButton(text="Посмотреть пример результата", callback_data="show_examples")],
-            [InlineKeyboardButton(text="ℹ️ Как это работает", callback_data="show_process")],
-            [InlineKeyboardButton(text="Связь с Ольгой / оператором", callback_data="operator_help")],
-            [InlineKeyboardButton(text="Живой диалог с нейросетью", callback_data="start_live_chat")],
+            [InlineKeyboardButton(text="💬 Нутри-чат", callback_data="tier_nutri_chat")],
+            [InlineKeyboardButton(text="🥗 Привычки и тарелка", callback_data="tier_habits")],
+            [InlineKeyboardButton(text="📋 Стандартный разбор", callback_data="tier_standard")],
+            [InlineKeyboardButton(text="👑 Премиум с анализами", callback_data="tier_premium")],
+            [InlineKeyboardButton(text="Выбрать: 🧬 Разбор Осипова — 7 000 ₽", callback_data="tier_osipov")],
+            [InlineKeyboardButton(text="🧪 Сдать анализы", callback_data="show_labs_link"),
+             InlineKeyboardButton(text="💼 Мои тарифы", callback_data="choose_product")],
         ]
     )
 
@@ -292,9 +289,11 @@ def start_keyboard() -> InlineKeyboardMarkup:
 def product_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="7 дней — 3 900 ₽", callback_data="tier_week")],
-            [InlineKeyboardButton(text="30 дней — 6 900 ₽", callback_data="tier_premium")],
-            [InlineKeyboardButton(text="VIP 30 дней — 14 900 ₽", callback_data="tier_vip")],
+            [InlineKeyboardButton(text="Пробный вход: Нутри-чат — 300 ₽ / 2 дня", callback_data="tier_nutri_chat")],
+            [InlineKeyboardButton(text="Выбрать: 🥗 Привычки и тарелка — 6 900 ₽", callback_data="tier_habits")],
+            [InlineKeyboardButton(text="Выбрать: 📋 Стандартный разбор — 10 000 ₽", callback_data="tier_standard")],
+            [InlineKeyboardButton(text="Выбрать: 👑 Премиум с анализами — 14 900 ₽", callback_data="tier_premium")],
+            [InlineKeyboardButton(text="Выбрать: 🧬 Разбор Осипова — 7 000 ₽", callback_data="tier_osipov")],
             [InlineKeyboardButton(text="Посмотреть пример результата", callback_data="show_examples")],
         ]
     )
@@ -320,38 +319,37 @@ def labs_keyboard() -> InlineKeyboardMarkup:
 
 
 TIER_NAMES = {
-    "week": "Разбор на 7 дней",
-    "premium": "Персональный разбор на 30 дней",
-    "vip": "VIP-сопровождение на 30 дней",
+    "nutri_chat": "Нутри-чат",
+    "habits": "Привычки и тарелка",
+    "standard": "Стандартный нутрициологический разбор",
+    "premium": "Премиум-разбор с анализами",
+    "osipov": "Разбор ХМС/ГХ-МС по Осипову",
+    "screening": "Нутри-чат",
+    "basic": "Стандартный нутрициологический разбор",
+    "full": "Премиум-разбор с анализами",
 }
 
 INTAKE_STEP_ORDER = [
-    "full_name",
-    "age",
-    "city",
-    "anthropometrics",
-    "work_lifestyle",
-    "symptoms",
-    "wellbeing_energy",
-    "complaint_pattern",
-    "goals",
-    "nutrition",
-    "food_behavior",
-    "digestion",
-    "sleep_stress",
-    "activity",
-    "female_hormones",
-    "emotional_stress",
-    "background",
-    "risk_details",
-    "motivation",
-    "red_flags",
-    "labs",
+    "full_name",           # 1. Имя, возраст, город
+    "anthropometrics",     # 2. Рост и вес
+    "symptoms",            # 3. Главные жалобы
+    "goals",               # 4. Цель разбора
+    "nutrition_routine",   # 5. Режим питания
+    "nutrition",           # 6. Рацион за день
+    "food_behavior",       # 7. Пищевое поведение
+    "digestion",           # 8. ЖКТ, стул, желчеотток
+    "water_alcohol",       # 9. Вода, кофе, алкоголь
+    "sleep_stress",        # 10. Сон, стресс, энергия
+    "work_lifestyle",      # 11. Работа, активность, нагрузки
+    "background",          # 12. Диагнозы, препараты, БАДы
+    "female_hormones",     # 13. Гормональный/репродуктивный фон
+    "lab_notes",           # 14. Анализы и обследования
+    "red_flags",           # 15. Красные флаги
 ]
 OPTIONAL_INTAKE_STEPS = {
     "anthropometrics",
     "female_hormones",
-    "labs",
+    "lab_notes",
 }
 NAV_BACK_WORDS = {
     "назад",
@@ -388,7 +386,7 @@ NAV_REPEAT_WORDS = {
 }
 
 
-def start_session(user: types.User, tier: str = "premium") -> dict[str, Any]:
+def start_session(user: types.User, tier: str = "basic") -> dict[str, Any]:
     submission_id = build_submission_id(user.id)
     session = {
         "submission_id": submission_id,
@@ -446,7 +444,7 @@ def intake_previous_step(step: str) -> str | None:
 
 
 def step_has_answer(session: dict[str, Any], step: str) -> bool:
-    if step == "labs":
+    if step == "lab_notes":
         return bool(
             session.get("lab_notes")
             or session.get("documents")
@@ -483,12 +481,12 @@ async def handle_intake_navigation(message: types.Message, session: dict[str, An
         await send_step_prompt(message.chat.id, previous_step)
         return True
 
-    if normalized in SKIP_WORDS and step not in {"labs", "red_flags"}:
+    if normalized in SKIP_WORDS and step not in {"lab_notes", "red_flags"}:
         session[step] = "Клиент пропустил шаг."
         next_step = intake_next_step(step)
         if not next_step:
-            session["step"] = "labs"
-            next_step = "labs"
+            session["step"] = "lab_notes"
+            next_step = "lab_notes"
         else:
             session["step"] = next_step
         touch_session()
@@ -619,18 +617,18 @@ def build_followup_context(case: dict[str, Any], user_text: str) -> str:
             "case": {
                 "submission_id": case.get("submission_id"),
                 "symptoms": medical.get("symptoms"),
-                "wellbeing_energy": medical.get("wellbeing_energy"),
-                "background": medical.get("background"),
-                "risk_details": medical.get("risk_details"),
+                "goals": medical.get("goals"),
+                "nutrition_routine": medical.get("nutrition_routine"),
                 "nutrition": medical.get("nutrition"),
                 "food_behavior": medical.get("food_behavior"),
                 "digestion": medical.get("digestion"),
+                "water_alcohol": medical.get("water_alcohol"),
                 "sleep_stress": medical.get("sleep_stress"),
-                "activity": medical.get("activity"),
+                "work_lifestyle": medical.get("work_lifestyle"),
+                "background": medical.get("background"),
                 "female_hormones": medical.get("female_hormones"),
-                "hormonal_reproductive_context": medical.get("hormonal_reproductive_context") or medical.get("female_hormones"),
-                "emotional_stress": medical.get("emotional_stress"),
-                "motivation": medical.get("motivation"),
+                "lab_notes": medical.get("lab_notes"),
+                "red_flags": medical.get("red_flags"),
                 "requires_lab_resubmission": case.get("requires_lab_resubmission"),
                 "lab_quality_check": case.get("lab_quality_check"),
                 "lab_confirmation_status": case.get("lab_confirmation_status"),
@@ -653,93 +651,177 @@ def build_followup_context(case: dict[str, Any], user_text: str) -> str:
 
 async def send_step_prompt(chat_id: int, step: str) -> None:
     prompts = {
-        "full_name": "Шаг 1/21. Как к вам обращаться? Напишите имя и фамилию.",
-        "age": "Шаг 2/21. Сколько вам полных лет?",
-        "city": "Шаг 3/21. Из какого вы города и часового пояса?",
-        "anthropometrics": (
-            "Шаг 4/21. Укажите рост, текущий вес и желаемый вес, если это актуально. "
-            "Можно одной строкой: `рост 168, вес 72, хочу 65`."
+        "full_name": (
+            "Шаг 1 из 15\n\n"
+            "Как к вам обращаться?\n\n"
+            "Напишите имя, возраст и город.\n"
+            "Пример: Ольга, 32 года, Санкт-Петербург"
         ),
-        "work_lifestyle": (
-            "Шаг 5/21. Чем вы занимаетесь и какой характер работы: сидячая/активная, график, ночные смены, "
-            "командировки, уровень нагрузки в обычный день?"
+        "anthropometrics": (
+            "Шаг 2 из 15\n\n"
+            "Укажите рост, текущий вес и желаемый вес.\n"
+            "Пример: рост 172, вес 70, хочу 60"
         ),
         "symptoms": (
-            "Шаг 6/21. Какие 3-7 жалоб сейчас беспокоят сильнее всего? "
-            "Например: усталость, сон, ЖКТ, желчный/желчеотток, кожа, волосы, отёки, тяга к сладкому, цикл, настроение."
-        ),
-        "wellbeing_energy": (
-            "Шаг 7/21. Оцените самочувствие: энергия утром/днём/вечером по шкале 1-10, "
-            "есть ли головные боли, сонливость, ПМС, отёки, тяжесть или утреннее разбитое состояние?"
-        ),
-        "complaint_pattern": (
-            "Шаг 8/21. Опишите динамику жалоб: когда началось, что усиливает, что облегчает, "
-            "есть ли повторяемость по времени суток, циклу, еде, стрессу или нагрузке?"
+            "Шаг 3 из 15\n\n"
+            "Какие главные жалобы сейчас?\n\n"
+            "Выберите кнопку или напишите свои жалобы через запятую.\n"
+            "Пример: усталость, вздутие, ломкость волос, тяга к сладкому"
         ),
         "goals": (
-            "Шаг 9/21. Какой результат вы хотите получить от разбора в ближайшие 4-8 недель "
-            "и какой результат считаете реальным через 3 месяца?"
+            "Шаг 4 из 15\n\n"
+            "Какого результата хотите достичь?\n\n"
+            "Выберите кнопку или напишите свою цель.\n"
+            "Пример: вернуть бодрость к обеду, убрать изжогу, восстановить качество волос"
+        ),
+        "nutrition_routine": (
+            "Шаг 5 из 15\n\n"
+            "Какой у вас режим питания?\n\n"
+            "Напишите: сколько раз в день едите, примерное время, есть ли перекусы или пропуски.\n"
+            "Пример: завтрак 8:00, обед 13:00, ужин 19:00, перекус сладким в 15:00."
         ),
         "nutrition": (
-            "Шаг 10/21. Опишите питание за обычный день: завтрак, обед, ужин, перекусы, вода, кофе/чай, "
-            "сладкое, алкоголь, кто обычно готовит, есть ли ограничения или пищевые реакции."
+            "Шаг 6 из 15\n\n"
+            "Опишите обычный день питания.\n\n"
+            "Укажите завтрак, обед, ужин, перекусы и напитки.\n"
+            "Пример: завтрак — яйца и овощи; обед — суп и рыба; ужин — салат с курицей."
         ),
         "food_behavior": (
-            "Шаг 11/21. Опишите пищевое поведение: тяга к сладкому/солёному, переедание, заедание эмоций, "
-            "голод физиологический или эмоциональный, что чувствуете после еды."
+            "Шаг 7 из 15\n\n"
+            "Есть ли тяга к сладкому, мучному, переедание или заедание стресса?\n\n"
+            "Выберите кнопку или напишите подробнее."
         ),
         "digestion": (
-            "Шаг 12/21. Что сейчас с ЖКТ и желчеоттоком: аппетит, вздутие, изжога, отрыжка, тошнота, горечь во рту, "
-            "тяжесть справа под рёбрами, стул, боли, реакция на жирное, молочные продукты, глютен или сладкое?"
+            "Шаг 8 из 15\n\n"
+            "Есть ли жалобы по ЖКТ и желчеоттоку?\n\n"
+            "Выберите кнопку или напишите свой вариант.\n"
+            "Можно указать: вздутие, изжога, тяжесть после жирного, горечь во рту, стул."
+        ),
+        "water_alcohol": (
+            "Шаг 9 из 15\n\n"
+            "Сколько воды, кофе, чая и алкоголя в обычный день?\n"
+            "Пример: 1,5 л воды, 2 чашки кофе до обеда, алкоголь раз в неделю."
         ),
         "sleep_stress": (
-            "Шаг 13/21. Какой сон и восстановление: во сколько засыпаете/просыпаетесь, ночные пробуждения, "
-            "утренние отёки/головная боль, уровень восстановления 1-10 и что чаще всего мешает сну?"
+            "Шаг 10 из 15\n\n"
+            "Какой у вас сон и уровень стресса?\n\n"
+            "Выберите кнопку или напишите: во сколько ложитесь, во сколько встаёте, как спите, какой стресс."
         ),
-        "activity": (
-            "Шаг 14/21. Какая активность сейчас: шаги, тренировки, сидячая работа, усталость после нагрузки, "
-            "одышка, ограничения по здоровью или движения, которые вызывают дискомфорт?"
-        ),
-        "female_hormones": (
-            "Шаг 15/21. Гормональный и репродуктивный фон, если актуально. "
-            "Для женщин: цикл, регулярность, ПМС, болезненность, обильность, сгустки, роды/кесарево, "
-            "гормональные препараты, приливы, потливость, либидо, изменения кожи/волос/веса за последний год. "
-            "Для мужчин: либидо, восстановление, настроение, вес/талия, выпадение волос, мочеполовые жалобы, "
-            "приём тестостерона/гормональных препаратов или наблюдение у уролога/эндокринолога. "
-            "Если не актуально, напишите `не актуально`."
-        ),
-        "emotional_stress": (
-            "Шаг 16/21. Эмоции и стресс: уровень стресса 1-10, главные источники, реакция на стресс "
-            "(тревога, злость, апатия, переедание), что помогает расслабиться, есть ли выгорание?"
+        "work_lifestyle": (
+            "Шаг 11 из 15\n\n"
+            "Какая у вас активность и нагрузка на работе?\n"
+            "Пример: сидячая работа, около 5000 шагов, спорта нет."
         ),
         "background": (
-            "Шаг 17/21. Укажите важный медицинский фон: хронические заболевания, диагнозы, операции, травмы, роды, "
-            "беременность/ГВ, детский или подростковый возраст, онкология в анамнезе."
+            "Шаг 12 из 15\n\n"
+            "Есть ли диагнозы от врача, операции, лекарства или БАДы?\n\n"
+            "Важно указать дозировки, если знаете.\n"
+            "Пример: гипотиреоз, L-тироксин 50 мкг, витамин D 2000 МЕ."
         ),
-        "risk_details": (
-            "Шаг 18/21. Лекарства, витамины, БАДы и дозировки сейчас. Отдельно укажите аллергии, непереносимости, "
-            "скачки давления, сердцебиение, головокружения, щитовидку, сахар/инсулин, когда сдавали анализы в последний раз "
-            "и были ли УЗИ, консультации или выписки из стационара за последние 6 месяцев."
+        "female_hormones": (
+            "Шаг 13 из 15\n\n"
+            "Гормональный и репродуктивный фон.\n\n"
+            "Для женщин: цикл, ПМС, либидо.\n"
+            "Для мужчин: либидо, простата, самочувствие.\n"
+            "Выберите кнопку или напишите свой вариант."
         ),
-        "motivation": (
-            "Шаг 19/21. Мотивация и тело: что хотите изменить в теле/самочувствии, почему занялись этим сейчас, "
-            "что мешало удерживать результат раньше, есть ли поддержка семьи/окружения?"
+        "lab_notes": (
+            "Шаг 14 из 15\n\n"
+            "Есть ли анализы за последние 6 месяцев?\n\n"
+            "Можно прикрепить PDF, фото бланка или написать показатели вручную.\n"
+            "Пример: ферритин 15, ТТГ 3.4"
         ),
         "red_flags": (
-            "Шаг 20/21. Есть ли сейчас красные флаги: острая боль в груди, потеря сознания, кровь в стуле, "
-            "температура несколько дней подряд, беременность с осложнениями или другое состояние, "
-            "где нужна срочная очная помощь? Ответьте коротко: `да` или `нет`, и если нужно - уточните."
+            "Шаг 15 из 15\n\n"
+            "Есть ли сейчас острые симптомы?\n\n"
+            "Например: сильная боль, кровь, высокая температура, резкое похудение, обмороки, боль в груди.\n"
+            "Выберите кнопку или напишите подробнее."
         ),
-        "labs": "Шаг 21/21. " + LABS_GUIDANCE_TEXT,
-        "contact": "Финальный шаг. Как лучше связаться с вами после разбора: Telegram, телефон или email?",
     }
 
-    prompts["contact"] = (
-        "Финальный шаг. По умолчанию продолжаем общение здесь, в Telegram. "
-        "Если нужен другой Telegram-аккаунт, укажите его. "
-        "Иначе просто ответьте: `этот чат`."
-    )
-    reply_markup = labs_keyboard() if step == "labs" else None
+    reply_markup = None
+
+    # Premium interactive keyboards based on step
+    if step == "symptoms":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Усталость, низкий ресурс, ЖКТ"), KeyboardButton(text="Анемия, ломкость волос")],
+                [KeyboardButton(text="Вздутие, изжога после еды"), KeyboardButton(text="Отёки, вес, тяга к сладкому")],
+                [KeyboardButton(text="Напишу свой вариант"), KeyboardButton(text="Пропустить этот шаг")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "goals":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Восстановить энергию и бодрость"), KeyboardButton(text="Наладить пищеварение и ЖКТ")],
+                [KeyboardButton(text="Укрепить волосы и ногти"), KeyboardButton(text="Снизить вес")],
+                [KeyboardButton(text="Подобрать питание и добавки"), KeyboardButton(text="Напишу свою цель")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "food_behavior":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Тянет на сладкое"), KeyboardButton(text="Переедаю вечером")],
+                [KeyboardButton(text="Заедаю стресс"), KeyboardButton(text="Нет выраженных проблем")],
+                [KeyboardButton(text="Напишу подробнее"), KeyboardButton(text="Пропустить")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "digestion":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Вздутие, изжога после жирного"), KeyboardButton(text="Регулярные запоры / тяжесть")],
+                [KeyboardButton(text="Горечь во рту / желчеотток"), KeyboardButton(text="Удалён желчный пузырь")],
+                [KeyboardButton(text="Всё в норме, жалоб нет"), KeyboardButton(text="Пропустить")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "sleep_stress":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Сон нормальный, стресс умеренный"), KeyboardButton(text="Плохо засыпаю")],
+                [KeyboardButton(text="Просыпаюсь ночью"), KeyboardButton(text="Стресс высокий")],
+                [KeyboardButton(text="Напишу подробнее"), KeyboardButton(text="Пропустить")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "female_hormones":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Снижено либидо, цикл регулярный"), KeyboardButton(text="Выраженный ПМС, раздражительность")],
+                [KeyboardButton(text="Я мужчина, напишу свой вариант"), KeyboardButton(text="Всё в норме, жалоб нет")],
+                [KeyboardButton(text="Пропустить")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "lab_notes":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Нет анализов (хочу сдать)"), KeyboardButton(text="Пропустить анализы")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    elif step == "red_flags":
+        reply_markup = ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Нет (острых симптомов нет)")]
+            ],
+            resize_keyboard=True,
+            one_time_keyboard=True
+        )
+    else:
+        # Restore normal keyboard for typed-only fields to avoid keyboard sticky states
+        reply_markup = ReplyKeyboardRemove()
+
     await bot.send_message(chat_id, prompts[step], reply_markup=reply_markup)
 
 
@@ -1782,22 +1864,7 @@ async def process_manual_payment_confirm(callback_query: types.CallbackQuery) ->
     save_submission_state(settings.submissions_dir, submission)
 
     client_id = submission.get("profile", {}).get("telegram_user_id")
-    if client_id:
-        try:
-            await bot.send_message(
-                client_id,
-                "Оплата подтверждена. Мы начинаем сборку премиального досье, а перед отправкой результат пройдёт экспертную проверку.",
-            )
-        except Exception:
-            logger.exception("Failed to notify client about manual payment confirmation for %s", submission_id)
-
     admin_chat_id = callback_query.message.chat.id if callback_query.message else callback_query.from_user.id
-    await bot.send_message(
-        admin_chat_id,
-        f"✅ Ручная оплата подтверждена для {submission_id}. Запускаю сборку досье.",
-    )
-    await bot.answer_callback_query(callback_query.id, "Ручная оплата подтверждена.")
-
     session = build_session_from_submission(
         submission,
         SimpleNamespace(
@@ -1806,6 +1873,36 @@ async def process_manual_payment_confirm(callback_query: types.CallbackQuery) ->
             full_name=submission.get("profile", {}).get("telegram_full_name"),
         ),
     )
+    if client_id:
+        user_sessions[client_id] = session
+        touch_session()
+
+    tier = str(submission.get("offer") or session.get("tier") or session.get("offer") or "standard").strip().lower()
+    if is_instant_paid_product(tier):
+        if client_id:
+            try:
+                await activate_paid_product(client_id, session)
+            except Exception:
+                logger.exception("Failed to activate instant product after manual payment for %s", submission_id)
+        await bot.send_message(admin_chat_id, f"✅ Ручная оплата подтверждена для {submission_id}. Быстрый тариф активирован.")
+        await bot.answer_callback_query(callback_query.id, "Ручная оплата подтверждена.")
+        return
+
+    if client_id:
+        try:
+            await bot.send_message(
+                client_id,
+                "Оплата подтверждена. Начинаю сборку персонального разбора. После генерации результат будет отправлен прямо сюда, без ожидания внутренней проверки.",
+            )
+        except Exception:
+            logger.exception("Failed to notify client about manual payment confirmation for %s", submission_id)
+
+    await bot.send_message(
+        admin_chat_id,
+        f"✅ Ручная оплата подтверждена для {submission_id}. Запускаю сборку разбора.",
+    )
+    await bot.answer_callback_query(callback_query.id, "Ручная оплата подтверждена.")
+
     await build_dossier_after_payment(
         callback_query.message,
         session,
@@ -1987,6 +2084,51 @@ async def send_loading_status(chat_id: int) -> asyncio.Task:
     return asyncio.create_task(_updater())
 
 
+
+INSTANT_PAID_PRODUCT_STEPS = {
+    "nutri_chat": "paid_nutri_chat",
+    "habits": "habits_daily_log",
+    "osipov": "osipov_context",
+}
+
+
+def is_instant_paid_product(tier: str | None) -> bool:
+    return str(tier or "").strip().lower() in INSTANT_PAID_PRODUCT_STEPS
+
+
+async def activate_paid_product(chat_id: int, session: dict[str, Any]) -> None:
+    tier = str(session.get("tier") or session.get("offer") or "standard").strip().lower()
+
+    if tier == "nutri_chat":
+        session["step"] = "paid_nutri_chat"
+        session["nutri_chat_started_at"] = utc_now_iso()
+        session["nutri_chat_expires_at"] = (datetime.now(timezone.utc) + timedelta(days=2)).isoformat()
+        touch_session()
+        await bot.send_message(
+            chat_id,
+            "✅ Оплата подтверждена. Нутри-чат открыт на 2 дня.\n\n"
+            "Напишите вопрос по питанию, привычкам, ЖКТ, желчеоттоку, энергии, сну или самочувствию. "
+            "Я отвечу в формате: кратко пойму вопрос, при необходимости уточню детали, дам возможную нутрициологическую гипотезу и 1-3 практических шага.",
+        )
+        return
+
+    if tier == "habits":
+        session["step"] = "habits_daily_log"
+        touch_session()
+        await bot.send_message(
+            chat_id,
+            "✅ Оплата подтверждена. Тариф «Привычки и тарелка» открыт на 21 день.\n\n"
+            "Каждый день присылайте фото тарелок или текстом: завтрак, обед, ужин, перекусы, воду, кофе, сон, стресс, энергию, тягу к сладкому, ЖКТ/стул и отёки.\n\n"
+            "Я буду давать короткий ежедневный отчёт: что получилось, что улучшить и фокус на завтра.",
+        )
+        return
+
+    if tier == "osipov":
+        session["step"] = "osipov_context"
+        touch_session()
+        await bot.send_message(chat_id, "✅ Оплата подтверждена.")
+        await bot.send_message(chat_id, osipov_context_prompt())
+        return
 async def finalize_submission(message: types.Message, session: dict[str, Any]) -> None:
     submission = build_submission_payload(session)
     submission["payment_context"] = build_payment_context(session, now_iso=utc_now_iso())
@@ -2172,7 +2314,14 @@ async def process_successful_payment(message: types.Message) -> None:
         user_sessions[message.from_user.id] = session
         touch_session()
 
-    await message.answer("✅ Оплата успешно получена. Запускаю сборку премиального досье.")
+    tier = str(submission.get("offer") or session.get("tier") or session.get("offer") or "standard").strip().lower()
+    if is_instant_paid_product(tier):
+        session["tier"] = tier
+        session["offer"] = tier
+        await activate_paid_product(message.chat.id, session)
+        return
+
+    await message.answer("✅ Оплата успешно получена. Запускаю сборку персонального разбора.")
     await build_dossier_after_payment(message, session)
 
 
@@ -2242,55 +2391,16 @@ async def build_dossier_after_payment(
             draft_path = save_draft(settings.drafts_dir, session["submission_id"], draft_text)
             submission["draft_path"] = str(draft_path)
 
-            try:
-                judge_report_text = await asyncio.wait_for(
-                    asyncio.to_thread(generate_case_judge_report, settings, submission, draft_text),
-                    timeout=90,
-                )
-            except Exception:
-                logger.exception("Judge review failed for %s", session["submission_id"])
-                judge_report_text = None
-
-            if judge_report_text:
-                review_path = save_review_report(settings.drafts_dir, session["submission_id"], judge_report_text)
-                submission["judge_report_path"] = str(review_path)
-
-            try:
-                growth_governance = load_product_governance(settings.product_governance_path)
-                growth_governance_context = build_growth_governance_context(growth_governance)
-                growth_report_text = await asyncio.wait_for(
-                    asyncio.to_thread(
-                        generate_case_growth_report,
-                        settings,
-                        submission,
-                        draft_text,
-                        judge_report_text,
-                        growth_governance_context,
-                    ),
-                    timeout=90,
-                )
-            except Exception:
-                logger.exception("Growth architect review failed for %s", session["submission_id"])
-                growth_report_text = None
-
-            if growth_report_text:
-                growth_path = save_growth_report(settings.drafts_dir, session["submission_id"], growth_report_text)
-                submission["growth_report_path"] = str(growth_path)
-
-            review_signals = apply_internal_review_signals(
-                submission,
-                judge_report_text,
-                growth_report_text,
-            )
-            product_insights_payload = update_product_insights_memory(
-                submission,
-                judge_report_text,
-                growth_report_text,
-            )
-            governance_payload = sync_governance_experiments_from_insights(product_insights_payload)
-            submission["product_insights_updated_at"] = product_insights_payload.get("updated_at")
-            submission["product_governance_updated_at"] = governance_payload.get("updated_at")
-
+            # Direct-to-client mode: no internal judge/growth review blocks delivery.
+            judge_report_text = None
+            growth_report_text = None
+            review_signals = {
+                "judge_verdict": "direct_delivery",
+                "market_verdict": "direct_delivery",
+                "needs_quality_rework": False,
+                "needs_market_rework": False,
+                "review_flags": [],
+            }
             # [OBSIDIAN SYNC] Automatically export the draft to the expert's Second Brain
             await asyncio.to_thread(export_to_obsidian, session, draft_text)
             
@@ -2325,18 +2435,10 @@ async def build_dossier_after_payment(
             except Exception as e:
                 logger.exception("Failed to render Premium PDF. Check JSON formatting.")
             
-        if review_signals.get("needs_quality_rework") and review_signals.get("needs_market_rework"):
-            update_submission_status(submission, intake_status="review_priority_quality_and_market", now_iso=utc_now_iso())
-        elif review_signals.get("needs_quality_rework"):
-            update_submission_status(submission, intake_status="review_priority_quality_rework", now_iso=utc_now_iso())
-        elif review_signals.get("needs_market_rework"):
-            update_submission_status(submission, intake_status="review_priority_market_rework", now_iso=utc_now_iso())
-        elif submission.get("pdf_path"):
-            update_submission_status(submission, intake_status="awaiting_human_review", now_iso=utc_now_iso())
-        elif submission.get("draft_path"):
-            update_submission_status(submission, intake_status="draft_ready_human_review", now_iso=utc_now_iso())
+        if submission.get("pdf_path") or draft_text:
+            update_submission_status(submission, intake_status="ready_for_direct_delivery", now_iso=utc_now_iso())
         else:
-            update_submission_status(submission, intake_status="awaiting_manual_review_no_draft", now_iso=utc_now_iso())
+            update_submission_status(submission, intake_status="generation_failed_no_result", now_iso=utc_now_iso())
         submission["generation_finished_at"] = utc_now_iso()
         save_submission_state(settings.submissions_dir, submission)
     finally:
@@ -2347,32 +2449,57 @@ async def build_dossier_after_payment(
             pass
 
     logger.info("Saved submission %s to %s", session["submission_id"], submission_path)
-    await notify_admins(submission, draft_text, judge_report_text, growth_report_text)
-    clear_session(int(session["telegram_user_id"]))
-    if settings.tg_payment_token:
+
+    delivered = False
+    if client_chat_id and submission.get("pdf_path") and Path(str(submission["pdf_path"])).exists():
+        from aiogram.types import FSInputFile
+        pdf_doc = FSInputFile(str(submission["pdf_path"]))
+        await bot.send_document(
+            client_chat_id,
+            document=pdf_doc,
+            caption=(
+                "Ваш персональный нутрициологический разбор готов.\n\n"
+                "Это не диагноз и не замена врачу. Используйте документ как навигацию: что видно по питанию, привычкам, анализам/жалобам, "
+                "какие вопросы обсудить со специалистом и какие шаги можно начать безопасно."
+            ),
+        )
+        delivered = True
+    elif client_chat_id and draft_text:
         await bot.send_message(
             client_chat_id,
-            "Анкета отправлена на проверку.\n\n"
-            "Главный эксперт изучит материалы, и мы вышлем ваше Премиальное Wellness-досье прямо в этот чат.\n\n"
-            "Если нужно начать заново, используйте /reset."
+            "Ваш персональный нутрициологический разбор готов. PDF сейчас не собрался, поэтому отправляю результат текстом."
         )
+        for chunk in split_telegram_text(draft_text):
+            await bot.send_message(client_chat_id, chunk)
+        delivered = True
+
+    if delivered:
+        update_submission_status(submission, intake_status="delivered_to_client", now_iso=utc_now_iso())
+        submission["delivered_at"] = utc_now_iso()
+        submission["direct_delivery"] = True
+        save_submission_state(settings.submissions_dir, submission)
+        clear_session(int(session["telegram_user_id"]))
         return
 
-    await bot.send_message(client_chat_id, MANUAL_HANDOFF_REVIEW_TEXT)
-
+    if client_chat_id:
+        await bot.send_message(
+            client_chat_id,
+            "Не удалось автоматически собрать результат. Данные сохранены, команда увидит ошибку и вернётся к вам здесь."
+        )
+    await notify_admins(submission, draft_text, judge_report_text, growth_report_text)
 
 @dp.message(Command("start"))
 async def cmd_start(message: types.Message) -> None:
     clear_session(message.from_user.id)
     reset_chat_session(message.from_user.id)
-    await message.answer(START_TEXT, reply_markup=start_keyboard())
+    await message.answer(PRODUCT_MENU_TEXT, reply_markup=product_keyboard(), parse_mode="HTML")
 
 
 @dp.message(Command("reset"))
 async def cmd_reset(message: types.Message) -> None:
     clear_session(message.from_user.id)
     reset_chat_session(message.from_user.id)
-    await message.answer(RESET_TEXT, reply_markup=start_keyboard())
+    await message.answer(PRODUCT_MENU_TEXT, reply_markup=product_keyboard(), parse_mode="HTML")
 
 
 @dp.message(Command("chat"))
@@ -2445,7 +2572,7 @@ async def cmd_queue(message: types.Message) -> None:
             status = "⏳ В обработке"
              
         lines.append(
-            f"• <code>{case.get('submission_id')}</code>\n"
+            f"1. <code>{case.get('submission_id')}</code>\n"
             f"  👤 {profile.get('full_name') or profile.get('telegram_full_name')}\n"
             f"  🚩 {status}\n"
         )
@@ -2784,25 +2911,89 @@ async def cmd_llmprobe(message: types.Message) -> None:
     )
 
 
+def build_habits_daily_report(text: str, *, has_photo: bool = False) -> str:
+    lower = text.lower()
+    positives = []
+    improvements = []
+    if has_photo or any(word in lower for word in ("завтрак", "обед", "ужин", "перекус")):
+        positives.append("вы зафиксировали питание — уже есть материал для наблюдения")
+    if any(word in lower for word in ("белок", "яй", "рыб", "творог", "мяс", "кур", "боб")):
+        positives.append("в описании есть источник белка")
+    else:
+        improvements.append("проверить, был ли белок в каждом основном приёме пищи")
+    if any(word in lower for word in ("овощ", "зелень", "ягод", "клетчат", "салат")):
+        positives.append("есть опора на клетчатку/овощи")
+    else:
+        improvements.append("добавить овощи, зелень или другой источник клетчатки")
+    if "коф" in lower:
+        improvements.append("посмотреть время кофе: лучше не натощак и не поздно вечером")
+    if any(word in lower for word in ("слад", "печен", "конфет", "булк")):
+        improvements.append("отследить тягу к сладкому и связь с белком, сном и стрессом")
+    if any(word in lower for word in ("сон", "стресс", "энерг", "отек", "отёк", "стул", "вздут")):
+        positives.append("вы отметили самочувствие — это поможет увидеть связь привычек и состояния")
+
+    positives_text = "; ".join(positives[:2]) if positives else "вы сделали первый шаг и прислали данные"
+    improvements_text = "; ".join(improvements[:3]) if improvements else "сохранить регулярность и завтра снова прислать питание + самочувствие"
+    return (
+        "Короткий отчёт за сегодня:\n\n"
+        f"1. Что получилось хорошо: {positives_text}.\n"
+        f"2. Что можно улучшить: {improvements_text}.\n"
+        "3. Главная точка внимания: белок в первой половине дня, клетчатка и время кофе.\n"
+        "4. Связь питания и самочувствия: завтра отметьте энергию, тягу к сладкому, отёки, сон и ЖКТ.\n"
+        "5. Фокус на завтра: прислать завтрак/обед/ужин, воду, кофе, сон и стресс по шкале 1-10.\n"
+        "6. Поддержка: не ищем идеальную диету, ищем повторяющиеся закономерности и мягко их корректируем."
+    )
+
+
+def osipov_context_prompt() -> str:
+    return (
+        "🧬 Разбор ХМС/ГХ-МС по Осипову\n\n"
+        "Напишите коротко контекст перед файлом:\n"
+        "1. основные жалобы по ЖКТ;\n"
+        "1. стул, вздутие, боли;\n"
+        "1. питание, сладкое, молочные продукты, переносимость клетчатки;\n"
+        "1. хронические заболевания ЖКТ, удалён ли желчный пузырь;\n"
+        "1. лекарства, добавки, аллергии;\n"
+        "1. беременность/ГВ, если актуально.\n\n"
+        "После этого пришлите PDF или фото анализа."
+    )
+
+
 @dp.callback_query(lambda c: c.data and c.data.startswith("tier_"))
 async def process_tier_selection(callback_query: types.CallbackQuery) -> None:
     tier = callback_query.data.replace("tier_", "")
     if tier not in TIER_NAMES:
-        tier = "premium"
+        tier = "standard"
 
-    reset_chat_session(callback_query.from_user.id)
-    start_session(callback_query.from_user, tier=tier)
+    user_id = callback_query.from_user.id
+    reset_chat_session(user_id)
 
-    await bot.send_message(callback_query.from_user.id, TIER_DESCRIPTIONS.get(tier, TIER_PREMIUM_DESC))
-    await bot.send_message(callback_query.from_user.id, CONSENT_TEXT, reply_markup=consent_keyboard())
+    session = start_session(callback_query.from_user, tier=tier)
+    if tier == "nutri_chat":
+        session["product_mode"] = "nutri_chat"
+    if tier == "habits":
+        session["product_mode"] = "daily_habits"
+    elif tier == "standard":
+        session["product_mode"] = "standard_no_labs"
+    elif tier == "premium":
+        session["product_mode"] = "premium_labs"
+    elif tier == "osipov":
+        session["product_mode"] = "osipov"
+
+    await bot.send_message(user_id, TIER_DESCRIPTIONS.get(tier, TIER_DESCRIPTIONS["standard"]), parse_mode="HTML")
+    await bot.send_message(user_id, CONSENT_TEXT, reply_markup=consent_keyboard())
     await bot.answer_callback_query(callback_query.id)
-
 
 @dp.callback_query(lambda c: c.data == "choose_product")
 async def process_choose_product(callback_query: types.CallbackQuery) -> None:
-    await bot.send_message(callback_query.from_user.id, PRODUCT_MENU_TEXT, reply_markup=product_keyboard())
+    await bot.send_message(callback_query.from_user.id, PRODUCT_MENU_TEXT, reply_markup=product_keyboard(), parse_mode="HTML")
     await bot.answer_callback_query(callback_query.id)
 
+
+@dp.callback_query(lambda c: c.data == "show_labs_link")
+async def process_show_labs_link(callback_query: types.CallbackQuery) -> None:
+    await bot.send_message(callback_query.from_user.id, LABS_GUIDANCE_TEXT)
+    await bot.answer_callback_query(callback_query.id)
 
 @dp.callback_query(lambda c: c.data == "show_process")
 async def process_show_process(callback_query: types.CallbackQuery) -> None:
@@ -2835,14 +3026,22 @@ async def process_start_live_chat(callback_query: types.CallbackQuery) -> None:
 
 @dp.callback_query(lambda c: c.data == "consent_yes")
 async def process_consent_yes(callback_query: types.CallbackQuery) -> None:
-    session = get_session(callback_query.from_user.id) or start_session(callback_query.from_user)
+    session = get_session(callback_query.from_user.id) or start_session(callback_query.from_user, tier="standard")
     session["consent_given"] = True
-    session["step"] = "full_name"
-    touch_session()
-    await bot.send_message(callback_query.from_user.id, "Спасибо. Согласие зафиксировано.")
-    await send_step_prompt(callback_query.from_user.id, session["step"])
-    await bot.answer_callback_query(callback_query.id)
+    tier = str(session.get("tier") or session.get("offer") or "standard")
 
+    await bot.send_message(callback_query.from_user.id, "Спасибо. Согласие зафиксировано.")
+
+    if is_instant_paid_product(tier):
+        session["step"] = "awaiting_product_payment"
+        touch_session()
+        await finalize_submission(callback_query.message, session)
+    else:
+        session["step"] = "full_name"
+        touch_session()
+        await send_step_prompt(callback_query.from_user.id, session["step"])
+
+    await bot.answer_callback_query(callback_query.id)
 
 @dp.callback_query(lambda c: c.data == "consent_no")
 async def process_consent_no(callback_query: types.CallbackQuery) -> None:
@@ -2854,54 +3053,60 @@ async def process_consent_no(callback_query: types.CallbackQuery) -> None:
 @dp.callback_query(lambda c: c.data == "manual_labs_help")
 async def process_manual_labs_help(callback_query: types.CallbackQuery) -> None:
     session = get_session(callback_query.from_user.id)
-    if not session or session.get("step") != "labs":
+    if not session or session.get("step") != "lab_notes":
         await bot.answer_callback_query(callback_query.id, text="Сначала начните разбор заново через /start", show_alert=True)
         return
 
-    await callback_query.message.answer(build_manual_biomarker_input_message(), reply_markup=labs_keyboard())
+    await callback_query.message.answer(
+        "Напишите текстом: какие анализы сдавали, дату, основные показатели и их значения. "
+        "Можно также прикрепить фото/PDF бланка."
+    )
     await bot.answer_callback_query(callback_query.id)
 
 @dp.callback_query(lambda c: c.data == "skip_labs")
 async def process_skip_labs(callback_query: types.CallbackQuery) -> None:
     session = get_session(callback_query.from_user.id)
-    if not session or session.get("step") != "labs":
+    if not session or session.get("step") != "lab_notes":
         await bot.answer_callback_query(callback_query.id, text="Сначала начните intake заново через /start", show_alert=True)
         return
 
-    session["lab_notes"] = session.get("lab_notes") or "Клиент пропустил загрузку анализов на этом этапе."
-    session["contact"] = "telegram_current_chat"
-    session["step"] = "done"
+    session["lab_notes"] = session.get("lab_notes") or "Клиент пропустил ввод анализов."
+    session["step"] = "red_flags"
     touch_session()
-    await finalize_submission(callback_query.message, session)
+    await send_step_prompt(callback_query.message.chat.id, "red_flags")
     await bot.answer_callback_query(callback_query.id)
 
 
 @dp.callback_query(lambda c: c.data == "labs_done")
 async def process_labs_done(callback_query: types.CallbackQuery) -> None:
     session = get_session(callback_query.from_user.id)
-    if not session or session.get("step") != "labs":
+    if not session or session.get("step") != "lab_notes":
         await bot.answer_callback_query(callback_query.id, text="Сначала начните intake заново через /start", show_alert=True)
         return
 
-    if session.get("lab_confirmation_status") == "pending_client_confirmation":
-        await callback_query.message.answer(
-            "Я уже распознал(а) показатели из файла, но мне нужно ваше подтверждение, чтобы не ошибиться.\n\n"
-            "Ответьте, пожалуйста: «да, верно» — если всё совпадает, или напишите исправления по цифрам/единицам."
-        )
-        await bot.answer_callback_query(callback_query.id)
-        return
-
     session["contact"] = "telegram_current_chat"
-    session["step"] = "done"
+    session["step"] = "red_flags"
     touch_session()
-    await finalize_submission(callback_query.message, session)
+    await send_step_prompt(callback_query.message.chat.id, "red_flags")
     await bot.answer_callback_query(callback_query.id)
 
 
 @dp.message(lambda message: message.document is not None)
 async def handle_document_upload(message: types.Message) -> None:
     session = get_session(message.from_user.id)
-    if not session or session.get("step") != "labs":
+    if session and session.get("step") == "osipov_upload":
+        upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "osipov"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        original_name = message.document.file_name or "osipov_analysis.pdf"
+        file_name = sanitize_filename(f"{utc_now_iso().replace(':', '').replace('-', '')}_{original_name}")
+        destination = upload_dir / file_name
+        await bot.download(message.document, destination=destination)
+        session.setdefault("documents", []).append({"kind": "osipov_document", "file_name": file_name, "stored_path": str(destination)})
+        session["step"] = "done"
+        touch_session()
+        await message.answer("Анализ Осипова принят. Я сохраню его как отдельный платный блок и подготовлю разбор: микробные маркеры, связь с жалобами, что требует врача и план нутрициологической поддержки.")
+        return
+    if not session or session.get("step") != "lab_notes":
         followup_case = find_active_followup_case(message.from_user.id)
         if followup_case:
             upload_dir = case_upload_dir(settings.uploads_dir, followup_case["submission_id"]) / "followup"
@@ -2952,15 +3157,41 @@ async def handle_document_upload(message: types.Message) -> None:
     
     touch_session()
     await message.answer(
-        "Файл сохранён. Я начал автоматическое распознавание данных из него. Если есть ещё документы, отправляйте. Когда закончите, нажмите кнопку.",
-        reply_markup=labs_keyboard(),
+        "Файл сохранён. Если есть ещё документы или фото анализов — отправляйте. "
+        "Когда закончите, напишите текстом: какие показатели/анализы сдавали и что показали, "
+        "или просто напишите `готово` чтобы перейти дальше.",
     )
 
 
 @dp.message(lambda message: bool(message.photo))
 async def handle_photo_upload(message: types.Message) -> None:
     session = get_session(message.from_user.id)
-    if not session or session.get("step") != "labs":
+    if session and session.get("step") == "paid_nutri_chat":
+        await message.answer("В Нутри-чате я работаю с текстовыми вопросами. Если хотите разбор фото тарелок, выберите тариф «Привычки и тарелка».")
+        return
+    if session and session.get("step") == "habits_daily_log":
+        upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "plates"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        file_name = sanitize_filename(f"{utc_now_iso().replace(':', '').replace('-', '')}_plate.jpg")
+        destination = upload_dir / file_name
+        await bot.download(message.photo[-1], destination=destination)
+        caption = (message.caption or "Фото тарелки без подписи.").strip()
+        session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "kind": "plate_photo", "caption": caption, "stored_path": str(destination)})
+        touch_session()
+        await message.answer(build_habits_daily_report(caption, has_photo=True))
+        return
+    if session and session.get("step") == "osipov_upload":
+        upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "osipov"
+        upload_dir.mkdir(parents=True, exist_ok=True)
+        file_name = sanitize_filename(f"{utc_now_iso().replace(':', '').replace('-', '')}_osipov_photo.jpg")
+        destination = upload_dir / file_name
+        await bot.download(message.photo[-1], destination=destination)
+        session.setdefault("documents", []).append({"kind": "osipov_photo", "file_name": file_name, "stored_path": str(destination)})
+        session["step"] = "done"
+        touch_session()
+        await message.answer("Фото анализа Осипова принято. Если цифры читаются плохо, я попрошу прислать PDF или более чёткое фото. Разбор будет оформлен как отдельный блок без диагнозов и без назначения лекарств.")
+        return
+    if not session or session.get("step") != "lab_notes":
         followup_case = find_active_followup_case(message.from_user.id)
         if followup_case:
             upload_dir = case_upload_dir(settings.uploads_dir, followup_case["submission_id"]) / "followup"
@@ -3022,91 +3253,23 @@ async def handle_photo_upload(message: types.Message) -> None:
         msg_text = "Фото сохранено. Анализирую показатели... Можно отправить ещё фото/PDF или нажать кнопку."
 
     touch_session()
-    await message.answer(msg_text, reply_markup=labs_keyboard())
+    await message.answer(msg_text)
 
 
 @dp.message(F.voice)
 async def handle_voice(message: types.Message) -> None:
-    session = get_session(message.from_user.id)
-    if not session and (settings.llm_provider == "disabled" or not settings.llm_api_key):
-        await message.answer(UNKNOWN_STATE_TEXT, reply_markup=start_keyboard())
-        return
-        
-    await bot.send_chat_action(message.chat.id, "typing")
-    text = await handle_voice_to_text(bot, message.voice.file_id, settings)
-    
-    if not text:
-        await message.answer(
-            "Извините, я не смог расшифровать голосовое сообщение. "
-            "Пожалуйста, повторите текстом."
-        )
-        return
-        
-    # Simulate a text message with the decoded voice
-    message.text = f"🎤 Распознано: {text}"
-    _text_backup = message.text 
-    message.text = text # provide clean text to the handler
-    await message.answer(f"<i>{_text_backup}</i>", parse_mode="HTML")
-    await handle_message(message)
-
-
-@dp.message(F.audio)
-async def handle_audio(message: types.Message) -> None:
-    session = get_session(message.from_user.id)
-    if not session and (settings.llm_provider == "disabled" or not settings.llm_api_key):
-        await message.answer(UNKNOWN_STATE_TEXT, reply_markup=start_keyboard())
-        return
-
-    audio = message.audio
-    if not audio:
-        await message.answer(
-            "Я не увидел аудиофайл. Попробуйте отправить его ещё раз или используйте голосовое сообщение."
-        )
-        return
-
-    await bot.send_chat_action(message.chat.id, "typing")
-    text = await handle_audio_to_text(
-        bot,
-        audio.file_id,
-        settings,
-        file_name=audio.file_name,
-        mime_type=audio.mime_type,
-        duration_seconds=audio.duration,
-        file_size=audio.file_size,
+    await message.answer(
+        "❌ Голосовые сообщения отключены. Пожалуйста, напишите текстом."
     )
 
-    if not text:
-        if settings.llm_provider == "yandex_foundation":
-            duration_note = ""
-            if audio.duration and audio.duration > SYNC_STT_MAX_DURATION_SECONDS:
-                duration_note = f"Длительность аудио сейчас {audio.duration} сек., а безопасный предел для этого режима — до {SYNC_STT_MAX_DURATION_SECONDS} сек. "
-            size_note = ""
-            if audio.file_size and audio.file_size > SYNC_STT_MAX_BYTES:
-                size_note = "Файл получился слишком тяжёлым для текущего режима распознавания. "
-            await message.answer(
-                "Я пока не смог распознать этот аудиофайл. "
-                f"{duration_note}{size_note}"
-                "Надёжнее всего отправить речь как обычное голосовое сообщение в Telegram. "
-                "Если хотите именно аудиофайлом, лучше использовать короткий `.ogg/.opus` файл."
-            )
-            return
 
-        await message.answer(
-            "Я не смог распознать этот аудиофайл. Попробуйте отправить его ещё раз или используйте голосовое сообщение."
-        )
-        return
 
-    message.text = f"🎧 Распознано из аудио: {text}"
-    _text_backup = message.text
-    message.text = text
-    await message.answer(f"<i>{_text_backup}</i>", parse_mode="HTML")
-    await handle_message(message)
 
 
 @dp.message()
 async def handle_message(message: types.Message) -> None:
     if not message.text:
-        await message.answer("Для этого шага лучше отправить текстовый ответ или голосовое сообщение.")
+        await message.answer("Для этого шага отправьте текстовое сообщение.")
         return
 
     if message.text.startswith("/"):
@@ -3115,14 +3278,88 @@ async def handle_message(message: types.Message) -> None:
     session = get_session(message.from_user.id)
     text = message.text.strip()
 
-    if not session:
-        if wants_premium_intake(text):
-            reset_chat_session(message.from_user.id)
-            start_session(message.from_user, tier="premium")
-            await message.answer(TIER_PREMIUM_DESC)
-            await message.answer(CONSENT_TEXT, reply_markup=consent_keyboard())
+    # SCREENING MODE: user sent symptoms after choosing 500 RUB tier
+    if session and session.get("step") == "awaiting_screening_symptoms":
+        session["screening_symptoms"] = text
+        session["step"] = "screening_completed"
+        touch_session()
+        await bot.send_chat_action(message.chat.id, "typing")
+        try:
+            reply = await asyncio.to_thread(generate_screening_reply, settings, text)
+        except Exception:
+            logger.exception("Screening generation failed for user %s", message.from_user.id)
+            await message.answer(
+                "Не удалось подготовить ответ. Попробуйте ещё раз или напишите «нужен оператор»."
+            )
             return
 
+        if reply:
+            await message.answer(reply[:TELEGRAM_MESSAGE_SAFE_LIMIT])
+        else:
+            await message.answer(
+                "Не удалось обработать симптомы. Попробуйте описать их более конкретно "
+                "или выберите другой формат разбора через /start"
+            )
+        return
+
+    if session and session.get("step") == "paid_nutri_chat":
+        expires_at = parse_utc_iso(session.get("nutri_chat_expires_at"))
+        if expires_at and datetime.now(timezone.utc) > expires_at:
+            clear_session(message.from_user.id)
+            reset_chat_session(message.from_user.id)
+            await message.answer(
+                "Пробный Нутри-чат на 2 дня завершён. Если хотите продолжить, выберите подходящий тариф ниже.",
+                reply_markup=product_keyboard(),
+            )
+            return
+        if settings.llm_provider == "disabled" or not settings.llm_api_key or not settings.llm_model:
+            await message.answer("Сейчас AI-ответы временно недоступны. Напишите вопрос позже или обратитесь к оператору.")
+            return
+        try:
+            await bot.send_chat_action(message.chat.id, "typing")
+            history = get_chat_history(message.from_user.id)
+            nutri_prompt = (
+                "Режим оплаченного тарифа Нутри-чат. Отвечай только на русском языке как нутрициологический помощник. "
+                "Не ставь диагнозы, не обещай лечение, не отменяй лекарства. Используй формулировки: предварительная нутрициологическая гипотеза, возможная причина, что стоит проверить, что обсудить с врачом. "
+                "Структура ответа: 1) кратко понять вопрос, 2) если данных мало - уточнить 1-2 важных детали, 3) объяснить возможную связь с питанием/режимом/ЖКТ/желчеоттоком/сном/стрессом, 4) дать 1-3 практических шага, 5) отметить красные флаги и врача, если актуально.\n\n"
+                f"Вопрос клиента: {text}"
+            )
+            reply = await asyncio.to_thread(generate_live_reply, settings, history, nutri_prompt)
+        except Exception:
+            logger.exception("Paid nutri-chat response failed for user %s", message.from_user.id)
+            await message.answer("Сейчас не удалось подготовить ответ. Попробуйте ещё раз через минуту или напишите оператору.")
+            return
+        if not reply:
+            await message.answer("Не удалось сформировать ответ. Попробуйте переформулировать вопрос чуть конкретнее.")
+            return
+        append_chat_message(message.from_user.id, "user", text)
+        append_chat_message(message.from_user.id, "assistant", reply)
+        await message.answer(reply[:TELEGRAM_MESSAGE_SAFE_LIMIT])
+        return
+    if session and session.get("step") == "habits_daily_log":
+        session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "text": text})
+        touch_session()
+        await message.answer(build_habits_daily_report(text))
+        return
+
+    if session and session.get("step") == "osipov_context":
+        session["osipov_context"] = text
+        session["step"] = "osipov_upload"
+        touch_session()
+        await message.answer(
+            "Контекст сохранён. Теперь пришлите PDF или фото анализа ХМС/ГХ-МС по Осипову.\n\n"
+            "Я не буду ставить диагноз по анализу, а подготовлю нутрициологическую интерпретацию: микробные маркеры, связь с жалобами, что требует врача и что можно поддержать питанием/ЖКТ/микробиотой."
+        )
+        return
+
+    if session and session.get("step") == "osipov_upload":
+        session["osipov_extra_note"] = text
+        touch_session()
+        await message.answer(
+            "Комментарий сохранён. Пришлите сам анализ PDF или фото. Если файла пока нет, можно вернуться позже в этот чат."
+        )
+        return
+    if not session:
         followup_case = find_active_followup_case(message.from_user.id)
         if followup_case:
             if followup_case.get("lab_confirmation_status") == "pending_client_confirmation":
@@ -3167,7 +3404,7 @@ async def handle_message(message: types.Message) -> None:
                 {
                     "kind": "text_question",
                     "text": text,
-                    "note": "Question during 30-day follow-up.",
+                    "note": "Question during active paid follow-up.",
                 },
             )
             try:
@@ -3187,39 +3424,10 @@ async def handle_message(message: types.Message) -> None:
             )
             return
 
-        if settings.llm_provider == "disabled" or not settings.llm_api_key or not settings.llm_model:
-            await message.answer(UNKNOWN_STATE_TEXT, reply_markup=start_keyboard())
-            return
-
-        try:
-            await bot.send_chat_action(message.chat.id, "typing")
-            history = get_chat_history(message.from_user.id)
-            reply = await asyncio.to_thread(generate_live_reply, settings, history, text)
-        except Exception:
-            logger.exception("Live chat response failed for user %s", message.from_user.id)
-            await message.answer(
-                "Сейчас не удалось получить ответ от AI. Попробуйте еще раз через минуту."
-            )
-            return
-
-        if not reply:
-            await message.answer(
-                "Я не смог сформировать ответ. Попробуйте переформулировать запрос или начните intake через /start."
-            )
-            return
-
-        # [ANTI-LOOP VALIDATOR]
-        history = get_chat_history(message.from_user.id)
-        assistant_replies = [msg["content"] for msg in history if msg["role"] == "assistant"]
-        if len(assistant_replies) >= 2 and reply == assistant_replies[-1] and reply == assistant_replies[-2]:
-            logger.warning("[ANTI-LOOP] Detected repetitive AI loop for user %s", message.from_user.id)
-            await message.answer("⚠️ Защита от зацикливания: Я заметил, что повторяюсь. Давайте обнулим контекст живого диалога, чтобы вернуть ясность.")
-            reset_chat_session(message.from_user.id)
-            return
-
-        append_chat_message(message.from_user.id, "user", text)
-        append_chat_message(message.from_user.id, "assistant", reply)
-        await message.answer(reply[:3800])
+        await message.answer(
+            "Чтобы я корректно помогла, сначала выберите тариф. Ниже есть все варианты: от Нутри-чата до премиум-разбора с анализами.",
+            reply_markup=product_keyboard(),
+        )
         return
 
     step = session.get("step")
@@ -3229,23 +3437,6 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "full_name":
         session["full_name"] = text
-        session["step"] = "age"
-        touch_session()
-        await send_step_prompt(message.chat.id, "age")
-        return
-
-    if step == "age":
-        if not text.isdigit():
-            await message.answer("Возраст лучше указать числом, например: 34")
-            return
-        session["age"] = int(text)
-        session["step"] = "city"
-        touch_session()
-        await send_step_prompt(message.chat.id, "city")
-        return
-
-    if step == "city":
-        session["city"] = text
         session["step"] = "anthropometrics"
         touch_session()
         await send_step_prompt(message.chat.id, "anthropometrics")
@@ -3253,13 +3444,6 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "anthropometrics":
         session["anthropometrics"] = text
-        session["step"] = "work_lifestyle"
-        touch_session()
-        await send_step_prompt(message.chat.id, "work_lifestyle")
-        return
-
-    if step == "work_lifestyle":
-        session["work_lifestyle"] = text
         session["step"] = "symptoms"
         touch_session()
         await send_step_prompt(message.chat.id, "symptoms")
@@ -3267,20 +3451,6 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "symptoms":
         session["symptoms"] = text
-        session["step"] = "wellbeing_energy"
-        touch_session()
-        await send_step_prompt(message.chat.id, "wellbeing_energy")
-        return
-
-    if step == "wellbeing_energy":
-        session["wellbeing_energy"] = text
-        session["step"] = "complaint_pattern"
-        touch_session()
-        await send_step_prompt(message.chat.id, "complaint_pattern")
-        return
-
-    if step == "complaint_pattern":
-        session["complaint_pattern"] = text
         session["step"] = "goals"
         touch_session()
         await send_step_prompt(message.chat.id, "goals")
@@ -3288,6 +3458,13 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "goals":
         session["goals"] = text
+        session["step"] = "nutrition_routine"
+        touch_session()
+        await send_step_prompt(message.chat.id, "nutrition_routine")
+        return
+
+    if step == "nutrition_routine":
+        session["nutrition_routine"] = text
         session["step"] = "nutrition"
         touch_session()
         await send_step_prompt(message.chat.id, "nutrition")
@@ -3309,6 +3486,13 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "digestion":
         session["digestion"] = text
+        session["step"] = "water_alcohol"
+        touch_session()
+        await send_step_prompt(message.chat.id, "water_alcohol")
+        return
+
+    if step == "water_alcohol":
+        session["water_alcohol"] = text
         session["step"] = "sleep_stress"
         touch_session()
         await send_step_prompt(message.chat.id, "sleep_stress")
@@ -3316,27 +3500,13 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "sleep_stress":
         session["sleep_stress"] = text
-        session["step"] = "activity"
+        session["step"] = "work_lifestyle"
         touch_session()
-        await send_step_prompt(message.chat.id, "activity")
+        await send_step_prompt(message.chat.id, "work_lifestyle")
         return
 
-    if step == "activity":
-        session["activity"] = text
-        session["step"] = "female_hormones"
-        touch_session()
-        await send_step_prompt(message.chat.id, "female_hormones")
-        return
-
-    if step == "female_hormones":
-        session["female_hormones"] = text
-        session["step"] = "emotional_stress"
-        touch_session()
-        await send_step_prompt(message.chat.id, "emotional_stress")
-        return
-
-    if step == "emotional_stress":
-        session["emotional_stress"] = text
+    if step == "work_lifestyle":
+        session["work_lifestyle"] = text
         session["step"] = "background"
         touch_session()
         await send_step_prompt(message.chat.id, "background")
@@ -3344,22 +3514,30 @@ async def handle_message(message: types.Message) -> None:
 
     if step == "background":
         session["background"] = text
-        session["step"] = "risk_details"
+        session["step"] = "female_hormones"
         touch_session()
-        await send_step_prompt(message.chat.id, "risk_details")
+        await send_step_prompt(message.chat.id, "female_hormones")
         return
 
-    if step == "risk_details":
-        session["risk_details"] = text
-        session["step"] = "motivation"
+    if step == "female_hormones":
+        session["female_hormones"] = text
+        if str(session.get("tier") or session.get("offer") or "") == "standard":
+            session["lab_notes"] = "Стандартный тариф: лабораторные анализы не разбираются; бот формирует список анализов к сдаче."
+            session["step"] = "red_flags"
+            touch_session()
+            await message.answer("В стандартном тарифе я не разбираю лабораторные анализы. В итоговом разборе составлю список анализов, которые стоит сдать, и дам ссылку Holodoc.")
+            await send_step_prompt(message.chat.id, "red_flags")
+            return
+        session["step"] = "lab_notes"
         touch_session()
-        await send_step_prompt(message.chat.id, "motivation")
+        await send_step_prompt(message.chat.id, "lab_notes")
         return
 
-    if step == "motivation":
-        session["motivation"] = text
+    if step == "lab_notes":
+        session["lab_notes"] = text
+        touch_session()
+        session["contact"] = "telegram_current_chat"
         session["step"] = "red_flags"
-        touch_session()
         await send_step_prompt(message.chat.id, "red_flags")
         return
 
@@ -3371,98 +3549,7 @@ async def handle_message(message: types.Message) -> None:
                 "Спасибо. Такой ответ помечу как красный флаг. Это не экстренный чат, поэтому при ухудшении состояния "
                 "нужна очная медицинская помощь. Анкету можно продолжить, чтобы команда увидела контекст."
             )
-        session["step"] = "labs"
-        touch_session()
-        await send_step_prompt(message.chat.id, "labs")
-        return
-
-    if step == "labs":
-        if session.get("lab_confirmation_status") == "pending_client_confirmation":
-            if is_lab_confirmation_yes(text):
-                mark_lab_confirmation(
-                    session,
-                    status="client_confirmed",
-                    note="Клиент подтвердил, что OCR-распознавание анализов верно.",
-                )
-                session["requires_lab_resubmission"] = False
-                session.pop("pending_biomarker_confirmation", None)
-                session["contact"] = "telegram_current_chat"
-                session["step"] = "done"
-                touch_session()
-                await message.answer(
-                    "Спасибо, зафиксировала: распознанные показатели подтверждены вами. "
-                    "Теперь я могу использовать их в разборе как подтверждённые клиентом данные."
-                )
-                await finalize_submission(message, session)
-                return
-
-            mark_lab_confirmation(
-                session,
-                status="client_correction_needed",
-                note=f"Клиент не подтвердил OCR и прислал уточнение: {text}",
-            )
-            session["requires_lab_resubmission"] = True
-            session["contact"] = "telegram_current_chat"
-            session["step"] = "done"
-            touch_session()
-            await message.answer(
-                "Принято. Я не буду использовать прежнее автоматическое распознавание как факт. "
-                "Ваше уточнение сохранено, а показатели будут помечены как требующие ручной проверки."
-            )
-            await finalize_submission(message, session)
-            return
-
-        if text.lower() in SKIP_WORDS:
-            session["lab_notes"] = "Клиент пропустил загрузку анализов на этом этапе."
-            session["contact"] = "telegram_current_chat"
-            session["step"] = "done"
-            touch_session()
-            await finalize_submission(message, session)
-            return
-
-        manual_structured = await parse_manual_biomarkers(text, settings)
-        manual_biomarkers = manual_structured.get("biomarkers") or []
-        session["lab_notes"] = text
-        if manual_biomarkers:
-            session.setdefault("parsed_biomarkers", []).extend(manual_biomarkers)
-            mark_lab_confirmation(
-                session,
-                status="client_provided_text",
-                note="Клиент вручную указал показатели анализов текстом; значения считаются клиентским вводом.",
-            )
-            session["lab_quality_check"] = {
-                "status": manual_structured.get("quality_status", "manual_text_client_provided"),
-                "requires_resubmission": False,
-                "issues": [],
-            }
-            session["requires_lab_resubmission"] = False
-        elif re.search(r"\d", text):
-            session["lab_quality_check"] = {
-                "status": manual_structured.get("quality_status", "manual_text_no_clear_biomarkers"),
-                "requires_resubmission": True,
-                "issues": manual_structured.get("issues", ["no_clear_biomarker_lines_in_manual_text"]),
-            }
-            session["requires_lab_resubmission"] = True
-            touch_session()
-            await message.answer(build_manual_biomarker_rewrite_message())
-            return
-        session["contact"] = "telegram_current_chat"
         session["step"] = "done"
-        touch_session()
-        if manual_biomarkers:
-            await message.answer(
-                "Принято. Я сохранил(а) показатели, которые вы написали текстом, как клиентский ввод. "
-                "Если в какой-то цифре или единице измерения есть сомнение — лучше дослать PDF или уточнить отдельным сообщением."
-            )
-        else:
-            await message.answer(
-                "Принято. Я сохранил(а) текстовое описание анализов. Если захотите, позже можно дослать PDF или фото прямо в диалог."
-            )
-        await finalize_submission(message, session)
-        return
-
-    if step == "contact":
-        session["contact"] = "telegram_current_chat" if text.strip() else "telegram_current_chat"
         touch_session()
         await finalize_submission(message, session)
         return
@@ -3560,6 +3647,54 @@ async def cmd_tma(message: types.Message) -> None:
         return
 
     session = get_session(message.from_user.id)
+    if session and session.get("step") == "paid_nutri_chat":
+        if settings.llm_provider == "disabled" or not settings.llm_api_key or not settings.llm_model:
+            await message.answer("Сейчас AI-ответы временно недоступны. Напишите вопрос позже или обратитесь к оператору.")
+            return
+        try:
+            await bot.send_chat_action(message.chat.id, "typing")
+            history = get_chat_history(message.from_user.id)
+            nutri_prompt = (
+                "Режим оплаченного тарифа Нутри-чат. Отвечай только на русском языке как нутрициологический помощник. "
+                "Не ставь диагнозы, не обещай лечение, не отменяй лекарства. Используй формулировки: предварительная нутрициологическая гипотеза, возможная причина, что стоит проверить, что обсудить с врачом. "
+                "Структура ответа: 1) кратко понять вопрос, 2) если данных мало - уточнить 1-2 важных детали, 3) объяснить возможную связь с питанием/режимом/ЖКТ/желчеоттоком/сном/стрессом, 4) дать 1-3 практических шага, 5) отметить красные флаги и врача, если актуально.\n\n"
+                f"Вопрос клиента: {text}"
+            )
+            reply = await asyncio.to_thread(generate_live_reply, settings, history, nutri_prompt)
+        except Exception:
+            logger.exception("Paid nutri-chat response failed for user %s", message.from_user.id)
+            await message.answer("Сейчас не удалось подготовить ответ. Попробуйте ещё раз через минуту или напишите оператору.")
+            return
+        if not reply:
+            await message.answer("Не удалось сформировать ответ. Попробуйте переформулировать вопрос чуть конкретнее.")
+            return
+        append_chat_message(message.from_user.id, "user", text)
+        append_chat_message(message.from_user.id, "assistant", reply)
+        await message.answer(reply[:TELEGRAM_MESSAGE_SAFE_LIMIT])
+        return
+    if session and session.get("step") == "habits_daily_log":
+        session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "text": text})
+        touch_session()
+        await message.answer(build_habits_daily_report(text))
+        return
+
+    if session and session.get("step") == "osipov_context":
+        session["osipov_context"] = text
+        session["step"] = "osipov_upload"
+        touch_session()
+        await message.answer(
+            "Контекст сохранён. Теперь пришлите PDF или фото анализа ХМС/ГХ-МС по Осипову.\n\n"
+            "Я не буду ставить диагноз по анализу, а подготовлю нутрициологическую интерпретацию: микробные маркеры, связь с жалобами, что требует врача и что можно поддержать питанием/ЖКТ/микробиотой."
+        )
+        return
+
+    if session and session.get("step") == "osipov_upload":
+        session["osipov_extra_note"] = text
+        touch_session()
+        await message.answer(
+            "Комментарий сохранён. Пришлите сам анализ PDF или фото. Если файла пока нет, можно вернуться позже в этот чат."
+        )
+        return
     if not session:
         await message.answer(
             "Мини-приложение доступно только для активного кейса. Сначала начните или продолжите intake в этом чате."
@@ -3605,6 +3740,54 @@ async def handle_tma_api(request):
         return web.json_response({"error": "Invalid user_id"}, status=400)
 
     session = get_session(numeric_user_id)
+    if session and session.get("step") == "paid_nutri_chat":
+        if settings.llm_provider == "disabled" or not settings.llm_api_key or not settings.llm_model:
+            await message.answer("Сейчас AI-ответы временно недоступны. Напишите вопрос позже или обратитесь к оператору.")
+            return
+        try:
+            await bot.send_chat_action(message.chat.id, "typing")
+            history = get_chat_history(message.from_user.id)
+            nutri_prompt = (
+                "Режим оплаченного тарифа Нутри-чат. Отвечай только на русском языке как нутрициологический помощник. "
+                "Не ставь диагнозы, не обещай лечение, не отменяй лекарства. Используй формулировки: предварительная нутрициологическая гипотеза, возможная причина, что стоит проверить, что обсудить с врачом. "
+                "Структура ответа: 1) кратко понять вопрос, 2) если данных мало - уточнить 1-2 важных детали, 3) объяснить возможную связь с питанием/режимом/ЖКТ/желчеоттоком/сном/стрессом, 4) дать 1-3 практических шага, 5) отметить красные флаги и врача, если актуально.\n\n"
+                f"Вопрос клиента: {text}"
+            )
+            reply = await asyncio.to_thread(generate_live_reply, settings, history, nutri_prompt)
+        except Exception:
+            logger.exception("Paid nutri-chat response failed for user %s", message.from_user.id)
+            await message.answer("Сейчас не удалось подготовить ответ. Попробуйте ещё раз через минуту или напишите оператору.")
+            return
+        if not reply:
+            await message.answer("Не удалось сформировать ответ. Попробуйте переформулировать вопрос чуть конкретнее.")
+            return
+        append_chat_message(message.from_user.id, "user", text)
+        append_chat_message(message.from_user.id, "assistant", reply)
+        await message.answer(reply[:TELEGRAM_MESSAGE_SAFE_LIMIT])
+        return
+    if session and session.get("step") == "habits_daily_log":
+        session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "text": text})
+        touch_session()
+        await message.answer(build_habits_daily_report(text))
+        return
+
+    if session and session.get("step") == "osipov_context":
+        session["osipov_context"] = text
+        session["step"] = "osipov_upload"
+        touch_session()
+        await message.answer(
+            "Контекст сохранён. Теперь пришлите PDF или фото анализа ХМС/ГХ-МС по Осипову.\n\n"
+            "Я не буду ставить диагноз по анализу, а подготовлю нутрициологическую интерпретацию: микробные маркеры, связь с жалобами, что требует врача и что можно поддержать питанием/ЖКТ/микробиотой."
+        )
+        return
+
+    if session and session.get("step") == "osipov_upload":
+        session["osipov_extra_note"] = text
+        touch_session()
+        await message.answer(
+            "Комментарий сохранён. Пришлите сам анализ PDF или фото. Если файла пока нет, можно вернуться позже в этот чат."
+        )
+        return
     if not session:
         return web.json_response({"error": "No active TMA session"}, status=404)
 
@@ -3664,13 +3847,14 @@ async def nurture_engine_loop():
                 user_id = int(user_id_str)
                 step = session.get("step")
                 
-                # Check if the user is stuck on 'labs'
-                if step == "labs" and not session.get("nurture_sent"):
+                # Check if the user is stuck on 'lab_notes'
+                if step == "lab_notes" and not session.get("nurture_sent"):
                     try:
                         name = session.get("full_name", "Здравствуйте").split(" ")[0]
                         await bot.send_message(
                             user_id,
-                            f"{name}, я жду ваши результаты анализов, чтобы начать собирать стратегию. Если у вас возникли трудности с PDF-форматом — можно отправить фото бланков или написать показатели вручную. Я проверю читаемость и не буду делать выводы по сомнительным цифрам."
+                            f"{name}, напишите, пожалуйста, какие анализы сдавали — или пришлите фото результатов. "
+                            f"Это поможет мне собрать полную картину. Если анализов нет, просто напишите `пропустить`."
                         )
                         session["nurture_sent"] = True
                         touch_session()
@@ -3731,7 +3915,7 @@ async def init_web_app():
     app = web.Application()
     if settings.tma_enabled:
         app.router.add_get("/api/session", handle_tma_api)
-        app.router.add_static("/static/", path="WellnessBot/static", name="static")
+        app.router.add_static("/static/", path="static", name="static")
     return app
 
 def export_to_obsidian(session: dict, content: str) -> None:
@@ -3756,40 +3940,57 @@ def export_to_obsidian(session: dict, content: str) -> None:
 
 async def main() -> None:
     global ACTIVE_TMA_PORT
-    logger.info("Starting Wellness Ecosystem (Bot + TMA Server)")
+
+    # --- Single-instance lock ---
+    lock_path = Path(__file__).parent / ".bot.lock"
+    try:
+        if lock_path.exists():
+            old_pid = int(lock_path.read_text().strip())
+            try:
+                os.kill(old_pid, 0)  # check if alive
+                logger.error("Another bot instance is running (PID %s). Exiting.", old_pid)
+                return
+            except (OSError, ValueError):
+                pass  # stale lock
+        lock_path.write_text(str(os.getpid()))
+    except Exception as exc:
+        logger.warning("PID lock file error: %s", exc)
+    # --- end lock ---
+
+    logger.info("Starting Wellness Bot")
     restore_runtime_state()
-    
-    # Start Web Server
-    app = await init_web_app()
     asyncio.create_task(nurture_engine_loop())
     asyncio.create_task(weekly_digest_loop())
-    runner = web.AppRunner(app)
-    await runner.setup()
-    base_port = int(os.getenv("TMA_PORT", "8000"))
-    last_error: OSError | None = None
-    started_port: int | None = None
-    for candidate_port in (base_port, base_port + 1, base_port + 2):
-        try:
-            site = web.TCPSite(runner, "localhost", candidate_port)
-            await site.start()
-            started_port = candidate_port
-            break
-        except OSError as exc:
-            last_error = exc
-            logger.warning("TMA bind failed on localhost:%s (%s). Trying next port.", candidate_port, exc)
-
-    if started_port is None:
-        raise last_error or RuntimeError("Failed to start TMA server")
-
-    ACTIVE_TMA_PORT = started_port
-    logger.info("TMA Server started at http://localhost:%s", started_port)
-    
-    # Start Bot
-    await dp.start_polling(bot)
+    await dp.start_polling(bot, drop_pending_updates=True)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

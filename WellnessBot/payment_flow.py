@@ -1,37 +1,59 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Any
 
 
 PRODUCT_OFFERS = {
-    "week": {
-        "name": "Разбор на 7 дней",
-        "price_rub": 3900,
-        "invoice_title": "Разбор на 7 дней",
-        "invoice_description": "Первичная нутрициологическая навигация: анкета, гипотезы, список анализов и план первых шагов.",
+    "nutri_chat": {
+        "name": "Нутри-чат",
+        "price_rub": 300,
+        "invoice_title": "Нутри-чат",
+        "invoice_description": "Пробный доступ на 2 дня: вопрос-ответ по питанию, привычкам, режиму, ЖКТ, желчеоттоку, энергии и профилактической поддержке.",
+    },
+    "habits": {
+        "name": "Привычки и тарелка",
+        "price_rub": 6900,
+        "invoice_title": "Привычки и тарелка",
+        "invoice_description": "21 день ежедневной работы с питанием: фото тарелок, привычки, вода, кофе, сон, стресс и короткая корректировка.",
+    },
+    "standard": {
+        "name": "Стандартный нутрициологический разбор",
+        "price_rub": 10000,
+        "invoice_title": "Стандартный нутрициологический разбор",
+        "invoice_description": "Подробный разбор питания, жалоб, привычек и образа жизни без расшифровки лабораторных анализов.",
     },
     "premium": {
-        "name": "Персональный разбор на 30 дней",
-        "price_rub": 6900,
-        "invoice_title": "Персональный разбор на 30 дней",
-        "invoice_description": "Глубокий нутрициологический разбор: анкета, анализы, гипотезы, план действий и 30 дней вопросов в Telegram.",
+        "name": "Премиум-разбор с анализами",
+        "price_rub": 14900,
+        "invoice_title": "Премиум-разбор с анализами",
+        "invoice_description": "Глубокий разбор питания, жалоб, анамнеза и лабораторных анализов с нутрициологическим планом.",
     },
     "vip": {
-        "name": "VIP-сопровождение на 30 дней",
+        "name": "Премиум-разбор с анализами",
         "price_rub": 14900,
-        "invoice_title": "VIP-сопровождение на 30 дней",
-        "invoice_description": "Расширенное сопровождение: полный разбор, корректировки, дополнительные документы и приоритетная ручная связь.",
+        "invoice_title": "Премиум-разбор с анализами",
+        "invoice_description": "Глубокий разбор питания, жалоб, анамнеза и лабораторных анализов с нутрициологическим планом.",
+    },
+    "osipov": {
+        "name": "Разбор ХМС/ГХ-МС по Осипову",
+        "price_rub": 7000,
+        "invoice_title": "Разбор ХМС/ГХ-МС по Осипову",
+        "invoice_description": "Отдельный разбор микробных маркеров по Осипову с привязкой к жалобам, ЖКТ, питанию и нутрициологической поддержке.",
     },
 }
 PRODUCT_ALIASES = {
-    "month": "premium",
-    "premium_wellness_dossier": "premium",
+    "screening": "nutri_chat",
+    "week": "nutri_chat",
+    "basic": "standard",
+    "month": "standard",
+    "premium_wellness_dossier": "standard",
+    "full": "premium",
 }
 
-
 def normalize_product_code(raw_code: str | None) -> str:
-    code = (raw_code or "premium").strip().lower()
-    return PRODUCT_ALIASES.get(code, code if code in PRODUCT_OFFERS else "premium")
+    code = (raw_code or "standard").strip().lower()
+    return PRODUCT_ALIASES.get(code, code if code in PRODUCT_OFFERS else "standard")
 
 
 def get_product_offer(raw_code: str | None) -> dict[str, Any]:
@@ -42,7 +64,7 @@ def get_product_offer(raw_code: str | None) -> dict[str, Any]:
     return offer
 
 
-PREMIUM_PRICE_RUB = 6900
+PREMIUM_PRICE_RUB = 14900
 PREMIUM_PRICE_KOPECKS = PREMIUM_PRICE_RUB * 100
 PAYMENT_STATUS_PAID = "paid"
 PAYMENT_STATUS_MANUAL_PENDING = "manual_payment_pending"
@@ -53,7 +75,7 @@ PAYMENT_STATUSES_CONFIRMED_FOR_DOSSIER = {
 }
 
 
-def build_invoice_payload(submission_id: str, telegram_user_id: int, offer_code: str = "premium") -> str:
+def build_invoice_payload(submission_id: str, telegram_user_id: int, offer_code: str = "standard") -> str:
     normalized_offer_code = normalize_product_code(offer_code)
     return f"{normalized_offer_code}:{submission_id}:{telegram_user_id}"
 
@@ -162,3 +184,7 @@ def mark_manual_payment_confirmed(
     if note:
         submission["manual_payment_note"] = note
     submission["status_updated_at"] = now_iso
+
+
+
+

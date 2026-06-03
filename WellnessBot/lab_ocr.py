@@ -22,6 +22,9 @@ LAB_HEADER_STOPWORDS = (
     "бланк",
     "номер",
     "пол",
+    "жен",
+    "муж",
+    "лет",
     "возраст",
     "фамил",
     "имя",
@@ -379,8 +382,13 @@ def should_skip_ocr_line(name_part: str) -> bool:
         return True
     if len(normalized) > 80:
         return True
-    if not any(alias in normalized for alias in KNOWN_MARKER_ALIASES):
+    # Skip lines that are clearly dates, phone numbers, addresses
+    if re.search(r"^\d{1,2}[./]\d{1,2}[./]\d{2,4}$", normalized.strip()):
         return True
+    if re.search(r"^(\+7|8)\d", normalized):
+        return True
+    # Don't require KNOWN_MARKER_ALIASES — soft filter instead:
+    # if it looks like a plausible biomarker name (has letters + plausible length), keep it
     return False
 
 
@@ -495,8 +503,6 @@ async def recognize_text(file_path: Path, settings: Any) -> Optional[str]:
 
 
 async def parse_biomarkers(raw_text: str, settings: Any) -> dict[str, Any]:
-    """Conservatively parse only clearly readable biomarker lines from OCR text."""
-    del settings  # Reserved for future provider-aware parsing.
 
     if not raw_text:
         return {

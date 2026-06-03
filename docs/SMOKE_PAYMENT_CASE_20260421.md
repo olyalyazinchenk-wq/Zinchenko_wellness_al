@@ -10,11 +10,11 @@
 ```json
 {
   "offer_code": "premium",
-  "offer_name": "Персональный разбор на 30 дней",
-  "invoice_title": "Персональный разбор на 30 дней",
-  "invoice_description": "Глубокий нутрициологический разбор: анкета, анализы, гипотезы, план действий и 30 дней вопросов в Telegram.",
-  "amount_rub": 6900,
-  "amount_kop": 690000,
+  "offer_name": "Премиум-разбор с анализами",
+  "invoice_title": "Премиум-разбор с анализами",
+  "invoice_description": "Глубокий разбор питания, жалоб, анамнеза и лабораторных анализов с нутрициологическим планом.",
+  "amount_rub": 14900,
+  "amount_kop": 1490000,
   "currency": "RUB",
   "invoice_payload": "premium:smoke_case_payment_001:1084557944",
   "invoice_sent_at": "2026-04-21T00:25:00Z",
@@ -47,20 +47,24 @@
     "wellbeing_energy": null,
     "complaint_pattern": null,
     "goal": "Получить понятный нутрициологический разбор и план следующего шага",
+    "goals": "Получить понятный нутрициологический разбор и план следующего шага",
     "work_lifestyle": null,
+    "nutrition_routine": null,
     "nutrition": null,
     "food_behavior": null,
     "digestion": null,
+    "water_alcohol": null,
     "sleep_stress": null,
+    "stress_level": null,
     "activity": null,
+    "background": "Принимаю селен и белок",
     "female_hormones": null,
     "hormonal_reproductive_context": null,
     "emotional_stress": null,
-    "background": "Принимаю селен и белок",
     "risk_details": null,
     "motivation": null,
-    "red_flags": "Нет",
-    "lab_notes": "Анализы пока не приложены"
+    "lab_notes": "Анализы пока не приложены",
+    "red_flags": "Нет"
   },
   "documents": [],
   "parsed_biomarkers": [
@@ -81,11 +85,11 @@
   "status_updated_at": "2026-04-21T00:27:00Z",
   "payment_context": {
     "offer_code": "premium",
-    "offer_name": "Персональный разбор на 30 дней",
-    "invoice_title": "Персональный разбор на 30 дней",
-    "invoice_description": "Глубокий нутрициологический разбор: анкета, анализы, гипотезы, план действий и 30 дней вопросов в Telegram.",
-    "amount_rub": 6900,
-    "amount_kop": 690000,
+    "offer_name": "Премиум-разбор с анализами",
+    "invoice_title": "Премиум-разбор с анализами",
+    "invoice_description": "Глубокий разбор питания, жалоб, анамнеза и лабораторных анализов с нутрициологическим планом.",
+    "amount_rub": 14900,
+    "amount_kop": 1490000,
     "currency": "RUB",
     "invoice_payload": "premium:smoke_case_payment_001:1084557944",
     "invoice_sent_at": "2026-04-21T00:25:00Z",
@@ -147,5 +151,5 @@
 ## Invoice Roundtrip
 - payload_submission_id: smoke_case_payment_001
 - payload_user_id: 1084557944
-- premium_price_rub: 6900
-- premium_price_kop: 690000
+- premium_price_rub: 14900
+- premium_price_kop: 1490000

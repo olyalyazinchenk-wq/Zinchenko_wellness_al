@@ -297,7 +297,7 @@
             <!-- Screen 1: Tier Selection -->
             <div class="screen active" id="screenTier">
                 <div class="tier-select-title">Начать разбор кейса</div>
-                <div class="tier-select-sub">Один входной путь: ясность, следующий шаг и затем Premium Wellness Dossier при необходимости</div>
+                <div class="tier-select-sub">Один входной путь: ясность, следующий шаг и затем Персональное досье при необходимости</div>
 
                 <div class="tier-option" onclick="selectTier('premium')">
                     <div class="tier-option-header">
@@ -307,8 +307,8 @@
                             <div class="tier-option-audience">Женщины 28-45 • fatigue • ЖКТ • unclear symptoms</div>
                         </div>
                     </div>
-                    <div class="tier-option-desc">Спокойно собираем ваш кейс, выделяем главное, определяем следующий шаг и при необходимости переводим в Premium Wellness Dossier с проверкой эксперта</div>
-                    <div class="tier-option-price">от 2 990 ₽</div>
+                    <div class="tier-option-desc">Спокойно собираем ваш кейс, выделяем главное, определяем следующий шаг и при необходимости переводим в Персональное досье с проверкой эксперта</div>
+                    <div class="tier-option-price">1 000 ₽</div>
                 </div>
             </div>
 
@@ -372,7 +372,7 @@
             <!-- Screen: Result -->
             <div class="screen" id="screenResult">
                 <div class="result-badge">✓ Досье сформировано</div>
-                <div class="result-title" id="resultTitle">Premium Wellness-Досье</div>
+                <div class="result-title" id="resultTitle">Персональное досье</div>
                 <div class="result-sub" id="resultSub"></div>
                 <div id="resultContent"></div>
                 <div class="result-disclaimer">Данный разбор не является медицинским диагнозом. При критических отклонениях обратитесь к врачу очно.</div>
@@ -560,30 +560,23 @@
 
         // ─── Result ───
         function showResult() {
-            document.getElementById('resultTitle').textContent = 'Premium Wellness-Досье';
+            document.getElementById('resultTitle').textContent = 'Персональное досье';
             document.getElementById('resultSub').textContent = `Подготовлено для ${state.data.name || 'вас'}`;
 
-            // Demo result content
+            // Safe demo placeholder — no hardcoded medical findings
             const content = document.getElementById('resultContent');
             content.innerHTML = `
                 <div class="result-section">
-                    <div class="result-section-title">Выявленные риски</div>
-                    <div class="result-item"><strong>Ферритин:</strong> Вероятный латентный дефицит железа <span class="tag-red">⚠ ВНИМАНИЕ</span></div>
-                    <div class="result-item"><strong>Витамин D:</strong> Субоптимальный уровень, требует коррекции</div>
-                    <div class="result-item"><strong>Кортизол:</strong> Признаки хронического стресса</div>
+                    <div class="result-section-title">Что внутри досье</div>
+                    <div class="result-item">Анализ симптомов и образа жизни</div>
+                    <div class="result-item">Разбор лабораторных показателей (при наличии)</div>
+                    <div class="result-item">Индивидуальные ориентиры по питанию и поддержке (после проверки эксперта)</div>
                 </div>
                 <div class="result-section">
-                    <div class="result-section-title">Протокол нутрицевтиков</div>
-                    <div class="result-item"><strong>Железо:</strong> Бисглицинат 25 мг + Витамин C 500 мг (натощак)</div>
-                    <div class="result-item"><strong>Витамин D3:</strong> 5000 МЕ + K2 (MK-7) 100 мкг</div>
-                    <div class="result-item"><strong>Магний:</strong> Глицинат 400 мг за час до сна</div>
-                    <div class="result-item"><strong>Ашваганда:</strong> KSM-66, 300 мг утром</div>
-                </div>
-                <div class="result-section">
-                    <div class="result-section-title">Питание</div>
-                    <div class="result-item">Протокол LCHF: акцент на качественные жиры и белок</div>
-                    <div class="result-item">Исключить: добавленный сахар, рафинированные масла</div>
-                    <div class="result-item">Основа: птица, рыба, яйца, авокадо, зелёные овощи</div>
+                    <div class="result-section-title">Формат</div>
+                    <div class="result-item">PDF-досье с проверкой эксперта-нутрициолога</div>
+                    <div class="result-item">Поддержка в Telegram по выбранному пакету</div>
+                    <div class="result-item">Корректировка маршрута по анализам и обратной связи</div>
                 </div>`;
             showScreen('result');
         }

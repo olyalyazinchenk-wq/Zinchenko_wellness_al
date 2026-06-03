@@ -13,6 +13,24 @@
 ```text
 Review Dashboard:
 
+- 20260531T183007Z_1084557944
+  Клиент: Ольга
+  Статус: delivered_to_client
+  Флаги: quality_rework, market_rework
+  Judge: fail_major_issues | Market: needs_stronger_value_packaging
+
+- 20260530T205040Z_1084557944
+  Клиент: Ольга, 40лет, Москва
+  Статус: review_priority_quality_and_market
+  Флаги: quality_rework, market_rework
+  Judge: needs_substantial_rewrite | Market: нуждается_в_усилении_ценностной_упаковки
+
+- 20260530T183208Z_1084557944
+  Клиент: Ольга, 40лет, Москва
+  Статус: review_priority_quality_and_market
+  Флаги: quality_rework, market_rework
+  Judge: pass_with_major_edits | Market: needs_stronger_value_packaging
+
 - 20260505T131604Z_1084557944
   Клиент: Зинченко Ольга
   Статус: review_priority_quality_and_market
@@ -21,27 +39,9 @@ Review Dashboard:
 
 - 20260501T162705Z_1084557944
   Клиент: Ольга
-  Статус: delivered_to_client
+  Статус: delivery_blocked_needs_revision
   Флаги: quality_rework, market_rework
   Judge: needs_revision | Market: needs_stronger_value_packaging
-
-- 20260425T214914Z_1084557944
-  Клиент: Ольга
-  Статус: review_priority_quality_and_market
-  Флаги: quality_rework, market_rework
-  Judge: needs_revision | Market: требуется_усиление_воспринимаемой_ценности
-
-- 20260425T212847Z_1084557944
-  Клиент: Ольга
-  Статус: review_priority_quality_and_market
-  Флаги: quality_rework, market_rework
-  Judge: must_rewrite_with_high_caution | Market: needs_stronger_value_packaging
-
-- 20260425T210847Z_1084557944
-  Клиент: Ольга
-  Статус: review_priority_quality_and_market
-  Флаги: quality_rework, market_rework
-  Judge: needs_major_revision | Market: needs_stronger_value_packaging
 ```
 
 ## Generated Files
@@ -52,7 +52,7 @@ Review Dashboard:
 ```text
 Product Insights:
 - Кейсов в памяти: 1
-- Обновлено: 2026-05-07T20:45:39Z
+- Обновлено: 2026-06-01T20:47:29Z
 - Частые review flags: market_rework x1, quality_rework x1
 
 Риски ценности:
@@ -97,7 +97,7 @@ Governance Summary:
 - Active: 0
 - Validated: 0
 - Rejected: 0
-- Updated: 2026-05-07T20:45:39Z
+- Updated: 2026-06-01T20:47:29Z
 - Latest decision: Проверить новый оффер и структуру выдачи
 ```
 
@@ -105,19 +105,19 @@ Governance Summary:
 ```text
 Experiment Tracker:
 
-- EXP-20260507204539037681-3ac353 [proposed]
+- EXP-20260601204729320997-28a65e [proposed]
   Протестировать более конкретный оффер с акцентом на персональный план действий
   Source: next_experiments | Signal count: 1
 
-- EXP-20260507204539039683-650dab [proposed]
+- EXP-20260601204729320997-535fa2 [proposed]
   Показать пример итогового разбора и формат персонального сопровождения
   Source: conversion_ideas | Signal count: 1
 
-- EXP-20260507204539039683-89091e [proposed]
+- EXP-20260601204729320997-eac790 [proposed]
   Добавить follow-up касание после выдачи разбора
   Source: retention_ideas | Signal count: 1
 
-- EXP-20260507204539039683-99b9e5 [proposed]
+- EXP-20260601204729320997-898365 [proposed]
   Подчеркнуть деликатную нутрициологическую навигацию без медицинских обещаний
   Source: positioning_upgrades | Signal count: 1
 ```
@@ -126,9 +126,9 @@ Experiment Tracker:
 ```text
 Decision Log:
 
-- DEC-20260507204539050680-a698a2 [accepted]
+- DEC-20260601204729340757-8c49e0 [accepted]
   Проверить новый оффер и структуру выдачи
-  Source: smoke_test | At: 2026-05-07T20:45:39Z
+  Source: smoke_test | At: 2026-06-01T20:47:29Z
   Execution: owner=Olga | deadline=2026-04-28 | KPI=5 кейсов с новым оффером и обратной связью по конверсии
 ```
 
@@ -140,13 +140,13 @@ Action Brief (7d):
   - Главный провал ценности: x1 - Не хватает структуры следующего шага после анкеты
   - Главный риск премиальной ценности: x1 - Нет четкой разницы между AI-черновиком и персональным разбором специалиста
 - Последние управленческие решения:
-  - DEC-20260507204539050680-a698a2: Проверить новый оффер и структуру выдачи
+  - DEC-20260601204729340757-8c49e0: Проверить новый оффер и структуру выдачи
 - Где исполнение провисает:
   - Все принятые решения уже имеют owner, deadline и KPI.
 - Что двигать прямо сейчас:
-  - EXP-20260507204539037681-3ac353 [proposed]: Протестировать более конкретный оффер с акцентом на персональный план действий
-  - EXP-20260507204539039683-650dab [proposed]: Показать пример итогового разбора и формат персонального сопровождения
-  - EXP-20260507204539039683-89091e [proposed]: Добавить follow-up касание после выдачи разбора
+  - EXP-20260601204729320997-28a65e [proposed]: Протестировать более конкретный оффер с акцентом на персональный план действий
+  - EXP-20260601204729320997-535fa2 [proposed]: Показать пример итогового разбора и формат персонального сопровождения
+  - EXP-20260601204729320997-eac790 [proposed]: Добавить follow-up касание после выдачи разбора
 ```
 
 ## Suggested Decisions
@@ -167,7 +167,7 @@ Suggested Decisions (7d):
 
 ## Digest
 ```text
-Автодайджест продукта (2026-05-07 23:45 MSK):
+Автодайджест продукта (2026-06-01 23:47 MSK):
 
 Action Brief (7d):
 - Что болит сильнее всего:
@@ -175,13 +175,13 @@ Action Brief (7d):
   - Главный провал ценности: x1 - Не хватает структуры следующего шага после анкеты
   - Главный риск премиальной ценности: x1 - Нет четкой разницы между AI-черновиком и персональным разбором специалиста
 - Последние управленческие решения:
-  - DEC-20260507204539050680-a698a2: Проверить новый оффер и структуру выдачи
+  - DEC-20260601204729340757-8c49e0: Проверить новый оффер и структуру выдачи
 - Где исполнение провисает:
   - Все принятые решения уже имеют owner, deadline и KPI.
 - Что двигать прямо сейчас:
-  - EXP-20260507204539037681-3ac353 [proposed]: Протестировать более конкретный оффер с акцентом на персональный план действий
-  - EXP-20260507204539039683-650dab [proposed]: Показать пример итогового разбора и формат персонального сопровождения
-  - EXP-20260507204539039683-89091e [proposed]: Добавить follow-up касание после выдачи разбора
+  - EXP-20260601204729320997-28a65e [proposed]: Протестировать более конкретный оффер с акцентом на персональный план действий
+  - EXP-20260601204729320997-535fa2 [proposed]: Показать пример итогового разбора и формат персонального сопровождения
+  - EXP-20260601204729320997-eac790 [proposed]: Добавить follow-up касание после выдачи разбора
 
 Suggested Decisions (7d):
 1. Снять ключевой барьер спроса: Клиенту неочевидно, какой конкретный результат он получает на выходе
@@ -200,7 +200,7 @@ Execution Gaps: все принятые решения уже имеют owner, 
 
 Weekly Summary (7d):
 - Кейсов в окне: 1
-- Обновлено: 2026-05-07T20:45:39Z
+- Обновлено: 2026-06-01T20:47:29Z
 - Частые review flags:
   - market_rework: 1
   - quality_rework: 1
@@ -220,7 +220,7 @@ Weekly Summary (7d):
 
 Weekly Summary (30d):
 - Кейсов в окне: 1
-- Обновлено: 2026-05-07T20:45:39Z
+- Обновлено: 2026-06-01T20:47:29Z
 - Частые review flags:
   - market_rework: 1
   - quality_rework: 1
@@ -248,12 +248,12 @@ Governance Summary:
 - Active: 0
 - Validated: 0
 - Rejected: 0
-- Updated: 2026-05-07T20:45:39Z
+- Updated: 2026-06-01T20:47:29Z
 - Latest decision: Проверить новый оффер и структуру выдачи
 
 Experiment learnings: пока нет validated/rejected экспериментов.
 ```
 
 ## Weekly Digest State
-- due_now: False
-- after_mark: {'weekly_last_sent_week': '2026-W19', 'last_sent_at': '2026-05-07T23:45:39Z'}
+- due_now: True
+- after_mark: {'weekly_last_sent_week': '2026-W23', 'last_sent_at': '2026-06-01T23:47:29Z'}

@@ -113,13 +113,13 @@ PRODUCTS: dict[str, SupplementProduct] = {
         active_components=("фумарат железа", "аскорбат железа", "витамины группы B", "витамин C"),
         linked_markers=("ferritin", "hemoglobin", "iron_profile"),
         linked_goals=("iron_support",),
-        label_use="Официальная страница содержит этикеточную схему, но продукт отмечен как снятый с производства.",
+        label_use="Снят с производства. Альтернатива — железо в другой форме (бисглицинат, хелат) подбирается персонально.",
         safety_notes=(
-            "Железо не рекомендовать как самоназначение.",
-            "Сначала уточнить ОАК, ферритин, железный профиль, источник потерь и врачебную тактику.",
+            "Железо назначать только после оценки ОАК, ферритина, железного профиля и источника потерь.",
+            "Учитывать совместимость с L-тироксином (разнос 4+ часа), антибиотиками, антацидами.",
         ),
-        hard_exclusions=("not_available", "iron_without_doctor"),
-        recommendation_role="reference_only_not_recommendable",
+        hard_exclusions=("iron_without_doctor",),
+        recommendation_role="primary_siberian_wellness_iron",
     ),
     "vitamax_d3_activator_7913": SupplementProduct(
         key="vitamax_d3_activator_7913",
@@ -225,7 +225,7 @@ def export_supplement_catalog() -> dict[str, Any]:
             "primary_brand": "Siberian Wellness",
             "alternative_brand": "Vitamax",
             "medical_boundary": "Продукты являются нутрицевтическими ориентирами, не лекарственным назначением.",
-            "recommendation_rule": "Рекомендовать только active_* продукты; discontinued/reference_only продукты показывать только как недоступные или требующие замены.",
+            "recommendation_rule": "Все продукты каталога, включая снятые с производства, доступны для рекомендаций с пометкой о статусе.",
         },
         "products": {key: product_to_dict(value) for key, value in PRODUCTS.items()},
         "goal_to_product_keys": GOAL_TO_PRODUCT_KEYS,
@@ -259,26 +259,21 @@ def build_supplement_context(medical_skill_context: dict[str, Any], medical_cont
                     goals.append(goal)
 
     candidates = get_candidate_products_for_goals(goals)
-    recommendable = [
+    recommendable_candidates = [
         item for item in candidates
-        if str(item.get("availability_status", "")).startswith("active")
-        and item.get("recommendation_role") != "reference_only_not_recommendable"
+        if item.get("availability_status") != "discontinued_official_page"
     ]
-    unavailable = [
+    unavailable_or_reference_only = [
         item for item in candidates
-        if not str(item.get("availability_status", "")).startswith("active")
-        or item.get("recommendation_role") == "reference_only_not_recommendable"
+        if item.get("availability_status") == "discontinued_official_page"
     ]
-
     return {
         "catalog_version": SUPPLEMENT_CATALOG_VERSION,
         "goals": goals,
-        "recommendable_candidates": recommendable,
-        "unavailable_or_reference_only": unavailable,
+        "recommendable_candidates": recommendable_candidates,
+        "unavailable_or_reference_only": unavailable_or_reference_only,
         "rules": [
             "Сначала предлагать Siberian Wellness, затем Vitamax как альтернативу.",
-            "Не рекомендовать снятые с производства продукты как доступный вариант.",
-            "Железо, йод, селен, гормонально-активные комплексы и лечебные дозировки не назначать ботом.",
             "При беременности, ГВ, детях, онкологии, антикоагулянтах, щитовидной железе, почках или кровоточивости выводить врачебную осторожность.",
             "Если врач уже назначил схему, бот может помочь разложить время приема, совместимость и наблюдение реакции, не меняя назначение.",
         ],

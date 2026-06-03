@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import json
 import logging
@@ -10,30 +10,53 @@ from openai import OpenAI
 from config import Settings
 from medical_skill_database import build_medical_skill_context
 from prompts import (
+    BASIC_DOSSIER_DRAFT_PROMPT,
     DOSSIER_DRAFT_PROMPT,
     DOSSIER_GROWTH_ARCHITECT_PROMPT,
     DOSSIER_JUDGE_PROMPT,
+    FULL_DOSSIER_DRAFT_PROMPT,
     LIVE_CHAT_PROMPT,
-    PREMIUM_PROMPT,
+    PREMIUM_BASIC_PROMPT,
+    PREMIUM_FULL_PROMPT,
     REVIEW_REPLY_PROMPT,
+    SCREENING_PROMPT,
     SOCIAL_PROMPT,
     SPORT_PROMPT,
 )
 
 TIER_PROMPTS = {
-    "week": PREMIUM_PROMPT,
-    "premium": PREMIUM_PROMPT,
-    "vip": PREMIUM_PROMPT,
+    "nutri_chat": SCREENING_PROMPT,
+    "habits": SCREENING_PROMPT,
+    "standard": PREMIUM_BASIC_PROMPT,
+    "premium": PREMIUM_FULL_PROMPT,
+    "osipov": PREMIUM_FULL_PROMPT,
+    "screening": SCREENING_PROMPT,
+    "basic": PREMIUM_BASIC_PROMPT,
+    "full": PREMIUM_FULL_PROMPT,
     "sport": SPORT_PROMPT,
     "social": SOCIAL_PROMPT,
 }
 
+# Mapping: which dossier prompt to use for which tier
+TIER_DOSSIER_PROMPTS = {
+    "standard": BASIC_DOSSIER_DRAFT_PROMPT,
+    "premium": FULL_DOSSIER_DRAFT_PROMPT,
+    "osipov": FULL_DOSSIER_DRAFT_PROMPT,
+    "basic": BASIC_DOSSIER_DRAFT_PROMPT,
+    "full": FULL_DOSSIER_DRAFT_PROMPT,
+}
+
 
 def get_system_prompt_for_tier(tier: str | None) -> str:
-    """Return the tier-specific system prompt, falling back to the generic dossier prompt."""
-    if tier and tier in TIER_PROMPTS:
-        return TIER_PROMPTS[tier] + "\n\n" + DOSSIER_DRAFT_PROMPT
-    return DOSSIER_DRAFT_PROMPT
+    """Return the tier-specific system prompt with matching dossier prompt."""
+    if not tier:
+        return DOSSIER_DRAFT_PROMPT
+    tier_lower = tier.strip().lower()
+    tier_prompt = TIER_PROMPTS.get(tier_lower, "")
+    dossier_prompt = TIER_DOSSIER_PROMPTS.get(tier_lower, DOSSIER_DRAFT_PROMPT)
+    if tier_prompt:
+        return tier_prompt + "\n\n" + dossier_prompt
+    return dossier_prompt
 
 logger = logging.getLogger("wellness_bot.ai")
 YANDEX_FOUNDATION_URL = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
@@ -360,6 +383,10 @@ def looks_english_heavy(reply: str | None) -> bool:
 
 def sanitize_live_reply(reply: str) -> str:
     sanitized = reply
+    # Telegram users should not see raw Markdown artifacts from the model.
+    sanitized = re.sub(r"\*\*(.*?)\*\*", r"\1", sanitized)
+    sanitized = re.sub(r"(?m)^\s*[\*\-]\s+", "", sanitized)
+    sanitized = sanitized.replace("*", "")
     replacements = (
         ("лечебная доза", "дозировка, которую стоит подбирать после оценки данных"),
         ("выраженный дефицит", "зона возможного дефицитного риска"),
@@ -967,3 +994,94 @@ def generate_review_reply(
         input=review_input,
     )
     return finalize_review_reply((response.output_text or "").strip() or None, review_text, score=score)
+
+
+def generate_screening_reply(
+    settings: Settings,
+    user_text: str,
+) -> str | None:
+    """Generate a quick screening reply (500 RUB tier): symptom -> deficiency hypothesis.
+    Returns concise text, not JSON dossier."""
+    if settings.llm_provider == "disabled":
+        return None
+    if not settings.llm_api_key or not settings.llm_model:
+        logger.warning("LLM provider is enabled but API key or model is missing for screening.")
+        return None
+
+    if settings.llm_provider == "yandex_foundation":
+        return generate_screening_yandex(settings, user_text)
+
+    client = build_client(settings)
+    screening_input = json.dumps(
+        {"symptoms": user_text.strip(), "mode": "quick_screening"},
+        ensure_ascii=False,
+        indent=2,
+    )
+
+    if settings.llm_api_mode == "chat_completions":
+        response = client.chat.completions.create(
+            model=settings.llm_model,
+            messages=[
+                {"role": "system", "content": SCREENING_PROMPT},
+                {"role": "user", "content": screening_input},
+            ],
+            temperature=0.3,
+        )
+        return (extract_chat_completion_text(response) or "").strip() or None
+
+    response = client.responses.create(
+        model=settings.llm_model,
+        instructions=SCREENING_PROMPT,
+        input=screening_input,
+    )
+    return (response.output_text or "").strip() or None
+
+
+def generate_screening_yandex(
+    settings: Settings,
+    user_text: str,
+) -> str | None:
+    """Yandex Foundation screening variant."""
+    if not settings.llm_api_key or not settings.llm_model:
+        return None
+
+    auth_scheme = "Bearer" if settings.llm_use_iam_token else "Api-Key"
+    headers = {
+        "Authorization": f"{auth_scheme} {settings.llm_api_key}",
+        "Content-Type": "application/json",
+    }
+    if settings.llm_project_id:
+        headers["x-folder-id"] = settings.llm_project_id
+
+    payload = {
+        "modelUri": settings.llm_model,
+        "completionOptions": {
+            "stream": False,
+            "temperature": 0.3,
+            "maxTokens": "1000",
+        },
+        "messages": [
+            {"role": "system", "text": SCREENING_PROMPT},
+            {"role": "user", "text": json.dumps(
+                {"symptoms": user_text.strip(), "mode": "quick_screening"},
+                ensure_ascii=False,
+            )},
+        ],
+    }
+
+    response = httpx.post(
+        settings.llm_base_url or YANDEX_FOUNDATION_URL,
+        headers=headers,
+        json=payload,
+        timeout=settings.llm_timeout_seconds,
+        trust_env=False,
+    )
+    response.raise_for_status()
+    data = response.json()
+    alternatives = data.get("result", {}).get("alternatives", [])
+    if not alternatives:
+        return None
+    message = alternatives[0].get("message", {})
+    text = message.get("text", "").strip()
+    return text or None
+
