@@ -1,8 +1,8 @@
 # Engineering Mandate
 
-Date: 2026-06-03
+Date: 2026-06-07
 Issued by: Chief Orchestrator
-Status: June 3 refresh; runtime baseline is unchanged from June 2 direct fallback, but the lead engineering failure is now continuity-chat safety plus commercialization control, while disk headroom is down to `6.59 GB`
+Status: June 7 morning refresh; runtime remains proven from late June 6, but engineering still has not canonicalized the duplicate paid `habits` rail, repaired the delivered-case contradiction, or collapsed public proof/pricing to one truthful surface
 
 ## Mission
 
@@ -11,6 +11,321 @@ Run one coherent Telegram paid cycle through:
 `approved offer choice -> manual concierge payment -> intake -> AI draft -> human review -> safe delivery -> same-thread follow-up`
 
 No new tariff, catalog branch, or upgrade path counts as live truth until one approved offer map and one replayable proof artifact exist. Public launch remains blocked.
+
+## 2026-06-07 11:51 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as unchanged from the late-night proof, not as newly improving:
+  - `bot.stderr` still ends with handled updates at `2026-06-06 23:25:02-23:25:31 +03:00`
+  - no fresher recovery or failure artifact displaced that late June 6 baseline
+  - do not spend the next engineering packet narrating runtime unless a newer harder failure appears
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - no intake depth, review artifact, delivery truth, `canonical_path`, or `case_relation` has been added
+- Treat same-user commercialization control as unchanged and still unacceptable:
+  - `20260606T202509Z_1084557944` is still a `6900 RUB` paid `habits` branch
+  - `20260603T113045Z_1084557944` is still an older unresolved `6900 RUB` paid `habits` branch
+  - `20260603T112723Z_1084557944` still remains pending at `500 RUB`
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat public price/proof drift as an engineering truth problem:
+  - `landing/index.html` still presents hardcoded client case outcomes
+  - `index.html` still presents YooKassa-like Telegram payment flow, assured PDF delivery, and `700 / 14900 RUB` pricing as if those were approved live truth
+  - `mini-app/index.html` still presents a `1000 RUB` placeholder entry rail
+  - persisted runtime/submission truth still contains live `6900 RUB` `habits`
+  - no public ladder is approved until code, docs, prompts, persisted artifacts, and surfaces agree
+- Treat working-tree motion as mostly documentation and observability churn, not product progress:
+  - tracked changes are still mostly docs
+  - `ops/bot-status.ps1` adds a useful local monitoring patch
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- Treat QA observability as still broken:
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md` is still the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+- Treat disk as below the safe floor and slightly worse than the late-night reading:
+  - actual `C:` free space is `7309180928` bytes (`~6.81 GiB`) at `2026-06-07 11:51:00 +03:00`
+- The next engineering packet is now:
+  1. declare the canonical owner of the June 6 `habits` branch relative to the June 3 paid stack
+  2. add a hard guard so unresolved same-user same-offer paid state blocks any new paid branch creation
+  3. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. remove landing/root overclaims and freeze mini-app price copy if the ladder is still unresolved
+  6. restore disk above `10 GB`
+  7. normalize one approved public offer map only after steps `1-6` land
+  8. replay one reviewed paid case only after those controls land
+
+## 2026-06-06 23:49 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as alive-and-fresh enough to leave the lead slot:
+  - `bot.stderr` now shows handled updates at `2026-06-06 23:25:02-23:25:31 +03:00`
+  - the June 5 reconnect is no longer the newest runtime proof
+  - direct fallback still stands; do not spend the next engineering packet narrating runtime unless a newer harder failure appears
+- Treat the mounted paid rail as newly replaced, not stale-expired:
+  - `runtime_state.json` no longer mounts the expired `20260603T121917Z_1084557944` `nutri_chat`
+  - it now mounts `20260606T202509Z_1084557944`
+  - mounted state is `offer = habits`, `step = habits_daily_log`
+  - the first stored daily-log text is `Что делаем?`
+  - this is not clean progress, because the new rail has no `canonical_path`, no `case_relation`, no intake depth, and no review artifact
+- Treat the June 6 commercialization event as a stronger engineering warning than the older expired-state story:
+  - `20260606T202509Z_1084557944` is another same-user `6900 RUB` `habits` sale
+  - `20260603T113045Z_1084557944` is already an unresolved same-user `habits` sale at the same price
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+  - engineering has therefore not solved commercialization control; it has only shifted the mounted branch
+- Treat QA observability as still broken:
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md` is still the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+- Treat disk as improved but still below the safe floor:
+  - actual `C:` free space is `7413276672` bytes (`~6.90 GiB`) at `2026-06-06 23:49:02 +03:00`
+  - replay, benchmark, and artifact-heavy work are safer than they were this morning, but still not fully unblocked
+- Treat public surfaces as an engineering truth problem, not just marketing debt:
+  - `landing/index.html` still presents hardcoded client case outcomes and biomarker deltas
+  - `index.html` still presents YooKassa-like Telegram payment flow and an assured PDF dossier path as if they were the approved live path
+- The next engineering packet is now:
+  1. decide whether `20260606T202509Z_1084557944` becomes the canonical `habits` continuity rail or is merged/voided
+  2. add a hard guard so unresolved same-user paid state blocks any new paid branch creation
+  3. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. remove landing/root overclaims
+  6. restore disk above `10 GB`
+  7. choose one approved continuity rail only after steps `1-6` land
+  8. replay one reviewed paid case only after those controls land
+
+## 2026-06-06 11:47 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat the latest runtime artifact as alive-but-stale rather than freshly informative:
+  - `bot.stderr` still ends with the already-known June 5 reconnect at `2026-06-05 00:32:22 +03:00`
+  - no newer failure or recovery displaced the June 3 direct-fallback baseline
+  - do not spend the lead engineering slot on runtime narration unless a newer harder failure appears
+- Treat the active low-ticket rail as expired-and-stale in mounted runtime state:
+  - `runtime_state.json` still points to `20260603T121917Z_1084557944`
+  - that paid `nutri_chat` session expired at `2026-06-05 15:19:49 MSK`
+  - the runtime session still sits at `step = paid_nutri_chat`, which means expiry-closeout control is still broken on June 6
+  - the stored transcript still uses markdown bullets, mechanism-heavy GI explanation, too many clarifying questions, specialist-workup framing, and upsell-style continuation prompts that exceed the approved low-ticket contract
+- Treat the absence of new June 6 commercialization proof as a hard engineering signal:
+  - there is still no newer paid submission after `20260603T121917Z_1084557944`
+  - `20260603T112723Z_1084557944` still sits unresolved at `manual_payment_pending`
+  - `20260603T113045Z_1084557944` `habits` is still commercially live but operationally unclassified
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat QA observability as still broken, not partially solved:
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md` confirms routing tests and smoke still pass
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+- Treat disk headroom as a severe P0 enabler failure:
+  - actual `C:` free space is `3726004224` bytes (`~3.47 GiB`) at `2026-06-06 11:47:39 +03:00`
+  - benchmark, replay, PDF, and artifact-heavy work should be considered unsafe until the floor is restored
+- Treat backlog churn with corrected source boundaries:
+  - `WellnessBot/data/product_governance.json` still exposes `151` experiments and `0` decisions
+  - `docs/tasks` still contains `29` `HERMES-20260505-*` task or draft files
+- The next engineering packet is now:
+  1. close the stale expired `nutri_chat` session in runtime and artifacts
+  2. add expiry-aware session control so expired `nutri_chat` cannot remain the mounted proof rail
+  3. restore disk above `10 GB`
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. audit the stale thread and tighten the low-ticket contract in prompt and sanitizer behavior
+  6. add canonical-path enforcement before same-user paid branch creation
+  7. classify the unresolved `20260530` to `20260603` same-user stack, including the pending `500 RUB` branch and paid `habits`
+  8. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  9. choose one approved offer map only after steps `1-8` land
+  10. replay one reviewed paid case only after those controls land
+
+## 2026-06-05 23:46 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat the latest runtime artifact as alive-but-stale rather than actively improving:
+  - `bot.stderr` still ends with the already-known June 5 reconnect at `2026-06-05 00:32:22 +03:00`
+  - no newer failure or recovery displaced the June 3 direct-fallback baseline
+  - do not spend the lead engineering slot on proxy narration unless a newer harder failure appears
+- Treat the active low-ticket rail as expired-but-still-held in runtime:
+  - `runtime_state.json` still points to `20260603T121917Z_1084557944`
+  - that paid `nutri_chat` session expired at `2026-06-05 15:19:49 MSK`
+  - the runtime session still sits at `step = paid_nutri_chat`, which means expiry-closeout control is currently broken
+  - the stored transcript still uses markdown bullets, mechanism-heavy GI explanation, too many clarifying questions, and specialist-workup framing that exceed the approved low-ticket contract
+- Treat the absence of new late June 5 commercialization proof as a hard engineering signal:
+  - there is still no newer paid submission after `20260603T121917Z_1084557944`
+  - the unresolved `20260530` to `20260603` stack is still unclassified
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+  - `20260603T113045Z_1084557944` `habits` is still commercially live but operationally unclassified
+- Treat QA observability as still broken, not partially solved:
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md` confirms routing tests and smoke still pass
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+- Treat disk headroom as a severe P0 enabler failure:
+  - actual `C:` free space is `3.91 GB` at `2026-06-05 23:46:45 +03:00`
+  - benchmark, replay, PDF, and artifact-heavy work should be considered unsafe until the floor is restored
+- Treat governance churn with the live schema note:
+  - `WellnessBot/data/product_governance.json` currently exposes `experiments`
+  - the blocker mass is still `151` experiments, `0` decisions, and `29` open `HERMES-20260505-*` packets
+- The next engineering packet is now:
+  1. close the expired `nutri_chat` session in runtime and artifacts
+  2. add expiry-aware session control so expired `nutri_chat` cannot remain the active proof rail
+  3. audit the expired thread and tighten the low-ticket contract in prompt and sanitizer behavior
+  4. restore disk above `10 GB`
+  5. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  6. add canonical-path enforcement before same-user paid branch creation
+  7. classify the unresolved `20260530` to `20260603` same-user stack, including `habits`
+  8. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  9. choose one approved offer map only after steps `1-8` land
+  10. replay one reviewed paid case only after those controls land
+
+## 2026-06-05 11:45 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat the latest runtime artifact as alive-but-noisy with two additional June 5 recoveries:
+  - `bot.stderr` still shows the clean June 3 direct-fallback startup at `2026-06-03 21:47:08-21:47:13 +03:00`
+  - the June 4 timeout plus two June 4 SSL/decryption reconnects still stand
+  - the same log now adds SSL/decryption failures at `2026-06-05 00:03:39 +03:00` and `00:32:10 +03:00`
+  - polling reconnects at `00:03:51 +03:00` and `00:32:22 +03:00`
+  - do not spend the lead engineering slot on proxy narration unless a newer harder failure disproves the direct-fallback baseline
+- Treat the active low-ticket rail as a same-day proof-capture deadline rather than a background artifact:
+  - `runtime_state.json` still points to `20260603T121917Z_1084557944`
+  - that paid `nutri_chat` session expires at `2026-06-05 15:19:49 MSK`
+  - the stored transcript still uses markdown bullets, mechanism-heavy GI explanation, too many clarifying questions, and specialist-workup framing that exceed the approved low-ticket contract
+- Treat the absence of new June 5 commercialization proof as a hard engineering signal:
+  - there is still no newer paid submission after `20260603T121917Z_1084557944`
+  - the unresolved `20260530` to `20260603` stack is still unclassified
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+  - `20260603T113045Z_1084557944` `habits` is still commercially live but operationally unclassified
+- Treat QA observability as still broken, not partially solved:
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md` confirms routing tests and smoke still pass
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - model-path drift still includes overlength, markdown emphasis, invented names, and weak emergency separation
+- Treat disk headroom as a severe P0 enabler failure:
+  - actual `C:` free space is `4.02 GB` at `2026-06-05 11:44:42 +03:00`
+  - benchmark, replay, PDF, and artifact-heavy work should be considered unsafe until the floor is restored
+- Treat governance churn as unchanged blocker mass, not backlog asset:
+  - `151` experiments still exist
+  - `0` decisions still exist
+  - `29` `HERMES-20260505-*` packets still remain open
+- The next engineering packet is now:
+  1. audit the active `nutri_chat` rail before `2026-06-05 15:19:49 MSK`
+  2. tighten the live `nutri_chat` contract in prompt and sanitizer behavior
+  3. restore disk above `10 GB`
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. add canonical-path enforcement before same-user paid branch creation
+  6. classify the unresolved `20260530` to `20260603` same-user stack, including `habits`
+  7. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  8. choose one approved offer map only after steps `1-7` land
+  9. replay one reviewed paid case only after those controls land
+
+## 2026-06-04 23:43 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat the latest runtime artifact as alive-but-noisy rather than quietly stable:
+  - `bot.stderr` still shows the clean June 3 direct-fallback startup at `2026-06-03 21:47:08-21:47:13 +03:00`
+  - the earlier June 4 timeout/reconnect still stands
+  - the same log now adds `TelegramNetworkError` with `ClientOSError: [SSL: DECRYPTION_FAILED_OR_BAD_RECORD_MAC]` at `2026-06-04 21:20:14 +03:00` and `23:17:31 +03:00`
+  - polling reconnects at `21:20:26 +03:00` and `23:17:42 +03:00`
+  - do not spend the lead engineering slot on proxy narration unless a newer harder failure disproves the direct-fallback baseline
+- Treat the absence of new June 4 commercialization proof as a hard engineering signal:
+  - there is still no newer paid submission after `20260603T121917Z_1084557944`
+  - the unresolved `20260530` to `20260603` stack is still unclassified
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat disk headroom as a worsened P0 enabler failure:
+  - actual `C:` free space is `5.42 GB` at `2026-06-04 23:43:33 +03:00`
+  - replay, benchmark, PDF, and artifact-heavy work should be considered constrained until the floor is restored
+- Treat the active low-ticket rail as the strongest current product proof and the strongest current safety drift:
+  - `runtime_state.json` still points to `20260603T121917Z_1084557944`
+  - the stored transcript still uses markdown bullets, mechanism-heavy GI explanation, and escalation framing that are too wide for the approved low-ticket contract
+- Treat governance churn as unchanged blocker mass, not backlog asset:
+  - `151` experiments still exist
+  - `0` decisions still exist
+  - `29` `HERMES-20260505-*` packets still remain open
+- The next engineering packet is now:
+  1. restore disk above `10 GB`
+  2. add canonical-path enforcement before same-user paid branch creation
+  3. classify the unresolved `20260530` to `20260603` same-user stack, including `habits`
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. tighten and audit the active `nutri_chat` contract
+  6. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  7. choose one approved offer map only after steps `1-6` land
+  8. replay one reviewed paid case only after those controls land
+  9. keep the June 4 transport noise logged as an ops monitor, not as a reason to restart strategy churn
+
+## 2026-06-04 11:45 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat the latest runtime artifact as reconnect-capable but not fully quiet:
+  - `bot.stderr` still shows the clean June 3 direct-fallback startup at `2026-06-03 21:47:08-21:47:13 +03:00`
+  - the same log now shows `TelegramNetworkError` timeout at `2026-06-04 00:49:09 +03:00`
+  - polling reconnects at `2026-06-04 00:49:20 +03:00`
+  - do not spend the lead engineering slot on proxy narration unless a newer failure disproves the direct-fallback baseline
+- Treat the absence of new June 4 commercialization proof as a hard engineering signal:
+  - there is still no newer paid submission after `20260603T121917Z_1084557944`
+  - the unresolved `20260530` to `20260603` stack is still unclassified
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat disk headroom as a renewed P0 enabler failure:
+  - actual `C:` free space is `5.69 GB` at `2026-06-04 11:44:36 +03:00`
+  - replay, benchmark, PDF, and artifact-heavy work should be considered constrained until the floor is restored
+- Treat the active low-ticket rail as the strongest current product proof and the strongest current safety drift:
+  - `runtime_state.json` still points to `20260603T121917Z_1084557944`
+  - the stored transcript still uses markdown bullets, mechanism-heavy GI explanation, and escalation framing that are too wide for the approved low-ticket contract
+- Treat governance churn as an unchanged blocker, not a backlog asset:
+  - `151` experiments still exist
+  - `0` decisions still exist
+  - `29` `HERMES-20260505-*` packets still remain open
+- The next engineering packet is now:
+  1. restore disk above `10 GB`
+  2. add canonical-path enforcement before same-user paid branch creation
+  3. classify the unresolved `20260530` to `20260603` same-user stack
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. tighten and audit the active `nutri_chat` contract
+  6. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  7. decide whether the June 3 `habits` sale is parked, merged, or blocked
+  8. choose one approved offer map only after steps `1-7` land
+  9. replay one reviewed paid case only after those controls land
+
+## 2026-06-03 23:43 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as freshly re-proven and no longer worthy of lead-slot debate:
+  - `bot.stderr` now shows a newer startup at `2026-06-03 21:47:08-21:47:13 +03:00`
+  - `bot.stderr.log` still shows handled updates and DeepSeek `200 OK` calls at `14:26-14:27 +03:00`
+  - the active runtime truth remains proxy failure followed by direct fallback and clean polling start
+- Treat commercialization control as materially worse than the afternoon mandate:
+  - `20260603T112723Z_1084557944` = `nutri_chat` at `500 RUB`, still `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits` at `6900 RUB`, already `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat` at `300 RUB`, `manual_payment_confirmed`, and active in `runtime_state.json`
+  - none of those June 3 branches has `canonical_path`
+  - the same user now spans at least `11` live-relevant paid submissions
+- Treat the offer map as the current code-level governance breach:
+  - `WellnessBot/payment_flow.py`, `WellnessBot/texts.py`, and `WellnessBot/main.py` align around `300 / 6900 / 10000 / 14900`
+  - `WellnessBot/prompts.py` still frames legacy `500 / 6900 / 14000`
+  - live artifacts now contain `500 / 6900 / 14000 / 14900 / 300`
+  - no ladder is approved until one map is normalized across code, prompts, docs, and artifacts
+- Treat the active low-ticket rail as proven but still safety-sensitive:
+  - the best live proof remains paid same-thread `nutri_chat`
+  - the rail is now coded as `300 RUB` / `2 days`
+  - prompt and sanitizer rules still need tightening so the rail stops behaving like a quasi-consult
+- Treat `habits` as ungoverned commercialization, not as proven delivery:
+  - the same-day `6900 RUB` payment exists
+  - its canonical role, review boundary, and delivery proof do not
+- Treat governance and disk loop signals as unchanged:
+  - `151` experiments still exist
+  - `0` decisions exist
+  - `29` `HERMES-20260505-*` packets still remain open
+  - actual `C:` free space is `6.70 GB` at `2026-06-03 23:39:32 +03:00`
+- The next engineering packet is now:
+  1. add canonical-path enforcement before same-user paid branch creation
+  2. classify the unresolved `20260530` to `20260603` same-user stack
+  3. choose one approved offer map and normalize it across code, prompts, docs, and UX text
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. tighten and audit the active `nutri_chat` contract
+  6. decide whether the June 3 `habits` sale is parked, merged, or temporarily allowed
+  7. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  8. replay one reviewed paid case only after those controls land
+  9. restore disk above `10 GB`
 
 ## 2026-06-03 11:45 Correction Set
 

@@ -61,6 +61,12 @@ Before concluding a sync:
 - separate `repo head` from `working tree truth` in `PROJECT_PULSE_LOG.md` and `AGENT_CONTEXT_HUB.md`
 - if a dirty change conflicts with the standing pilot, safety, or pricing rules, call it out immediately as a regression with owner and next fix action
 
+## Draft Current-Run Rule
+If local sync docs already contain a same-day refresh but the matching mirror or external replay artifacts are missing:
+- treat the local doc state as draft, not as completed sync truth
+- complete the missing mirror and external sync artifacts against that draft only if the underlying facts still match
+- if any governing fact changed again, rewrite the draft timestamp and aligned artifacts to the newer absolute run time before concluding the cycle
+
 ## Timestamp Integrity Rule
 Before writing the new run entry:
 - resolve the current local run time explicitly
@@ -73,6 +79,12 @@ Before carrying forward any runtime narrative:
 - prefer the freshest successful or failed runtime artifact over older hub summaries
 - if fresh runtime evidence overturns the earlier same-day story, write the correction explicitly into `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and the outward-sync artifacts
 - do not keep a stale outage narrative active once a newer successful polling or model-call artifact exists
+
+## Transient Polling Recovery Rule
+Before treating a timeout as a fresh outage:
+- if the newest runtime artifact shows a polling timeout followed by `Connection established` without a restart banner, classify it as transient network degradation rather than bot-down state
+- log both timestamps explicitly in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
+- keep the latest successful reconnect artifact as governing runtime continuity proof unless a later fatal shutdown or restart contradicts it
 
 ## Benchmark Reference Precedence Rule
 Before carrying forward any benchmark or QA narrative:
@@ -102,6 +114,12 @@ Before carrying forward any active case or blocker:
 - if `runtime_state.json` is empty, rebuild the live picture from the newest persisted submissions and review artifacts instead of inferring no active work
 - if `runtime_state.json` points to a `submission_id` with no matching JSON file, treat that session as provisional only and log a persistence regression
 
+## Runtime State Structure Rule
+Before summarizing active runtime truth:
+- inspect `user_sessions` and `chat_sessions` first; do not assume top-level `submission_id`, `offer`, `step`, or `chat_history` keys exist
+- pair the active `user_sessions` entry with the matching `chat_sessions` array so commercial state and live-answer behavior are sampled together
+- if the runtime-state layout changes again, record the new structure in this hub before the run concludes
+
 ## Active Continuity Thread Audit Rule
 Before describing `nutri_chat` or any paid continuity-chat rail as safe or commercially healthy:
 - inspect the latest assistant turns in `WellnessBot/data/runtime_state.json` chat memory
@@ -109,11 +127,24 @@ Before describing `nutri_chat` or any paid continuity-chat rail as safe or comme
 - if continuity behavior is the freshest product proof, treat that thread as benchmark-relevant product truth even when no new PDF or dossier artifact exists
 - log any false-specificity or escalation-boundary breach immediately in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts with owner and next fix action
 
+## Continuity Session Expiry Rule
+Before describing a paid continuity rail as active:
+- compare the stored expiry field such as `nutri_chat_expires_at` against the current local run timestamp
+- if the expiry has passed and `runtime_state.json` still points to that session, log it as an expired continuity-state regression
+- record the absolute expiry timestamp explicitly in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
+- do not describe the expired rail as an active commercial proof or active paid state until it is either renewed or cleared from runtime state
+
 ## Single Active Paid Path Rule
 Before carrying execution forward for any Telegram user:
 - verify the same user is not simultaneously holding a live `week`, `premium`, `basic`, `full`, or `vip` runtime session plus unresolved older paid submissions
 - if multiple paid paths coexist, log the conflict immediately in `PROJECT_PULSE_LOG.md` with owner and next fix action
 - explicitly declare one active paid path and freeze, archive, or merge the others before calling the state coherent
+
+## Duplicate Paid Offer Re-entry Rule
+Before treating a new paid session as valid demand proof:
+- compare the newest paid submission against unresolved older submissions for the same user and the same offer code
+- if a second paid branch for the same offer appears while the older paid branch is still unresolved, log it immediately as duplicate paid-offer multiplication
+- explicitly declare which submission is canonical and freeze, merge, refund, or archive the duplicate before treating monetization as coherent
 
 ## Paid Delivery Completion Rule
 Before describing a paid path as operationally healthy:

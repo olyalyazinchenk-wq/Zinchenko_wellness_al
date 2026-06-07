@@ -1,5 +1,672 @@
 # Project Pulse Log
 
+## 2026-06-07 11:51 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Runtime truth не изменилась относительно позднего окна `2026-06-06`: freshest proof в `bot.stderr` по-прежнему заканчивается на `2026-06-06 23:25:02-23:25:31 +03:00`, а mounted session остаётся `20260606T202509Z_1084557944` с `offer=habits`, `step=habits_daily_log`, `manual_payment_confirmed`.
+- Текущий диск `C:` = `7309156352` байт (`~6.81 GiB`) на `2026-06-07 11:50:55 +03:00`; это ниже порога `10 GB`, хотя и лучше критического утреннего минимума 6 июня.
+- Tracked-дельта остаётся сосредоточенной в `docs/*` и `ops/bot-status.ps1`; новых tracked-изменений в `WellnessBot/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось. Локальные untracked-артефакты (`.bot.lock`, backup-файлы, `bot.stderr`, `bot.stdout`, `docs/WELLNESS_DIALOGUE_QA_20260605.md`, `ops/skills/graphify-codex/`) не входят в safe publish path.
+
+### Этап и блокеры
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
+- К пилоту по-прежнему готов только контролируемый Telegram-first text flow с ручной оплатой и ручной выдачей после проверки.
+- Главные блокеры остаются прежними: duplicate same-user `habits` paths (`20260603T113045Z_1084557944` и `20260606T202509Z_1084557944`), `20260531T183007Z_1084557944` с конфликтом `delivered_to_client` + `fail_major_issues`, disk floor breach, batch QA abort на prompt `1`, и landing overclaim-risk surface.
+- Публично нельзя запускать автооплату, неутверждённую offer/price map, voice/audio как продуктовый путь, mini-app beyond placeholder, или любые public-facing proof surfaces до ремонта canonical path и delivery gate.
+
+### Внешняя синхронизация
+- GitHub remote `origin` доступен (`git ls-remote --heads origin` успешен), но локальный docs-only commit/push path всё ещё заблокирован: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` падает на `.git/index.lock: Permission denied`.
+- Через GitHub connector записан sanitised artifact `docs/external_sync/antigravity_sync_20260607T0851Z.md` с commit `fd2a3522139dcf9a85ec36e618086072e5fbca2e` в `origin/master`.
+- Через Notion connector создана sanitised status page `Antigravity Sync Run - 2026-06-07 11:51 MSK` (`3788a9de-1d41-814c-87c2-fe207539ba48`).
+
+### Следующие шаги
+1. Канонизировать June 3 / June 6 `habits` stack в один active paid path.
+2. Добавить hard guard против новых same-user paid branches при unresolved canonical-path или review-конфликте.
+3. Аудировать и исправить `20260531T183007Z_1084557944`.
+4. Поднять `C:` выше `10 GB`.
+5. Починить partial-artifact поведение `ops/quality_probe.py`, затем только после этого повторять batch benchmark.
+
+## 2026-06-06 23:50 MSK - Sync Verification Addendum
+
+### Benchmark And Regression Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
+- Fresh runtime evidence now extends to `2026-06-06 23:25:02-23:25:31 +03:00`; the earlier claim that proof stopped at `2026-06-05 00:32:22 +03:00` is obsolete.
+- `runtime_state.json` no longer points to the expired June 3 `nutri_chat` rail. It now points to `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log`, and `manual_payment_confirmed`.
+- Current `C:` free space is `7421394944` bytes (`~6.91 GiB`) at `2026-06-06 23:50:19 +03:00`; this is real recovery from the morning low, but the `10 GB` floor is still breached.
+- Immediate regression callouts:
+  - duplicate same-offer paid-path multiplication; owner `Operator + Lead Developer`; next fix action declare one canonical `habits` path between the June 3 and June 6 paid branches, then freeze, merge, or archive the duplicate
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - disk floor breach; owner `Ops`; next fix action restore `C:` above `10 GB` before more artifact-heavy work
+  - batch QA observability gap; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  - landing proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the hardcoded case-study metrics before using landing as live proof
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260606_2350_MSK.md`.
+- Notion: run note created successfully as page `3778a9de-1d41-81bb-9b1b-f2a56cb3e300`, and the hub page `AGENT CONTEXT HUB — Antigravity / Wellness` was prepended with a fresh `Context For New Model — 2026-06-06 23:50 MSK` block.
+- GitHub: sanitized status artifact and context snapshot were created successfully on the default branch:
+  - `docs/external_sync/antigravity_sync_20260606T205018Z.md` -> commit `448fa7110295c4fff8b38c8533a9643921852a77`
+  - `docs/external_sync/antigravity_context_snapshot_20260606T205018Z.md` -> commit `38bfccf7e3bf2e011c0d541d396529d78600be38`
+  - `docs/external_sync/2026-06-06_2350_sync_blocked.md` -> commit `67d83783064ec50849f19b9d3e31b824dbe9e02e`
+- Google Drive: blocked because no file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- Replace the stale-expiry packet with a duplicate-path control packet:
+  1. restore disk above `10 GB`
+  2. declare one canonical `habits` path
+  3. hard-block duplicate same-offer paid branch creation
+  4. repair the delivered-case contradiction
+  5. patch partial-artifact QA capture
+  6. re-run the batch benchmark only after step `5`
+- Keep the landing proof block out of the live proof story until its hardcoded case metrics are removed or neutralized.
+
+### Strategy Delta
+- Runtime liveness is no longer the lead risk. The system is freshly proven alive again.
+- The lead risk is now commercialization control:
+  - a new paid `habits` rail became active without resolving the older paid `habits` rail
+  - the older delivered paid case still conflicts with failed internal review
+- Disk is improving but still below the safety floor, so infra risk remains active rather than cleared.
+- The public surface story remains narrower than the codebase suggests: the mini-app is still safely placeholder-only, while landing still overclaims with hardcoded case metrics.
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: collapse duplicate paid `habits` branches into one canonical path.
+- Goal 3: prevent same-user same-offer paid re-entry while an older paid path is unresolved.
+- Goal 4: repair the delivered-case review contradiction before counting higher-ticket proof as valid.
+- Goal 5: restore benchmark observability under prompt-level model failures.
+- Goal 6: remove landing proof overclaims before treating the public surface as trustworthy.
+
+## 2026-06-06 23:50 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Runtime truth изменилась: в `bot.stderr` появился свежий proof-of-life на `2026-06-06 23:25:02-23:25:31 +03:00`, а mounted runtime session переключился на новый `habits` кейс `20260606T202509Z_1084557944`.
+- Новый mounted сеанс имеет `payment_status=manual_payment_confirmed`, `offer=habits`, `step=habits_daily_log`; это уже не stale June 3 `nutri_chat`, но это ещё один same-user paid branch без канонической классификации.
+- Disk floor частично восстановился: `C:` свободно `7421399040` байт (`~6.91 GiB`) на `2026-06-06 23:50:35 +03:00`, однако порог `10 GB` всё ещё не достигнут.
+- В tracked-дельте остаются `docs/*` и `ops/bot-status.ps1`; новых tracked-изменений в `WellnessBot/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось. Untracked локальные артефакты по-прежнему остаются вне safe publish path.
+
+### Внешняя синхронизация
+- GitHub remote `origin` доступен (`git ls-remote --heads origin` успешен), но локальный docs-only commit/push path всё ещё заблокирован: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` падает на `.git/index.lock: Permission denied`.
+- Чтобы сохранить внешний след синка без публикации чувствительных данных, через GitHub connector создан sanitised artifact `docs/external_sync/antigravity_sync_20260606T205035Z.md` с commit `7e507bdc7da21a72cc880ab4daa2dc88de1cc896`.
+- Notion connector доступен; создана новая sanitised status page `Antigravity Sync Run - 2026-06-06 23:50 MSK` (`3778a9de-1d41-81b3-938b-c77cb34d81a0`).
+- Google Drive upload/share по-прежнему недоступен в текущей Codex-сессии.
+
+### Текущий этап, блокеры и границы запуска
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
+- К пилоту готов только контролируемый Telegram-first text flow с ручной оплатой и ручной выдачей после проверки.
+- Нельзя запускать публично автооплату, неутверждённую offer-map/price-map, voice/audio как продуктовый путь и любые public-facing promise surfaces до ремонта canonical path и delivery gate.
+- Главный новый риск этого окна: June 6 `habits` ветка уже mounted и `manual_payment_confirmed`, хотя June 3 paid-ветки всё ещё не классифицированы в один canonical path.
+- Нерешённые блокеры сохраняются: `20260531T183007Z_1084557944` всё ещё сочетает `delivered_to_client` и `fail_major_issues`, batch QA всё ещё падает на prompt `1`, а `landing/index.html` остаётся overclaim-risk surface.
+
+### Следующие шаги
+1. Канонизировать `20260606T202509Z_1084557944` относительно June 3 `nutri_chat` и `habits` веток.
+2. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
+3. Проверить, почему June 6 `habits` ветка получила `manual_payment_confirmed`, и было ли это ожидаемым операторским действием.
+4. Поднять `C:` выше `10 GB`.
+5. Починить `ops/quality_probe.py`, затем только после этого повторять полный batch benchmark.
+
+## 2026-06-06 11:50 MSK - Sync Verification Addendum
+
+### Benchmark And Regression Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
+- Fresh runtime evidence still stops at `2026-06-05 00:32:22 +03:00`; no newer recovery or outage proof landed after that point.
+- `runtime_state.json` still points to `20260603T121917Z_1084557944`, but `nutri_chat_expires_at` already passed at `2026-06-05 15:19:49 +03:00`; treat this as an expired continuity-state regression, not active paid proof.
+- Current `C:` free space is `3722629120` bytes (`~3.47 GiB`) at `2026-06-06 11:50:40 +03:00`; this is the current top ops blocker.
+- Immediate regression callouts:
+  - expired continuity state; owner `Lead Developer + Operator`; next fix action clear or renew the stale `nutri_chat` rail before the next live reply or sale
+  - same-user paid-path multiplication; owner `Operator + Lead Developer`; next fix action hard-block new paid branch creation while review, expiry, or canonical-path conflicts remain
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`; owner `Lead Developer + Operator`; next fix action audit override history and repair the contradiction before more higher-ticket selling
+  - landing surface still contains hardcoded client-outcome proof and invented metric-improvement copy; owner `Product Strategist + Lead Developer`; next fix action neutralize those claims before treating the landing as live truth
+
+### Connector Status
+- Obsidian: local mirror refresh and new run-note mirror are required in this cycle and completed locally.
+- Notion: run note plus concise `Context For New Model` block were written to the workspace page `Antigravity Sync Run - 2026-06-06 11:50 MSK`.
+- GitHub: sanitized status artifact and context snapshot were replayed through the connector because local docs-only `git add` still fails on `.git/index.lock: Permission denied`.
+- Google Drive: blocked because no file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Connector Verification Delta
+- Notion external sync is verified:
+  - new page: `Antigravity Sync Run - 2026-06-06 11:50 MSK`
+  - page id: `3778a9de-1d41-8120-93a9-c726bab393ae`
+  - hub page updated: `AGENT CONTEXT HUB — Antigravity / Wellness`
+- GitHub external sync is write-verified on `main`:
+  - `docs/external_sync/antigravity_sync_20260606T085040Z.md` -> commit `97e613f1c320098113f2158e42d67c2e398f9541`
+  - `docs/external_sync/antigravity_context_snapshot_20260606T085040Z.md` -> commit `4ffadef5d2132619b7688542e92f711a098ec8d5`
+  - `docs/external_sync/2026-06-06_1150_sync_blocked.md` -> commit `ec42e44f6ebb0db6f5d3e41285d5732bfd90e1b9`
+- Google Drive remains blocked in-session with the same exact access request because file discovery/create/upload/share tools are still not exposed.
+
+### Plan Delta
+- Keep disk recovery first because the environment has now fallen to `~3.47 GiB`, which is below the already-breached storage floor from the late June 5 run.
+- Treat the June 6 sync as a control-completion packet, not a new product-story packet: close stale continuity-state handling, preserve benchmark anchors, and keep replay artifacts current.
+- Hold all new growth, benchmark rerun, PDF, and artifact-heavy work behind three repairs: disk headroom, expiry-aware runtime control, and partial-artifact QA capture.
+
+### Strategy Delta
+- Strategy now shifts from `expired rail is the lead risk` to `stale expired rail plus shrinking disk make the current proof system unreliable`.
+- The strongest recent product proof is still the June 3 `nutri_chat` thread, but it is now useful only as a bounded audit artifact, not as a live commercial rail.
+- The safe public surface story remains narrower than the codebase suggests: `mini-app/index.html` is placeholder-safe, while `landing/index.html` and root marketing surfaces still overclaim.
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: clear or renew the expired `nutri_chat` runtime rail before another live interaction.
+- Goal 3: make benchmark runs survive prompt-level model failures with partial artifacts.
+- Goal 4: enforce one canonical paid path per Telegram user before the next sale.
+- Goal 5: repair the delivered-case review contradiction before counting higher-ticket revenue as valid proof.
+
+## 2026-06-06 11:49 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Новых tracked-изменений в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app` за это окно не появилось; tracked-дельта по-прежнему сосредоточена в `docs/*`.
+- Runtime-картина не улучшилась: после `2026-06-05 00:32:22 +03:00` новых подтверждений жизни или новых сбоев в проверенном контуре не добавилось; direct fallback остаётся базовой линией.
+- Disk floor ухудшился: свободное место на `C:` просело до `3724460032` байт (`~3.47 GiB`) на `2026-06-06 11:49:04 +03:00`.
+
+### Внешняя синхронизация
+- GitHub remote `origin` доступен по HTTPS, но локальный docs-only commit/push снова заблокирован: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` падает на `.git/index.lock: Permission denied`.
+- Notion connector доступен; создана новая sanitised status page `Antigravity Sync Run - 2026-06-06 11:49 MSK`.
+- Через GitHub connector отправлены sanitised status artifact и context snapshot без секретов и клиентских данных.
+- Google Drive upload/share по-прежнему недоступен: в текущей Codex-сессии нет file discovery/create/upload/share tools.
+
+### Текущий этап, блокеры и границы запуска
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
+- К пилоту готов только контролируемый Telegram-first text flow с ручной оплатой и ручной выдачей после проверки.
+- Нельзя запускать публично автооплату, неутверждённую offer-map/price-map, voice/audio как продуктовый путь, а также любые публичные promise surfaces до ремонта canonical path и delivery gate.
+- Главные блокеры без изменений: expired `nutri_chat` state в runtime, same-user paid-branch multiplication, `delivered_to_client` при `fail_major_issues` в `20260531T183007Z_1084557944`, batch QA без partial artifacts при падении prompt `1`, и критически низкий диск.
+
+### Следующие шаги
+1. Поднять `C:` выше `10 GB`.
+2. Починить локальную запись в `.git`, чтобы вернуть узкий docs-only commit/push path.
+3. Добавить expiry guard для `nutri_chat`, чтобы expired paid state не оставался активным в runtime.
+4. Починить `ops/quality_probe.py`, чтобы сохранялись partial per-prompt artifacts при model-path сбоях.
+5. Заблокировать создание новых same-user paid branches при unresolved review/expiry/canonical-path конфликте.
+6. Снять противоречие `delivered_to_client` vs `fail_major_issues` и только потом возвращаться к нормализации продуктовой лестницы.
+
+## 2026-06-05 23:48 MSK - GitHub Sync Verification Addendum
+
+### Connector Verification Delta
+- Notion external sync is verified: page `Antigravity Sync Run - 2026-06-05 23:48 MSK` exists in the workspace.
+- GitHub external sync is write-verified by commit proof, not by immediate contents readback:
+  - `docs/external_sync/antigravity_sync_20260605T204843Z.md` -> commit `d17a351d5292c279338eaf9fef5289ee6ebd68fa`
+  - `docs/external_sync/antigravity_context_snapshot_20260605T204843Z.md` -> commit `bf5b59e46ee084551f213f7d1ebb822413ea187b`
+  - `docs/external_sync/2026-06-05_2348_sync_blocked.md` -> commit `709fe70368e815f167f506f7f9519ec632382e11`
+- Immediate `GitHub fetch_file` readback on both `master` and `main` still returned `404`, so the current proof of remote sync is the returned commit pages rather than contents-API path reads.
+- Google Drive remains blocked in-session with the same exact access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+## 2026-06-05 23:48 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Свежая git-дельта не изменила продуктовую картину: tracked-изменения по-прежнему сосредоточены в `docs/*`; новых tracked-изменений в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось.
+- В `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, `main_backup_2026-05-17*.py`); runtime-логи `bot.stderr` и `bot.stdout` остаются локальными и не готовы к публикации.
+- Этап проекта не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
+- Runtime новых событий после `2026-06-05 00:32:22 +03:00` не добавил; актуальной базовой линией остаётся direct fallback без доказанной обязательности прокси `127.0.0.1:10808`.
+- Ops-риск ухудшился: `C:` просел до `3.91 GB` (`2026-06-05 23:48:05 +03:00`), это текущий самый жёсткий инфраструктурный блокер.
+
+### Внешняя синхронизация
+- GitHub remote `origin` читается; подтверждено наличие обеих веток `master` и `main`, при этом локальная рабочая ветка остаётся `master`.
+- Notion connector доступен в текущей сессии; создана sanitised status page `Antigravity Sync Run - 2026-06-05 23:48 MSK`.
+- Через GitHub connector отправлен sanitised remote status artifact в `master` (commit `5a0452632d97f01f011799e6bec9fd85cf98b8b8`) без чувствительных данных.
+- Google Drive upload/share по-прежнему недоступен: в текущей Codex-сессии нет file discovery/create/upload/share tools.
+- Локальный docs-only `git add -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` снова упал на `.git/index.lock: Permission denied`; обычный commit/push из локального worktree не выполнен.
+
+### Текущий этап, блокеры и границы запуска
+- К пилоту по-прежнему готов только controlled concierge flow с ручной оплатой, Telegram-first text path и обязательным human review.
+- Нельзя запускать публично auto-paid сценарии, неутверждённую runtime offer-map/price-map, voice/audio как продуктовый путь и любые higher-ticket promise surfaces до ремонта canonical path и delivery gate.
+- Главные незакрытые блокеры без изменений: same-user paid-branch multiplication, `delivered_to_client` при `fail_major_issues` в `20260531T183007Z_1084557944`, overreach в live `nutri_chat`, и batch QA, который всё ещё падает на prompt `1`.
+
+### Следующие шаги
+1. Поднять `C:` выше `10 GB`.
+2. Проверить и восстановить безопасную запись в локальный `.git` для узкого docs-only commit path.
+3. Починить `ops/quality_probe.py`, чтобы сохранялись partial per-prompt artifacts при model-path сбоях.
+4. Ужесточить контракт live `nutri_chat` и отдельно проверить ветку `20260603T121917Z_1084557944`.
+5. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
+
+## 2026-06-05 11:52 MSK - Sync Contract Addendum
+
+### Benchmark And Connector Correction
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run is `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
+- Google Drive exact block reason: no Google Drive file discovery/create/upload/share tools are exposed in the current Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+## 2026-06-05 11:51 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Подтверждена свежая дельта репозитория: tracked-изменения по-прежнему сосредоточены в `docs/*`; новых tracked-изменений в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось. В `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, `main_backup_2026-05-17*.py`), а в корне лежат runtime-логи `bot.stderr`/`bot.stdout`.
+- Этап проекта не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен; публичный запуск не разрешён.
+- Runtime остаётся живым для controlled pilot: после June 4 reconnect proof появились ещё два early June 5 SSL-сбоя с восстановлением без рестарта (`00:03:39 -> 00:03:51`, `00:32:10 -> 00:32:22` MSK). Direct fallback остаётся базовой линией; прокси `127.0.0.1:10808` всё ещё не доказан как обязательный.
+- Ops-риск резко усилился: свободное место на `C:` просело до `4.02 GB` (`2026-06-05 11:51:11 +03:00`), что делает disk floor главным инфраструктурным ограничением ближайшего окна.
+- Продуктовая truth не улучшилась: proof-bearing rail остаётся `nutri_chat` за `300 RUB`; same-user paid-branch multiplication, delivery-gate contradiction и несогласованная offer-map/price-map остаются без закрытия.
+
+### Внешняя синхронизация
+- GitHub remote `origin` читается; одновременно подтверждено, что на удалённом есть и `master`, и `main`, а локальная рабочая ветка остаётся `master`. Это повышает риск нецелевого write-path через коннекторы и требует узкого docs-only пути.
+- Notion connector в этой сессии доступен: создана новая sanitised status page `Antigravity Sync Run - 2026-06-05 11:51 MSK`.
+- Через GitHub connector отправлен отдельный sanitised remote status artifact в `master`, но это не заменяет обычный локальный commit/push статусных файлов.
+- Google Drive upload/share по-прежнему недоступен в текущей Codex-сессии.
+- Локальный docs-only `git add` не прошёл: `.git/index.lock: Permission denied`; обычный commit/push статусных файлов остаётся заблокирован.
+
+### Следующие шаги
+1. Поднять `C:` выше `10 GB` до новых benchmark/proof-циклов.
+2. Восстановить надёжную локальную запись в `.git`, чтобы вернуть узкие docs-only commits на `master`.
+3. Починить partial artifact capture в `ops/quality_probe.py`, затем только после этого повторять полный batch benchmark.
+4. Ужесточить live-chat contract для `nutri_chat` и отдельно проверить активную ветку `20260603T121917Z_1084557944`.
+5. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
+6. Аудировать `20260531T183007Z_1084557944` и снять противоречие `delivered_to_client` vs `fail_major_issues`.
+
+## 2026-06-04 23:46 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Подтверждено текущее состояние репозитория: tracked-дельта остаётся в `docs/*`; новых tracked-изменений в `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось; в `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, `main_backup_2026-05-17*.py`).
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- Runtime остаётся достаточным для controlled pilot, но не стал главным риском: June 4 уже дал несколько reconnect proof без рестарта, а главным ограничением остаются canonical-path, delivery-gate, offer-map drift и disk floor.
+- Ops-риск усилился: свободное место на `C:` зафиксировано на уровне `5.42 GB` (`2026-06-04 23:46:41 +03:00`).
+
+### Внешняя синхронизация
+- Notion connector доступен: создана новая sanitised status page `Antigravity Sync Run - 2026-06-04 23:46 MSK`.
+- GitHub remote `origin` доступен по HTTPS, но локальный docs-only commit/push снова заблокирован ошибкой `.git/index.lock: Permission denied`.
+- Google Drive upload/share в текущей Codex-сессии по-прежнему недоступен.
+
+### Следующие шаги
+1. Поднять `C:` выше `10 GB` до новых benchmark/proof-циклов.
+2. Починить локальную запись в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих диффов.
+3. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
+4. Починить partial artifact capture в `ops/quality_probe.py`, затем только после этого повторять полный batch benchmark.
+
+## 2026-06-04 23:45 MSK - Full Project Sync Cycle
+
+### State Read Delta
+- Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, root web surfaces, `ops/reports`, runtime logs, persisted submissions, review artifacts, current worktree drift, and connector availability.
+- Freshest runtime continuity proof improved again without restart:
+  - the June 3 `21:47` direct-fallback startup still remains the governing startup baseline
+  - `bot.stderr` now also shows `TelegramNetworkError` SSL transport failures at `2026-06-04 21:20:14 +03:00` and `2026-06-04 23:17:31 +03:00`
+  - the same polling process recovered with `Connection established` at `2026-06-04 21:20:26 +03:00` and `2026-06-04 23:17:42 +03:00`
+  - June 4 therefore adds two more continuity proofs, not a fresh restart story
+- `WellnessBot/data/runtime_state.json` still points to the active paid `nutri_chat` continuity rail and the same-user commercial stack remains unresolved.
+- Latest benchmark reference still remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA synthesis still remains `docs/WELLNESS_DIALOGUE_QA_20260603.md`.
+- QA truth did not improve in this cycle:
+  - routing tests passed
+  - smoke passed
+  - the full batch still has no fresh completed artifact because prompt `1` aborts on `openai.APIConnectionError`
+- Disk floor breach worsened again:
+  - actual `C:` free space is `5.43 GB` at `2026-06-04 23:45:18 +03:00`
+- The live proof-bearing continuity thread is still outside the intended low-ticket contract:
+  - runtime chat memory still contains markdown separators and bullet formatting
+  - the active thread still asks more than two clarifying questions in one turn
+  - the active thread still drifts into mechanistic GI differential framing and doctor-workup suggestions
+
+### Regression Delta
+- P0 same-user paid-branch multiplication remains active.
+  - owner: `Operator + Lead Developer`
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json` through `20260603T121917Z_1084557944.json`
+  - next fix action: hard-block new same-user paid branch creation while unresolved review or canonical-path conflicts exist, then collapse the live stack to one canonical path
+- P0 delivery-gate breach remains active.
+  - owner: `Lead Developer + Operator`
+  - source: `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - next fix action: record whether any manual override existed and remove or remediate the `delivered_to_client` contradiction while `internal_review.judge_verdict = fail_major_issues`
+- P0 continuity-chat overreach remains active on the proof-bearing live rail.
+  - owner: `Lead Developer + Quality Auditor`
+  - source: `WellnessBot/data/runtime_state.json`
+  - next fix action: tighten `LIVE_CHAT_PROMPT` and sanitizer rules so the low-ticket rail answers first, caps early hypotheses and clarifying questions at `2`, removes markdown bullets, and suppresses unsupported differential or workup framing, then audit the active thread against that contract
+- P1 benchmark observability gap remains active.
+  - owner: `Lead Developer`
+  - source: `docs/WELLNESS_DIALOGUE_QA_20260603.md`
+  - next fix action: make `ops/quality_probe.py` emit partial per-prompt artifacts when the model path fails
+- P1 offer and pricing fragmentation remains active.
+  - owner: `Product Strategist + Lead Developer`
+  - source: working-tree truth in `WellnessBot/payment_flow.py`, `WellnessBot/texts.py`, `WellnessBot/prompts.py`, `mini-app/index.html`, `landing/index.html`, `index.html`, `app.js`, and `styles.css`
+  - next fix action: normalize one approved ladder across code, prompts, docs, payment flow, mini-app, and root marketing surfaces only after canonical-path and delivery-gate repair land
+- P1 disk floor breach remains active.
+  - owner: `Ops`
+  - source: current `Get-PSDrive C` measurement
+  - next fix action: restore `C:` above `10 GB` before more artifact-heavy work
+
+### Connector Delta
+- Obsidian: done - refreshed the onboarding mirror and created a new local run-note mirror for this cycle.
+- Notion: done - workspace search succeeded and a fresh run note with a concise `Context For New Model` section was created under the Antigravity context hub page.
+- GitHub: done - connector access succeeded and a new sanitized status artifact plus context snapshot were created in `olyalyazinchenk-wq/Zinchenko_wellness_al`.
+- Google Drive: blocked - tool discovery exposes no Google Drive file discovery/create/upload/share tools in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- Since runtime recovered through three June 4 polling failures without restart, keep liveness as a monitored risk, not the top strategy slot.
+- Promote disk recovery ahead of more proof-artifact churn; the environment is now below the storage floor by a wider margin.
+- Keep same-user paid-path control, delivery-gate repair, and QA partial-artifact capture as the current execution core.
+- Keep offer-ladder normalization behind canonical-path repair, low-ticket contract repair, and delivery-gate repair.
+
+### Strategy Delta
+- Strategy pressure moved again in this cycle:
+  - runtime continuity improved with two more same-day recoveries
+  - no fresher completed benchmark artifact landed
+  - same-user paid-path control did not improve
+  - the active low-ticket rail still overreaches
+  - disk headroom worsened further
+- The next proof target therefore remains narrow:
+  - one bounded `nutri_chat` rail
+  - one canonical paid path per Telegram user
+  - one repaired delivery gate
+  - one benchmark runner that survives prompt-level model failures
+  - one environment state above the `10 GB` disk floor
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor before more artifact-heavy proof work.
+- Goal 2: make the benchmark survive model-path connection failures.
+- Goal 3: bound the active paid `nutri_chat` rail so it stops behaving like an open-ended quasi-consult.
+- Goal 4: stop same-user paid-branch multiplication before any new monetization experiment.
+- Goal 5: repair the `14900 RUB` delivery contradiction before counting higher-ticket sales as traction.
+
+### Next 12h Focus
+1. Restore `C:` above the `10 GB` floor and log the new baseline.
+2. Patch `ops/quality_probe.py` so prompt-level connection failures still emit a partial artifact.
+3. Re-run the batch benchmark only after step `2` lands.
+4. Tighten `LIVE_CHAT_PROMPT` and sanitizer rules to cap early hypotheses, cap clarifying questions, remove markdown bullets, and suppress unsupported differential or workup framing.
+5. Audit the active paid `nutri_chat` transcript against that contract.
+6. Add a hard guard so unresolved same-user paid/review state blocks creation of another paid branch.
+7. Audit `20260531T183007Z_1084557944` and remove the `delivered_to_client` contradiction if `fail_major_issues` still stands.
+8. Write `canonical_path` decisions for the unresolved `20260530` to `20260603` branches.
+9. Normalize one approved ladder only after steps `1-8` land.
+
+### Context For New Model
+- Stage: controlled concierge pilot where the bot stayed alive through three June 4 transport failures, but the main blocker is still commercial and safety control: the active proof-bearing rail is paid `nutri_chat`, the same user still spans unresolved higher-ticket branches, and the `14900 RUB` delivered case still carries a failed review verdict
+- Objective:
+  - preserve the proven direct-fallback runtime
+  - bound the live `nutri_chat` contract directly
+  - repair the delivery-gate contradiction before counting new sales as proof
+  - stop same-user branch multiplication
+  - normalize one approved offer ladder
+  - restore benchmark observability around the live model path
+- Constraints:
+  - Telegram-first only
+  - `PAYMENT_MODE=manual`
+  - human review remains mandatory
+  - one canonical commercial path per Telegram user
+  - no new same-user paid branch while unresolved review or delivery contradictions remain
+  - text-only intake is the only proven live modality
+  - disk free space is `5.43 GB`
+  - latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`
+  - current QA synthesis doc is `docs/WELLNESS_DIALOGUE_QA_20260603.md`
+  - the fresh batch benchmark still fails on prompt `1`
+  - Google Drive file discovery/create/upload/share tools are unavailable in the current Codex session
+- Immediate next actions:
+  1. restore disk above `10 GB`
+  2. patch `ops/quality_probe.py` so model-path failures still emit partial artifacts
+  3. tighten the live-chat contract
+  4. audit the active paid `nutri_chat` thread for safety and escalation boundaries
+  5. hard-block new same-user paid branch creation while conflicts exist
+  6. audit and repair `20260531T183007Z_1084557944`
+  7. classify the `20260530` to `20260603` branches into one canonical path
+  8. normalize one approved ladder only after the control fixes land
+
+## 2026-06-04 11:44 MSK - Full Project Sync Cycle
+
+### State Read Delta
+- Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, root web surfaces, `ops/reports`, runtime logs, persisted submissions, review artifacts, current worktree drift, and connector availability.
+- Freshest runtime continuity proof improved without a restart:
+  - `bot.stderr` shows `TelegramNetworkError` timeout at `2026-06-04 00:49:09 +03:00`
+  - the same polling process recovered with `Connection established` at `2026-06-04 00:49:20 +03:00`
+  - the June 3 `21:47` direct-fallback startup remains the governing startup baseline, and June 4 adds continuity proof instead of a fresh outage
+- `WellnessBot/data/runtime_state.json` still points to the active paid `nutri_chat` continuity rail and the same-user commercial stack remains unresolved.
+- Latest benchmark reference still remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA synthesis still remains `docs/WELLNESS_DIALOGUE_QA_20260603.md`.
+- QA truth did not improve in this cycle:
+  - routing tests passed
+  - smoke passed
+  - the full batch still has no fresh completed artifact because prompt `1` aborts on `openai.APIConnectionError`
+- Disk floor breach worsened again:
+  - actual `C:` free space is `5.69 GB` at `2026-06-04 11:44:47 +03:00`
+
+### Regression Delta
+- P0 same-user paid-branch multiplication remains active.
+  - owner: `Operator + Lead Developer`
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json` through `20260603T121917Z_1084557944.json`
+  - next fix action: hard-block new same-user paid branch creation while unresolved review or canonical-path conflicts exist, then collapse the live stack to one canonical path
+- P0 delivery-gate breach remains active.
+  - owner: `Lead Developer + Operator`
+  - source: `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - next fix action: record whether any manual override existed and remove or remediate the `delivered_to_client` contradiction while `internal_review.judge_verdict = fail_major_issues`
+- P0 continuity-chat overreach remains active on the proof-bearing live rail.
+  - owner: `Lead Developer + Quality Auditor`
+  - source: `WellnessBot/data/runtime_state.json`
+  - next fix action: audit the active paid `nutri_chat` thread for over-specificity, unsupported mechanisms, escalation boundaries, and continuity promises that exceed the approved rail
+- P1 offer and pricing fragmentation remains active.
+  - owner: `Product Strategist + Lead Developer`
+  - source: working-tree drift in `WellnessBot/main.py`, `WellnessBot/payment_flow.py`, `WellnessBot/texts.py`, `WellnessBot/prompts.py`, `mini-app/index.html`, `index.html`, `app.js`, and `styles.css`
+  - next fix action: normalize one approved ladder across code, prompts, docs, payment flow, mini-app, and root marketing surfaces
+- P1 benchmark observability gap remains active.
+  - owner: `Lead Developer`
+  - source: `docs/WELLNESS_DIALOGUE_QA_20260603.md`
+  - next fix action: make `ops/quality_probe.py` emit partial per-prompt artifacts when the model path fails
+- P1 disk floor breach remains active.
+  - owner: `Ops`
+  - source: current `Get-PSDrive C` measurement
+  - next fix action: restore `C:` above `10 GB` before more artifact-heavy work
+
+### Connector Delta
+- Obsidian: done - refreshed the onboarding mirror and created a new local run-note mirror for this cycle.
+- Notion: done - workspace search succeeded and a fresh run note with a concise `Context For New Model` section was created under the Antigravity context hub page.
+- GitHub: done - connector access succeeded and a new sanitized status artifact plus context snapshot were created in `olyalyazinchenk-wq/Zinchenko_wellness_al`.
+- Google Drive: blocked - tool discovery exposes no Google Drive file discovery/create/upload/share tools in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- Since runtime survived the June 4 timeout without restart, stop spending lead attention on proving liveness again; shift the top slot fully to commercial-control and QA-observability repair.
+- Treat the active low-ticket paid chat as the proof-bearing rail, but do not treat it as safe-by-default until transcript audit and contract hardening land.
+- Keep offer-ladder normalization behind canonical-path repair and delivery-gate repair.
+- Keep disk recovery inside the current 12h plan because artifact generation is still happening below the storage floor.
+
+### Strategy Delta
+- Strategy pressure moved again in this cycle:
+  - runtime continuity improved
+  - no fresher completed benchmark artifact landed
+  - same-user paid-path control did not improve
+  - disk headroom worsened further
+- The next proof target therefore remains narrow:
+  - one bounded `nutri_chat` rail
+  - one canonical paid path per Telegram user
+  - one repaired delivery gate
+  - one benchmark runner that survives prompt-level model failures
+  - one environment state above the `10 GB` disk floor
+
+### Goals Delta
+- Goal 1: make the benchmark survive model-path connection failures.
+- Goal 2: bound the active paid `nutri_chat` rail so it stops behaving like an open-ended quasi-consult.
+- Goal 3: stop same-user paid-branch multiplication before any new monetization experiment.
+- Goal 4: repair the `14900 RUB` delivery contradiction before counting higher-ticket sales as traction.
+- Goal 5: restore `C:` above the `10 GB` floor before more artifact-heavy proof work.
+
+### Next 12h Focus
+1. Patch `ops/quality_probe.py` so prompt-level connection failures still emit a partial artifact.
+2. Re-run the batch benchmark only after step `1` lands.
+3. Tighten `LIVE_CHAT_PROMPT` and sanitizer rules to cap early hypotheses, cap clarifying questions, remove markdown bullets, and suppress unsupported diagnostic storytelling.
+4. Audit the active paid `nutri_chat` transcript against that contract.
+5. Add a hard guard so unresolved same-user paid/review state blocks creation of another paid branch.
+6. Audit `20260531T183007Z_1084557944` and remove the `delivered_to_client` contradiction if `fail_major_issues` still stands.
+7. Write `canonical_path` decisions for the unresolved `20260530` to `20260603` branches.
+8. Restore `C:` above the `10 GB` floor and log the new baseline.
+
+### Context For New Model
+- Stage: controlled concierge pilot where the bot stayed alive through a June 4 polling timeout, but the main blocker is still commercial and safety control: the active proof-bearing rail is paid `nutri_chat`, the same user still spans unresolved higher-ticket branches, and the `14900 RUB` delivered case still carries a failed review verdict
+- Objective:
+  - preserve the proven direct-fallback runtime
+  - bound the live `nutri_chat` contract directly
+  - repair the delivery-gate contradiction before counting new sales as proof
+  - stop same-user branch multiplication
+  - normalize one approved offer ladder
+  - restore benchmark observability around the live model path
+- Constraints:
+  - Telegram-first only
+  - `PAYMENT_MODE=manual`
+  - human review remains mandatory
+  - one canonical commercial path per Telegram user
+  - no new same-user paid branch while unresolved review or delivery contradictions remain
+  - text-only intake is the only proven live modality
+  - disk free space is `5.69 GB`
+  - latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`
+  - current QA synthesis doc is `docs/WELLNESS_DIALOGUE_QA_20260603.md`
+  - the fresh batch benchmark still fails on prompt `1`
+  - Google Drive file discovery/create/upload/share tools are unavailable in the current Codex session
+- Immediate next actions:
+  1. patch `ops/quality_probe.py` so model-path failures still emit partial artifacts
+  2. tighten the live-chat contract
+  3. hard-block new same-user paid branch creation while conflicts exist
+  4. audit the active paid `nutri_chat` thread for safety and escalation boundaries
+  5. audit and repair `20260531T183007Z_1084557944`
+  6. classify the `20260530` to `20260603` branches into one canonical path
+  7. normalize one approved ladder only after the control fixes land
+  8. restore disk above `10 GB`
+
+## 2026-06-04 11:46 MSK - Регулярная синхронизация (12h)
+
+### Что изменилось
+- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Подтверждено состояние рабочего дерева: tracked-дельта остаётся в `docs/*`; новых tracked-изменений в `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось; в `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, backup-файлы).
+- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- Главный блокер по-прежнему не runtime, а коммерческий контроль:
+  - один Telegram user всё ещё размножен в неканонизированный стек платных веток
+  - кейс `20260531T183007Z_1084557944` остаётся противоречивым (`delivered_to_client` при `fail_major_issues`)
+  - offer-map продолжает расходиться между кодом, промптами и артефактами
+- Ops-риск усилился: свободное место на `C:` упало до `5.69 GB` (`2026-06-04 11:46:46 +03:00`).
+
+### Внешняя синхронизация
+- Notion connector доступен; для этого окна подготовлен sanitised status-update без секретов и клиентских данных.
+- GitHub remote `origin` доступен по HTTPS (`refs/heads/main`, `refs/heads/master` читаются), но локальный docs-only commit/push снова заблокирован ошибкой `.git/index.lock: Permission denied`.
+- Локальный отчёт блокера создан: `docs/external_sync/2026-06-04_1146_git_push_blocked.md`.
+
+### Следующие шаги
+1. Починить локальную запись в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих диффов.
+2. Держать проект в режиме controlled concierge pilot: Telegram-first, manual payment, human review, text-only intake.
+3. Не выпускать публично `habits`, `standard`, `premium`, root/landing surfaces и `mini-app`, пока не закрыты canonical-path, delivery-gate и offer-map drift.
+4. Поднять `C:` выше `10 GB` до новых benchmark/proof-циклов.
+
+## 2026-06-03 23:41 MSK - Full Project Sync Cycle
+
+### State Read Delta
+- Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, root web surfaces, `ops/reports`, runtime logs, persisted submissions, review artifacts, and current worktree drift.
+- Fresh runtime proof moved again on the same day:
+  - `bot.stderr` now shows a clean June 3 night restart at `21:47:11-21:47:13 +03:00`
+  - proxy connectivity fails once, then the bot falls back to direct connection and starts polling
+  - direct fallback remains the governing runtime truth; proxy `127.0.0.1:10808` is still not proven required
+- `WellnessBot/data/runtime_state.json` now points to a newer active paid session:
+  - `submission_id = 20260603T121917Z_1084557944`
+  - `offer = nutri_chat`
+  - `payment_context.amount_rub = 300`
+- The same-user commercial stack widened again after the morning sync:
+  - `20260603T112723Z_1084557944` = new `500 RUB` `nutri_chat`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = new `6900 RUB` `habits`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = new `300 RUB` `nutri_chat`, `manual_payment_confirmed` and active in runtime memory
+  - the same Telegram user now spans at least `11` live-relevant paid submissions
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA synthesis remains `docs/WELLNESS_DIALOGUE_QA_20260603.md`.
+- QA truth did not improve after the morning sync:
+  - routing tests pass
+  - smoke passes
+  - full batch still aborts on prompt `1` with `openai.APIConnectionError`
+- Disk floor breach remains active:
+  - actual `C:` free space is `6.70 GB` at `2026-06-03 23:41:46 +03:00`
+
+### Regression Delta
+- P0 same-user paid-branch multiplication.
+  - owner: `Operator + Lead Developer`
+  - source: `WellnessBot/data/submissions/20260501T162705Z_1084557944.json` through `20260603T121917Z_1084557944.json`
+  - next fix action: hard-block new same-user paid branch creation while unresolved review or canonical-path conflicts exist, then collapse the `11`-submission stack to one canonical path
+- P0 delivery-gate breach remains active.
+  - owner: `Lead Developer + Operator`
+  - source: `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - next fix action: record whether any manual override existed and remove or remediate the `delivered_to_client` contradiction while `internal_review.judge_verdict = fail_major_issues`
+- P0 continuity-chat overreach remains active on the proof-bearing live rail.
+  - owner: `Lead Developer + Quality Auditor`
+  - source: `WellnessBot/data/runtime_state.json`
+  - next fix action: audit the active `20260603T121917Z_1084557944` `nutri_chat` thread for over-specificity, mechanism claims, escalation boundaries, and unapproved continuity framing
+- P1 offer and pricing fragmentation widened.
+  - owner: `Product Strategist + Lead Developer`
+  - source: working-tree diffs in `WellnessBot/main.py`, `WellnessBot/payment_flow.py`, `WellnessBot/texts.py`, `WellnessBot/prompts.py`, `WellnessBot/ai_drafting.py`, `mini-app/index.html`, `index.html`, `app.js`, and `styles.css`
+  - next fix action: normalize one approved ladder across code, docs, prompts, payment flow, mini-app, and root marketing surfaces
+- P1 benchmark observability gap remains active.
+  - owner: `Lead Developer`
+  - source: `docs/WELLNESS_DIALOGUE_QA_20260603.md`
+  - next fix action: make `ops/quality_probe.py` emit partial per-prompt artifacts when the model path fails
+- P1 disk floor breach remains active.
+  - owner: `Ops`
+  - source: current `Get-PSDrive C` measurement
+  - next fix action: restore `C:` above `10 GB` before more artifact-heavy work
+
+### Connector Delta
+- Obsidian: done - refreshed the onboarding mirror and created a new local run-note mirror for this cycle.
+- Notion: done - real workspace search succeeded, the Antigravity context hub page was reachable, and a fresh run note with a concise `Context For New Model` section was created under that hub.
+- GitHub: done - published a new sanitized status artifact and context snapshot for external contributors in `olyalyazinchenk-wq/Zinchenko_wellness_al`.
+- Google Drive: blocked - tool discovery still exposes no Google Drive file discovery/create/upload/share tools in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- Move same-user paid-path control ahead of every new product or surface claim: the biggest new delta in this cycle is not runtime, it is fresh same-day paid-branch multiplication.
+- Keep the active `nutri_chat` rail as the current proof-bearing product, but treat it as a safety audit target before it is treated as commercial proof.
+- Normalize the product ladder only after delivery-gate repair, branch collapse, and QA observability repair land.
+- Keep GitHub and Notion artifacts current, keep Obsidian mirrored locally, and continue treating Google Drive as unavailable until file create/upload/share tools are actually exposed.
+
+### Strategy Delta
+- Strategy pressure changed again in this cycle:
+  - runtime improved and gained a fresher June 3 night artifact
+  - the active paid rail stayed live
+  - the same-user commercial stack worsened again on the same day
+- The next proof target is therefore narrower:
+  - one bounded `nutri_chat` live contract
+  - one canonical paid path per Telegram user
+  - one repaired delivery gate
+  - one approved ladder
+  - one QA run that survives prompt-level connection failures
+
+### Goals Delta
+- Goal 1: make the benchmark survive model-path connection failures.
+- Goal 2: bound the active `nutri_chat` rail so it stops behaving like an open-ended quasi-consult.
+- Goal 3: stop same-user paid-branch multiplication before any new monetization experiment.
+- Goal 4: repair the `14900 RUB` delivery contradiction before counting reviewed escalations as traction.
+- Goal 5: restore disk above the `10 GB` floor before more artifact-heavy proof work.
+
+### Next 12h Focus
+1. Patch `ops/quality_probe.py` so prompt-level connection failures still emit a partial artifact.
+2. Re-run the batch benchmark only after step `1` lands.
+3. Tighten `LIVE_CHAT_PROMPT` and sanitizer rules to cap early hypotheses, cap clarifying questions, remove markdown bullets, and suppress unsupported diagnostic storytelling.
+4. Audit the active `20260603T121917Z_1084557944` `nutri_chat` transcript against that contract.
+5. Add a hard guard so unresolved same-user paid/review state blocks creation of another paid branch.
+6. Audit `20260531T183007Z_1084557944` and remove the `delivered_to_client` contradiction if `fail_major_issues` still stands.
+7. Write `canonical_path` decisions for the unresolved `20260530` to `20260603` branches.
+8. Restore `C:` above the `10 GB` floor and log the new baseline.
+
+### Context For New Model
+- Stage: controlled concierge pilot where runtime is re-proven on June 3 night, but the main blocker is now commercial and safety control: the same user opened new paid `habits` and `nutri_chat` branches on June 3 while an older `14900 RUB` case still carries `delivered_to_client` plus `fail_major_issues`
+- Objective:
+  - preserve the June 3 direct-fallback runtime
+  - treat `nutri_chat` as the current proof-bearing product and bound it directly
+  - repair the delivery-gate contradiction before counting new sales as proof
+  - stop same-user branch multiplication
+  - normalize one approved offer ladder
+  - restore benchmark observability around the live model path
+- Constraints:
+  - Telegram-first only
+  - `PAYMENT_MODE=manual`
+  - human review remains mandatory
+  - one canonical commercial path per Telegram user
+  - no new same-user paid branch while unresolved review or delivery contradictions remain
+  - text-only intake is the only proven live modality
+  - disk free space is `6.70 GB`
+  - latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`
+  - current QA synthesis doc is `docs/WELLNESS_DIALOGUE_QA_20260603.md`
+  - the fresh batch benchmark still fails on prompt `1`
+  - Google Drive file discovery/create/upload/share tools are unavailable in the current Codex session
+- Immediate next actions:
+  1. patch `ops/quality_probe.py` so model-path failures still emit partial artifacts
+  2. tighten the live-chat contract
+  3. hard-block new same-user paid branch creation while conflicts exist
+  4. audit the active `20260603T121917Z_1084557944` `nutri_chat` thread for safety and escalation boundaries
+  5. audit and repair `20260531T183007Z_1084557944`
+  6. classify the `20260530` to `20260603` branches into one canonical path
+  7. normalize one approved ladder only after the control fixes land
+  8. restore disk above `10 GB`
+
 ## 2026-06-03 23:44 MSK - Регулярная синхронизация (12h)
 
 ### Что изменилось
@@ -3465,3 +4132,33 @@ Decision:
 1. Зафиксировать docs-снимок аккуратным коммитом и отправить в GitHub (без секретов/PII).
 2. Проверить доступ к Notion и обновить страницу статуса (только санитизированный executive summary).
 
+# Project Pulse Log
+
+## 2026-06-05 23:49 MSK - Sync Contract Addendum
+
+### Benchmark And State Correction
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run is `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
+- `runtime_state.json` still points to the June 3 paid `nutri_chat` rail, but `nutri_chat_expires_at` passed at `2026-06-05 15:19:49 +03:00`; treat this as an expired continuity-state regression, not an active paid rail.
+- Current `C:` free space is `4198252544` bytes (`~3.91 GiB`) at `2026-06-05 23:46:45 +03:00`.
+- Google Drive exact block reason: no Google Drive file discovery/create/upload/share tools are exposed in the current Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- Move expired continuity-state handling ahead of new product-story narration: the strongest recent live rail is stale runtime state until it is renewed or cleared.
+- Keep disk recovery ahead of benchmark, replay, PDF, or artifact-heavy work while the environment remains below `10 GB`.
+- Keep same-user paid-path control, delivery-gate repair, and QA partial-artifact capture as the current execution core.
+
+### Strategy Delta
+- Strategy no longer turns on runtime liveness first; it turns on state coherence first.
+- The next proof target is now:
+  - one runtime that does not present expired paid state as active
+  - one canonical paid path per Telegram user
+  - one review-safe delivered case
+  - one benchmark runner that survives prompt-level model failures
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: clear or renew expired continuity state before the next live paid interaction.
+- Goal 3: collapse the same-user paid stack into one canonical commercial path.
+- Goal 4: repair the delivery gate and benchmark observability before more growth claims.
