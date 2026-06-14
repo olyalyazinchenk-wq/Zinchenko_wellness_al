@@ -593,6 +593,54 @@ def parse_utc_iso(value: str | None) -> datetime | None:
         return None
 
 
+def find_pending_manual_payment_submission(user_id: int) -> dict[str, Any] | None:
+    """Find a case with manual_payment_pending status for the user."""
+    for case in list_recent_cases(settings.submissions_dir, limit=50):
+        profile = case.get("profile", {})
+        case_user_id = case.get("telegram_user_id") or profile.get("telegram_user_id")
+        if case_user_id and int(case_user_id) == int(user_id):
+            if case.get("intake_status") == "manual_payment_pending":
+                return case
+    return None
+
+
+async def check_and_prompt_pending_payment(message: types.Message) -> bool:
+    """Check if the user has a pending manual payment, and prompt them to confirm if they send a message."""
+    if not message.from_user:
+        return False
+    pending_sub = find_pending_manual_payment_submission(message.from_user.id)
+    if pending_sub:
+        submission_id = pending_sub["submission_id"]
+        # If client hasn't clicked "Подтвердить оплату" yet:
+        if not pending_sub.get("client_reported_payment"):
+            client_pay_markup = InlineKeyboardMarkup(
+                inline_keyboard=[
+                    [
+                        InlineKeyboardButton(
+                            text="✅ Подтвердить оплату (я оплатил/а)",
+                            callback_data=f"clientconfirmpay_{submission_id}",
+                        )
+                    ]
+                ]
+            )
+            await message.answer(
+                "Вы начали оформление программы, но мы пока не получили вашу отметку об оплате.\n\n"
+                "Если вы уже провели платеж, пожалуйста, <b>нажмите на кнопку «Подтвердить оплату (я оплатил/а)» ниже</b>, "
+                "чтобы кураторы сразу получили уведомление и открыли вам доступ к программе.\n\n"
+                "Если у вас возникли трудности с оплатой или вопросы, просто напишите здесь в чат.",
+                reply_markup=client_pay_markup,
+                parse_mode="HTML"
+            )
+            return True
+        else:
+            await message.answer(
+                "✅ Отметка об оплате получена! Наша команда уже проверяет платёж. "
+                "Как только кураторы подтвердят оплату, мы сразу же начнем работу и бот пришлет уведомление. Пожалуйста, ожидайте."
+            )
+            return True
+    return False
+
+
 def find_active_followup_case(user_id: int) -> dict[str, Any] | None:
     """Return the latest delivered case inside the 30-day support window."""
     now = datetime.now(timezone.utc)
@@ -1925,6 +1973,80 @@ async def process_manual_payment_confirm(callback_query: types.CallbackQuery) ->
         client_chat_id=client_id,
     )
 
+
+@dp.callback_query(lambda c: c.data and c.data.startswith("clientconfirmpay_"))
+async def process_client_payment_confirm(callback_query: types.CallbackQuery) -> None:
+    submission_id = callback_query.data.replace("clientconfirmpay_", "", 1)
+    submission = load_submission(settings.submissions_dir, submission_id)
+    if not submission:
+        await bot.answer_callback_query(callback_query.id, "Заявка не найдена.")
+        return
+
+    # If already confirmed by admin
+    if submission.get("intake_status") == "manual_payment_confirmed":
+        await bot.answer_callback_query(callback_query.id, "Ваша оплата уже подтверждена кураторами!")
+        return
+
+    # Check if client has already reported payment
+    if submission.get("client_reported_payment"):
+        await bot.answer_callback_query(callback_query.id, "Вы уже подтвердили оплату. Команда проверяет её.")
+        return
+
+    # Mark as reported by client
+    submission["client_reported_payment"] = True
+    submission["client_reported_payment_at"] = utc_now_iso()
+    save_submission_state(settings.submissions_dir, submission)
+
+    # Update the message text to confirm
+    try:
+        await bot.edit_message_reply_markup(
+            chat_id=callback_query.message.chat.id,
+            message_id=callback_query.message.message_id,
+            reply_markup=None # Remove the button
+        )
+    except Exception:
+        pass
+
+    await bot.send_message(
+        callback_query.message.chat.id,
+        "✅ Отметка об оплате получена! Наша команда уже проверяет платёж. "
+        "Как только оплата будет подтверждена, мы сразу начнем работу."
+    )
+
+    # Also, notify admins about this client action!
+    payment_context = submission.get("payment_context", {})
+    offer_name = payment_context.get("offer_name") or TIER_NAMES.get(submission.get("offer") or submission.get("tier"), "Разбор")
+    client_name = submission.get("profile", {}).get("full_name") or submission.get("profile", {}).get("telegram_full_name") or "Клиент"
+    
+    admin_alert_text = (
+        f"⚡️ <b>Клиент подтвердил ручную оплату!</b>\n\n"
+        f"ID: <code>{submission_id}</code>\n"
+        f"👤 Клиент: {client_name}\n"
+        f"🛍️ Продукт: {offer_name}\n"
+        f"💰 Сумма: {payment_context.get('amount_rub')} ₽\n\n"
+        f"Пожалуйста, проверьте поступление средств и подтвердите в системе."
+    )
+    
+    admin_markup = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="✅ Подтвердить ручную оплату",
+                    callback_data=f"manualpay_{submission_id}",
+                )
+            ]
+        ]
+    )
+
+    for admin_chat_id in settings.admin_chat_ids:
+        try:
+            await bot.send_message(admin_chat_id, admin_alert_text, reply_markup=admin_markup, parse_mode="HTML")
+        except Exception:
+            logger.exception("Failed to send client payment alert to admin %s", admin_chat_id)
+
+    await bot.answer_callback_query(callback_query.id, "Оплата подтверждена!")
+
+
 @dp.callback_query(lambda c: c.data and c.data.startswith("approve_"))
 async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
     if not is_admin(callback_query.from_user.id):
@@ -2227,10 +2349,22 @@ async def finalize_submission(message: types.Message, session: dict[str, Any]) -
     submission["manual_handoff_started_at"] = utc_now_iso()
     save_submission_state(settings.submissions_dir, submission)
     await notify_admins_manual_handoff(submission)
+    
+    client_pay_markup = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="✅ Подтвердить оплату (я оплатил/а)",
+                    callback_data=f"clientconfirmpay_{submission['submission_id']}",
+                )
+            ]
+        ]
+    )
+
     if is_instant:
-        await message.answer(MANUAL_HANDOFF_INSTANT_START_TEXT)
+        await message.answer(MANUAL_HANDOFF_INSTANT_START_TEXT, reply_markup=client_pay_markup)
     else:
-        await message.answer(MANUAL_HANDOFF_START_TEXT)
+        await message.answer(MANUAL_HANDOFF_START_TEXT, reply_markup=client_pay_markup)
 
 
 @dp.pre_checkout_query()
@@ -3180,6 +3314,8 @@ async def process_labs_done(callback_query: types.CallbackQuery) -> None:
 
 @dp.message(lambda message: message.document is not None)
 async def handle_document_upload(message: types.Message) -> None:
+    if await check_and_prompt_pending_payment(message):
+        return
     session = get_session(message.from_user.id)
     if session and session.get("step") == "osipov_upload":
         upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "osipov"
@@ -3252,6 +3388,8 @@ async def handle_document_upload(message: types.Message) -> None:
 
 @dp.message(lambda message: bool(message.photo))
 async def handle_photo_upload(message: types.Message) -> None:
+    if await check_and_prompt_pending_payment(message):
+        return
     session = get_session(message.from_user.id)
     if session and session.get("step") == "paid_nutri_chat":
         await message.answer("В Нутри-чате я работаю с текстовыми вопросами. Если хотите разбор фото тарелок, выберите тариф «Привычки и тарелка».")
@@ -3466,6 +3604,8 @@ async def handle_message(message: types.Message) -> None:
         return
 
     if text == "📝 Заполнить анкету":
+        if await check_and_prompt_pending_payment(message):
+            return
         if not session:
             await message.answer(
                 "У вас нет активной сессии для заполнения анкеты.\n\n"
@@ -3504,6 +3644,10 @@ async def handle_message(message: types.Message) -> None:
 
     if text == "🚨 Красные флаги":
         await message.answer(RED_FLAGS_INFO_TEXT, parse_mode="HTML")
+        return
+
+    # Check pending payment before processing any standard messages/inputs
+    if await check_and_prompt_pending_payment(message):
         return
 
     # SCREENING MODE: user sent symptoms after choosing 500 RUB tier
@@ -4102,6 +4246,52 @@ async def nurture_engine_loop():
                                 logger.info("Sent water reminder (%s) to %s", local_hour, user_id)
                             except Exception as e:
                                 logger.error("Failed to send water reminder (%s) to %s: %s", local_hour, user_id, e)
+                                
+                # 3. Manual payment reminder
+                submission_id = session.get("submission_id")
+                if submission_id:
+                    submission = load_submission(settings.submissions_dir, submission_id)
+                    if submission and submission.get("intake_status") == "manual_payment_pending":
+                        if not submission.get("client_reported_payment") and not submission.get("payment_reminder_sent"):
+                            try:
+                                pending_at_str = submission.get("manual_payment_pending_at") or submission.get("manual_handoff_started_at")
+                                if pending_at_str:
+                                    try:
+                                        pending_at = datetime.strptime(pending_at_str, "%Y-%m-%dT%H:%M:%SZ")
+                                    except ValueError:
+                                        pending_at = datetime.utcnow()
+                                    
+                                    elapsed = (datetime.utcnow() - pending_at).total_seconds()
+                                    if elapsed < 15 * 60:
+                                        continue  # Skip sending the reminder if it has been less than 15 minutes
+                                
+                                name = (session.get("full_name") or session.get("profile", {}).get("full_name") or "Здравствуйте").split(" ")[0]
+                                client_pay_markup = InlineKeyboardMarkup(
+                                    inline_keyboard=[
+                                        [
+                                            InlineKeyboardButton(
+                                                text="✅ Подтвердить оплату (я оплатил/а)",
+                                                callback_data=f"clientconfirmpay_{submission_id}",
+                                            )
+                                        ]
+                                    ]
+                                )
+                                await bot.send_message(
+                                    user_id,
+                                    f"🔔 <b>{name}, напоминание об оплате</b>\n\n"
+                                    f"Вы начали оформление программы, но мы пока не получили вашу отметку об оплате.\n\n"
+                                    f"Если вы уже провели платеж, пожалуйста, <b>нажмите на кнопку «Подтвердить оплату (я оплатил/а)» ниже</b>. "
+                                    f"Это нужно, чтобы наша команда сразу увидела ваш платеж и открыла доступ к программе!\n\n"
+                                    f"Если у вас возникли трудности с оплатой или вопросы, просто напишите здесь в чат.",
+                                    reply_markup=client_pay_markup,
+                                    parse_mode="HTML"
+                                )
+                                submission["payment_reminder_sent"] = True
+                                save_submission_state(settings.submissions_dir, submission)
+                                touch_session()
+                                logger.info("Sent manual payment reminder with confirmation button to user %s", user_id)
+                            except Exception as e:
+                                logger.error("Failed to send manual payment reminder to %s: %s", user_id, e)
         except Exception as e:
             logger.exception("Nurture engine error: %s", e)
             
