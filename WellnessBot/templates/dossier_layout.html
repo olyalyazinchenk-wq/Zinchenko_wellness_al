@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Wellness Досье</title>
+    <title>{{ product_name | default('Wellness Досье') }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -141,7 +141,7 @@
         </div>
         
         <div class="flex flex-col items-center">
-            <h1 class="cover-title">Wellness<br>Досье</h1>
+            <h1 class="cover-title">{{ product_title | default('Wellness<br>Досье') | safe }}</h1>
             <div class="divider-gold"></div>
             <p class="font-serif italic text-2xl text-gray-500 tracking-wide font-light">Нутрициологический Разбор и Следующие Шаги</p>
         </div>
@@ -199,7 +199,7 @@
         </div>
 
         <div class="page-footer">
-            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO · {{ (product_name or 'WELLNESS ДОСЬЕ') | upper }}</span>
             <span>СТР. 02</span>
         </div>
     </div>
@@ -230,7 +230,7 @@
             </ul>
         </div>
         <div class="page-footer">
-            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO · {{ (product_name or 'WELLNESS ДОСЬЕ') | upper }}</span>
             <span>СТР. 03</span>
         </div>
     </div>
@@ -259,7 +259,7 @@
             </ul>
         </div>
         <div class="page-footer">
-            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO · {{ (product_name or 'WELLNESS ДОСЬЕ') | upper }}</span>
             <span>СТР. 04</span>
         </div>
     </div>
@@ -290,7 +290,7 @@
         </div>
         
         <div class="page-footer">
-            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO · {{ (product_name or 'WELLNESS ДОСЬЕ') | upper }}</span>
             <span>СТР. 05</span>
         </div>
     </div>
@@ -325,7 +325,7 @@
         </div>
         
         <div class="page-footer">
-            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO · {{ (product_name or 'WELLNESS ДОСЬЕ') | upper }}</span>
             <span>СТР. 06</span>
         </div>
     </div>
@@ -353,7 +353,7 @@
         </div>
 
         <div class="page-footer">
-            <span class="font-medium text-goldDark">OLGA ZINCHENKO</span>
+            <span class="font-medium text-goldDark">OLGA ZINCHENKO · {{ (product_name or 'WELLNESS ДОСЬЕ') | upper }}</span>
             <span>СТР. 07</span>
         </div>
     </div>

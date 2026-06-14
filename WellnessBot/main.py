@@ -1036,7 +1036,21 @@ def clean_pdf_data_symbols(data: dict[str, Any]) -> dict[str, Any]:
     return cleaned
 
 
-def normalize_dossier_pdf_data(raw_data: dict[str, Any]) -> dict[str, Any]:
+def get_product_filename_prefix(offer_code: str | None) -> str:
+    mapping = {
+        "nutri_chat": "Express_Audit_Moya_Tarelka",
+        "screening": "Express_Audit_Moya_Tarelka",
+        "habits": "Umny_Kurator_Soprovozhdenie",
+        "standard": "Deficit_Chek_Karta_Simptomov",
+        "basic": "Deficit_Chek_Karta_Simptomov",
+        "premium": "Personalny_Wellness_Pasport",
+        "full": "Personalny_Wellness_Pasport",
+        "osipov": "Kod_Mikrobioma_HMS_Osipov",
+    }
+    return mapping.get(offer_code, "Wellness_Dossier")
+
+
+def normalize_dossier_pdf_data(raw_data: dict[str, Any], submission: dict[str, Any] | None = None) -> dict[str, Any]:
     """Map the LLM dossier schema into the HTML PDF template schema."""
     profile = raw_data.get("profile") if isinstance(raw_data.get("profile"), dict) else {}
     strategy = raw_data.get("strategy") if isinstance(raw_data.get("strategy"), dict) else {}
@@ -1065,6 +1079,26 @@ def normalize_dossier_pdf_data(raw_data: dict[str, Any]) -> dict[str, Any]:
     additional_control.extend(ensure_list(raw_data.get("gi_status")))
     additional_control.extend(ensure_list(strategy.get("control")))
 
+    offer_code = None
+    if submission:
+        offer_code = submission.get("offer") or submission.get("tier")
+    if not offer_code:
+        offer_code = raw_data.get("offer") or raw_data.get("tier")
+    
+    product_name = TIER_NAMES.get(offer_code, "Wellness-Паспорт")
+    
+    title_mapping = {
+        "nutri_chat": "ЭКСПРЕСС-АУДИТ<br>«МОЯ ТАРЕЛКА»",
+        "screening": "ЭКСПРЕСС-АУДИТ<br>«МОЯ ТАРЕЛКА»",
+        "habits": "УМНЫЙ КУРАТОР:<br>СОПРОВОЖДЕНИЕ",
+        "standard": "ДЕФИЦИТ-ЧЕК /<br>КАРТА СИМПТОМОВ",
+        "basic": "ДЕФИЦИТ-ЧЕК /<br>КАРТА СИМПТОМОВ",
+        "premium": "ПЕРСОНАЛЬНЫЙ<br>WELLNESS-ПАСПОРТ",
+        "full": "ПЕРСОНАЛЬНЫЙ<br>WELLNESS-ПАСПОРТ",
+        "osipov": "КОД МИКРОБИОМА:<br>ХМС ПО ОСИПОВУ",
+    }
+    product_title = title_mapping.get(offer_code, "ПЕРСОНАЛЬНОЕ<br>WELLNESS ДОСЬЕ")
+
     res = {
         **raw_data,
         "client_profile": raw_data.get("client_profile") or client_profile or "Клиент",
@@ -1076,6 +1110,8 @@ def normalize_dossier_pdf_data(raw_data: dict[str, Any]) -> dict[str, Any]:
         "additional_control": additional_control,
         "final_conclusion": raw_data.get("final_conclusion") or raw_data.get("expert_conclusion") or "",
         "schemes": raw_data.get("schemes") if isinstance(raw_data.get("schemes"), list) else [],
+        "product_name": product_name,
+        "product_title": product_title,
     }
     return clean_pdf_data_symbols(res)
 
@@ -2265,10 +2301,12 @@ async def process_admin_regen(callback_query: types.CallbackQuery) -> None:
         clean_json_str = re.sub(r"\s*```$", "", clean_json_str)
         
         pdf_data = apply_safe_action_floor(
-            normalize_dossier_pdf_data(json.loads(clean_json_str.strip())),
+            normalize_dossier_pdf_data(json.loads(clean_json_str.strip()), submission=submission),
             submission,
         )
-        pdf_filename = f"dossier_{submission_id}.pdf"
+        offer_code = submission.get("offer") or submission.get("tier")
+        prefix = get_product_filename_prefix(offer_code)
+        pdf_filename = f"{prefix}_{submission_id}.pdf"
         pdf_path = settings.drafts_dir / pdf_filename
         
         await asyncio.to_thread(create_premium_pdf, pdf_data, str(pdf_path))
@@ -2669,7 +2707,7 @@ async def build_dossier_after_payment(
     
         if draft_text:
             try:
-                draft_payload = normalize_dossier_pdf_data(json.loads(strip_json_code_fences(draft_text)))
+                draft_payload = normalize_dossier_pdf_data(json.loads(strip_json_code_fences(draft_text)), submission=submission)
                 draft_payload = apply_safe_action_floor(draft_payload, submission)
                 draft_text = json.dumps(draft_payload, ensure_ascii=False, indent=2)
             except Exception:
@@ -2697,7 +2735,7 @@ async def build_dossier_after_payment(
                 clean_json_str = strip_json_code_fences(draft_text)
                 
                 pdf_data = apply_safe_action_floor(
-                    normalize_dossier_pdf_data(json.loads(clean_json_str)),
+                    normalize_dossier_pdf_data(json.loads(clean_json_str), submission=submission),
                     submission,
                 )
                 
@@ -2713,7 +2751,9 @@ async def build_dossier_after_payment(
                     elif not isinstance(val, list):
                         pdf_data[field] = [str(val)]
                 
-                pdf_filename = f"dossier_{session['submission_id']}.pdf"
+                offer_code = submission.get("offer") or submission.get("tier")
+                prefix = get_product_filename_prefix(offer_code)
+                pdf_filename = f"{prefix}_{session['submission_id']}.pdf"
                 pdf_path = settings.drafts_dir / pdf_filename
                 
                 # Run playwright pdf generation in thread pool
