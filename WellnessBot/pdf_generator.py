@@ -44,7 +44,7 @@ def draw_cover(canvas, doc):
     # Subtitle / Logo area
     canvas.setFillColor(colors.white)
     canvas.setFont(FONT_NAME, 10)
-    canvas.drawString(25*mm, A4[1] - 30*mm, "ОЛЬГА ЗИНЧЕНКО")
+    canvas.drawString(25*mm, A4[1] - 30*mm, "ЗИНЧЕНКО ОЛЬГА ВИКТОРОВНА")
     canvas.setFillColor(COLOR_ACCENT)
     canvas.setFont(FONT_NAME, 8)
     canvas.drawString(25*mm, A4[1] - 35*mm, "Н У Т Р И Ц И О Л О Г")
@@ -80,7 +80,7 @@ def draw_inner(canvas, doc):
     # Header text
     canvas.setFillColor(COLOR_ACCENT)
     canvas.setFont(FONT_NAME, 8)
-    canvas.drawString(20*mm, A4[1] - 12*mm, "WELLNESS ДОСЬЕ | ОЛЬГА ЗИНЧЕНКО")
+    canvas.drawString(20*mm, A4[1] - 12*mm, "WELLNESS ДОСЬЕ | ЗИНЧЕНКО ОЛЬГА ВИКТОРОВНА")
     
     # Page Number
     page_num = canvas.getPageNumber()

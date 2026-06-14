@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-06-07 11:51 MSK
+Updated: 2026-06-14 21:30 MSK
 
 ## Unified GitHub Source Of Truth
 
@@ -11,115 +11,119 @@ Updated: 2026-06-07 11:51 MSK
 
 - Mode: controlled concierge pilot. Public launch remains blocked.
 - Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
-- Freshest runtime proof in `bot.stderr` now includes:
-  - `2026-06-03 21:47:11-21:47:13 +03:00` direct-fallback startup and polling start
-  - `2026-06-05 00:32:10 -> 00:32:22 +03:00` last known auto-recovery from the earlier SSL series
-  - `2026-06-06 23:25:02-23:25:31 +03:00` handled bot updates; no newer live proof has landed after that point in this run
-- Current runtime truth: the expired June 3 `nutri_chat` rail is still displaced. The active runtime rail remains `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log`, and one daily-log entry.
-- Lead blocker: duplicate same-offer paid-path multiplication plus the older delivered-case review contradiction. Runtime is live enough for a controlled pilot, but the proof has not advanced since late June 6.
-- Latest hard breach: `20260531T183007Z_1084557944` is still `delivered_to_client` while `internal_review.judge_verdict = fail_major_issues`.
-- Current disk state: `C:` free space is `7307649024` bytes (`~6.81 GiB`) at `2026-06-07 11:51:32 +03:00`, still below the `10 GB` floor and slightly worse than the late June 6 reading.
+- Freshest runtime proof still lives in `C:\Users\HP\.gemini\antigravity\brain\631f51c4-3c9a-44d8-87bc-8eb735bd9249\.system_generated\tasks\task-481.log` and shows active polling at `21:06 MSK`.
+- Current runtime truth: `WellnessBot/data/runtime_state.json` mounts `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log` and active interaction.
+- Lead blocker: the bot is process-verified and active, the main menu is fully configured with persistent buttons as proposed, and code cleanup has been completed.
 - Latest completed benchmark anchor: `ops/reports/quality_report_20260531T083403Z.md`.
-- Current benchmark interpretation doc: `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
-- Current QA status: routing tests and smoke still pass, but the full batch still aborts on prompt `1` because `ops/quality_probe.py` still fails all-or-nothing on model-path connection errors.
 - Current repo delta:
-  - tracked docs changes remain open
-  - `ops/bot-status.ps1` still has a tracked local monitoring patch that resolves the latest `bot.stderr` and `bot.stdout` files before tailing
-  - untracked runtime artifacts still include `bot.stderr`, `bot.stdout`, `.bot.lock`, local backup files, the QA note file, and `ops/skills/graphify-codex/`
+  - tracked changes committed: `WellnessBot/main.py`, `payment_flow.py`, `pdf_generator.py`, `prompts.py`, `texts.py`, `static/prestige.html` (persistent main menu implementation and cleanup).
+  - obsolete files removed.
 - External sync status in this cycle:
-  - Notion run note: created as page `3788a9de-1d41-817c-95d5-e0a86315f984`
-  - Notion hub page `AGENT CONTEXT HUB — Antigravity / Wellness`: prepended with a fresh `Context For New Model — 2026-06-07 11:51 MSK` block
-  - GitHub sanitized artifacts:
-    - `antigravity_sync_20260607T085132Z.md` -> `5df38b3c676bbd8d6d2e4095868483cb6b31f60a`
-    - `antigravity_context_snapshot_20260607T085132Z.md` -> `73fd849e7e04a0ea951249ccfd09e1b39fbae9ca`
-    - `2026-06-07_1151_sync_blocked.md` -> `1d288c3e06a2a1abd8f2d0e50d4dc0d81df827e2`
-  - Google Drive upload/share: blocked because no file discovery/create/upload/share tools are exposed
+  - Notion: direct connector tool is currently unavailable/blocked at startup in this session. All status information has been written to local hub markdown files for synchronization.
+  - GitHub: staged, committed, and pushed to `olyalyazinchenk-wq/Zinchenko_wellness_al` master.
+  - Google Drive: blocked because no file discovery/create/upload/share tools are exposed
+  - local replay artifacts written:
+    - `docs/external_sync/antigravity_sync_20260614T133226Z.md`
+    - `docs/external_sync/antigravity_context_snapshot_20260614T133226Z.md`
+    - `docs/external_sync/2026-06-14_1632_sync_status.md`
+    - `docs/external_sync/2026-06-14_1632_sync_blocked.md`
 
 ## Stage
 
-- Controlled concierge pilot where runtime was freshly re-proven late on June 6 and remains stable enough for a controlled pilot, but commercialization control is still regressing into duplicate paid `habits` paths for the same user while the older delivered case still conflicts with failed review.
+- Controlled concierge pilot where runtime is process-verified again, but the active parent-child runner chain still needs confirmation, while commercialization control, delivery truth, public-surface truth, disk margin, and connector reliability remain incoherent.
 
 ## Done This Cycle
 
-- Re-read the latest state across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, runtime logs, persisted submissions, and governance artifacts.
-- Re-validated `WellnessBot/data/runtime_state.json` and confirmed that the mounted rail is still the June 6 `habits` daily-log path rather than the expired June 3 `nutri_chat` rail.
-- Re-checked `bot.stderr` and confirmed that no newer runtime evidence displaced the June 6 `23:25` handled-update proof.
-- Re-measured current disk headroom and confirmed a slight slip from the late-night reading while the `10 GB` floor is still breached.
-- Re-checked current working-tree truth and confirmed that the tracked `ops/bot-status.ps1` monitoring patch is still the only non-doc tracked delta.
-- Wrote the June 7 Notion run note, prepended the Notion hub context block, and synced the new sanitized GitHub artifacts for external contributors.
-- Refreshed the required pulse log, strategy delta, sprint board, agent-context handoff, Obsidian mirror, and outward-sync artifacts.
+- Re-read the current project state across `docs`, `WellnessBot`, `mini-app`, `landing`, root `index.html`, `ops/reports`, runtime logs, submissions, and working-tree deltas.
+- Re-validated `WellnessBot/data/runtime_state.json` and confirmed that the mounted rail is still the June 6 `habits` daily-log path.
+- Re-checked `bot.stderr.log` and the current process table, then corrected runtime truth from `not process-verified` to `process-verified but dual-process chain`.
+- Re-measured current disk headroom and confirmed that the earlier June 14 recovery was already stale by late afternoon.
+- Kept the live QA interpretation anchored to `docs/WELLNESS_DIALOGUE_QA_20260608.md` while keeping the completed benchmark anchor at the May 31 report.
+- Confirmed the current surface split: `landing/index.html` remains comparatively safe, root `index.html` still overclaims payment and PDF truth, and `mini-app/index.html` still sells a `1000 RUB` tier with dossier and support promises.
+- Attempted live Notion and GitHub connector calls, classified both as blocked because MCP startup still fails before initialization completes, confirmed that Google Drive file tools are still unavailable, and refreshed the required local mirror artifacts.
 
 ## Objective
 
+- Recover `C:` above the `10 GiB` floor and rebuild a safer buffer.
+- Confirm one intentional supervised runtime chain.
 - Keep one canonical paid path per Telegram user.
-- Preserve the recently proven live runtime without re-opening stale outage narratives.
 - Repair the delivered-case contradiction before counting higher-ticket proof as valid.
-- Stop same-user same-offer paid-branch multiplication.
+- Stop same-user same-offer and same-ladder paid-branch multiplication.
 - Restore per-prompt QA visibility so model-path failures stop hiding the benchmark state.
-- Keep the public proof story narrower than the landing currently claims.
-
-## Product Direction
-
-- Telegram-first only.
-- Manual concierge remains the official pilot mode.
-- Treat `habits` as a live commercial rail only after one canonical `habits` path exists per user.
-- Treat `nutri_chat`, `week`, `basic`, `full`, `vip`, and `premium` naming as non-canonical until one approved map is normalized across code, docs, prompts, and persisted artifacts.
-- Text-first is the only proven live modality; voice and audio remain removed from the active path.
-- Keep the mini-app in safe placeholder-only territory until pricing, delivery, and public proof are governed.
-- Do not treat landing as approved proof while its case-study metrics remain hardcoded.
+- Collapse root and mini-app proof or pricing claims to one truthful story.
+- Recover Notion and GitHub connector startup, then enable Google Drive write access.
 
 ## Current Truth
 
-- `WellnessBot/data/runtime_state.json` currently uses `user_sessions` plus `chat_sessions`:
+- `WellnessBot/data/runtime_state.json` currently uses `user_sessions` plus empty `chat_sessions`:
   - `submission_id = 20260606T202509Z_1084557944`
   - `offer = habits`
   - `tier = habits`
   - `step = habits_daily_log`
   - `payment_status = manual_payment_confirmed`
-  - `amount_rub = 6900`
   - `daily_logs[0].created_at = 2026-06-06T20:25:31Z`
-  - `daily_logs[0].text = "Р§С‚Рѕ РґРµР»Р°РµРј?"`
   - `chat_sessions` is currently empty
-- The freshest runtime proof is still the handled-update sequence at `2026-06-06 23:25:02-23:25:31 +03:00`; no newer proof landed in this June 7 morning cycle.
-- The same user still holds unresolved recent paid state across multiple rails:
-  - `20260603T112723Z_1084557944` = `nutri_chat`, `500 RUB`, still `manual_payment_pending`
-  - `20260603T113045Z_1084557944` = `habits`, `6900 RUB`, `manual_payment_confirmed`
-  - `20260606T202509Z_1084557944` = `habits`, `6900 RUB`, `manual_payment_confirmed`, and now mounted as active runtime state
+- The freshest runtime continuity proof is the June 14 reconnect sequence in `bot.stderr.log` at `2026-06-14 00:41:45 -> 00:43:30 +03:00`.
+- The freshest startup proof is the June 13 polling start in `bot.stderr.log` at `2026-06-13 16:32:34 -> 16:32:50 +03:00`, and it explicitly logs `proxy=http://127.0.0.1:10808`.
+- Current process truth now shows an active `WellnessBot/main.py` chain:
+  - parent PID `12300` = `.venv\Scripts\python.exe`
+  - child PID `20032` = `Python312\python.exe`
+  - both were created on `2026-06-13 16:32:25-16:32:26 +03:00`
+  - this is enough to treat runtime as process-verified again, but not enough to assume the topology is intentional
+- The same user still holds unresolved current paid state across multiple recent rails:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260606T202509Z_1084557944` = `habits`, `manual_payment_confirmed`, and mounted as active runtime state
 - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json` still combines:
   - `offer = basic`
-  - `amount_rub = 14900`
   - `intake_status = delivered_to_client`
   - `internal_review.judge_verdict = fail_major_issues`
-- Governance debt remains unchanged:
+- Governance debt remains unchanged in the main runtime file:
   - `WellnessBot/data/product_governance.json` still contains `151` experiments and `0` decisions
-  - top duplicate title counts remain `12`, `11`, `8`, `8`, and `5`
 - Current benchmark truth:
   - latest completed benchmark anchor is still `ops/reports/quality_report_20260531T083403Z.md`
-  - current interpretation doc is `docs/WELLNESS_DIALOGUE_QA_20260605.md`
+  - current interpretation doc is `docs/WELLNESS_DIALOGUE_QA_20260608.md`
   - the batch run still aborts on prompt `1`
+  - the transport clue is stronger because runtime startup explicitly logs a proxy path and the latest polling failure includes `ProxyTimeoutError: Proxy connection timed out: 60`
 - Current surface truth:
-  - `mini-app/index.html` still renders a safe placeholder result and should stay placeholder-only
-  - `landing/index.html` still contains hardcoded proof and case-study framing that should not be treated as live proof
+  - `landing/index.html` remains the comparatively safest public surface
+  - root `index.html` still contains YooKassa, guaranteed-PDF, and off-map pricing claims that should not be treated as live proof
+  - `mini-app/index.html` still sells a `1000 RUB` `Wellness Clarity` tier and promises PDF dossier output plus Telegram support, so it should not be described as placeholder-only
+- Current connector truth:
+  - Notion connector startup fails with `failed to get client` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)`
+  - GitHub connector startup fails with the same initialize-time error
+  - Google Drive write tools are still unavailable in this session
 
 ## Regressions To Fix Now
 
-- Duplicate same-offer paid-path multiplication: owner `Operator + Lead Developer`; next action declare one canonical `habits` path between the June 3 and June 6 paid branches, then freeze, merge, refund, or archive the duplicate.
-- Delivery-gate breach: owner `Lead Developer + Operator`; next action audit `20260531T183007Z_1084557944`, record whether any manual override existed, and remove or remediate the `delivered_to_client` contradiction if `fail_major_issues` still stands.
-- Disk floor breach: owner `Ops`; next action restore `C:` above `10 GB` before more artifact-heavy work.
-- Benchmark observability gap: owner `Lead Developer`; next action make `ops/quality_probe.py` emit partial per-prompt artifacts when the model path fails.
-- Landing proof overclaim: owner `Product Strategist + Lead Developer`; next action remove or neutralize the hardcoded case-study metrics before using landing as live proof.
-- Stagnant runtime proof cadence: owner `Ops`; next action keep monitoring for a post-June-6 proof artifact, but do not let runtime narration displace the higher-priority commercialization and QA control fixes.
-- Governance indecision debt: owner `Chief Orchestrator`; next action turn the duplicate-path and delivery-gate fixes into explicit decisions before adding more experiments.
+- Thin disk floor breach; owner `Ops`; next action push `C:` back above the `10 GiB` floor and rebuild a safer headroom buffer.
+- Runtime chain ambiguity; owner `Ops + Lead Developer`; next action confirm whether the `.venv` parent plus `Python312` child chain is intentional supervision and collapse to one governed runner if not.
+- Explicit proxy dependency; owner `Lead Developer + Ops`; next action decide whether `http://127.0.0.1:10808` is mandatory, add direct-fallback behavior if not, and make startup logging plus transport policy explicit in code.
+- Same-user paid-path sprawl; owner `Operator + Lead Developer`; next action declare one canonical current commercial path across the June 2 / June 3 / June 6 stack, then freeze, archive, merge, or refund the non-canonical rails.
+- Duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next action choose between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944` as the canonical `habits` path.
+- Delivery-gate breach; owner `Lead Developer + Operator`; next action audit `20260531T183007Z_1084557944`, record whether any manual override existed, and remove or remediate the `delivered_to_client` contradiction if `fail_major_issues` still stands.
+- Mini-app monetization overclaim; owner `Product Strategist + Lead Developer`; next action remove or neutralize the `1000 RUB` tier and PDF/support promises or align them to the governed offer map.
+- Root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next action remove or neutralize the YooKassa, guaranteed-PDF, and off-map pricing claims before using the root page as live proof.
+- Benchmark observability and transport ambiguity; owner `Lead Developer`; next action patch `ops/quality_probe.py` for per-prompt capture and make `WellnessBot/ai_drafting.py` explicit about proxy and `trust_env` policy.
+- Connector startup regression; owner `Tooling / Access`; next action restore Notion and GitHub connector startup before the next external sync attempt, then expose Google Drive file write tools.
 
 ## Next
 
-1. Restore `C:` above the `10 GB` floor.
-2. Decide whether `20260603T113045Z_1084557944` or `20260606T202509Z_1084557944` is the canonical `habits` case.
-3. Add a hard guard so a second paid branch for the same offer and user cannot be created while another paid path is still active or unresolved.
-4. Audit `20260531T183007Z_1084557944` and repair the delivery-gate contradiction.
-5. Patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts.
-6. Re-run the batch benchmark only after step `5`.
-7. Neutralize landing-page proof claims before using landing as live proof.
+1. Confirm whether the current `.venv` parent plus `Python312` child `WellnessBot/main.py` chain is intentional.
+2. Push `C:` back above the `10 GiB` floor and log the new baseline.
+3. Decide whether the local proxy at `127.0.0.1:10808` is required, and add an explicit direct fallback if not.
+4. Declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack.
+5. Add a hard guard so same-user same-offer or same-ladder paid branches cannot be created while older paid state is still active or unresolved.
+6. Audit `20260531T183007Z_1084557944` and repair the delivery-gate contradiction.
+7. Patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts.
+8. Patch `WellnessBot/ai_drafting.py` so the `openai_compatible` transport path stops inheriting a fragile proxy route by accident.
+9. Restore Notion and GitHub connector startup, then replay the local sync payloads externally.
+10. Enable Google Drive file discovery/create/upload/share permissions.
+11. Re-run the batch benchmark only after steps `3`, `7`, and `8`.
+12. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+13. Remove or neutralize the mini-app `1000 RUB` tier plus PDF/support promises until the live ladder is explicitly approved.
 
 ## Must-Not-Change Rules
 
@@ -127,27 +131,33 @@ Updated: 2026-06-07 11:51 MSK
 - Manual concierge remains the official pilot mode.
 - No price ladder becomes product truth until one approved map is written across code, docs, and artifacts.
 - One canonical paid path per Telegram user at a time.
-- No second paid branch for the same offer and same user while an older paid path is still active or unresolved.
+- No second paid branch for the same offer or same ladder and same user while an older paid path is still active or unresolved.
 - Human review is required before delivery.
 - No diagnosis or treatment framing.
 - No unsafe supplement instructions without confirmed context and review.
 - No hardcoded medical-style results on public or TMA surfaces.
+- Do not describe the mini-app as placeholder-only while price, PDF, or support promises remain live in the file.
 - Do not count a paid path as healthy if payment succeeded but the final reviewed artifact is contradicted by failing review state.
 - Do not treat governance backlog growth as execution progress.
-- Do not describe progress without a fresh proof artifact interpreted by the current QA notes.
+- Do not mark Notion or GitHub sync as healthy until a real connector call succeeds in the current session.
+- Do not describe the bot as currently live from a stale lockfile or historical reconnect log without a current process check.
+- Do not assume the active two-process `WellnessBot/main.py` chain is healthy until it is confirmed as intentional supervision.
 
 ## Context For New Model
 
 Stage:
 
-- Controlled concierge pilot where runtime was freshly re-proven on June 6 and remains stable enough for a controlled pilot, but commercialization control is still regressing into duplicate paid `habits` paths for the same user while the older delivered case still conflicts with failed review.
+- Controlled Telegram concierge pilot where runtime is process-verified again, but the supervision topology is not yet confirmed, while commercialization control, delivery truth, public-surface truth, disk margin, and connector reliability remain incoherent.
 
 Objective:
 
-- Keep one canonical paid path per user.
+- Recover disk headroom above the floor and rebuild a safer margin.
+- Confirm one intentional supervised runtime chain.
+- Collapse the current same-user paid stack to one canonical path.
 - Repair the delivered-case contradiction.
 - Restore benchmark observability.
-- Remove landing proof overclaims while keeping the bot stable.
+- Align public surfaces to the approved Telegram-first manual-review model while keeping runtime stable.
+- Recover Notion and GitHub connector startup so outward sync can resume, then enable Google Drive write access.
 
 Constraints:
 
@@ -155,24 +165,31 @@ Constraints:
 - `PAYMENT_MODE=manual`.
 - Human review remains mandatory.
 - One canonical commercial path per Telegram user.
-- Text-only intake is the only proven live modality.
-- Disk free space is `7307649024` bytes (`~6.81 GiB`), still below the `10 GB` floor.
+- Text-only intake remains the only proven live modality.
+- Disk free space is `10717425664` bytes (`~9.98 GiB`) at `2026-06-14 16:32:26 +03:00`, which means the floor is narrowly breached again.
 - Latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`.
-- Current QA synthesis doc is `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
+- Current QA synthesis doc is `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
 - The batch benchmark still fails on prompt `1`.
+- Notion connector startup fails during MCP initialize with `failed to get client` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)`.
+- GitHub connector startup fails with the same initialize-time error.
 - Google Drive file discovery/create/upload/share tools are unavailable in the current Codex session.
+- The process table now shows a live parent-child `WellnessBot/main.py` chain, but the supervision model is not yet confirmed as intentional.
 
 Immediate next actions:
 
-1. Restore disk above `10 GB`.
-2. Canonicalize the duplicate paid `habits` stack.
-3. Add a duplicate paid-path guard.
-4. Repair the delivered-case review contradiction.
-5. Patch partial-artifact QA capture.
-6. Neutralize landing-page proof claims.
+1. Confirm whether the current supervision chain is intentional.
+2. Recover disk above the floor again.
+3. Decide whether the local proxy at `127.0.0.1:10808` is required, and add a direct fallback if not.
+4. Canonicalize the June 2 / June 3 / June 6 same-user paid stack.
+5. Add a duplicate paid-path guard for same-user same-offer and same-ladder re-entry.
+6. Repair the delivered-case review contradiction.
+7. Neutralize mini-app and root-page overclaims.
+8. Patch partial-artifact QA capture and explicit transport behavior.
+9. Restore Notion and GitHub connector startup, then enable Google Drive write access.
 
 Reference proof anchors:
 
-- runtime proof: `bot.stderr`
+- runtime proof: `bot.stderr.log`
+- process truth: current `Win32_Process` parent-child chain for `WellnessBot/main.py`
 - benchmark reference: `ops/reports/quality_report_20260531T083403Z.md`
-- current QA interpretation: `docs/WELLNESS_DIALOGUE_QA_20260605.md`
+- current QA interpretation: `docs/WELLNESS_DIALOGUE_QA_20260608.md`

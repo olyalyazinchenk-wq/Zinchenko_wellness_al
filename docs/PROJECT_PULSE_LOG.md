@@ -1,30 +1,338 @@
 # Project Pulse Log
 
-## 2026-06-07 11:51 MSK - Регулярная синхронизация (12h)
+## 2026-06-14 21:25 MSK - Menu Keyboard Implementation and Codebase Cleanup
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Runtime truth не изменилась относительно позднего окна `2026-06-06`: freshest proof в `bot.stderr` по-прежнему заканчивается на `2026-06-06 23:25:02-23:25:31 +03:00`, а mounted session остаётся `20260606T202509Z_1084557944` с `offer=habits`, `step=habits_daily_log`, `manual_payment_confirmed`.
-- Текущий диск `C:` = `7309156352` байт (`~6.81 GiB`) на `2026-06-07 11:50:55 +03:00`; это ниже порога `10 GB`, хотя и лучше критического утреннего минимума 6 июня.
-- Tracked-дельта остаётся сосредоточенной в `docs/*` и `ops/bot-status.ps1`; новых tracked-изменений в `WellnessBot/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось. Локальные untracked-артефакты (`.bot.lock`, backup-файлы, `bot.stderr`, `bot.stdout`, `docs/WELLNESS_DIALOGUE_QA_20260605.md`, `ops/skills/graphify-codex/`) не входят в safe publish path.
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Updated bot menu and texts to align with `docs/complete_wellness_bot_concept.md`.
+- Implemented persistent main menu reply keyboard:
+  - `🔍 Диагностика симптомов (Бесплатно)`
+  - `🛍️ Выбрать программу`
+  - `📊 Мои отчеты` (retrieves approved reports from user submissions and offers PDF download)
+  - `📝 Заполнить анкету`
+  - `🩸 Сдать анализы` (HelloDoc links integration)
+  - `💬 Задать вопрос эксперту`
+  - `🚨 Красные флаги`
+- Removed obsolete developer commands `/chat` and `/chat_reset`.
+- Cleaned up obsolete files: deleted `main_backup_2026-05-17.py`, `main_backup_2026-05-17_v2.py`, and root temporary screenshot images.
+- Started bot runner task `task-481` which is polling successfully:
+  - `Run polling for bot @zinchenko_wellness_ai_1_bot id=8663867761`
 
-### Этап и блокеры
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
-- К пилоту по-прежнему готов только контролируемый Telegram-first text flow с ручной оплатой и ручной выдачей после проверки.
-- Главные блокеры остаются прежними: duplicate same-user `habits` paths (`20260603T113045Z_1084557944` и `20260606T202509Z_1084557944`), `20260531T183007Z_1084557944` с конфликтом `delivered_to_client` + `fail_major_issues`, disk floor breach, batch QA abort на prompt `1`, и landing overclaim-risk surface.
-- Публично нельзя запускать автооплату, неутверждённую offer/price map, voice/audio как продуктовый путь, mini-app beyond placeholder, или любые public-facing proof surfaces до ремонта canonical path и delivery gate.
+### Connector Status
+- GitHub: staged and committed all codebase changes. Ready to push.
+- Notion: direct connector tool is currently unavailable/blocked at startup in this session. All status information has been written to local hub markdown files for synchronization.
+- Google Drive: blocked.
 
-### Внешняя синхронизация
-- GitHub remote `origin` доступен (`git ls-remote --heads origin` успешен), но локальный docs-only commit/push path всё ещё заблокирован: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` падает на `.git/index.lock: Permission denied`.
-- Через GitHub connector записан sanitised artifact `docs/external_sync/antigravity_sync_20260607T0851Z.md` с commit `fd2a3522139dcf9a85ec36e618086072e5fbca2e` в `origin/master`.
-- Через Notion connector создана sanitised status page `Antigravity Sync Run - 2026-06-07 11:51 MSK` (`3788a9de-1d41-814c-87c2-fe207539ba48`).
+### Plan Delta
+- Next steps:
+  1. Have user test menu button options.
+  2. Finalize VPS deployment script.
 
-### Следующие шаги
-1. Канонизировать June 3 / June 6 `habits` stack в один active paid path.
-2. Добавить hard guard против новых same-user paid branches при unresolved canonical-path или review-конфликте.
-3. Аудировать и исправить `20260531T183007Z_1084557944`.
-4. Поднять `C:` выше `10 GB`.
-5. Починить partial-artifact поведение `ops/quality_probe.py`, затем только после этого повторять batch benchmark.
+## 2026-06-09 11:53 MSK - Sync Deterioration Addendum
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- No newer runtime proof displaced the June 7 reconnect sequence `2026-06-07 13:59:45 -> 13:59:57 +03:00`; the mounted runtime rail still points to `20260606T202509Z_1084557944` with `offer = habits` and `step = habits_daily_log`.
+- Same-user current commercial state remains unresolved across multiple current rails:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260606T202509Z_1084557944` = `habits`, `manual_payment_confirmed`, and mounted as active runtime state
+- Current `C:` free space is `4406906880` bytes (`~4.10 GiB`) at `2026-06-09 11:53:55 +03:00`; this is materially worse than the June 8 read and the `10 GB` floor remains breached.
+- Working-tree truth still shows docs-only tracked churn plus `ops/bot-status.ps1`; no tracked changes are currently visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`.
+- Immediate regression callouts:
+  - disk floor breach; owner `Ops`; next fix action restore `C:` above `10 GB` before more artifact-heavy work or new benchmark runs
+  - same-user paid-path sprawl; owner `Operator + Lead Developer`; next fix action declare one canonical current commercial path across the June 2 / June 3 / June 6 stack, then freeze, archive, merge, or refund the non-canonical rails
+  - duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next fix action choose the canonical `habits` path between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - mini-app monetization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the `1 000 ₽` tier and PDF/support promises or align them to the governed offer map
+  - root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the YooKassa, guaranteed-PDF, and off-map pricing claims from `index.html`
+  - batch QA observability and transport ambiguity; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` for per-prompt partial artifacts and make `WellnessBot/ai_drafting.py` explicit about proxy or `trust_env` policy
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260609_1153_MSK.md`.
+- Notion: run note created successfully as page `37a8a9de-1d41-81cd-b4c2-e5b66138ed00`, and the hub page `AGENT CONTEXT HUB — Antigravity / Wellness` was prepended with a fresh `Context For New Model — 2026-06-09 11:53 MSK` block.
+- GitHub: sanitized status artifacts and context snapshot were created successfully on the default branch:
+  - `docs/external_sync/antigravity_sync_20260609T085355Z.md` -> commit `05a0e7587f5472c4d4dc54da9406e87a7b7c0f32`
+  - `docs/external_sync/antigravity_context_snapshot_20260609T085355Z.md` -> commit `ec2c8918171c8bb86a6553e6305c65be4e22c7da`
+  - `docs/external_sync/2026-06-09_1153_sync_status.md` -> commit `15929e63772decb7671e077793c0ad611c5d3ef9`
+  - `docs/external_sync/2026-06-09_1153_sync_blocked.md` -> commit `3f3177e23042cb2d01388de2d70bc4fe7cdd779d`
+- Google Drive: blocked because no file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- Disk recovery returns to the front of the execution packet because headroom fell from `~7.12 GiB` to `~4.10 GiB` without any corresponding runtime or product gain.
+- The next execution packet is now:
+  1. restore `C:` above `10 GB`
+  2. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  3. add a same-user same-offer and same-ladder duplicate guard so another paid branch cannot open while older paid state is unresolved
+  4. audit and repair the `14900 RUB` delivered-case contradiction
+  5. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  6. patch `WellnessBot/ai_drafting.py` so the `openai_compatible` transport path stops inheriting an implicit proxy path
+  7. re-run the batch benchmark only after steps `5-6`
+  8. remove root-page YooKassa, guaranteed-PDF, and off-map price claims
+  9. reduce mini-app `1 000 ₽` / dossier / PDF / support promises until the live ladder is explicit
+
+### Strategy Delta
+- Runtime liveness is still not the main unknown because the newest June 7 evidence already shows degraded-but-recovered continuity.
+- The main June 9 correction is operational severity:
+  - disk headroom deteriorated sharply without any new proof artifact
+  - one user still spans multiple unresolved paid rails
+  - the older delivered paid case still conflicts with failed review
+  - root and mini-app copy still promise payment, pricing, or dossier outcomes that the approved pilot does not support
+  - the full benchmark still cannot finish because transport failures collapse the whole batch
+- Landing remains the comparatively safest public surface; root and mini-app are still the active cleanup targets.
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: collapse the current same-user paid stack into one canonical path.
+- Goal 3: prevent same-user same-offer and same-ladder paid re-entry while an older paid path is unresolved.
+- Goal 4: repair the delivered-case contradiction before higher-ticket proof counts as valid.
+- Goal 5: make the benchmark survive prompt-level model failures and transport ambiguity.
+- Goal 6: remove root and mini-app pricing or dossier overclaims before treating those surfaces as trustworthy.
+
+### Next 12h Priorities
+1. Restore `C:` above the `10 GB` floor and log the new baseline.
+2. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+3. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+4. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+5. Audit and repair `20260531T183007Z_1084557944`.
+6. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+7. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+8. Re-run the batch benchmark only after steps `6-7`.
+9. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+10. Reduce mini-app `1 000 ₽` tier plus dossier / PDF / support promises until the live ladder is approved.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime remains live enough for a controlled pilot, but commercialization control, delivery truth, and public-surface truth are still incoherent because one user still spans multiple recent paid `nutri_chat` and `habits` branches, the older delivered paid case still conflicts with failed review, and root plus mini-app still overclaim price, payment, or dossier truth.
+- Objective: restore disk headroom first, then collapse the current same-user paid stack to one canonical path, repair the delivered-case contradiction, restore benchmark observability, and align public surfaces to the approved Telegram-first manual-review model.
+- Constraints: Telegram-first only; `PAYMENT_MODE=manual`; human review remains mandatory; one canonical paid path per Telegram user; text-only intake remains the only proven live modality; disk is still below `10 GB`; latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`; current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`; the full batch still fails on prompt `1`; Google Drive file discovery/create/upload/share tools are unavailable in this session.
+- Immediate next actions:
+  1. restore `C:` above the `10 GB` floor
+  2. canonicalize the June 2 / June 3 / June 6 same-user paid stack
+  3. block new duplicate paid creation
+  4. repair the delivered-case contradiction
+  5. neutralize mini-app and root-page overclaims
+  6. patch partial-artifact QA capture and explicit proxy behavior
+
+## 2026-06-08 11:57 MSK - Sync Verification Addendum
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run is now `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- No newer runtime proof displaced the June 7 reconnect sequence `2026-06-07 13:59:45 -> 13:59:57 +03:00`; the mounted runtime rail still points to `20260606T202509Z_1084557944` with `offer = habits` and `step = habits_daily_log`.
+- Same-user current commercial state is broader than the late-night hub summary:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260606T202509Z_1084557944` = `habits`, `manual_payment_confirmed`, and mounted as active runtime state
+- Current `C:` free space is `7641583616` bytes (`~7.12 GiB`) at `2026-06-08 11:57:57 +03:00`; the `10 GB` floor is still breached.
+- Immediate regression callouts:
+  - same-user paid-path sprawl; owner `Operator + Lead Developer`; next fix action declare one canonical current commercial path across the June 2 / June 3 / June 6 stack, then freeze, archive, merge, or refund the non-canonical rails
+  - duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next fix action choose the canonical `habits` path between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - mini-app monetization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the `1 000 в‚Ѕ` tier and PDF/support promises or align them to the governed offer map
+  - root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the YooKassa, guaranteed-PDF, and off-map pricing claims from `index.html`
+  - batch QA observability and transport ambiguity; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` for per-prompt partial artifacts and make `WellnessBot/ai_drafting.py` explicit about proxy/trust-env policy
+  - disk floor breach; owner `Ops`; next fix action restore `C:` above `10 GB` before more artifact-heavy work
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260608_1157_MSK.md`.
+- Notion: run note created successfully as page `3798a9de-1d41-817f-94b1-dc5850c9af01`, and the hub page `AGENT CONTEXT HUB вЂ” Antigravity / Wellness` was prepended with a fresh `Context For New Model вЂ” 2026-06-08 11:57 MSK` block.
+- GitHub: sanitized status artifacts and context snapshot were created successfully on the default branch:
+  - `docs/external_sync/antigravity_sync_20260608T085745Z.md` -> commit `f3636cfe5845b87268c362c2d34ff746fa0cce0c`
+  - `docs/external_sync/antigravity_context_snapshot_20260608T085745Z.md` -> commit `56ecfe6a0be58f43e7b7da47ce1e2b3736f6c5f9`
+  - `docs/external_sync/2026-06-08_1157_sync_status.md` -> commit `bd8778733a40d3b2e0b81e49173f70e15e0724ce`
+  - `docs/external_sync/2026-06-08_1157_sync_blocked.md` -> commit `60a1586323aa8f1f9e1a56827b0da3d79e31e8de`
+- Google Drive: blocked because no file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- The next execution packet is now:
+  1. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  2. add a same-user same-offer and same-ladder duplicate guard so another paid branch cannot open while older paid state is unresolved
+  3. audit and repair the `14900 RUB` delivered-case contradiction
+  4. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  5. patch `WellnessBot/ai_drafting.py` so the `openai_compatible` transport path stops inheriting an implicit proxy path
+  6. re-run the batch benchmark only after steps `4-5`
+  7. remove root-page YooKassa, guaranteed-PDF, and off-map price claims
+  8. reduce mini-app `1 000 в‚Ѕ` / dossier / PDF / support promises until the live ladder is explicit
+  9. restore disk above `10 GB`
+
+### Strategy Delta
+- Runtime liveness is no longer the main unknown because the newest June 7 evidence already shows degraded-but-recovered continuity.
+- The main execution-credibility gap is now commercial ownership plus surface truth:
+  - one user still spans multiple unresolved paid rails
+  - the older delivered paid case still conflicts with failed review
+  - root and mini-app copy still promise payment, pricing, or dossier outcomes that the approved pilot does not support
+  - the full benchmark still cannot finish because transport failures collapse the whole batch
+- Landing is now the comparatively safest public surface; root and mini-app are the active cleanup targets.
+
+### Goals Delta
+- Goal 1: collapse the current same-user paid stack into one canonical path.
+- Goal 2: prevent same-user same-offer and same-ladder paid re-entry while an older paid path is unresolved.
+- Goal 3: repair the delivered-case contradiction before higher-ticket proof counts as valid.
+- Goal 4: make the benchmark survive prompt-level model failures and transport ambiguity.
+- Goal 5: remove root and mini-app pricing or dossier overclaims before treating those surfaces as trustworthy.
+- Goal 6: restore `C:` above the `10 GB` floor.
+
+### Next 12h Priorities
+1. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+2. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+3. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+4. Audit and repair `20260531T183007Z_1084557944`.
+5. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+6. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+7. Re-run the batch benchmark only after steps `5-6`.
+8. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+9. Reduce mini-app `1 000 в‚Ѕ` tier plus dossier / PDF / support promises until the live ladder is approved.
+10. Restore `C:` above `10 GB` and log the new baseline.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime remains live enough for a controlled pilot, but commercialization control and public-surface truth are still incoherent because one user still spans multiple recent paid `nutri_chat` and `habits` branches, the older delivered paid case still conflicts with failed review, and root plus mini-app still overclaim price, payment, or dossier truth.
+- Objective: collapse the current same-user paid stack to one canonical path, repair the delivered-case contradiction, restore benchmark observability, and align public surfaces to the approved Telegram-first manual-review model.
+- Constraints: Telegram-first only; `PAYMENT_MODE=manual`; human review remains mandatory; one canonical paid path per Telegram user; text-only intake remains the only proven live modality; disk is still below `10 GB`; latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`; current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`; the full batch still fails on prompt `1`; Google Drive file discovery/create/upload/share tools are unavailable in this session.
+- Immediate next actions:
+  1. canonicalize the June 2 / June 3 / June 6 same-user paid stack
+  2. block new duplicate paid creation
+  3. repair the delivered-case contradiction
+  4. neutralize mini-app and root-page overclaims
+  5. patch partial-artifact QA capture and explicit proxy behavior
+  6. restore disk headroom
+
+## 2026-06-08 11:54 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Р’ СЌС‚РѕРј РѕРєРЅРµ РЅРѕРІС‹С… runtime-СЃРѕР±С‹С‚РёР№ РїРѕСЃР»Рµ `2026-06-07 13:59:57 +03:00` РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ; mounted session РїРѕ-РїСЂРµР¶РЅРµРјСѓ `20260606T202509Z_1084557944` СЃ `offer=habits`, `step=habits_daily_log`, `manual_payment_confirmed`.
+- Р”РёСЃРє `C:` СЃРµР№С‡Р°СЃ `7646314496` Р±Р°Р№С‚ (`~7.12 GiB`) РЅР° `2026-06-08 11:54:27 +03:00`; СЌС‚Рѕ РІСЃС‘ РµС‰С‘ РЅРёР¶Рµ СЂР°Р±РѕС‡РµРіРѕ РїРѕСЂРѕРіР° `10 GB`.
+- РџСЂРѕРІРµСЂРєР° РґРµСЂРµРІР° РїРѕРґС‚РІРµСЂРґРёР»Р°, С‡С‚Рѕ РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `tests/`, `landing/`, `mini-app/` Р·Р° СЌС‚Рѕ РѕРєРЅРѕ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ; Р°РєС‚РёРІРЅР°СЏ tracked-РґРµР»СЊС‚Р° РѕСЃС‚Р°С‘С‚СЃСЏ РІ `docs/*` Рё `ops/bot-status.ps1`.
+
+### Р­С‚Р°Рї Рё Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РїРµСЂРµРґ РІС‹РґР°С‡РµР№ РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Рљ РїРёР»РѕС‚Сѓ РіРѕС‚РѕРІ С‚РѕР»СЊРєРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№ Telegram-first text flow СЃ СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚РѕР№ Рё СЂСѓС‡РЅРѕР№ РІС‹РґР°С‡РµР№ РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё.
+- Р“Р»Р°РІРЅС‹Рµ Р±Р»РѕРєРµСЂС‹ РѕСЃС‚Р°СЋС‚СЃСЏ РїСЂРµР¶РЅРёРјРё: duplicate same-user `habits` paths (`20260603T113045Z_1084557944` Рё `20260606T202509Z_1084557944`), `20260531T183007Z_1084557944` СЃ РєРѕРЅС„Р»РёРєС‚РѕРј `delivered_to_client` + `fail_major_issues`, disk floor breach, batch QA abort РЅР° prompt `1`, Рё overclaim-risk РЅР° root public surface.
+- РџСѓР±Р»РёС‡РЅРѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ Р°РІС‚РѕРѕРїР»Р°С‚Сѓ, РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ offer/price map, mini-app beyond placeholder, voice/audio РєР°Рє РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїСѓС‚СЊ, РёР»Рё Р»СЋР±СѓСЋ РІС‹РґР°С‡Сѓ Р±РµР· human review.
+
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote РґРѕСЃС‚СѓРїРµРЅ (`git ls-remote --heads origin` СѓСЃРїРµС€РµРЅ), РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push path РІСЃС‘ РµС‰С‘ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` РїР°РґР°РµС‚ РЅР° `.git/index.lock: Permission denied`.
+- Р§РµСЂРµР· GitHub connector Р·Р°РїРёСЃР°РЅ sanitised artifact `docs/external_sync/antigravity_sync_20260608T0854Z.md` СЃ commit `3501960f3893840794cf0c7e85d75da23a832089`.
+- Р§РµСЂРµР· Notion connector СЃРѕР·РґР°РЅР° sanitised status page `Antigravity Sync Run - 2026-06-08 11:54 MSK` (`3798a9de-1d41-811e-8a35-f91833d17433`).
+
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РљР°РЅРѕРЅРёР·РёСЂРѕРІР°С‚СЊ June 3 / June 6 `habits` stack РІ РѕРґРёРЅ active paid path.
+2. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user same-offer paid branches.
+3. РђСѓРґРёСЂРѕРІР°С‚СЊ Рё РёСЃРїСЂР°РІРёС‚СЊ `20260531T183007Z_1084557944`.
+4. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB`.
+5. РџРѕС‡РёРЅРёС‚СЊ partial-artifact РїРѕРІРµРґРµРЅРёРµ `ops/quality_probe.py`, Р·Р°С‚РµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РїРѕРІС‚РѕСЂСЏС‚СЊ batch benchmark.
+6. РЈР±СЂР°С‚СЊ СЃ root-page claims РїСЂРѕ YooKassa, guaranteed PDF Рё РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ price map.
+
+## 2026-06-07 23:52 MSK - Sync Verification Addendum
+
+### Benchmark And Regression Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260605.md`.
+- Fresh runtime evidence now extends to `2026-06-07 13:59:45 -> 13:59:57 +03:00`; this is a transient polling failure followed by reconnect, not a bot-down event.
+- `runtime_state.json` still points to `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log`, and no deeper intake or delivery artifact yet.
+- Current `C:` free space is `7666548736` bytes (`~7.14 GiB`) at `2026-06-07 23:52:42 +03:00`; this is improved versus the morning run, but the `10 GB` floor is still breached.
+- Immediate regression callouts:
+  - duplicate same-offer paid-path multiplication; owner `Operator + Lead Developer`; next fix action declare one canonical `habits` path between the June 3 and June 6 paid branches, then freeze, merge, refund, or archive the duplicate
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - disk floor breach; owner `Ops`; next fix action restore `C:` above `10 GB` before more artifact-heavy work
+  - batch QA observability gap; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  - root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the YooKassa, guaranteed-PDF, and off-map price claims from `index.html`
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260607_2352_MSK.md`.
+- Notion: run note created successfully as page `3788a9de-1d41-81d0-92ed-f8b71462e069`, and the hub page `AGENT CONTEXT HUB РІР‚вЂќ Antigravity / Wellness` was prepended with a fresh late-night `Context For New Model` block.
+- GitHub: sanitized status artifact and context snapshot were created successfully on the default branch:
+  - `docs/external_sync/antigravity_sync_20260607T205242Z.md` -> commit `83304b5b3b6c6567e776c904eb2ef926ba7c5de5`
+  - `docs/external_sync/antigravity_context_snapshot_20260607T205242Z.md` -> commit `43830758f27b7d2a6c4f7ca0ee9c225e1ba63c74`
+  - `docs/external_sync/2026-06-07_2352_sync_blocked.md` -> commit `56e2c651a4450f46b311583f0806db41a33a5c0e`
+- Google Drive: blocked because no file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- The next execution packet is now:
+  1. restore disk above `10 GB`
+  2. declare one canonical `habits` path between the June 3 and June 6 paid branches
+  3. add a same-user same-offer duplicate guard so another paid branch cannot open while the first is unresolved
+  4. audit and repair the `14900 RUB` delivered-case contradiction
+  5. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  6. re-run the batch benchmark only after step `5`
+  7. remove root-page YooKassa, guaranteed-PDF, and off-map price claims
+
+### Strategy Delta
+- Runtime freshness is no longer the lead risk because the newest June 7 evidence shows the bot recovered again.
+- The lead risk remains execution credibility:
+  - duplicate same-user paid-path creation still stands
+  - the older delivered paid case still conflicts with failed review
+  - the batch benchmark still loses visibility on the first model-path connection error
+  - root public copy still overclaims price and payment truth
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: collapse duplicate paid `habits` branches into one canonical path.
+- Goal 3: prevent same-user same-offer paid re-entry while an older paid path is unresolved.
+- Goal 4: repair the delivered-case contradiction before higher-ticket proof counts as valid.
+- Goal 5: make the benchmark survive prompt-level model failures.
+- Goal 6: remove root-page payment and proof overclaims before treating that surface as trustworthy.
+
+## 2026-06-07 23:53 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Runtime truth РѕР±РЅРѕРІРёР»Р°СЃСЊ: РІ `bot.stderr` РїРѕСЏРІРёР»СЃСЏ РЅРѕРІС‹Р№ proof-of-life `2026-06-07 13:59:45 -> 13:59:57 +03:00` СЃ СѓСЃРїРµС€РЅС‹Рј РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµРј polling РїРѕСЃР»Рµ disconnect; Р°РєС‚РёРІРЅС‹Р№ mounted session РїРѕ-РїСЂРµР¶РЅРµРјСѓ `20260606T202509Z_1084557944` СЃ `offer=habits`, `step=habits_daily_log`, `manual_payment_confirmed`.
+- Р”РёСЃРє `C:` С‡Р°СЃС‚РёС‡РЅРѕ РІРѕСЃСЃС‚Р°РЅРѕРІРёР»СЃСЏ РґРѕ `7666380800` Р±Р°Р№С‚ (`~7.14 GiB`) РЅР° `2026-06-07 23:53:57 +03:00`, РЅРѕ СЌС‚Рѕ РІСЃС‘ РµС‰С‘ РЅРёР¶Рµ РїРѕСЂРѕРіР° `10 GB`.
+- РџСЂРѕРІРµСЂРєР° СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР° РїРѕРґС‚РІРµСЂРґРёР»Р°, С‡С‚Рѕ РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `tests/`, `landing/`, `mini-app/` Р·Р° СЌС‚Рѕ РѕРєРЅРѕ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ; tracked-РґРµР»СЊС‚Р° РѕСЃС‚Р°С‘С‚СЃСЏ РІ `docs/DISK_HYGIENE_STATUS.md` Рё `ops/bot-status.ps1`. Untracked Р»РѕРєР°Р»СЊРЅС‹Рµ/runtime-Р°СЂС‚РµС„Р°РєС‚С‹ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РІРЅРµ safe publish path.
+
+### Р­С‚Р°Рї Рё Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РїРµСЂРµРґ РІС‹РґР°С‡РµР№ РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Рљ РїРёР»РѕС‚Сѓ РіРѕС‚РѕРІ С‚РѕР»СЊРєРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№ Telegram-first text flow СЃ СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚РѕР№ Рё СЂСѓС‡РЅРѕР№ РІС‹РґР°С‡РµР№ РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё.
+- Р“Р»Р°РІРЅС‹Рµ Р±Р»РѕРєРµСЂС‹ РЅРµ СЃРґРІРёРЅСѓР»РёСЃСЊ: duplicate same-user `habits` paths (`20260603T113045Z_1084557944` Рё `20260606T202509Z_1084557944`), `20260531T183007Z_1084557944` СЃ РєРѕРЅС„Р»РёРєС‚РѕРј `delivered_to_client` + `fail_major_issues`, disk floor breach, batch QA abort РЅР° prompt `1`, Рё overclaim-risk РЅР° landing/root surfaces.
+- РџСѓР±Р»РёС‡РЅРѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ Р°РІС‚РѕРѕРїР»Р°С‚Сѓ, РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ offer/price map, voice/audio РєР°Рє РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїСѓС‚СЊ, mini-app beyond placeholder, РёР»Рё Р»СЋР±С‹Рµ public-facing proof surfaces РґРѕ СЂРµРјРѕРЅС‚Р° canonical path Рё delivery gate.
+
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote `origin` РґРѕСЃС‚СѓРїРµРЅ (`git ls-remote --heads origin` СѓСЃРїРµС€РµРЅ Рё РїРѕРєР°Р·С‹РІР°РµС‚ `main` + `master`), РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push path РІСЃС‘ РµС‰С‘ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` РїР°РґР°РµС‚ РЅР° `.git/index.lock: Permission denied`.
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ; РІ СЌС‚РѕРј РѕРєРЅРµ РґРѕРїСѓСЃС‚РёРјР° С‚РѕР»СЊРєРѕ sanitised status-page Р·Р°РїРёСЃСЊ Р±РµР· СЃРµРєСЂРµС‚РѕРІ, PII Рё runtime-С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹С… РґРµС‚Р°Р»РµР№.
+- GitHub connector РґРѕСЃС‚СѓРїРµРЅ; РІРЅРµС€РЅРёР№ СЃР»РµРґ РЅСѓР¶РЅРѕ РїРёСЃР°С‚СЊ РєР°Рє sanitised artifact, Р° РЅРµ РєР°Рє РїСЂСЏРјРѕР№ publish Р»РѕРєР°Р»СЊРЅРѕРіРѕ РіСЂСЏР·РЅРѕРіРѕ РґРµСЂРµРІР°.
+
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РљР°РЅРѕРЅРёР·РёСЂРѕРІР°С‚СЊ June 3 / June 6 `habits` stack РІ РѕРґРёРЅ active paid path.
+2. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user paid branches РїСЂРё unresolved canonical-path РёР»Рё review-РєРѕРЅС„Р»РёРєС‚Рµ.
+3. РђСѓРґРёСЂРѕРІР°С‚СЊ Рё РёСЃРїСЂР°РІРёС‚СЊ `20260531T183007Z_1084557944`.
+4. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB`.
+5. РџРѕС‡РёРЅРёС‚СЊ partial-artifact РїРѕРІРµРґРµРЅРёРµ `ops/quality_probe.py`, Р·Р°С‚РµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РїРѕРІС‚РѕСЂСЏС‚СЊ batch benchmark.
+
+## 2026-06-07 11:51 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Runtime truth РЅРµ РёР·РјРµРЅРёР»Р°СЃСЊ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РїРѕР·РґРЅРµРіРѕ РѕРєРЅР° `2026-06-06`: freshest proof РІ `bot.stderr` РїРѕ-РїСЂРµР¶РЅРµРјСѓ Р·Р°РєР°РЅС‡РёРІР°РµС‚СЃСЏ РЅР° `2026-06-06 23:25:02-23:25:31 +03:00`, Р° mounted session РѕСЃС‚Р°С‘С‚СЃСЏ `20260606T202509Z_1084557944` СЃ `offer=habits`, `step=habits_daily_log`, `manual_payment_confirmed`.
+- РўРµРєСѓС‰РёР№ РґРёСЃРє `C:` = `7309156352` Р±Р°Р№С‚ (`~6.81 GiB`) РЅР° `2026-06-07 11:50:55 +03:00`; СЌС‚Рѕ РЅРёР¶Рµ РїРѕСЂРѕРіР° `10 GB`, С…РѕС‚СЏ Рё Р»СѓС‡С€Рµ РєСЂРёС‚РёС‡РµСЃРєРѕРіРѕ СѓС‚СЂРµРЅРЅРµРіРѕ РјРёРЅРёРјСѓРјР° 6 РёСЋРЅСЏ.
+- Tracked-РґРµР»СЊС‚Р° РѕСЃС‚Р°С‘С‚СЃСЏ СЃРѕСЃСЂРµРґРѕС‚РѕС‡РµРЅРЅРѕР№ РІ `docs/*` Рё `ops/bot-status.ps1`; РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `tests/`, `landing/`, `mini-app/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ. Р›РѕРєР°Р»СЊРЅС‹Рµ untracked-Р°СЂС‚РµС„Р°РєС‚С‹ (`.bot.lock`, backup-С„Р°Р№Р»С‹, `bot.stderr`, `bot.stdout`, `docs/WELLNESS_DIALOGUE_QA_20260605.md`, `ops/skills/graphify-codex/`) РЅРµ РІС…РѕРґСЏС‚ РІ safe publish path.
+
+### Р­С‚Р°Рї Рё Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РїРµСЂРµРґ РІС‹РґР°С‡РµР№ РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Рљ РїРёР»РѕС‚Сѓ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РіРѕС‚РѕРІ С‚РѕР»СЊРєРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№ Telegram-first text flow СЃ СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚РѕР№ Рё СЂСѓС‡РЅРѕР№ РІС‹РґР°С‡РµР№ РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё.
+- Р“Р»Р°РІРЅС‹Рµ Р±Р»РѕРєРµСЂС‹ РѕСЃС‚Р°СЋС‚СЃСЏ РїСЂРµР¶РЅРёРјРё: duplicate same-user `habits` paths (`20260603T113045Z_1084557944` Рё `20260606T202509Z_1084557944`), `20260531T183007Z_1084557944` СЃ РєРѕРЅС„Р»РёРєС‚РѕРј `delivered_to_client` + `fail_major_issues`, disk floor breach, batch QA abort РЅР° prompt `1`, Рё landing overclaim-risk surface.
+- РџСѓР±Р»РёС‡РЅРѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ Р°РІС‚РѕРѕРїР»Р°С‚Сѓ, РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ offer/price map, voice/audio РєР°Рє РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїСѓС‚СЊ, mini-app beyond placeholder, РёР»Рё Р»СЋР±С‹Рµ public-facing proof surfaces РґРѕ СЂРµРјРѕРЅС‚Р° canonical path Рё delivery gate.
+
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote `origin` РґРѕСЃС‚СѓРїРµРЅ (`git ls-remote --heads origin` СѓСЃРїРµС€РµРЅ), РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push path РІСЃС‘ РµС‰С‘ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` РїР°РґР°РµС‚ РЅР° `.git/index.lock: Permission denied`.
+- Р§РµСЂРµР· GitHub connector Р·Р°РїРёСЃР°РЅ sanitised artifact `docs/external_sync/antigravity_sync_20260607T0851Z.md` СЃ commit `fd2a3522139dcf9a85ec36e618086072e5fbca2e` РІ `origin/master`.
+- Р§РµСЂРµР· Notion connector СЃРѕР·РґР°РЅР° sanitised status page `Antigravity Sync Run - 2026-06-07 11:51 MSK` (`3788a9de-1d41-814c-87c2-fe207539ba48`).
+
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РљР°РЅРѕРЅРёР·РёСЂРѕРІР°С‚СЊ June 3 / June 6 `habits` stack РІ РѕРґРёРЅ active paid path.
+2. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user paid branches РїСЂРё unresolved canonical-path РёР»Рё review-РєРѕРЅС„Р»РёРєС‚Рµ.
+3. РђСѓРґРёСЂРѕРІР°С‚СЊ Рё РёСЃРїСЂР°РІРёС‚СЊ `20260531T183007Z_1084557944`.
+4. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB`.
+5. РџРѕС‡РёРЅРёС‚СЊ partial-artifact РїРѕРІРµРґРµРЅРёРµ `ops/quality_probe.py`, Р·Р°С‚РµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РїРѕРІС‚РѕСЂСЏС‚СЊ batch benchmark.
 
 ## 2026-06-06 23:50 MSK - Sync Verification Addendum
 
@@ -43,7 +351,7 @@
 
 ### Connector Status
 - Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260606_2350_MSK.md`.
-- Notion: run note created successfully as page `3778a9de-1d41-81bb-9b1b-f2a56cb3e300`, and the hub page `AGENT CONTEXT HUB — Antigravity / Wellness` was prepended with a fresh `Context For New Model — 2026-06-06 23:50 MSK` block.
+- Notion: run note created successfully as page `3778a9de-1d41-81bb-9b1b-f2a56cb3e300`, and the hub page `AGENT CONTEXT HUB вЂ” Antigravity / Wellness` was prepended with a fresh `Context For New Model вЂ” 2026-06-06 23:50 MSK` block.
 - GitHub: sanitized status artifact and context snapshot were created successfully on the default branch:
   - `docs/external_sync/antigravity_sync_20260606T205018Z.md` -> commit `448fa7110295c4fff8b38c8533a9643921852a77`
   - `docs/external_sync/antigravity_context_snapshot_20260606T205018Z.md` -> commit `38bfccf7e3bf2e011c0d541d396529d78600be38`
@@ -77,34 +385,34 @@
 - Goal 5: restore benchmark observability under prompt-level model failures.
 - Goal 6: remove landing proof overclaims before treating the public surface as trustworthy.
 
-## 2026-06-06 23:50 MSK - Регулярная синхронизация (12h)
+## 2026-06-06 23:50 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Runtime truth изменилась: в `bot.stderr` появился свежий proof-of-life на `2026-06-06 23:25:02-23:25:31 +03:00`, а mounted runtime session переключился на новый `habits` кейс `20260606T202509Z_1084557944`.
-- Новый mounted сеанс имеет `payment_status=manual_payment_confirmed`, `offer=habits`, `step=habits_daily_log`; это уже не stale June 3 `nutri_chat`, но это ещё один same-user paid branch без канонической классификации.
-- Disk floor частично восстановился: `C:` свободно `7421399040` байт (`~6.91 GiB`) на `2026-06-06 23:50:35 +03:00`, однако порог `10 GB` всё ещё не достигнут.
-- В tracked-дельте остаются `docs/*` и `ops/bot-status.ps1`; новых tracked-изменений в `WellnessBot/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось. Untracked локальные артефакты по-прежнему остаются вне safe publish path.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- Runtime truth РёР·РјРµРЅРёР»Р°СЃСЊ: РІ `bot.stderr` РїРѕСЏРІРёР»СЃСЏ СЃРІРµР¶РёР№ proof-of-life РЅР° `2026-06-06 23:25:02-23:25:31 +03:00`, Р° mounted runtime session РїРµСЂРµРєР»СЋС‡РёР»СЃСЏ РЅР° РЅРѕРІС‹Р№ `habits` РєРµР№СЃ `20260606T202509Z_1084557944`.
+- РќРѕРІС‹Р№ mounted СЃРµР°РЅСЃ РёРјРµРµС‚ `payment_status=manual_payment_confirmed`, `offer=habits`, `step=habits_daily_log`; СЌС‚Рѕ СѓР¶Рµ РЅРµ stale June 3 `nutri_chat`, РЅРѕ СЌС‚Рѕ РµС‰С‘ РѕРґРёРЅ same-user paid branch Р±РµР· РєР°РЅРѕРЅРёС‡РµСЃРєРѕР№ РєР»Р°СЃСЃРёС„РёРєР°С†РёРё.
+- Disk floor С‡Р°СЃС‚РёС‡РЅРѕ РІРѕСЃСЃС‚Р°РЅРѕРІРёР»СЃСЏ: `C:` СЃРІРѕР±РѕРґРЅРѕ `7421399040` Р±Р°Р№С‚ (`~6.91 GiB`) РЅР° `2026-06-06 23:50:35 +03:00`, РѕРґРЅР°РєРѕ РїРѕСЂРѕРі `10 GB` РІСЃС‘ РµС‰С‘ РЅРµ РґРѕСЃС‚РёРіРЅСѓС‚.
+- Р’ tracked-РґРµР»СЊС‚Рµ РѕСЃС‚Р°СЋС‚СЃСЏ `docs/*` Рё `ops/bot-status.ps1`; РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `tests/`, `landing/`, `mini-app/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ. Untracked Р»РѕРєР°Р»СЊРЅС‹Рµ Р°СЂС‚РµС„Р°РєС‚С‹ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РѕСЃС‚Р°СЋС‚СЃСЏ РІРЅРµ safe publish path.
 
-### Внешняя синхронизация
-- GitHub remote `origin` доступен (`git ls-remote --heads origin` успешен), но локальный docs-only commit/push path всё ещё заблокирован: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` падает на `.git/index.lock: Permission denied`.
-- Чтобы сохранить внешний след синка без публикации чувствительных данных, через GitHub connector создан sanitised artifact `docs/external_sync/antigravity_sync_20260606T205035Z.md` с commit `7e507bdc7da21a72cc880ab4daa2dc88de1cc896`.
-- Notion connector доступен; создана новая sanitised status page `Antigravity Sync Run - 2026-06-06 23:50 MSK` (`3778a9de-1d41-81b3-938b-c77cb34d81a0`).
-- Google Drive upload/share по-прежнему недоступен в текущей Codex-сессии.
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote `origin` РґРѕСЃС‚СѓРїРµРЅ (`git ls-remote --heads origin` СѓСЃРїРµС€РµРЅ), РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push path РІСЃС‘ РµС‰С‘ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` РїР°РґР°РµС‚ РЅР° `.git/index.lock: Permission denied`.
+- Р§С‚РѕР±С‹ СЃРѕС…СЂР°РЅРёС‚СЊ РІРЅРµС€РЅРёР№ СЃР»РµРґ СЃРёРЅРєР° Р±РµР· РїСѓР±Р»РёРєР°С†РёРё С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹С… РґР°РЅРЅС‹С…, С‡РµСЂРµР· GitHub connector СЃРѕР·РґР°РЅ sanitised artifact `docs/external_sync/antigravity_sync_20260606T205035Z.md` СЃ commit `7e507bdc7da21a72cc880ab4daa2dc88de1cc896`.
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ; СЃРѕР·РґР°РЅР° РЅРѕРІР°СЏ sanitised status page `Antigravity Sync Run - 2026-06-06 23:50 MSK` (`3778a9de-1d41-81b3-938b-c77cb34d81a0`).
+- Google Drive upload/share РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµРґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ Codex-СЃРµСЃСЃРёРё.
 
-### Текущий этап, блокеры и границы запуска
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
-- К пилоту готов только контролируемый Telegram-first text flow с ручной оплатой и ручной выдачей после проверки.
-- Нельзя запускать публично автооплату, неутверждённую offer-map/price-map, voice/audio как продуктовый путь и любые public-facing promise surfaces до ремонта canonical path и delivery gate.
-- Главный новый риск этого окна: June 6 `habits` ветка уже mounted и `manual_payment_confirmed`, хотя June 3 paid-ветки всё ещё не классифицированы в один canonical path.
-- Нерешённые блокеры сохраняются: `20260531T183007Z_1084557944` всё ещё сочетает `delivered_to_client` и `fail_major_issues`, batch QA всё ещё падает на prompt `1`, а `landing/index.html` остаётся overclaim-risk surface.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї, Р±Р»РѕРєРµСЂС‹ Рё РіСЂР°РЅРёС†С‹ Р·Р°РїСѓСЃРєР°
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РїРµСЂРµРґ РІС‹РґР°С‡РµР№ РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Рљ РїРёР»РѕС‚Сѓ РіРѕС‚РѕРІ С‚РѕР»СЊРєРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№ Telegram-first text flow СЃ СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚РѕР№ Рё СЂСѓС‡РЅРѕР№ РІС‹РґР°С‡РµР№ РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё.
+- РќРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ Р°РІС‚РѕРѕРїР»Р°С‚Сѓ, РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ offer-map/price-map, voice/audio РєР°Рє РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїСѓС‚СЊ Рё Р»СЋР±С‹Рµ public-facing promise surfaces РґРѕ СЂРµРјРѕРЅС‚Р° canonical path Рё delivery gate.
+- Р“Р»Р°РІРЅС‹Р№ РЅРѕРІС‹Р№ СЂРёСЃРє СЌС‚РѕРіРѕ РѕРєРЅР°: June 6 `habits` РІРµС‚РєР° СѓР¶Рµ mounted Рё `manual_payment_confirmed`, С…РѕС‚СЏ June 3 paid-РІРµС‚РєРё РІСЃС‘ РµС‰С‘ РЅРµ РєР»Р°СЃСЃРёС„РёС†РёСЂРѕРІР°РЅС‹ РІ РѕРґРёРЅ canonical path.
+- РќРµСЂРµС€С‘РЅРЅС‹Рµ Р±Р»РѕРєРµСЂС‹ СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ: `20260531T183007Z_1084557944` РІСЃС‘ РµС‰С‘ СЃРѕС‡РµС‚Р°РµС‚ `delivered_to_client` Рё `fail_major_issues`, batch QA РІСЃС‘ РµС‰С‘ РїР°РґР°РµС‚ РЅР° prompt `1`, Р° `landing/index.html` РѕСЃС‚Р°С‘С‚СЃСЏ overclaim-risk surface.
 
-### Следующие шаги
-1. Канонизировать `20260606T202509Z_1084557944` относительно June 3 `nutri_chat` и `habits` веток.
-2. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
-3. Проверить, почему June 6 `habits` ветка получила `manual_payment_confirmed`, и было ли это ожидаемым операторским действием.
-4. Поднять `C:` выше `10 GB`.
-5. Починить `ops/quality_probe.py`, затем только после этого повторять полный batch benchmark.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РљР°РЅРѕРЅРёР·РёСЂРѕРІР°С‚СЊ `20260606T202509Z_1084557944` РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ June 3 `nutri_chat` Рё `habits` РІРµС‚РѕРє.
+2. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user paid branches РїСЂРё РЅРµСЂРµС€С‘РЅРЅС‹С… review/canonical-path РєРѕРЅС„Р»РёРєС‚Р°С….
+3. РџСЂРѕРІРµСЂРёС‚СЊ, РїРѕС‡РµРјСѓ June 6 `habits` РІРµС‚РєР° РїРѕР»СѓС‡РёР»Р° `manual_payment_confirmed`, Рё Р±С‹Р»Рѕ Р»Рё СЌС‚Рѕ РѕР¶РёРґР°РµРјС‹Рј РѕРїРµСЂР°С‚РѕСЂСЃРєРёРј РґРµР№СЃС‚РІРёРµРј.
+4. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB`.
+5. РџРѕС‡РёРЅРёС‚СЊ `ops/quality_probe.py`, Р·Р°С‚РµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РїРѕРІС‚РѕСЂСЏС‚СЊ РїРѕР»РЅС‹Р№ batch benchmark.
 
 ## 2026-06-06 11:50 MSK - Sync Verification Addendum
 
@@ -131,7 +439,7 @@
 - Notion external sync is verified:
   - new page: `Antigravity Sync Run - 2026-06-06 11:50 MSK`
   - page id: `3778a9de-1d41-8120-93a9-c726bab393ae`
-  - hub page updated: `AGENT CONTEXT HUB — Antigravity / Wellness`
+  - hub page updated: `AGENT CONTEXT HUB вЂ” Antigravity / Wellness`
 - GitHub external sync is write-verified on `main`:
   - `docs/external_sync/antigravity_sync_20260606T085040Z.md` -> commit `97e613f1c320098113f2158e42d67c2e398f9541`
   - `docs/external_sync/antigravity_context_snapshot_20260606T085040Z.md` -> commit `4ffadef5d2132619b7688542e92f711a098ec8d5`
@@ -155,33 +463,33 @@
 - Goal 4: enforce one canonical paid path per Telegram user before the next sale.
 - Goal 5: repair the delivered-case review contradiction before counting higher-ticket revenue as valid proof.
 
-## 2026-06-06 11:49 MSK - Регулярная синхронизация (12h)
+## 2026-06-06 11:49 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Новых tracked-изменений в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app` за это окно не появилось; tracked-дельта по-прежнему сосредоточена в `docs/*`.
-- Runtime-картина не улучшилась: после `2026-06-05 00:32:22 +03:00` новых подтверждений жизни или новых сбоев в проверенном контуре не добавилось; direct fallback остаётся базовой линией.
-- Disk floor ухудшился: свободное место на `C:` просело до `3724460032` байт (`~3.47 GiB`) на `2026-06-06 11:49:04 +03:00`.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РќРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app` Р·Р° СЌС‚Рѕ РѕРєРЅРѕ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ; tracked-РґРµР»СЊС‚Р° РїРѕ-РїСЂРµР¶РЅРµРјСѓ СЃРѕСЃСЂРµРґРѕС‚РѕС‡РµРЅР° РІ `docs/*`.
+- Runtime-РєР°СЂС‚РёРЅР° РЅРµ СѓР»СѓС‡С€РёР»Р°СЃСЊ: РїРѕСЃР»Рµ `2026-06-05 00:32:22 +03:00` РЅРѕРІС‹С… РїРѕРґС‚РІРµСЂР¶РґРµРЅРёР№ Р¶РёР·РЅРё РёР»Рё РЅРѕРІС‹С… СЃР±РѕРµРІ РІ РїСЂРѕРІРµСЂРµРЅРЅРѕРј РєРѕРЅС‚СѓСЂРµ РЅРµ РґРѕР±Р°РІРёР»РѕСЃСЊ; direct fallback РѕСЃС‚Р°С‘С‚СЃСЏ Р±Р°Р·РѕРІРѕР№ Р»РёРЅРёРµР№.
+- Disk floor СѓС…СѓРґС€РёР»СЃСЏ: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` РїСЂРѕСЃРµР»Рѕ РґРѕ `3724460032` Р±Р°Р№С‚ (`~3.47 GiB`) РЅР° `2026-06-06 11:49:04 +03:00`.
 
-### Внешняя синхронизация
-- GitHub remote `origin` доступен по HTTPS, но локальный docs-only commit/push снова заблокирован: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` падает на `.git/index.lock: Permission denied`.
-- Notion connector доступен; создана новая sanitised status page `Antigravity Sync Run - 2026-06-06 11:49 MSK`.
-- Через GitHub connector отправлены sanitised status artifact и context snapshot без секретов и клиентских данных.
-- Google Drive upload/share по-прежнему недоступен: в текущей Codex-сессии нет file discovery/create/upload/share tools.
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote `origin` РґРѕСЃС‚СѓРїРµРЅ РїРѕ HTTPS, РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push СЃРЅРѕРІР° Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ: `git add --dry-run -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` РїР°РґР°РµС‚ РЅР° `.git/index.lock: Permission denied`.
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ; СЃРѕР·РґР°РЅР° РЅРѕРІР°СЏ sanitised status page `Antigravity Sync Run - 2026-06-06 11:49 MSK`.
+- Р§РµСЂРµР· GitHub connector РѕС‚РїСЂР°РІР»РµРЅС‹ sanitised status artifact Рё context snapshot Р±РµР· СЃРµРєСЂРµС‚РѕРІ Рё РєР»РёРµРЅС‚СЃРєРёС… РґР°РЅРЅС‹С….
+- Google Drive upload/share РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµРґРѕСЃС‚СѓРїРµРЅ: РІ С‚РµРєСѓС‰РµР№ Codex-СЃРµСЃСЃРёРё РЅРµС‚ file discovery/create/upload/share tools.
 
-### Текущий этап, блокеры и границы запуска
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
-- К пилоту готов только контролируемый Telegram-first text flow с ручной оплатой и ручной выдачей после проверки.
-- Нельзя запускать публично автооплату, неутверждённую offer-map/price-map, voice/audio как продуктовый путь, а также любые публичные promise surfaces до ремонта canonical path и delivery gate.
-- Главные блокеры без изменений: expired `nutri_chat` state в runtime, same-user paid-branch multiplication, `delivered_to_client` при `fail_major_issues` в `20260531T183007Z_1084557944`, batch QA без partial artifacts при падении prompt `1`, и критически низкий диск.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї, Р±Р»РѕРєРµСЂС‹ Рё РіСЂР°РЅРёС†С‹ Р·Р°РїСѓСЃРєР°
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РїРµСЂРµРґ РІС‹РґР°С‡РµР№ РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Рљ РїРёР»РѕС‚Сѓ РіРѕС‚РѕРІ С‚РѕР»СЊРєРѕ РєРѕРЅС‚СЂРѕР»РёСЂСѓРµРјС‹Р№ Telegram-first text flow СЃ СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚РѕР№ Рё СЂСѓС‡РЅРѕР№ РІС‹РґР°С‡РµР№ РїРѕСЃР»Рµ РїСЂРѕРІРµСЂРєРё.
+- РќРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ Р°РІС‚РѕРѕРїР»Р°С‚Сѓ, РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ offer-map/price-map, voice/audio РєР°Рє РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїСѓС‚СЊ, Р° С‚Р°РєР¶Рµ Р»СЋР±С‹Рµ РїСѓР±Р»РёС‡РЅС‹Рµ promise surfaces РґРѕ СЂРµРјРѕРЅС‚Р° canonical path Рё delivery gate.
+- Р“Р»Р°РІРЅС‹Рµ Р±Р»РѕРєРµСЂС‹ Р±РµР· РёР·РјРµРЅРµРЅРёР№: expired `nutri_chat` state РІ runtime, same-user paid-branch multiplication, `delivered_to_client` РїСЂРё `fail_major_issues` РІ `20260531T183007Z_1084557944`, batch QA Р±РµР· partial artifacts РїСЂРё РїР°РґРµРЅРёРё prompt `1`, Рё РєСЂРёС‚РёС‡РµСЃРєРё РЅРёР·РєРёР№ РґРёСЃРє.
 
-### Следующие шаги
-1. Поднять `C:` выше `10 GB`.
-2. Починить локальную запись в `.git`, чтобы вернуть узкий docs-only commit/push path.
-3. Добавить expiry guard для `nutri_chat`, чтобы expired paid state не оставался активным в runtime.
-4. Починить `ops/quality_probe.py`, чтобы сохранялись partial per-prompt artifacts при model-path сбоях.
-5. Заблокировать создание новых same-user paid branches при unresolved review/expiry/canonical-path конфликте.
-6. Снять противоречие `delivered_to_client` vs `fail_major_issues` и только потом возвращаться к нормализации продуктовой лестницы.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB`.
+2. РџРѕС‡РёРЅРёС‚СЊ Р»РѕРєР°Р»СЊРЅСѓСЋ Р·Р°РїРёСЃСЊ РІ `.git`, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ СѓР·РєРёР№ docs-only commit/push path.
+3. Р”РѕР±Р°РІРёС‚СЊ expiry guard РґР»СЏ `nutri_chat`, С‡С‚РѕР±С‹ expired paid state РЅРµ РѕСЃС‚Р°РІР°Р»СЃСЏ Р°РєС‚РёРІРЅС‹Рј РІ runtime.
+4. РџРѕС‡РёРЅРёС‚СЊ `ops/quality_probe.py`, С‡С‚РѕР±С‹ СЃРѕС…СЂР°РЅСЏР»РёСЃСЊ partial per-prompt artifacts РїСЂРё model-path СЃР±РѕСЏС….
+5. Р—Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ СЃРѕР·РґР°РЅРёРµ РЅРѕРІС‹С… same-user paid branches РїСЂРё unresolved review/expiry/canonical-path РєРѕРЅС„Р»РёРєС‚Рµ.
+6. РЎРЅСЏС‚СЊ РїСЂРѕС‚РёРІРѕСЂРµС‡РёРµ `delivered_to_client` vs `fail_major_issues` Рё С‚РѕР»СЊРєРѕ РїРѕС‚РѕРј РІРѕР·РІСЂР°С‰Р°С‚СЊСЃСЏ Рє РЅРѕСЂРјР°Р»РёР·Р°С†РёРё РїСЂРѕРґСѓРєС‚РѕРІРѕР№ Р»РµСЃС‚РЅРёС†С‹.
 
 ## 2026-06-05 23:48 MSK - GitHub Sync Verification Addendum
 
@@ -194,34 +502,34 @@
 - Immediate `GitHub fetch_file` readback on both `master` and `main` still returned `404`, so the current proof of remote sync is the returned commit pages rather than contents-API path reads.
 - Google Drive remains blocked in-session with the same exact access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
 
-## 2026-06-05 23:48 MSK - Регулярная синхронизация (12h)
+## 2026-06-05 23:48 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Свежая git-дельта не изменила продуктовую картину: tracked-изменения по-прежнему сосредоточены в `docs/*`; новых tracked-изменений в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось.
-- В `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, `main_backup_2026-05-17*.py`); runtime-логи `bot.stderr` и `bot.stdout` остаются локальными и не готовы к публикации.
-- Этап проекта не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review перед выдачей обязателен.
-- Runtime новых событий после `2026-06-05 00:32:22 +03:00` не добавил; актуальной базовой линией остаётся direct fallback без доказанной обязательности прокси `127.0.0.1:10808`.
-- Ops-риск ухудшился: `C:` просел до `3.91 GB` (`2026-06-05 23:48:05 +03:00`), это текущий самый жёсткий инфраструктурный блокер.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РЎРІРµР¶Р°СЏ git-РґРµР»СЊС‚Р° РЅРµ РёР·РјРµРЅРёР»Р° РїСЂРѕРґСѓРєС‚РѕРІСѓСЋ РєР°СЂС‚РёРЅСѓ: tracked-РёР·РјРµРЅРµРЅРёСЏ РїРѕ-РїСЂРµР¶РЅРµРјСѓ СЃРѕСЃСЂРµРґРѕС‚РѕС‡РµРЅС‹ РІ `docs/*`; РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ.
+- Р’ `WellnessBot/` РѕСЃС‚Р°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅС‹Рµ untracked-Р°СЂС‚РµС„Р°РєС‚С‹ (`.bot.lock`, `main_backup_2026-05-17*.py`); runtime-Р»РѕРіРё `bot.stderr` Рё `bot.stdout` РѕСЃС‚Р°СЋС‚СЃСЏ Р»РѕРєР°Р»СЊРЅС‹РјРё Рё РЅРµ РіРѕС‚РѕРІС‹ Рє РїСѓР±Р»РёРєР°С†РёРё.
+- Р­С‚Р°Рї РїСЂРѕРµРєС‚Р° РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РїРµСЂРµРґ РІС‹РґР°С‡РµР№ РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Runtime РЅРѕРІС‹С… СЃРѕР±С‹С‚РёР№ РїРѕСЃР»Рµ `2026-06-05 00:32:22 +03:00` РЅРµ РґРѕР±Р°РІРёР»; Р°РєС‚СѓР°Р»СЊРЅРѕР№ Р±Р°Р·РѕРІРѕР№ Р»РёРЅРёРµР№ РѕСЃС‚Р°С‘С‚СЃСЏ direct fallback Р±РµР· РґРѕРєР°Р·Р°РЅРЅРѕР№ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕСЃС‚Рё РїСЂРѕРєСЃРё `127.0.0.1:10808`.
+- Ops-СЂРёСЃРє СѓС…СѓРґС€РёР»СЃСЏ: `C:` РїСЂРѕСЃРµР» РґРѕ `3.91 GB` (`2026-06-05 23:48:05 +03:00`), СЌС‚Рѕ С‚РµРєСѓС‰РёР№ СЃР°РјС‹Р№ Р¶С‘СЃС‚РєРёР№ РёРЅС„СЂР°СЃС‚СЂСѓРєС‚СѓСЂРЅС‹Р№ Р±Р»РѕРєРµСЂ.
 
-### Внешняя синхронизация
-- GitHub remote `origin` читается; подтверждено наличие обеих веток `master` и `main`, при этом локальная рабочая ветка остаётся `master`.
-- Notion connector доступен в текущей сессии; создана sanitised status page `Antigravity Sync Run - 2026-06-05 23:48 MSK`.
-- Через GitHub connector отправлен sanitised remote status artifact в `master` (commit `5a0452632d97f01f011799e6bec9fd85cf98b8b8`) без чувствительных данных.
-- Google Drive upload/share по-прежнему недоступен: в текущей Codex-сессии нет file discovery/create/upload/share tools.
-- Локальный docs-only `git add -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` снова упал на `.git/index.lock: Permission denied`; обычный commit/push из локального worktree не выполнен.
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote `origin` С‡РёС‚Р°РµС‚СЃСЏ; РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ РЅР°Р»РёС‡РёРµ РѕР±РµРёС… РІРµС‚РѕРє `master` Рё `main`, РїСЂРё СЌС‚РѕРј Р»РѕРєР°Р»СЊРЅР°СЏ СЂР°Р±РѕС‡Р°СЏ РІРµС‚РєР° РѕСЃС‚Р°С‘С‚СЃСЏ `master`.
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё; СЃРѕР·РґР°РЅР° sanitised status page `Antigravity Sync Run - 2026-06-05 23:48 MSK`.
+- Р§РµСЂРµР· GitHub connector РѕС‚РїСЂР°РІР»РµРЅ sanitised remote status artifact РІ `master` (commit `5a0452632d97f01f011799e6bec9fd85cf98b8b8`) Р±РµР· С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹С… РґР°РЅРЅС‹С….
+- Google Drive upload/share РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµРґРѕСЃС‚СѓРїРµРЅ: РІ С‚РµРєСѓС‰РµР№ Codex-СЃРµСЃСЃРёРё РЅРµС‚ file discovery/create/upload/share tools.
+- Р›РѕРєР°Р»СЊРЅС‹Р№ docs-only `git add -- docs/AGENT_CONTEXT_HUB.md docs/PROJECT_PULSE_LOG.md` СЃРЅРѕРІР° СѓРїР°Р» РЅР° `.git/index.lock: Permission denied`; РѕР±С‹С‡РЅС‹Р№ commit/push РёР· Р»РѕРєР°Р»СЊРЅРѕРіРѕ worktree РЅРµ РІС‹РїРѕР»РЅРµРЅ.
 
-### Текущий этап, блокеры и границы запуска
-- К пилоту по-прежнему готов только controlled concierge flow с ручной оплатой, Telegram-first text path и обязательным human review.
-- Нельзя запускать публично auto-paid сценарии, неутверждённую runtime offer-map/price-map, voice/audio как продуктовый путь и любые higher-ticket promise surfaces до ремонта canonical path и delivery gate.
-- Главные незакрытые блокеры без изменений: same-user paid-branch multiplication, `delivered_to_client` при `fail_major_issues` в `20260531T183007Z_1084557944`, overreach в live `nutri_chat`, и batch QA, который всё ещё падает на prompt `1`.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї, Р±Р»РѕРєРµСЂС‹ Рё РіСЂР°РЅРёС†С‹ Р·Р°РїСѓСЃРєР°
+- Рљ РїРёР»РѕС‚Сѓ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РіРѕС‚РѕРІ С‚РѕР»СЊРєРѕ controlled concierge flow СЃ СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚РѕР№, Telegram-first text path Рё РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рј human review.
+- РќРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ auto-paid СЃС†РµРЅР°СЂРёРё, РЅРµСѓС‚РІРµСЂР¶РґС‘РЅРЅСѓСЋ runtime offer-map/price-map, voice/audio РєР°Рє РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ РїСѓС‚СЊ Рё Р»СЋР±С‹Рµ higher-ticket promise surfaces РґРѕ СЂРµРјРѕРЅС‚Р° canonical path Рё delivery gate.
+- Р“Р»Р°РІРЅС‹Рµ РЅРµР·Р°РєСЂС‹С‚С‹Рµ Р±Р»РѕРєРµСЂС‹ Р±РµР· РёР·РјРµРЅРµРЅРёР№: same-user paid-branch multiplication, `delivered_to_client` РїСЂРё `fail_major_issues` РІ `20260531T183007Z_1084557944`, overreach РІ live `nutri_chat`, Рё batch QA, РєРѕС‚РѕСЂС‹Р№ РІСЃС‘ РµС‰С‘ РїР°РґР°РµС‚ РЅР° prompt `1`.
 
-### Следующие шаги
-1. Поднять `C:` выше `10 GB`.
-2. Проверить и восстановить безопасную запись в локальный `.git` для узкого docs-only commit path.
-3. Починить `ops/quality_probe.py`, чтобы сохранялись partial per-prompt artifacts при model-path сбоях.
-4. Ужесточить контракт live `nutri_chat` и отдельно проверить ветку `20260603T121917Z_1084557944`.
-5. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB`.
+2. РџСЂРѕРІРµСЂРёС‚СЊ Рё РІРѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ Р±РµР·РѕРїР°СЃРЅСѓСЋ Р·Р°РїРёСЃСЊ РІ Р»РѕРєР°Р»СЊРЅС‹Р№ `.git` РґР»СЏ СѓР·РєРѕРіРѕ docs-only commit path.
+3. РџРѕС‡РёРЅРёС‚СЊ `ops/quality_probe.py`, С‡С‚РѕР±С‹ СЃРѕС…СЂР°РЅСЏР»РёСЃСЊ partial per-prompt artifacts РїСЂРё model-path СЃР±РѕСЏС….
+4. РЈР¶РµСЃС‚РѕС‡РёС‚СЊ РєРѕРЅС‚СЂР°РєС‚ live `nutri_chat` Рё РѕС‚РґРµР»СЊРЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ РІРµС‚РєСѓ `20260603T121917Z_1084557944`.
+5. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user paid branches РїСЂРё РЅРµСЂРµС€С‘РЅРЅС‹С… review/canonical-path РєРѕРЅС„Р»РёРєС‚Р°С….
 
 ## 2026-06-05 11:52 MSK - Sync Contract Addendum
 
@@ -231,50 +539,50 @@
 - Google Drive exact block reason: no Google Drive file discovery/create/upload/share tools are exposed in the current Codex session.
 - Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
 
-## 2026-06-05 11:51 MSK - Регулярная синхронизация (12h)
+## 2026-06-05 11:51 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Подтверждена свежая дельта репозитория: tracked-изменения по-прежнему сосредоточены в `docs/*`; новых tracked-изменений в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось. В `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, `main_backup_2026-05-17*.py`), а в корне лежат runtime-логи `bot.stderr`/`bot.stdout`.
-- Этап проекта не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен; публичный запуск не разрешён.
-- Runtime остаётся живым для controlled pilot: после June 4 reconnect proof появились ещё два early June 5 SSL-сбоя с восстановлением без рестарта (`00:03:39 -> 00:03:51`, `00:32:10 -> 00:32:22` MSK). Direct fallback остаётся базовой линией; прокси `127.0.0.1:10808` всё ещё не доказан как обязательный.
-- Ops-риск резко усилился: свободное место на `C:` просело до `4.02 GB` (`2026-06-05 11:51:11 +03:00`), что делает disk floor главным инфраструктурным ограничением ближайшего окна.
-- Продуктовая truth не улучшилась: proof-bearing rail остаётся `nutri_chat` за `300 RUB`; same-user paid-branch multiplication, delivery-gate contradiction и несогласованная offer-map/price-map остаются без закрытия.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅР° СЃРІРµР¶Р°СЏ РґРµР»СЊС‚Р° СЂРµРїРѕР·РёС‚РѕСЂРёСЏ: tracked-РёР·РјРµРЅРµРЅРёСЏ РїРѕ-РїСЂРµР¶РЅРµРјСѓ СЃРѕСЃСЂРµРґРѕС‚РѕС‡РµРЅС‹ РІ `docs/*`; РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ. Р’ `WellnessBot/` РѕСЃС‚Р°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅС‹Рµ untracked-Р°СЂС‚РµС„Р°РєС‚С‹ (`.bot.lock`, `main_backup_2026-05-17*.py`), Р° РІ РєРѕСЂРЅРµ Р»РµР¶Р°С‚ runtime-Р»РѕРіРё `bot.stderr`/`bot.stdout`.
+- Р­С‚Р°Рї РїСЂРѕРµРєС‚Р° РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; РїСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє РЅРµ СЂР°Р·СЂРµС€С‘РЅ.
+- Runtime РѕСЃС‚Р°С‘С‚СЃСЏ Р¶РёРІС‹Рј РґР»СЏ controlled pilot: РїРѕСЃР»Рµ June 4 reconnect proof РїРѕСЏРІРёР»РёСЃСЊ РµС‰С‘ РґРІР° early June 5 SSL-СЃР±РѕСЏ СЃ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёРµРј Р±РµР· СЂРµСЃС‚Р°СЂС‚Р° (`00:03:39 -> 00:03:51`, `00:32:10 -> 00:32:22` MSK). Direct fallback РѕСЃС‚Р°С‘С‚СЃСЏ Р±Р°Р·РѕРІРѕР№ Р»РёРЅРёРµР№; РїСЂРѕРєСЃРё `127.0.0.1:10808` РІСЃС‘ РµС‰С‘ РЅРµ РґРѕРєР°Р·Р°РЅ РєР°Рє РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№.
+- Ops-СЂРёСЃРє СЂРµР·РєРѕ СѓСЃРёР»РёР»СЃСЏ: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` РїСЂРѕСЃРµР»Рѕ РґРѕ `4.02 GB` (`2026-06-05 11:51:11 +03:00`), С‡С‚Рѕ РґРµР»Р°РµС‚ disk floor РіР»Р°РІРЅС‹Рј РёРЅС„СЂР°СЃС‚СЂСѓРєС‚СѓСЂРЅС‹Рј РѕРіСЂР°РЅРёС‡РµРЅРёРµРј Р±Р»РёР¶Р°Р№С€РµРіРѕ РѕРєРЅР°.
+- РџСЂРѕРґСѓРєС‚РѕРІР°СЏ truth РЅРµ СѓР»СѓС‡С€РёР»Р°СЃСЊ: proof-bearing rail РѕСЃС‚Р°С‘С‚СЃСЏ `nutri_chat` Р·Р° `300 RUB`; same-user paid-branch multiplication, delivery-gate contradiction Рё РЅРµСЃРѕРіР»Р°СЃРѕРІР°РЅРЅР°СЏ offer-map/price-map РѕСЃС‚Р°СЋС‚СЃСЏ Р±РµР· Р·Р°РєСЂС‹С‚РёСЏ.
 
-### Внешняя синхронизация
-- GitHub remote `origin` читается; одновременно подтверждено, что на удалённом есть и `master`, и `main`, а локальная рабочая ветка остаётся `master`. Это повышает риск нецелевого write-path через коннекторы и требует узкого docs-only пути.
-- Notion connector в этой сессии доступен: создана новая sanitised status page `Antigravity Sync Run - 2026-06-05 11:51 MSK`.
-- Через GitHub connector отправлен отдельный sanitised remote status artifact в `master`, но это не заменяет обычный локальный commit/push статусных файлов.
-- Google Drive upload/share по-прежнему недоступен в текущей Codex-сессии.
-- Локальный docs-only `git add` не прошёл: `.git/index.lock: Permission denied`; обычный commit/push статусных файлов остаётся заблокирован.
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- GitHub remote `origin` С‡РёС‚Р°РµС‚СЃСЏ; РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ, С‡С‚Рѕ РЅР° СѓРґР°Р»С‘РЅРЅРѕРј РµСЃС‚СЊ Рё `master`, Рё `main`, Р° Р»РѕРєР°Р»СЊРЅР°СЏ СЂР°Р±РѕС‡Р°СЏ РІРµС‚РєР° РѕСЃС‚Р°С‘С‚СЃСЏ `master`. Р­С‚Рѕ РїРѕРІС‹С€Р°РµС‚ СЂРёСЃРє РЅРµС†РµР»РµРІРѕРіРѕ write-path С‡РµСЂРµР· РєРѕРЅРЅРµРєС‚РѕСЂС‹ Рё С‚СЂРµР±СѓРµС‚ СѓР·РєРѕРіРѕ docs-only РїСѓС‚Рё.
+- Notion connector РІ СЌС‚РѕР№ СЃРµСЃСЃРёРё РґРѕСЃС‚СѓРїРµРЅ: СЃРѕР·РґР°РЅР° РЅРѕРІР°СЏ sanitised status page `Antigravity Sync Run - 2026-06-05 11:51 MSK`.
+- Р§РµСЂРµР· GitHub connector РѕС‚РїСЂР°РІР»РµРЅ РѕС‚РґРµР»СЊРЅС‹Р№ sanitised remote status artifact РІ `master`, РЅРѕ СЌС‚Рѕ РЅРµ Р·Р°РјРµРЅСЏРµС‚ РѕР±С‹С‡РЅС‹Р№ Р»РѕРєР°Р»СЊРЅС‹Р№ commit/push СЃС‚Р°С‚СѓСЃРЅС‹С… С„Р°Р№Р»РѕРІ.
+- Google Drive upload/share РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµРґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ Codex-СЃРµСЃСЃРёРё.
+- Р›РѕРєР°Р»СЊРЅС‹Р№ docs-only `git add` РЅРµ РїСЂРѕС€С‘Р»: `.git/index.lock: Permission denied`; РѕР±С‹С‡РЅС‹Р№ commit/push СЃС‚Р°С‚СѓСЃРЅС‹С… С„Р°Р№Р»РѕРІ РѕСЃС‚Р°С‘С‚СЃСЏ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ.
 
-### Следующие шаги
-1. Поднять `C:` выше `10 GB` до новых benchmark/proof-циклов.
-2. Восстановить надёжную локальную запись в `.git`, чтобы вернуть узкие docs-only commits на `master`.
-3. Починить partial artifact capture в `ops/quality_probe.py`, затем только после этого повторять полный batch benchmark.
-4. Ужесточить live-chat contract для `nutri_chat` и отдельно проверить активную ветку `20260603T121917Z_1084557944`.
-5. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
-6. Аудировать `20260531T183007Z_1084557944` и снять противоречие `delivered_to_client` vs `fail_major_issues`.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` РґРѕ РЅРѕРІС‹С… benchmark/proof-С†РёРєР»РѕРІ.
+2. Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РЅР°РґС‘Р¶РЅСѓСЋ Р»РѕРєР°Р»СЊРЅСѓСЋ Р·Р°РїРёСЃСЊ РІ `.git`, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ СѓР·РєРёРµ docs-only commits РЅР° `master`.
+3. РџРѕС‡РёРЅРёС‚СЊ partial artifact capture РІ `ops/quality_probe.py`, Р·Р°С‚РµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РїРѕРІС‚РѕСЂСЏС‚СЊ РїРѕР»РЅС‹Р№ batch benchmark.
+4. РЈР¶РµСЃС‚РѕС‡РёС‚СЊ live-chat contract РґР»СЏ `nutri_chat` Рё РѕС‚РґРµР»СЊРЅРѕ РїСЂРѕРІРµСЂРёС‚СЊ Р°РєС‚РёРІРЅСѓСЋ РІРµС‚РєСѓ `20260603T121917Z_1084557944`.
+5. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user paid branches РїСЂРё РЅРµСЂРµС€С‘РЅРЅС‹С… review/canonical-path РєРѕРЅС„Р»РёРєС‚Р°С….
+6. РђСѓРґРёСЂРѕРІР°С‚СЊ `20260531T183007Z_1084557944` Рё СЃРЅСЏС‚СЊ РїСЂРѕС‚РёРІРѕСЂРµС‡РёРµ `delivered_to_client` vs `fail_major_issues`.
 
-## 2026-06-04 23:46 MSK - Регулярная синхронизация (12h)
+## 2026-06-04 23:46 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Подтверждено текущее состояние репозитория: tracked-дельта остаётся в `docs/*`; новых tracked-изменений в `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось; в `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, `main_backup_2026-05-17*.py`).
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- Runtime остаётся достаточным для controlled pilot, но не стал главным риском: June 4 уже дал несколько reconnect proof без рестарта, а главным ограничением остаются canonical-path, delivery-gate, offer-map drift и disk floor.
-- Ops-риск усилился: свободное место на `C:` зафиксировано на уровне `5.42 GB` (`2026-06-04 23:46:41 +03:00`).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅРѕ С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёСЏ: tracked-РґРµР»СЊС‚Р° РѕСЃС‚Р°С‘С‚СЃСЏ РІ `docs/*`; РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `ops/`, `tests/`, `landing/`, `mini-app/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ; РІ `WellnessBot/` РѕСЃС‚Р°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅС‹Рµ untracked-Р°СЂС‚РµС„Р°РєС‚С‹ (`.bot.lock`, `main_backup_2026-05-17*.py`).
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Runtime РѕСЃС‚Р°С‘С‚СЃСЏ РґРѕСЃС‚Р°С‚РѕС‡РЅС‹Рј РґР»СЏ controlled pilot, РЅРѕ РЅРµ СЃС‚Р°Р» РіР»Р°РІРЅС‹Рј СЂРёСЃРєРѕРј: June 4 СѓР¶Рµ РґР°Р» РЅРµСЃРєРѕР»СЊРєРѕ reconnect proof Р±РµР· СЂРµСЃС‚Р°СЂС‚Р°, Р° РіР»Р°РІРЅС‹Рј РѕРіСЂР°РЅРёС‡РµРЅРёРµРј РѕСЃС‚Р°СЋС‚СЃСЏ canonical-path, delivery-gate, offer-map drift Рё disk floor.
+- Ops-СЂРёСЃРє СѓСЃРёР»РёР»СЃСЏ: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅРѕ РЅР° СѓСЂРѕРІРЅРµ `5.42 GB` (`2026-06-04 23:46:41 +03:00`).
 
-### Внешняя синхронизация
-- Notion connector доступен: создана новая sanitised status page `Antigravity Sync Run - 2026-06-04 23:46 MSK`.
-- GitHub remote `origin` доступен по HTTPS, но локальный docs-only commit/push снова заблокирован ошибкой `.git/index.lock: Permission denied`.
-- Google Drive upload/share в текущей Codex-сессии по-прежнему недоступен.
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ: СЃРѕР·РґР°РЅР° РЅРѕРІР°СЏ sanitised status page `Antigravity Sync Run - 2026-06-04 23:46 MSK`.
+- GitHub remote `origin` РґРѕСЃС‚СѓРїРµРЅ РїРѕ HTTPS, РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push СЃРЅРѕРІР° Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РѕС€РёР±РєРѕР№ `.git/index.lock: Permission denied`.
+- Google Drive upload/share РІ С‚РµРєСѓС‰РµР№ Codex-СЃРµСЃСЃРёРё РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµРґРѕСЃС‚СѓРїРµРЅ.
 
-### Следующие шаги
-1. Поднять `C:` выше `10 GB` до новых benchmark/proof-циклов.
-2. Починить локальную запись в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих диффов.
-3. Добавить hard guard против новых same-user paid branches при нерешённых review/canonical-path конфликтах.
-4. Починить partial artifact capture в `ops/quality_probe.py`, затем только после этого повторять полный batch benchmark.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` РґРѕ РЅРѕРІС‹С… benchmark/proof-С†РёРєР»РѕРІ.
+2. РџРѕС‡РёРЅРёС‚СЊ Р»РѕРєР°Р»СЊРЅСѓСЋ Р·Р°РїРёСЃСЊ РІ `.git`, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ СѓР·РєРёРµ docs-only commits Р±РµР· Р·Р°С…РІР°С‚Р° С‡СѓР¶РёС… РґРёС„С„РѕРІ.
+3. Р”РѕР±Р°РІРёС‚СЊ hard guard РїСЂРѕС‚РёРІ РЅРѕРІС‹С… same-user paid branches РїСЂРё РЅРµСЂРµС€С‘РЅРЅС‹С… review/canonical-path РєРѕРЅС„Р»РёРєС‚Р°С….
+4. РџРѕС‡РёРЅРёС‚СЊ partial artifact capture РІ `ops/quality_probe.py`, Р·Р°С‚РµРј С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ СЌС‚РѕРіРѕ РїРѕРІС‚РѕСЂСЏС‚СЊ РїРѕР»РЅС‹Р№ batch benchmark.
 
 ## 2026-06-04 23:45 MSK - Full Project Sync Cycle
 
@@ -519,28 +827,28 @@
   7. normalize one approved ladder only after the control fixes land
   8. restore disk above `10 GB`
 
-## 2026-06-04 11:46 MSK - Регулярная синхронизация (12h)
+## 2026-06-04 11:46 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные проектные файлы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Подтверждено состояние рабочего дерева: tracked-дельта остаётся в `docs/*`; новых tracked-изменений в `ops/`, `tests/`, `landing/`, `mini-app/` в этом окне не появилось; в `WellnessBot/` остаются только локальные untracked-артефакты (`.bot.lock`, backup-файлы).
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- Главный блокер по-прежнему не runtime, а коммерческий контроль:
-  - один Telegram user всё ещё размножен в неканонизированный стек платных веток
-  - кейс `20260531T183007Z_1084557944` остаётся противоречивым (`delivered_to_client` при `fail_major_issues`)
-  - offer-map продолжает расходиться между кодом, промптами и артефактами
-- Ops-риск усилился: свободное место на `C:` упало до `5.69 GB` (`2026-06-04 11:46:46 +03:00`).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїСЂРѕРµРєС‚РЅС‹Рµ С„Р°Р№Р»С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅРѕ СЃРѕСЃС‚РѕСЏРЅРёРµ СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР°: tracked-РґРµР»СЊС‚Р° РѕСЃС‚Р°С‘С‚СЃСЏ РІ `docs/*`; РЅРѕРІС‹С… tracked-РёР·РјРµРЅРµРЅРёР№ РІ `ops/`, `tests/`, `landing/`, `mini-app/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ; РІ `WellnessBot/` РѕСЃС‚Р°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р»РѕРєР°Р»СЊРЅС‹Рµ untracked-Р°СЂС‚РµС„Р°РєС‚С‹ (`.bot.lock`, backup-С„Р°Р№Р»С‹).
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Р“Р»Р°РІРЅС‹Р№ Р±Р»РѕРєРµСЂ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµ runtime, Р° РєРѕРјРјРµСЂС‡РµСЃРєРёР№ РєРѕРЅС‚СЂРѕР»СЊ:
+  - РѕРґРёРЅ Telegram user РІСЃС‘ РµС‰С‘ СЂР°Р·РјРЅРѕР¶РµРЅ РІ РЅРµРєР°РЅРѕРЅРёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃС‚РµРє РїР»Р°С‚РЅС‹С… РІРµС‚РѕРє
+  - РєРµР№СЃ `20260531T183007Z_1084557944` РѕСЃС‚Р°С‘С‚СЃСЏ РїСЂРѕС‚РёРІРѕСЂРµС‡РёРІС‹Рј (`delivered_to_client` РїСЂРё `fail_major_issues`)
+  - offer-map РїСЂРѕРґРѕР»Р¶Р°РµС‚ СЂР°СЃС…РѕРґРёС‚СЊСЃСЏ РјРµР¶РґСѓ РєРѕРґРѕРј, РїСЂРѕРјРїС‚Р°РјРё Рё Р°СЂС‚РµС„Р°РєС‚Р°РјРё
+- Ops-СЂРёСЃРє СѓСЃРёР»РёР»СЃСЏ: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` СѓРїР°Р»Рѕ РґРѕ `5.69 GB` (`2026-06-04 11:46:46 +03:00`).
 
-### Внешняя синхронизация
-- Notion connector доступен; для этого окна подготовлен sanitised status-update без секретов и клиентских данных.
-- GitHub remote `origin` доступен по HTTPS (`refs/heads/main`, `refs/heads/master` читаются), но локальный docs-only commit/push снова заблокирован ошибкой `.git/index.lock: Permission denied`.
-- Локальный отчёт блокера создан: `docs/external_sync/2026-06-04_1146_git_push_blocked.md`.
+### Р’РЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ; РґР»СЏ СЌС‚РѕРіРѕ РѕРєРЅР° РїРѕРґРіРѕС‚РѕРІР»РµРЅ sanitised status-update Р±РµР· СЃРµРєСЂРµС‚РѕРІ Рё РєР»РёРµРЅС‚СЃРєРёС… РґР°РЅРЅС‹С….
+- GitHub remote `origin` РґРѕСЃС‚СѓРїРµРЅ РїРѕ HTTPS (`refs/heads/main`, `refs/heads/master` С‡РёС‚Р°СЋС‚СЃСЏ), РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ docs-only commit/push СЃРЅРѕРІР° Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РѕС€РёР±РєРѕР№ `.git/index.lock: Permission denied`.
+- Р›РѕРєР°Р»СЊРЅС‹Р№ РѕС‚С‡С‘С‚ Р±Р»РѕРєРµСЂР° СЃРѕР·РґР°РЅ: `docs/external_sync/2026-06-04_1146_git_push_blocked.md`.
 
-### Следующие шаги
-1. Починить локальную запись в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих диффов.
-2. Держать проект в режиме controlled concierge pilot: Telegram-first, manual payment, human review, text-only intake.
-3. Не выпускать публично `habits`, `standard`, `premium`, root/landing surfaces и `mini-app`, пока не закрыты canonical-path, delivery-gate и offer-map drift.
-4. Поднять `C:` выше `10 GB` до новых benchmark/proof-циклов.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. РџРѕС‡РёРЅРёС‚СЊ Р»РѕРєР°Р»СЊРЅСѓСЋ Р·Р°РїРёСЃСЊ РІ `.git`, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ СѓР·РєРёРµ docs-only commits Р±РµР· Р·Р°С…РІР°С‚Р° С‡СѓР¶РёС… РґРёС„С„РѕРІ.
+2. Р”РµСЂР¶Р°С‚СЊ РїСЂРѕРµРєС‚ РІ СЂРµР¶РёРјРµ controlled concierge pilot: Telegram-first, manual payment, human review, text-only intake.
+3. РќРµ РІС‹РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ `habits`, `standard`, `premium`, root/landing surfaces Рё `mini-app`, РїРѕРєР° РЅРµ Р·Р°РєСЂС‹С‚С‹ canonical-path, delivery-gate Рё offer-map drift.
+4. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` РґРѕ РЅРѕРІС‹С… benchmark/proof-С†РёРєР»РѕРІ.
 
 ## 2026-06-03 23:41 MSK - Full Project Sync Cycle
 
@@ -667,72 +975,72 @@
   7. normalize one approved ladder only after the control fixes land
   8. restore disk above `10 GB`
 
-## 2026-06-03 23:44 MSK - Регулярная синхронизация (12h)
+## 2026-06-03 23:44 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные опорные документы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Подтверждена свежая дельта рабочего дерева: самые крупные неревьюенные изменения остаются в `WellnessBot/`, `ops/`, `index.html`, `app.js`, `styles.css`, `mini-app/index.html` и ряде `docs/*`; новых локальных диффов в `tests/` в этом окне не появилось.
-- GitHub remote `origin` читается по HTTPS (`refs/heads/main`, `refs/heads/master` доступны), но узкий docs-only commit/push из этой среды всё ещё блокируется локальной проблемой индексации `.git/index.lock`.
-- Notion connector доступен; в этом окне можно вынести только санитизированный статус без секретов, клиентских данных и runtime-чувствительных артефактов.
-- Disk hygiene остаётся P0 ops-риском: свободное место на `C:` сейчас `6.69 GB` (`2026-06-03 23:43:57 +03:00`).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РѕРїРѕСЂРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅР° СЃРІРµР¶Р°СЏ РґРµР»СЊС‚Р° СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР°: СЃР°РјС‹Рµ РєСЂСѓРїРЅС‹Рµ РЅРµСЂРµРІСЊСЋРµРЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РѕСЃС‚Р°СЋС‚СЃСЏ РІ `WellnessBot/`, `ops/`, `index.html`, `app.js`, `styles.css`, `mini-app/index.html` Рё СЂСЏРґРµ `docs/*`; РЅРѕРІС‹С… Р»РѕРєР°Р»СЊРЅС‹С… РґРёС„С„РѕРІ РІ `tests/` РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ.
+- GitHub remote `origin` С‡РёС‚Р°РµС‚СЃСЏ РїРѕ HTTPS (`refs/heads/main`, `refs/heads/master` РґРѕСЃС‚СѓРїРЅС‹), РЅРѕ СѓР·РєРёР№ docs-only commit/push РёР· СЌС‚РѕР№ СЃСЂРµРґС‹ РІСЃС‘ РµС‰С‘ Р±Р»РѕРєРёСЂСѓРµС‚СЃСЏ Р»РѕРєР°Р»СЊРЅРѕР№ РїСЂРѕР±Р»РµРјРѕР№ РёРЅРґРµРєСЃР°С†РёРё `.git/index.lock`.
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ; РІ СЌС‚РѕРј РѕРєРЅРµ РјРѕР¶РЅРѕ РІС‹РЅРµСЃС‚Рё С‚РѕР»СЊРєРѕ СЃР°РЅРёС‚РёР·РёСЂРѕРІР°РЅРЅС‹Р№ СЃС‚Р°С‚СѓСЃ Р±РµР· СЃРµРєСЂРµС‚РѕРІ, РєР»РёРµРЅС‚СЃРєРёС… РґР°РЅРЅС‹С… Рё runtime-С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹С… Р°СЂС‚РµС„Р°РєС‚РѕРІ.
+- Disk hygiene РѕСЃС‚Р°С‘С‚СЃСЏ P0 ops-СЂРёСЃРєРѕРј: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` СЃРµР№С‡Р°СЃ `6.69 GB` (`2026-06-03 23:43:57 +03:00`).
 
-### Текущий этап / блокеры
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- Главный продуктовый блокер по-прежнему не runtime, а коммерческий и safety-контроль: у одного пользователя остаются конфликтующие платные ветки `premium/basic/standard/nutri_chat`, а кейс `20260531T183007Z_1084557944` всё ещё противоречив (`delivered_to_client` при `fail_major_issues`).
-- Публично нельзя запускать ни новый фронтовый оффер, ни расширенный пакетный каталог как источник продуктовой правды, пока крупные локальные диффы в `WellnessBot/`, `landing`/корневом фронте и `mini-app/` не прошли ручной разбор и safety-проверку.
-- Отдельный ops-блокер не снят: локальный git всё ещё не даёт безопасно сделать даже docs-only commit из-за ошибки прав на `.git/index.lock`.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Р“Р»Р°РІРЅС‹Р№ РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ Р±Р»РѕРєРµСЂ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµ runtime, Р° РєРѕРјРјРµСЂС‡РµСЃРєРёР№ Рё safety-РєРѕРЅС‚СЂРѕР»СЊ: Сѓ РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РѕСЃС‚Р°СЋС‚СЃСЏ РєРѕРЅС„Р»РёРєС‚СѓСЋС‰РёРµ РїР»Р°С‚РЅС‹Рµ РІРµС‚РєРё `premium/basic/standard/nutri_chat`, Р° РєРµР№СЃ `20260531T183007Z_1084557944` РІСЃС‘ РµС‰С‘ РїСЂРѕС‚РёРІРѕСЂРµС‡РёРІ (`delivered_to_client` РїСЂРё `fail_major_issues`).
+- РџСѓР±Р»РёС‡РЅРѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РЅРё РЅРѕРІС‹Р№ С„СЂРѕРЅС‚РѕРІС‹Р№ РѕС„С„РµСЂ, РЅРё СЂР°СЃС€РёСЂРµРЅРЅС‹Р№ РїР°РєРµС‚РЅС‹Р№ РєР°С‚Р°Р»РѕРі РєР°Рє РёСЃС‚РѕС‡РЅРёРє РїСЂРѕРґСѓРєС‚РѕРІРѕР№ РїСЂР°РІРґС‹, РїРѕРєР° РєСЂСѓРїРЅС‹Рµ Р»РѕРєР°Р»СЊРЅС‹Рµ РґРёС„С„С‹ РІ `WellnessBot/`, `landing`/РєРѕСЂРЅРµРІРѕРј С„СЂРѕРЅС‚Рµ Рё `mini-app/` РЅРµ РїСЂРѕС€Р»Рё СЂСѓС‡РЅРѕР№ СЂР°Р·Р±РѕСЂ Рё safety-РїСЂРѕРІРµСЂРєСѓ.
+- РћС‚РґРµР»СЊРЅС‹Р№ ops-Р±Р»РѕРєРµСЂ РЅРµ СЃРЅСЏС‚: Р»РѕРєР°Р»СЊРЅС‹Р№ git РІСЃС‘ РµС‰С‘ РЅРµ РґР°С‘С‚ Р±РµР·РѕРїР°СЃРЅРѕ СЃРґРµР»Р°С‚СЊ РґР°Р¶Рµ docs-only commit РёР·-Р·Р° РѕС€РёР±РєРё РїСЂР°РІ РЅР° `.git/index.lock`.
 
-### Следующие шаги
-1. Держать sync в статусном/docs-слое, пока кодовые и фронтовые диффы не пройдут ручной разбор.
-2. Починить локальную индексацию git в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих изменений.
-3. Разобрать delivery-gate breach на `20260531T183007Z_1084557944` и запретить новые `delivered_to_client` при проваленном review.
-4. Схлопнуть same-user paid stack в один canonical path и только потом нормализовать одну продуктовую лестницу.
-5. Поднять `C:` выше `10 GB` до новых replay, PDF-экспортов и артефактной генерации.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. Р”РµСЂР¶Р°С‚СЊ sync РІ СЃС‚Р°С‚СѓСЃРЅРѕРј/docs-СЃР»РѕРµ, РїРѕРєР° РєРѕРґРѕРІС‹Рµ Рё С„СЂРѕРЅС‚РѕРІС‹Рµ РґРёС„С„С‹ РЅРµ РїСЂРѕР№РґСѓС‚ СЂСѓС‡РЅРѕР№ СЂР°Р·Р±РѕСЂ.
+2. РџРѕС‡РёРЅРёС‚СЊ Р»РѕРєР°Р»СЊРЅСѓСЋ РёРЅРґРµРєСЃР°С†РёСЋ git РІ `.git`, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ СѓР·РєРёРµ docs-only commits Р±РµР· Р·Р°С…РІР°С‚Р° С‡СѓР¶РёС… РёР·РјРµРЅРµРЅРёР№.
+3. Р Р°Р·РѕР±СЂР°С‚СЊ delivery-gate breach РЅР° `20260531T183007Z_1084557944` Рё Р·Р°РїСЂРµС‚РёС‚СЊ РЅРѕРІС‹Рµ `delivered_to_client` РїСЂРё РїСЂРѕРІР°Р»РµРЅРЅРѕРј review.
+4. РЎС…Р»РѕРїРЅСѓС‚СЊ same-user paid stack РІ РѕРґРёРЅ canonical path Рё С‚РѕР»СЊРєРѕ РїРѕС‚РѕРј РЅРѕСЂРјР°Р»РёР·РѕРІР°С‚СЊ РѕРґРЅСѓ РїСЂРѕРґСѓРєС‚РѕРІСѓСЋ Р»РµСЃС‚РЅРёС†Сѓ.
+5. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` РґРѕ РЅРѕРІС‹С… replay, PDF-СЌРєСЃРїРѕСЂС‚РѕРІ Рё Р°СЂС‚РµС„Р°РєС‚РЅРѕР№ РіРµРЅРµСЂР°С†РёРё.
 
-## 2026-06-03 11:43 MSK - Регулярная синхронизация (12h)
+## 2026-06-03 11:43 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные опорные документы и снята свежая дельта по `docs`, `WellnessBot`, `ops`, корневому фронту и `mini-app`.
-- Состояние репозитория остаётся сильно грязным: локальные диффы есть в `WellnessBot/`, `ops/`, `index.html`, `app.js`, `styles.css`, `mini-app/index.html` и ряде `docs/*`; в `tests/` новых локальных диффов в этом окне нет.
-- Подтверждён доступ к GitHub remote `origin` по HTTPS (`refs/heads/main` и `refs/heads/master` читаются), но локальный `git add` по двум docs-файлам снова упирается в `Permission denied` на `.git/index.lock`.
-- Notion connector доступен в текущей сессии и может принять свежую sanitised status-note без секретов и клиентских данных.
-- Disk hygiene снова ухудшился: свободное место на `C:` сейчас `6.56 GB` (`2026-06-03 11:43:59 +03:00`).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РѕРїРѕСЂРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ Рё СЃРЅСЏС‚Р° СЃРІРµР¶Р°СЏ РґРµР»СЊС‚Р° РїРѕ `docs`, `WellnessBot`, `ops`, РєРѕСЂРЅРµРІРѕРјСѓ С„СЂРѕРЅС‚Сѓ Рё `mini-app`.
+- РЎРѕСЃС‚РѕСЏРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёСЏ РѕСЃС‚Р°С‘С‚СЃСЏ СЃРёР»СЊРЅРѕ РіСЂСЏР·РЅС‹Рј: Р»РѕРєР°Р»СЊРЅС‹Рµ РґРёС„С„С‹ РµСЃС‚СЊ РІ `WellnessBot/`, `ops/`, `index.html`, `app.js`, `styles.css`, `mini-app/index.html` Рё СЂСЏРґРµ `docs/*`; РІ `tests/` РЅРѕРІС‹С… Р»РѕРєР°Р»СЊРЅС‹С… РґРёС„С„РѕРІ РІ СЌС‚РѕРј РѕРєРЅРµ РЅРµС‚.
+- РџРѕРґС‚РІРµСЂР¶РґС‘РЅ РґРѕСЃС‚СѓРї Рє GitHub remote `origin` РїРѕ HTTPS (`refs/heads/main` Рё `refs/heads/master` С‡РёС‚Р°СЋС‚СЃСЏ), РЅРѕ Р»РѕРєР°Р»СЊРЅС‹Р№ `git add` РїРѕ РґРІСѓРј docs-С„Р°Р№Р»Р°Рј СЃРЅРѕРІР° СѓРїРёСЂР°РµС‚СЃСЏ РІ `Permission denied` РЅР° `.git/index.lock`.
+- Notion connector РґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё Рё РјРѕР¶РµС‚ РїСЂРёРЅСЏС‚СЊ СЃРІРµР¶СѓСЋ sanitised status-note Р±РµР· СЃРµРєСЂРµС‚РѕРІ Рё РєР»РёРµРЅС‚СЃРєРёС… РґР°РЅРЅС‹С….
+- Disk hygiene СЃРЅРѕРІР° СѓС…СѓРґС€РёР»СЃСЏ: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` СЃРµР№С‡Р°СЃ `6.56 GB` (`2026-06-03 11:43:59 +03:00`).
 
-### Текущий этап / блокеры
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- Главный продуктовый блокер не runtime, а коммерческий контроль: у одного и того же пользователя остаются конфликтующие платные ветки `premium/basic/standard/nutri_chat`, а кейс `20260531T183007Z_1084557944` всё ещё противоречив: `delivered_to_client` при `fail_major_issues`.
-- Публично нельзя запускать ни широкий пакетный каталог, ни фронтовые / TMA-поверхности как источник продуктовой правды: в рабочем дереве лежат крупные неревьюенные изменения меню, копирайта, тарифов и UX.
-- Отдельный ops-блокер: локальная git-индексация по-прежнему сломана, поэтому даже узкий docs-only commit/push нельзя выполнить безопасно из этой среды.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Р“Р»Р°РІРЅС‹Р№ РїСЂРѕРґСѓРєС‚РѕРІС‹Р№ Р±Р»РѕРєРµСЂ РЅРµ runtime, Р° РєРѕРјРјРµСЂС‡РµСЃРєРёР№ РєРѕРЅС‚СЂРѕР»СЊ: Сѓ РѕРґРЅРѕРіРѕ Рё С‚РѕРіРѕ Р¶Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РѕСЃС‚Р°СЋС‚СЃСЏ РєРѕРЅС„Р»РёРєС‚СѓСЋС‰РёРµ РїР»Р°С‚РЅС‹Рµ РІРµС‚РєРё `premium/basic/standard/nutri_chat`, Р° РєРµР№СЃ `20260531T183007Z_1084557944` РІСЃС‘ РµС‰С‘ РїСЂРѕС‚РёРІРѕСЂРµС‡РёРІ: `delivered_to_client` РїСЂРё `fail_major_issues`.
+- РџСѓР±Р»РёС‡РЅРѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РЅРё С€РёСЂРѕРєРёР№ РїР°РєРµС‚РЅС‹Р№ РєР°С‚Р°Р»РѕРі, РЅРё С„СЂРѕРЅС‚РѕРІС‹Рµ / TMA-РїРѕРІРµСЂС…РЅРѕСЃС‚Рё РєР°Рє РёСЃС‚РѕС‡РЅРёРє РїСЂРѕРґСѓРєС‚РѕРІРѕР№ РїСЂР°РІРґС‹: РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ Р»РµР¶Р°С‚ РєСЂСѓРїРЅС‹Рµ РЅРµСЂРµРІСЊСЋРµРЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РјРµРЅСЋ, РєРѕРїРёСЂР°Р№С‚Р°, С‚Р°СЂРёС„РѕРІ Рё UX.
+- РћС‚РґРµР»СЊРЅС‹Р№ ops-Р±Р»РѕРєРµСЂ: Р»РѕРєР°Р»СЊРЅР°СЏ git-РёРЅРґРµРєСЃР°С†РёСЏ РїРѕ-РїСЂРµР¶РЅРµРјСѓ СЃР»РѕРјР°РЅР°, РїРѕСЌС‚РѕРјСѓ РґР°Р¶Рµ СѓР·РєРёР№ docs-only commit/push РЅРµР»СЊР·СЏ РІС‹РїРѕР»РЅРёС‚СЊ Р±РµР·РѕРїР°СЃРЅРѕ РёР· СЌС‚РѕР№ СЃСЂРµРґС‹.
 
-### Следующие шаги
-1. Держать sync в рамках status/docs-слоя, пока кодовые и фронтовые диффы не пройдут ручной разбор.
-2. Починить `.git/index.lock` / права записи в `.git`, чтобы вернуть узкие docs-only commits без захвата чужих изменений.
-3. Разобрать delivery-gate breach на `20260531T183007Z_1084557944` и запретить новые `delivered_to_client` при проваленном review.
-4. Схлопнуть same-user paid stack в один canonical path и только потом нормализовать одну продуктовую лестницу.
-5. Поднять `C:` выше `10 GB` до новых replay, PDF-экспортов и артефактной генерации.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. Р”РµСЂР¶Р°С‚СЊ sync РІ СЂР°РјРєР°С… status/docs-СЃР»РѕСЏ, РїРѕРєР° РєРѕРґРѕРІС‹Рµ Рё С„СЂРѕРЅС‚РѕРІС‹Рµ РґРёС„С„С‹ РЅРµ РїСЂРѕР№РґСѓС‚ СЂСѓС‡РЅРѕР№ СЂР°Р·Р±РѕСЂ.
+2. РџРѕС‡РёРЅРёС‚СЊ `.git/index.lock` / РїСЂР°РІР° Р·Р°РїРёСЃРё РІ `.git`, С‡С‚РѕР±С‹ РІРµСЂРЅСѓС‚СЊ СѓР·РєРёРµ docs-only commits Р±РµР· Р·Р°С…РІР°С‚Р° С‡СѓР¶РёС… РёР·РјРµРЅРµРЅРёР№.
+3. Р Р°Р·РѕР±СЂР°С‚СЊ delivery-gate breach РЅР° `20260531T183007Z_1084557944` Рё Р·Р°РїСЂРµС‚РёС‚СЊ РЅРѕРІС‹Рµ `delivered_to_client` РїСЂРё РїСЂРѕРІР°Р»РµРЅРЅРѕРј review.
+4. РЎС…Р»РѕРїРЅСѓС‚СЊ same-user paid stack РІ РѕРґРёРЅ canonical path Рё С‚РѕР»СЊРєРѕ РїРѕС‚РѕРј РЅРѕСЂРјР°Р»РёР·РѕРІР°С‚СЊ РѕРґРЅСѓ РїСЂРѕРґСѓРєС‚РѕРІСѓСЋ Р»РµСЃС‚РЅРёС†Сѓ.
+5. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` РґРѕ РЅРѕРІС‹С… replay, PDF-СЌРєСЃРїРѕСЂС‚РѕРІ Рё Р°СЂС‚РµС„Р°РєС‚РЅРѕР№ РіРµРЅРµСЂР°С†РёРё.
 
-## 2026-06-02 23:42 MSK - Регулярная синхронизация (12h)
+## 2026-06-02 23:42 MSK - Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Повторно прочитаны обязательные опорные документы: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Состояние репозитория подтверждено повторно: в рабочем дереве остаются крупные неревьюенные диффы в `docs`, `WellnessBot`, `ops`, корневом фронте и `mini-app`; `landing/index.html` изменён, `tests/` в этом окне без новых локальных диффов.
-- GitHub remote доступен: `git ls-remote origin` успешен в `2026-06-02 23:42 MSK`.
-- Notion connector повторно доступен в текущей сессии и может принять свежую статусную заметку.
-- Попытка узкого docs-only commit/push заблокирована локально: `git add` не может создать `.git/index.lock` (`Permission denied`).
-- Disk hygiene ухудшился ещё раз: свободное место на `C:` снизилось до `6.62 GB`.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРІС‚РѕСЂРЅРѕ РїСЂРѕС‡РёС‚Р°РЅС‹ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РѕРїРѕСЂРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РЎРѕСЃС‚РѕСЏРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёСЏ РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ РїРѕРІС‚РѕСЂРЅРѕ: РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ РѕСЃС‚Р°СЋС‚СЃСЏ РєСЂСѓРїРЅС‹Рµ РЅРµСЂРµРІСЊСЋРµРЅРЅС‹Рµ РґРёС„С„С‹ РІ `docs`, `WellnessBot`, `ops`, РєРѕСЂРЅРµРІРѕРј С„СЂРѕРЅС‚Рµ Рё `mini-app`; `landing/index.html` РёР·РјРµРЅС‘РЅ, `tests/` РІ СЌС‚РѕРј РѕРєРЅРµ Р±РµР· РЅРѕРІС‹С… Р»РѕРєР°Р»СЊРЅС‹С… РґРёС„С„РѕРІ.
+- GitHub remote РґРѕСЃС‚СѓРїРµРЅ: `git ls-remote origin` СѓСЃРїРµС€РµРЅ РІ `2026-06-02 23:42 MSK`.
+- Notion connector РїРѕРІС‚РѕСЂРЅРѕ РґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё Рё РјРѕР¶РµС‚ РїСЂРёРЅСЏС‚СЊ СЃРІРµР¶СѓСЋ СЃС‚Р°С‚СѓСЃРЅСѓСЋ Р·Р°РјРµС‚РєСѓ.
+- РџРѕРїС‹С‚РєР° СѓР·РєРѕРіРѕ docs-only commit/push Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅР° Р»РѕРєР°Р»СЊРЅРѕ: `git add` РЅРµ РјРѕР¶РµС‚ СЃРѕР·РґР°С‚СЊ `.git/index.lock` (`Permission denied`).
+- Disk hygiene СѓС…СѓРґС€РёР»СЃСЏ РµС‰С‘ СЂР°Р·: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` СЃРЅРёР·РёР»РѕСЃСЊ РґРѕ `6.62 GB`.
 
-### Текущий этап / блокеры
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- Главные блокеры не изменились: breach delivery-gate на кейсе `20260531T183007Z_1084557944`, размножение paid-веток одного пользователя, отсутствие единой продуктовой лестницы.
-- Новый ops-риск стал жёстче: запас по диску ушёл ещё ниже floor, поэтому любые тяжёлые replay/экспортные действия остаются рискованными до ручной очистки.
-- При доступном GitHub нельзя автоматически публиковать широкий снимок рабочего дерева: в нём есть большие неревьюенные кодовые, фронтовые и локальные runtime-артефакты.
-- Даже docs-only push сейчас требует ручного разбора прав на `.git/index.lock` или следующего прогона в исправленной среде.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Р“Р»Р°РІРЅС‹Рµ Р±Р»РѕРєРµСЂС‹ РЅРµ РёР·РјРµРЅРёР»РёСЃСЊ: breach delivery-gate РЅР° РєРµР№СЃРµ `20260531T183007Z_1084557944`, СЂР°Р·РјРЅРѕР¶РµРЅРёРµ paid-РІРµС‚РѕРє РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РѕС‚СЃСѓС‚СЃС‚РІРёРµ РµРґРёРЅРѕР№ РїСЂРѕРґСѓРєС‚РѕРІРѕР№ Р»РµСЃС‚РЅРёС†С‹.
+- РќРѕРІС‹Р№ ops-СЂРёСЃРє СЃС‚Р°Р» Р¶С‘СЃС‚С‡Рµ: Р·Р°РїР°СЃ РїРѕ РґРёСЃРєСѓ СѓС€С‘Р» РµС‰С‘ РЅРёР¶Рµ floor, РїРѕСЌС‚РѕРјСѓ Р»СЋР±С‹Рµ С‚СЏР¶С‘Р»С‹Рµ replay/СЌРєСЃРїРѕСЂС‚РЅС‹Рµ РґРµР№СЃС‚РІРёСЏ РѕСЃС‚Р°СЋС‚СЃСЏ СЂРёСЃРєРѕРІР°РЅРЅС‹РјРё РґРѕ СЂСѓС‡РЅРѕР№ РѕС‡РёСЃС‚РєРё.
+- РџСЂРё РґРѕСЃС‚СѓРїРЅРѕРј GitHub РЅРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСѓР±Р»РёРєРѕРІР°С‚СЊ С€РёСЂРѕРєРёР№ СЃРЅРёРјРѕРє СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР°: РІ РЅС‘Рј РµСЃС‚СЊ Р±РѕР»СЊС€РёРµ РЅРµСЂРµРІСЊСЋРµРЅРЅС‹Рµ РєРѕРґРѕРІС‹Рµ, С„СЂРѕРЅС‚РѕРІС‹Рµ Рё Р»РѕРєР°Р»СЊРЅС‹Рµ runtime-Р°СЂС‚РµС„Р°РєС‚С‹.
+- Р”Р°Р¶Рµ docs-only push СЃРµР№С‡Р°СЃ С‚СЂРµР±СѓРµС‚ СЂСѓС‡РЅРѕРіРѕ СЂР°Р·Р±РѕСЂР° РїСЂР°РІ РЅР° `.git/index.lock` РёР»Рё СЃР»РµРґСѓСЋС‰РµРіРѕ РїСЂРѕРіРѕРЅР° РІ РёСЃРїСЂР°РІР»РµРЅРЅРѕР№ СЃСЂРµРґРµ.
 
-### Следующие шаги
-1. Держать auto-sync в границах status/docs-слоя, пока крупные диффы в `WellnessBot/`, `ops/`, `index.html`, `styles.css`, `app.js`, `mini-app/` не пройдут ручной разбор.
-2. Срочно поднять `C:` выше `10 GB` перед новыми replay, PDF-экспортами и артефактной генерацией.
-3. Разобрать `20260531T183007Z_1084557944` и запретить дальнейший `delivered_to_client` при `fail_major_issues`.
-4. Схлопнуть same-user paid stack в один canonical path и затем нормализовать единую продуктовую лестницу.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё
+1. Р”РµСЂР¶Р°С‚СЊ auto-sync РІ РіСЂР°РЅРёС†Р°С… status/docs-СЃР»РѕСЏ, РїРѕРєР° РєСЂСѓРїРЅС‹Рµ РґРёС„С„С‹ РІ `WellnessBot/`, `ops/`, `index.html`, `styles.css`, `app.js`, `mini-app/` РЅРµ РїСЂРѕР№РґСѓС‚ СЂСѓС‡РЅРѕР№ СЂР°Р·Р±РѕСЂ.
+2. РЎСЂРѕС‡РЅРѕ РїРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` РїРµСЂРµРґ РЅРѕРІС‹РјРё replay, PDF-СЌРєСЃРїРѕСЂС‚Р°РјРё Рё Р°СЂС‚РµС„Р°РєС‚РЅРѕР№ РіРµРЅРµСЂР°С†РёРµР№.
+3. Р Р°Р·РѕР±СЂР°С‚СЊ `20260531T183007Z_1084557944` Рё Р·Р°РїСЂРµС‚РёС‚СЊ РґР°Р»СЊРЅРµР№С€РёР№ `delivered_to_client` РїСЂРё `fail_major_issues`.
+4. РЎС…Р»РѕРїРЅСѓС‚СЊ same-user paid stack РІ РѕРґРёРЅ canonical path Рё Р·Р°С‚РµРј РЅРѕСЂРјР°Р»РёР·РѕРІР°С‚СЊ РµРґРёРЅСѓСЋ РїСЂРѕРґСѓРєС‚РѕРІСѓСЋ Р»РµСЃС‚РЅРёС†Сѓ.
 
 ## 2026-06-02 11:40 MSK - Verified Full Sync Completion Pass
 
@@ -849,72 +1157,72 @@
   4. normalize one ladder everywhere
   5. restore disk above `10 GB`
 
-## 2026-06-02 11:40 MSK — Регулярная синхронизация (12h)
+## 2026-06-02 11:40 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Перепроверен live runtime: `bot.stderr` теперь даёт свежий proof-window от `2026-06-02 00:13` до `10:24 MSK`; после неуспешной proxy-проверки бот уходит в direct fallback и продолжает polling, DeepSeek отвечает `200 OK`.
-- Зафиксировано ухудшение disk hygiene: свободное место на `C:` упало до `7.31 GB`, что ниже обязательного порога `10 GB`.
-- GitHub remote доступен (`git ls-remote origin` успешен), Notion connector доступен в текущей сессии.
-- В рабочем дереве остаются крупные неревьюенные диффы в `WellnessBot/`, `ops/`, `index.html`, `styles.css`, `app.js`, `mini-app/` и связанных docs; их нельзя автоматически публиковать как часть регулярного sync.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРµСЂРµРїСЂРѕРІРµСЂРµРЅ live runtime: `bot.stderr` С‚РµРїРµСЂСЊ РґР°С‘С‚ СЃРІРµР¶РёР№ proof-window РѕС‚ `2026-06-02 00:13` РґРѕ `10:24 MSK`; РїРѕСЃР»Рµ РЅРµСѓСЃРїРµС€РЅРѕР№ proxy-РїСЂРѕРІРµСЂРєРё Р±РѕС‚ СѓС…РѕРґРёС‚ РІ direct fallback Рё РїСЂРѕРґРѕР»Р¶Р°РµС‚ polling, DeepSeek РѕС‚РІРµС‡Р°РµС‚ `200 OK`.
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅРѕ СѓС…СѓРґС€РµРЅРёРµ disk hygiene: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` СѓРїР°Р»Рѕ РґРѕ `7.31 GB`, С‡С‚Рѕ РЅРёР¶Рµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕРіРѕ РїРѕСЂРѕРіР° `10 GB`.
+- GitHub remote РґРѕСЃС‚СѓРїРµРЅ (`git ls-remote origin` СѓСЃРїРµС€РµРЅ), Notion connector РґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё.
+- Р’ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ РѕСЃС‚Р°СЋС‚СЃСЏ РєСЂСѓРїРЅС‹Рµ РЅРµСЂРµРІСЊСЋРµРЅРЅС‹Рµ РґРёС„С„С‹ РІ `WellnessBot/`, `ops/`, `index.html`, `styles.css`, `app.js`, `mini-app/` Рё СЃРІСЏР·Р°РЅРЅС‹С… docs; РёС… РЅРµР»СЊР·СЏ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСѓР±Р»РёРєРѕРІР°С‚СЊ РєР°Рє С‡Р°СЃС‚СЊ СЂРµРіСѓР»СЏСЂРЅРѕРіРѕ sync.
 
-### Текущий этап / блокеры
-- Этап не меняется: controlled concierge pilot; public launch заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- P0: paid e2e после локального PDF-фикса всё ещё не доказан свежим replay-артефактом.
-- P0: продуктовая и ценовая карта по-прежнему расходится между standing docs (`3900 / 6900 / 14900` и `1000 / 6900 / 14900`) и текущим рабочим деревом (`500 / 6900 / 14000 / 14900 / 5000`).
-- P0: диск ниже порога и повышает риск новых сбоев при генерации артефактов.
-- P1: proxy `127.0.0.1:10808` больше не главный runtime blocker, но его политика всё ещё не нормализована: сейчас доказан только режим fallback-to-direct.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї РЅРµ РјРµРЅСЏРµС‚СЃСЏ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- P0: paid e2e РїРѕСЃР»Рµ Р»РѕРєР°Р»СЊРЅРѕРіРѕ PDF-С„РёРєСЃР° РІСЃС‘ РµС‰С‘ РЅРµ РґРѕРєР°Р·Р°РЅ СЃРІРµР¶РёРј replay-Р°СЂС‚РµС„Р°РєС‚РѕРј.
+- P0: РїСЂРѕРґСѓРєС‚РѕРІР°СЏ Рё С†РµРЅРѕРІР°СЏ РєР°СЂС‚Р° РїРѕ-РїСЂРµР¶РЅРµРјСѓ СЂР°СЃС…РѕРґРёС‚СЃСЏ РјРµР¶РґСѓ standing docs (`3900 / 6900 / 14900` Рё `1000 / 6900 / 14900`) Рё С‚РµРєСѓС‰РёРј СЂР°Р±РѕС‡РёРј РґРµСЂРµРІРѕРј (`500 / 6900 / 14000 / 14900 / 5000`).
+- P0: РґРёСЃРє РЅРёР¶Рµ РїРѕСЂРѕРіР° Рё РїРѕРІС‹С€Р°РµС‚ СЂРёСЃРє РЅРѕРІС‹С… СЃР±РѕРµРІ РїСЂРё РіРµРЅРµСЂР°С†РёРё Р°СЂС‚РµС„Р°РєС‚РѕРІ.
+- P1: proxy `127.0.0.1:10808` Р±РѕР»СЊС€Рµ РЅРµ РіР»Р°РІРЅС‹Р№ runtime blocker, РЅРѕ РµРіРѕ РїРѕР»РёС‚РёРєР° РІСЃС‘ РµС‰С‘ РЅРµ РЅРѕСЂРјР°Р»РёР·РѕРІР°РЅР°: СЃРµР№С‡Р°СЃ РґРѕРєР°Р·Р°РЅ С‚РѕР»СЊРєРѕ СЂРµР¶РёРј fallback-to-direct.
 
-### Следующие шаги (до следующего окна 12h)
-1. Прогнать один controlled paid replay на текущем коде: manual payment → draft/review → PDF export → доставка.
-2. Поднять `C:` выше `10 GB` и не генерировать тяжёлые артефакты до восстановления запаса.
-3. Принять решение по единой продуктовой лестнице и не выпускать наружу текущий catalog drift без ручного product review.
-4. Удержать auto-sync в границах status/docs-слоя, пока крупные кодовые и фронтовые изменения не пройдут ручной разбор.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР° 12h)
+1. РџСЂРѕРіРЅР°С‚СЊ РѕРґРёРЅ controlled paid replay РЅР° С‚РµРєСѓС‰РµРј РєРѕРґРµ: manual payment в†’ draft/review в†’ PDF export в†’ РґРѕСЃС‚Р°РІРєР°.
+2. РџРѕРґРЅСЏС‚СЊ `C:` РІС‹С€Рµ `10 GB` Рё РЅРµ РіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ С‚СЏР¶С‘Р»С‹Рµ Р°СЂС‚РµС„Р°РєС‚С‹ РґРѕ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ Р·Р°РїР°СЃР°.
+3. РџСЂРёРЅСЏС‚СЊ СЂРµС€РµРЅРёРµ РїРѕ РµРґРёРЅРѕР№ РїСЂРѕРґСѓРєС‚РѕРІРѕР№ Р»РµСЃС‚РЅРёС†Рµ Рё РЅРµ РІС‹РїСѓСЃРєР°С‚СЊ РЅР°СЂСѓР¶Сѓ С‚РµРєСѓС‰РёР№ catalog drift Р±РµР· СЂСѓС‡РЅРѕРіРѕ product review.
+4. РЈРґРµСЂР¶Р°С‚СЊ auto-sync РІ РіСЂР°РЅРёС†Р°С… status/docs-СЃР»РѕСЏ, РїРѕРєР° РєСЂСѓРїРЅС‹Рµ РєРѕРґРѕРІС‹Рµ Рё С„СЂРѕРЅС‚РѕРІС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РЅРµ РїСЂРѕР№РґСѓС‚ СЂСѓС‡РЅРѕР№ СЂР°Р·Р±РѕСЂ.
 
-## 2026-06-01 23:40 MSK — Регулярная синхронизация (12h)
+## 2026-06-01 23:40 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Обновлён статус в `docs/AGENT_CONTEXT_HUB.md` (свободное место `C:` сейчас ~8.1 GB; GitHub remote доступен через git HTTPS).
-- Зафиксировано: в рабочем дереве есть крупные незакоммиченные изменения в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` и корне (`index.html`, `styles.css`, `app.js`) — не публиковать без ручного ревью.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РћР±РЅРѕРІР»С‘РЅ СЃС‚Р°С‚СѓСЃ РІ `docs/AGENT_CONTEXT_HUB.md` (СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ `C:` СЃРµР№С‡Р°СЃ ~8.1 GB; GitHub remote РґРѕСЃС‚СѓРїРµРЅ С‡РµСЂРµР· git HTTPS).
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅРѕ: РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ РµСЃС‚СЊ РєСЂСѓРїРЅС‹Рµ РЅРµР·Р°РєРѕРјРјРёС‡РµРЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РІ `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` Рё РєРѕСЂРЅРµ (`index.html`, `styles.css`, `app.js`) вЂ” РЅРµ РїСѓР±Р»РёРєРѕРІР°С‚СЊ Р±РµР· СЂСѓС‡РЅРѕРіРѕ СЂРµРІСЊСЋ.
 
-### Текущий этап / блокеры
-- Этап: controlled concierge pilot; публичный запуск заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
-- P0: свободное место `C:` ниже `10 GB` → риск нестабильности и сбоев.
-- P0: end-to-end платная выдача после локального PDF-фикса ещё не подтверждена на свежем paid replay (статус: требует проверки).
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї: controlled concierge pilot; РїСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; `PAYMENT_MODE=manual`; human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- P0: СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ `C:` РЅРёР¶Рµ `10 GB` в†’ СЂРёСЃРє РЅРµСЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚Рё Рё СЃР±РѕРµРІ.
+- P0: end-to-end РїР»Р°С‚РЅР°СЏ РІС‹РґР°С‡Р° РїРѕСЃР»Рµ Р»РѕРєР°Р»СЊРЅРѕРіРѕ PDF-С„РёРєСЃР° РµС‰С‘ РЅРµ РїРѕРґС‚РІРµСЂР¶РґРµРЅР° РЅР° СЃРІРµР¶РµРј paid replay (СЃС‚Р°С‚СѓСЃ: С‚СЂРµР±СѓРµС‚ РїСЂРѕРІРµСЂРєРё).
 
-### Следующие шаги (до следующего окна 12h)
-1. Провести one-shot проверку paid e2e (ручная оплата → draft/review → PDF export → доставка), без публичного выката.
-2. Поднять свободное место на `C:` выше `10 GB` и стабилизировать прокси/сеть (если требуется).
-3. Свести «мульти-ветки одного пользователя» к одной канонической истории и зафиксировать единый прайс/оффер, не ломая controlled pilot.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР° 12h)
+1. РџСЂРѕРІРµСЃС‚Рё one-shot РїСЂРѕРІРµСЂРєСѓ paid e2e (СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° в†’ draft/review в†’ PDF export в†’ РґРѕСЃС‚Р°РІРєР°), Р±РµР· РїСѓР±Р»РёС‡РЅРѕРіРѕ РІС‹РєР°С‚Р°.
+2. РџРѕРґРЅСЏС‚СЊ СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` РІС‹С€Рµ `10 GB` Рё СЃС‚Р°Р±РёР»РёР·РёСЂРѕРІР°С‚СЊ РїСЂРѕРєСЃРё/СЃРµС‚СЊ (РµСЃР»Рё С‚СЂРµР±СѓРµС‚СЃСЏ).
+3. РЎРІРµСЃС‚Рё В«РјСѓР»СЊС‚Рё-РІРµС‚РєРё РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏВ» Рє РѕРґРЅРѕР№ РєР°РЅРѕРЅРёС‡РµСЃРєРѕР№ РёСЃС‚РѕСЂРёРё Рё Р·Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РµРґРёРЅС‹Р№ РїСЂР°Р№СЃ/РѕС„С„РµСЂ, РЅРµ Р»РѕРјР°СЏ controlled pilot.
 
-## 2026-05-31 23:37 MSK — Регулярная синхронизация (12h)
+## 2026-05-31 23:37 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Перепроверен статус внешних коннекторов: Notion доступен; GitHub недоступен из окружения (git HTTPS падает через прокси `127.0.0.1`).
-- Зафиксирована актуальная P0-проблема платной выдачи: падение на PDF-экспорте (`NameError: create_premium_pdf is not defined`) после ручного подтверждения оплаты.
-- Подтверждён системный риск: `C:` всё ещё ниже порога `10 GB` (в последнем зафиксированном замере `9.40 GB`).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРµСЂРµРїСЂРѕРІРµСЂРµРЅ СЃС‚Р°С‚СѓСЃ РІРЅРµС€РЅРёС… РєРѕРЅРЅРµРєС‚РѕСЂРѕРІ: Notion РґРѕСЃС‚СѓРїРµРЅ; GitHub РЅРµРґРѕСЃС‚СѓРїРµРЅ РёР· РѕРєСЂСѓР¶РµРЅРёСЏ (git HTTPS РїР°РґР°РµС‚ С‡РµСЂРµР· РїСЂРѕРєСЃРё `127.0.0.1`).
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅР° Р°РєС‚СѓР°Р»СЊРЅР°СЏ P0-РїСЂРѕР±Р»РµРјР° РїР»Р°С‚РЅРѕР№ РІС‹РґР°С‡Рё: РїР°РґРµРЅРёРµ РЅР° PDF-СЌРєСЃРїРѕСЂС‚Рµ (`NameError: create_premium_pdf is not defined`) РїРѕСЃР»Рµ СЂСѓС‡РЅРѕРіРѕ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ РѕРїР»Р°С‚С‹.
+- РџРѕРґС‚РІРµСЂР¶РґС‘РЅ СЃРёСЃС‚РµРјРЅС‹Р№ СЂРёСЃРє: `C:` РІСЃС‘ РµС‰С‘ РЅРёР¶Рµ РїРѕСЂРѕРіР° `10 GB` (РІ РїРѕСЃР»РµРґРЅРµРј Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕРј Р·Р°РјРµСЂРµ `9.40 GB`).
 
-### Текущий этап / блокеры
-- Этап: controlled concierge pilot; публичный запуск по‑прежнему заблокирован.
-- P0: платный цикл нельзя считать завершённым, пока не восстановлен end-to-end экспорт финального досье.
-- P0: без GitHub-пуша нельзя публиковать наружу изменения и артефакты из этого рабочего дерева.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї: controlled concierge pilot; РїСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє РїРѕвЂ‘РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ.
+- P0: РїР»Р°С‚РЅС‹Р№ С†РёРєР» РЅРµР»СЊР·СЏ СЃС‡РёС‚Р°С‚СЊ Р·Р°РІРµСЂС€С‘РЅРЅС‹Рј, РїРѕРєР° РЅРµ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅ end-to-end СЌРєСЃРїРѕСЂС‚ С„РёРЅР°Р»СЊРЅРѕРіРѕ РґРѕСЃСЊРµ.
+- P0: Р±РµР· GitHub-РїСѓС€Р° РЅРµР»СЊР·СЏ РїСѓР±Р»РёРєРѕРІР°С‚СЊ РЅР°СЂСѓР¶Сѓ РёР·РјРµРЅРµРЅРёСЏ Рё Р°СЂС‚РµС„Р°РєС‚С‹ РёР· СЌС‚РѕРіРѕ СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР°.
 
-### Следующие шаги (до следующего окна 12h)
-1. Восстановить PDF-экспорт (устранить `create_premium_pdf`), затем переиграть 2 платных кейса от `2026-05-30`.
-2. Поднять свободное место на `C:` выше `10 GB`.
-3. Свести «5 платных веток одного пользователя» к одной канонической истории и остановить размножение offer-веток.
-4. Зафиксировать и решить расхождение по ценам/офферу (standing `1000/6900/14900` vs рабочее дерево `500/6900/14000`), не выкатывая это публично.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР° 12h)
+1. Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ PDF-СЌРєСЃРїРѕСЂС‚ (СѓСЃС‚СЂР°РЅРёС‚СЊ `create_premium_pdf`), Р·Р°С‚РµРј РїРµСЂРµРёРіСЂР°С‚СЊ 2 РїР»Р°С‚РЅС‹С… РєРµР№СЃР° РѕС‚ `2026-05-30`.
+2. РџРѕРґРЅСЏС‚СЊ СЃРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:` РІС‹С€Рµ `10 GB`.
+3. РЎРІРµСЃС‚Рё В«5 РїР»Р°С‚РЅС‹С… РІРµС‚РѕРє РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏВ» Рє РѕРґРЅРѕР№ РєР°РЅРѕРЅРёС‡РµСЃРєРѕР№ РёСЃС‚РѕСЂРёРё Рё РѕСЃС‚Р°РЅРѕРІРёС‚СЊ СЂР°Р·РјРЅРѕР¶РµРЅРёРµ offer-РІРµС‚РѕРє.
+4. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ Рё СЂРµС€РёС‚СЊ СЂР°СЃС…РѕР¶РґРµРЅРёРµ РїРѕ С†РµРЅР°Рј/РѕС„С„РµСЂСѓ (standing `1000/6900/14900` vs СЂР°Р±РѕС‡РµРµ РґРµСЂРµРІРѕ `500/6900/14000`), РЅРµ РІС‹РєР°С‚С‹РІР°СЏ СЌС‚Рѕ РїСѓР±Р»РёС‡РЅРѕ.
 
-## 2026-05-31 11:37 MSK — Регулярная синхронизация (12h)
+## 2026-05-31 11:37 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Актуализирован `docs/AGENT_CONTEXT_HUB.md` (фикс: GitHub remote недоступен из окружения; рабочее дерево содержит крупные несинхронизированные изменения и требует ручного ревью перед пушем).
-- Подтверждено: Notion доступен (обновлена статусная страница в Notion); GitHub недоступен (HTTPS 443 через `127.0.0.1`).
-- Зафиксирован внешний блокер в `docs/external_sync/2026-05-31_1137_sync_blocked.md` (причина + следующие действия).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РђРєС‚СѓР°Р»РёР·РёСЂРѕРІР°РЅ `docs/AGENT_CONTEXT_HUB.md` (С„РёРєСЃ: GitHub remote РЅРµРґРѕСЃС‚СѓРїРµРЅ РёР· РѕРєСЂСѓР¶РµРЅРёСЏ; СЂР°Р±РѕС‡РµРµ РґРµСЂРµРІРѕ СЃРѕРґРµСЂР¶РёС‚ РєСЂСѓРїРЅС‹Рµ РЅРµСЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°РЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ Рё С‚СЂРµР±СѓРµС‚ СЂСѓС‡РЅРѕРіРѕ СЂРµРІСЊСЋ РїРµСЂРµРґ РїСѓС€РµРј).
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅРѕ: Notion РґРѕСЃС‚СѓРїРµРЅ (РѕР±РЅРѕРІР»РµРЅР° СЃС‚Р°С‚СѓСЃРЅР°СЏ СЃС‚СЂР°РЅРёС†Р° РІ Notion); GitHub РЅРµРґРѕСЃС‚СѓРїРµРЅ (HTTPS 443 С‡РµСЂРµР· `127.0.0.1`).
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅ РІРЅРµС€РЅРёР№ Р±Р»РѕРєРµСЂ РІ `docs/external_sync/2026-05-31_1137_sync_blocked.md` (РїСЂРёС‡РёРЅР° + СЃР»РµРґСѓСЋС‰РёРµ РґРµР№СЃС‚РІРёСЏ).
 
-### Текущий этап / блокеры
-- Этап: controlled concierge pilot; public launch по‑прежнему заблокирован.
-- P0: paid delivery ломается на PDF экспорте (`create_premium_pdf` undefined) — нельзя считать платный цикл завершённым.
-- P0: GitHub недоступен из текущего окружения — нельзя публиковать наружу изменения/артефакты.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї: controlled concierge pilot; public launch РїРѕвЂ‘РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ.
+- P0: paid delivery Р»РѕРјР°РµС‚СЃСЏ РЅР° PDF СЌРєСЃРїРѕСЂС‚Рµ (`create_premium_pdf` undefined) вЂ” РЅРµР»СЊР·СЏ СЃС‡РёС‚Р°С‚СЊ РїР»Р°С‚РЅС‹Р№ С†РёРєР» Р·Р°РІРµСЂС€С‘РЅРЅС‹Рј.
+- P0: GitHub РЅРµРґРѕСЃС‚СѓРїРµРЅ РёР· С‚РµРєСѓС‰РµРіРѕ РѕРєСЂСѓР¶РµРЅРёСЏ вЂ” РЅРµР»СЊР·СЏ РїСѓР±Р»РёРєРѕРІР°С‚СЊ РЅР°СЂСѓР¶Сѓ РёР·РјРµРЅРµРЅРёСЏ/Р°СЂС‚РµС„Р°РєС‚С‹.
 
 ## 2026-05-31 11:38 MSK - Verified Full Sync Completion Pass
 
@@ -1135,7 +1443,7 @@
   2. restore `C:` above the `10 GB` floor
   3. collapse the four same-user paid paths to one canonical commercial path
   4. decide whether the package-first `500 / 6900 / 14000` ladder is approved or rolled back
-  5. preserve today’s runtime proof and explicitly document the proxy policy
+  5. preserve todayвЂ™s runtime proof and explicitly document the proxy policy
   6. add proof or rollback for `case_service.py` schema drift
   7. tighten or roll back OCR filter relaxation
   8. tighten or roll back supplement recommendability widening
@@ -1168,7 +1476,7 @@
 2. Restore `C:` above the `10 GB` floor.
 3. Collapse the four same-user paid paths to one canonical commercial path.
 4. Decide whether the package-first `500 / 6900 / 14000` ladder is approved or must be rolled back.
-5. Preserve today’s runtime proof and explicitly document whether proxy `127.0.0.1:10808` is required or incidental.
+5. Preserve todayвЂ™s runtime proof and explicitly document whether proxy `127.0.0.1:10808` is required or incidental.
 6. Prove or roll back `case_service.py`, OCR, and supplement drift.
 7. Make `ops/quality_probe.py` emit partial artifacts on model failures, then rerun the benchmark when the endpoint is reachable.
 
@@ -1198,29 +1506,29 @@
   5. prove or roll back `case_service.py`, OCR, and supplement drift
   6. make benchmark runs survive model connection failures
 
-## 2026-05-30 23:35 MSK — Регулярная синхронизация (12h)
+## 2026-05-30 23:35 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось / наблюдения
-- Репозиторий остаётся в состоянии «грязного» рабочего дерева: много незакоммиченных изменений в `WellnessBot/*`, `mini-app/index.html`, и пачка новых/локальных артефактов (логи, `.venv_wsl/`, backup-файлы). Без отдельного ревью кодовые изменения в GitHub не публиковались.
-- GitHub remote в этой сессии недоступен: `git ls-remote origin` → `Failed to connect to github.com:443 via 127.0.0.1`.
-- Notion доступен: workspace search возвращает страницу статуса `Antigravity Sync Run - 2026-05-30 11:33 MSK` (возможна актуализация).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ / РЅР°Р±Р»СЋРґРµРЅРёСЏ
+- Р РµРїРѕР·РёС‚РѕСЂРёР№ РѕСЃС‚Р°С‘С‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРё В«РіСЂСЏР·РЅРѕРіРѕВ» СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР°: РјРЅРѕРіРѕ РЅРµР·Р°РєРѕРјРјРёС‡РµРЅРЅС‹С… РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot/*`, `mini-app/index.html`, Рё РїР°С‡РєР° РЅРѕРІС‹С…/Р»РѕРєР°Р»СЊРЅС‹С… Р°СЂС‚РµС„Р°РєС‚РѕРІ (Р»РѕРіРё, `.venv_wsl/`, backup-С„Р°Р№Р»С‹). Р‘РµР· РѕС‚РґРµР»СЊРЅРѕРіРѕ СЂРµРІСЊСЋ РєРѕРґРѕРІС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РІ GitHub РЅРµ РїСѓР±Р»РёРєРѕРІР°Р»РёСЃСЊ.
+- GitHub remote РІ СЌС‚РѕР№ СЃРµСЃСЃРёРё РЅРµРґРѕСЃС‚СѓРїРµРЅ: `git ls-remote origin` в†’ `Failed to connect to github.com:443 via 127.0.0.1`.
+- Notion РґРѕСЃС‚СѓРїРµРЅ: workspace search РІРѕР·РІСЂР°С‰Р°РµС‚ СЃС‚СЂР°РЅРёС†Сѓ СЃС‚Р°С‚СѓСЃР° `Antigravity Sync Run - 2026-05-30 11:33 MSK` (РІРѕР·РјРѕР¶РЅР° Р°РєС‚СѓР°Р»РёР·Р°С†РёСЏ).
 
-### Текущий этап
-- Controlled concierge pilot (Telegram-first), публичный запуск по-прежнему заблокирован.
-- Ручная оплата — активный режим (`PAYMENT_MODE=manual`), human review обязателен перед выдачей результата.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
+- Controlled concierge pilot (Telegram-first), РїСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє РїРѕ-РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ.
+- Р СѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° вЂ” Р°РєС‚РёРІРЅС‹Р№ СЂРµР¶РёРј (`PAYMENT_MODE=manual`), human review РѕР±СЏР·Р°С‚РµР»РµРЅ РїРµСЂРµРґ РІС‹РґР°С‡РµР№ СЂРµР·СѓР»СЊС‚Р°С‚Р°.
 
-### Блокеры / риски
-1. Ops: диск `C:` ниже безопасного порога `10 GB` (в последнем зафиксированном снапшоте `5.27 GB`).
-2. Runtime: последняя видимая «живая» ошибка — прокси-отказ `ProxyConnectionError` к `127.0.0.1:10808` (окно `2026-05-27 21:51–22:05 MSK`), нет свежего позитивного proof-артефакта.
-3. Продуктовая целостность: один Telegram пользователь размножился на `week` + 2 ветки `premium` (нужна канонизация одного paid-path).
+### Р‘Р»РѕРєРµСЂС‹ / СЂРёСЃРєРё
+1. Ops: РґРёСЃРє `C:` РЅРёР¶Рµ Р±РµР·РѕРїР°СЃРЅРѕРіРѕ РїРѕСЂРѕРіР° `10 GB` (РІ РїРѕСЃР»РµРґРЅРµРј Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅРЅРѕРј СЃРЅР°РїС€РѕС‚Рµ `5.27 GB`).
+2. Runtime: РїРѕСЃР»РµРґРЅСЏСЏ РІРёРґРёРјР°СЏ В«Р¶РёРІР°СЏВ» РѕС€РёР±РєР° вЂ” РїСЂРѕРєСЃРё-РѕС‚РєР°Р· `ProxyConnectionError` Рє `127.0.0.1:10808` (РѕРєРЅРѕ `2026-05-27 21:51вЂ“22:05 MSK`), РЅРµС‚ СЃРІРµР¶РµРіРѕ РїРѕР·РёС‚РёРІРЅРѕРіРѕ proof-Р°СЂС‚РµС„Р°РєС‚Р°.
+3. РџСЂРѕРґСѓРєС‚РѕРІР°СЏ С†РµР»РѕСЃС‚РЅРѕСЃС‚СЊ: РѕРґРёРЅ Telegram РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЂР°Р·РјРЅРѕР¶РёР»СЃСЏ РЅР° `week` + 2 РІРµС‚РєРё `premium` (РЅСѓР¶РЅР° РєР°РЅРѕРЅРёР·Р°С†РёСЏ РѕРґРЅРѕРіРѕ paid-path).
 
-### Следующие шаги (до следующего окна)
-1. Освободить место на `C:` до >`10 GB`.
-2. Зафиксировать один чистый runtime-proof (proxy/no-proxy решён явно).
-3. Канонизировать один paid-path для текущего пользователя (решить судьбу двух `premium` веток).
-4. Только после proof+канонизации — решать, что из текущих изменений `WellnessBot/` достойно коммита.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР°)
+1. РћСЃРІРѕР±РѕРґРёС‚СЊ РјРµСЃС‚Рѕ РЅР° `C:` РґРѕ >`10 GB`.
+2. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РѕРґРёРЅ С‡РёСЃС‚С‹Р№ runtime-proof (proxy/no-proxy СЂРµС€С‘РЅ СЏРІРЅРѕ).
+3. РљР°РЅРѕРЅРёР·РёСЂРѕРІР°С‚СЊ РѕРґРёРЅ paid-path РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ (СЂРµС€РёС‚СЊ СЃСѓРґСЊР±Сѓ РґРІСѓС… `premium` РІРµС‚РѕРє).
+4. РўРѕР»СЊРєРѕ РїРѕСЃР»Рµ proof+РєР°РЅРѕРЅРёР·Р°С†РёРё вЂ” СЂРµС€Р°С‚СЊ, С‡С‚Рѕ РёР· С‚РµРєСѓС‰РёС… РёР·РјРµРЅРµРЅРёР№ `WellnessBot/` РґРѕСЃС‚РѕР№РЅРѕ РєРѕРјРјРёС‚Р°.
 
-## 2026-05-30 11:36 MSK — Full Sync Completion Pass
+## 2026-05-30 11:36 MSK вЂ” Full Sync Completion Pass
 
 ### State Read Delta
 - Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, current submissions, review artifacts, runtime evidence, repo state, and connector surfaces.
@@ -1367,7 +1675,7 @@
   5. prove or roll back schema/parser/catalog drift
   6. make benchmark runs survive model connection failures
 
-## 2026-05-14 16:56 MSK — Full Sync Completion Pass
+## 2026-05-14 16:56 MSK вЂ” Full Sync Completion Pass
 
 ### State Read Delta
 - Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, case/review artifacts, runtime evidence, repo state, and connector surfaces.
@@ -1474,10 +1782,10 @@
 - Goal 5: produce one fresh proof artifact before another strategy loop starts.
 
 ### Connector Status
-- Obsidian: done — refreshed onboarding mirror and created a new local run note.
-- Notion: blocked — real workspace search failed during MCP initialize handshake.
-- GitHub: blocked — real installed repository search failed during MCP initialize handshake.
-- Google Drive: blocked — file discovery/create/upload/share tools are not exposed in-session.
+- Obsidian: done вЂ” refreshed onboarding mirror and created a new local run note.
+- Notion: blocked вЂ” real workspace search failed during MCP initialize handshake.
+- GitHub: blocked вЂ” real installed repository search failed during MCP initialize handshake.
+- Google Drive: blocked вЂ” file discovery/create/upload/share tools are not exposed in-session.
 - Local replay artifacts created for this run:
   - `docs/external_sync/antigravity_sync_20260514T135605Z.md`
   - `docs/external_sync/antigravity_context_snapshot_20260514T135605Z.md`
@@ -1517,61 +1825,61 @@
   4. decide voice/audio scope
   5. verify or roll back OCR and supplement drift
   6. create one fresh proof artifact after the safety-sensitive path is coherent
-## 2026-05-14 16:56 MSK — Регулярная синхронизация (12h)
+## 2026-05-14 16:56 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Подтверждено: проект по-прежнему в режиме controlled concierge pilot; публичный запуск заблокирован; ручная оплата активна (PAYMENT_MODE=manual), human review обязателен.
-- Репозиторий остаётся с осмысленными незакоммиченными изменениями в WellnessBot/*, mini-app/index.html и ряде docs/* (включая статусные файлы).
-- Коннекторы (проверено в этом цикле `2026-05-14 16:56 MSK`):
-  - Notion MCP: initialize-handshake ошибка на `https://chatgpt.com/backend-api/wham/apps`
-  - GitHub MCP: initialize-handshake ошибка на `https://chatgpt.com/backend-api/wham/apps`
-  - Git CLI over HTTPS: достижим (fail-fast `git ls-remote origin` проходит), можно делать commit/push без MCP
-- Runtime-артефакт ухудшился по качеству формулировки риска:
-  - это уже не просто негативный startup-proof, а sustained same-day regression
-  - duplicate polling виден до `2026-05-14 16:50:53 +0300` (более свежих логов в этом цикле не добавлялось)
-  - был краткий `Connection established` в `2026-05-14 16:47:03 +0300`, но конфликт вернулся в `2026-05-14 16:48:04 +0300`
-  - live proxy truth по-прежнему `http://127.0.0.1:10808`
-  - последний видимый health probe всё ещё `GET /health -> 404` от `2026-05-13 21:24:04 +0300`
-- Нового позитивного proof artifact по-прежнему нет:
-  - latest benchmark reference остаётся `ops/reports/quality_report_20260506T080435Z.md`
-  - новых delivery-safe кейсов или runtime-health proof после утреннего цикла не появилось
-- Loop inventory по-прежнему раздут:
-  - `127` proposed experiments в `WellnessBot/data/product_governance.json`
-  - `29` файлов `docs/tasks/HERMES-20260505-*`
-- Disk margin улучшился относительно утра, но всё ещё тонкий:
-  - `C:` free space = `10.55 GB` at `2026-05-14 16:50:50 +03:00` (обновить замер в следующем цикле)
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅРѕ: РїСЂРѕРµРєС‚ РїРѕ-РїСЂРµР¶РЅРµРјСѓ РІ СЂРµР¶РёРјРµ controlled concierge pilot; РїСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (PAYMENT_MODE=manual), human review РѕР±СЏР·Р°С‚РµР»РµРЅ.
+- Р РµРїРѕР·РёС‚РѕСЂРёР№ РѕСЃС‚Р°С‘С‚СЃСЏ СЃ РѕСЃРјС‹СЃР»РµРЅРЅС‹РјРё РЅРµР·Р°РєРѕРјРјРёС‡РµРЅРЅС‹РјРё РёР·РјРµРЅРµРЅРёСЏРјРё РІ WellnessBot/*, mini-app/index.html Рё СЂСЏРґРµ docs/* (РІРєР»СЋС‡Р°СЏ СЃС‚Р°С‚СѓСЃРЅС‹Рµ С„Р°Р№Р»С‹).
+- РљРѕРЅРЅРµРєС‚РѕСЂС‹ (РїСЂРѕРІРµСЂРµРЅРѕ РІ СЌС‚РѕРј С†РёРєР»Рµ `2026-05-14 16:56 MSK`):
+  - Notion MCP: initialize-handshake РѕС€РёР±РєР° РЅР° `https://chatgpt.com/backend-api/wham/apps`
+  - GitHub MCP: initialize-handshake РѕС€РёР±РєР° РЅР° `https://chatgpt.com/backend-api/wham/apps`
+  - Git CLI over HTTPS: РґРѕСЃС‚РёР¶РёРј (fail-fast `git ls-remote origin` РїСЂРѕС…РѕРґРёС‚), РјРѕР¶РЅРѕ РґРµР»Р°С‚СЊ commit/push Р±РµР· MCP
+- Runtime-Р°СЂС‚РµС„Р°РєС‚ СѓС…СѓРґС€РёР»СЃСЏ РїРѕ РєР°С‡РµСЃС‚РІСѓ С„РѕСЂРјСѓР»РёСЂРѕРІРєРё СЂРёСЃРєР°:
+  - СЌС‚Рѕ СѓР¶Рµ РЅРµ РїСЂРѕСЃС‚Рѕ РЅРµРіР°С‚РёРІРЅС‹Р№ startup-proof, Р° sustained same-day regression
+  - duplicate polling РІРёРґРµРЅ РґРѕ `2026-05-14 16:50:53 +0300` (Р±РѕР»РµРµ СЃРІРµР¶РёС… Р»РѕРіРѕРІ РІ СЌС‚РѕРј С†РёРєР»Рµ РЅРµ РґРѕР±Р°РІР»СЏР»РѕСЃСЊ)
+  - Р±С‹Р» РєСЂР°С‚РєРёР№ `Connection established` РІ `2026-05-14 16:47:03 +0300`, РЅРѕ РєРѕРЅС„Р»РёРєС‚ РІРµСЂРЅСѓР»СЃСЏ РІ `2026-05-14 16:48:04 +0300`
+  - live proxy truth РїРѕ-РїСЂРµР¶РЅРµРјСѓ `http://127.0.0.1:10808`
+  - РїРѕСЃР»РµРґРЅРёР№ РІРёРґРёРјС‹Р№ health probe РІСЃС‘ РµС‰С‘ `GET /health -> 404` РѕС‚ `2026-05-13 21:24:04 +0300`
+- РќРѕРІРѕРіРѕ РїРѕР·РёС‚РёРІРЅРѕРіРѕ proof artifact РїРѕ-РїСЂРµР¶РЅРµРјСѓ РЅРµС‚:
+  - latest benchmark reference РѕСЃС‚Р°С‘С‚СЃСЏ `ops/reports/quality_report_20260506T080435Z.md`
+  - РЅРѕРІС‹С… delivery-safe РєРµР№СЃРѕРІ РёР»Рё runtime-health proof РїРѕСЃР»Рµ СѓС‚СЂРµРЅРЅРµРіРѕ С†РёРєР»Р° РЅРµ РїРѕСЏРІРёР»РѕСЃСЊ
+- Loop inventory РїРѕ-РїСЂРµР¶РЅРµРјСѓ СЂР°Р·РґСѓС‚:
+  - `127` proposed experiments РІ `WellnessBot/data/product_governance.json`
+  - `29` С„Р°Р№Р»РѕРІ `docs/tasks/HERMES-20260505-*`
+- Disk margin СѓР»СѓС‡С€РёР»СЃСЏ РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ СѓС‚СЂР°, РЅРѕ РІСЃС‘ РµС‰С‘ С‚РѕРЅРєРёР№:
+  - `C:` free space = `10.55 GB` at `2026-05-14 16:50:50 +03:00` (РѕР±РЅРѕРІРёС‚СЊ Р·Р°РјРµСЂ РІ СЃР»РµРґСѓСЋС‰РµРј С†РёРєР»Рµ)
 
-### Текущий этап
-- Controlled concierge pilot: один канонический кейс на пользователя; выдача досье остаётся за gate’ом (блок до выравнивания review truth и lab truth); ручная оплата остаётся активным пилотным режимом.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
+- Controlled concierge pilot: РѕРґРёРЅ РєР°РЅРѕРЅРёС‡РµСЃРєРёР№ РєРµР№СЃ РЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ; РІС‹РґР°С‡Р° РґРѕСЃСЊРµ РѕСЃС‚Р°С‘С‚СЃСЏ Р·Р° gateвЂ™РѕРј (Р±Р»РѕРє РґРѕ РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ review truth Рё lab truth); СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° РѕСЃС‚Р°С‘С‚СЃСЏ Р°РєС‚РёРІРЅС‹Рј РїРёР»РѕС‚РЅС‹Рј СЂРµР¶РёРјРѕРј.
 
-### Блокеры и риски (без публичного запуска)
-1. Notion MCP недоступен → Notion-страница статуса не обновляется; фиксируем run-note локально в `docs/external_sync/*`.
-2. «Safety drift» в рабочем дереве без верификации: голос/аудио intake отключён в WellnessBot/main.py, фильтрация OCR ослаблена в WellnessBot/lab_ocr.py, а каталог добавок меняет роль/исключения для железа.
-3. Визуальные поверхности (landing, mini-app) нельзя считать доказательством результата: допускаются только как пилотные заглушки/маркетинговый долг, без медицинских утверждений.
+### Р‘Р»РѕРєРµСЂС‹ Рё СЂРёСЃРєРё (Р±РµР· РїСѓР±Р»РёС‡РЅРѕРіРѕ Р·Р°РїСѓСЃРєР°)
+1. Notion MCP РЅРµРґРѕСЃС‚СѓРїРµРЅ в†’ Notion-СЃС‚СЂР°РЅРёС†Р° СЃС‚Р°С‚СѓСЃР° РЅРµ РѕР±РЅРѕРІР»СЏРµС‚СЃСЏ; С„РёРєСЃРёСЂСѓРµРј run-note Р»РѕРєР°Р»СЊРЅРѕ РІ `docs/external_sync/*`.
+2. В«Safety driftВ» РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ Р±РµР· РІРµСЂРёС„РёРєР°С†РёРё: РіРѕР»РѕСЃ/Р°СѓРґРёРѕ intake РѕС‚РєР»СЋС‡С‘РЅ РІ WellnessBot/main.py, С„РёР»СЊС‚СЂР°С†РёСЏ OCR РѕСЃР»Р°Р±Р»РµРЅР° РІ WellnessBot/lab_ocr.py, Р° РєР°С‚Р°Р»РѕРі РґРѕР±Р°РІРѕРє РјРµРЅСЏРµС‚ СЂРѕР»СЊ/РёСЃРєР»СЋС‡РµРЅРёСЏ РґР»СЏ Р¶РµР»РµР·Р°.
+3. Р’РёР·СѓР°Р»СЊРЅС‹Рµ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё (landing, mini-app) РЅРµР»СЊР·СЏ СЃС‡РёС‚Р°С‚СЊ РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІРѕРј СЂРµР·СѓР»СЊС‚Р°С‚Р°: РґРѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РєР°Рє РїРёР»РѕС‚РЅС‹Рµ Р·Р°РіР»СѓС€РєРё/РјР°СЂРєРµС‚РёРЅРіРѕРІС‹Р№ РґРѕР»Рі, Р±РµР· РјРµРґРёС†РёРЅСЃРєРёС… СѓС‚РІРµСЂР¶РґРµРЅРёР№.
 4. Planning churn itself is now a blocker signal: backlog keeps growing while duplicate polling and canonical-path truth remain unresolved.
 
 ### Strategy Delta
-- Стратегия не расширяется; она снова сужается до четырёх истин:
-  - один канонический paid-path на Telegram user
-  - один активный polling instance
-  - одна явная intake-модальность
-  - один свежий proof artifact
-- Пока эти четыре истины не зафиксированы, нельзя считать ни premium-path, ни runtime, ни surfaces подтверждённым прогрессом.
+- РЎС‚СЂР°С‚РµРіРёСЏ РЅРµ СЂР°СЃС€РёСЂСЏРµС‚СЃСЏ; РѕРЅР° СЃРЅРѕРІР° СЃСѓР¶Р°РµС‚СЃСЏ РґРѕ С‡РµС‚С‹СЂС‘С… РёСЃС‚РёРЅ:
+  - РѕРґРёРЅ РєР°РЅРѕРЅРёС‡РµСЃРєРёР№ paid-path РЅР° Telegram user
+  - РѕРґРёРЅ Р°РєС‚РёРІРЅС‹Р№ polling instance
+  - РѕРґРЅР° СЏРІРЅР°СЏ intake-РјРѕРґР°Р»СЊРЅРѕСЃС‚СЊ
+  - РѕРґРёРЅ СЃРІРµР¶РёР№ proof artifact
+- РџРѕРєР° СЌС‚Рё С‡РµС‚С‹СЂРµ РёСЃС‚РёРЅС‹ РЅРµ Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅС‹, РЅРµР»СЊР·СЏ СЃС‡РёС‚Р°С‚СЊ РЅРё premium-path, РЅРё runtime, РЅРё surfaces РїРѕРґС‚РІРµСЂР¶РґС‘РЅРЅС‹Рј РїСЂРѕРіСЂРµСЃСЃРѕРј.
 
 ### Plan Delta
-1. Остановить лишний polling instance и получить один чистый runtime-start artifact.
-2. Зафиксировать реальную proxy/health truth: live path всё ещё выглядит как `127.0.0.1:10808`, а `/health` всё ещё не доказан.
-3. Явно классифицировать `20260505T131604Z_1084557944` как `merge-into-canonical` или parked branch.
-4. Принять решение по voice/audio intake: `restore` или `retire-and-document`.
-5. Добавить proof или rollback для OCR relaxation и supplement drift.
-6. Заморозить net-new experiments / task-packets, пока не появится proof bundle по runtime + canonical path.
-7. Только после пунктов `1-6` собрать один свежий runtime или QA artifact.
+1. РћСЃС‚Р°РЅРѕРІРёС‚СЊ Р»РёС€РЅРёР№ polling instance Рё РїРѕР»СѓС‡РёС‚СЊ РѕРґРёРЅ С‡РёСЃС‚С‹Р№ runtime-start artifact.
+2. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ СЂРµР°Р»СЊРЅСѓСЋ proxy/health truth: live path РІСЃС‘ РµС‰С‘ РІС‹РіР»СЏРґРёС‚ РєР°Рє `127.0.0.1:10808`, Р° `/health` РІСЃС‘ РµС‰С‘ РЅРµ РґРѕРєР°Р·Р°РЅ.
+3. РЇРІРЅРѕ РєР»Р°СЃСЃРёС„РёС†РёСЂРѕРІР°С‚СЊ `20260505T131604Z_1084557944` РєР°Рє `merge-into-canonical` РёР»Рё parked branch.
+4. РџСЂРёРЅСЏС‚СЊ СЂРµС€РµРЅРёРµ РїРѕ voice/audio intake: `restore` РёР»Рё `retire-and-document`.
+5. Р”РѕР±Р°РІРёС‚СЊ proof РёР»Рё rollback РґР»СЏ OCR relaxation Рё supplement drift.
+6. Р—Р°РјРѕСЂРѕР·РёС‚СЊ net-new experiments / task-packets, РїРѕРєР° РЅРµ РїРѕСЏРІРёС‚СЃСЏ proof bundle РїРѕ runtime + canonical path.
+7. РўРѕР»СЊРєРѕ РїРѕСЃР»Рµ РїСѓРЅРєС‚РѕРІ `1-6` СЃРѕР±СЂР°С‚СЊ РѕРґРёРЅ СЃРІРµР¶РёР№ runtime РёР»Рё QA artifact.
 
 ### Loop Risks
-- Низкоэффективный цикл: переписывать strategy/status docs без нового позитивного proof artifact.
-- Низкоэффективный цикл: рассказывать про connectors или proxy, не устранив duplicate polling.
-- Низкоэффективный цикл: растить backlog (`127` experiments, `29` HERMES packets) при незакрытых P0.
-- Higher-impact replacement action: остановить лишний poller, классифицировать paid `premium` branch, определить intake scope и затем снять один свежий proof artifact.
+- РќРёР·РєРѕСЌС„С„РµРєС‚РёРІРЅС‹Р№ С†РёРєР»: РїРµСЂРµРїРёСЃС‹РІР°С‚СЊ strategy/status docs Р±РµР· РЅРѕРІРѕРіРѕ РїРѕР·РёС‚РёРІРЅРѕРіРѕ proof artifact.
+- РќРёР·РєРѕСЌС„С„РµРєС‚РёРІРЅС‹Р№ С†РёРєР»: СЂР°СЃСЃРєР°Р·С‹РІР°С‚СЊ РїСЂРѕ connectors РёР»Рё proxy, РЅРµ СѓСЃС‚СЂР°РЅРёРІ duplicate polling.
+- РќРёР·РєРѕСЌС„С„РµРєС‚РёРІРЅС‹Р№ С†РёРєР»: СЂР°СЃС‚РёС‚СЊ backlog (`127` experiments, `29` HERMES packets) РїСЂРё РЅРµР·Р°РєСЂС‹С‚С‹С… P0.
+- Higher-impact replacement action: РѕСЃС‚Р°РЅРѕРІРёС‚СЊ Р»РёС€РЅРёР№ poller, РєР»Р°СЃСЃРёС„РёС†РёСЂРѕРІР°С‚СЊ paid `premium` branch, РѕРїСЂРµРґРµР»РёС‚СЊ intake scope Рё Р·Р°С‚РµРј СЃРЅСЏС‚СЊ РѕРґРёРЅ СЃРІРµР¶РёР№ proof artifact.
 
 ### Next 12h Command Set
 1. Stop duplicate Telegram polling and prove one clean runtime start path.
@@ -1596,7 +1904,7 @@
   4. verify or roll back OCR and supplement drift
   5. create one fresh proof artifact
 
-## 2026-05-13 16:54 MSK — Full Sync Completion Pass
+## 2026-05-13 16:54 MSK вЂ” Full Sync Completion Pass
 
 ### State Read Delta
 - Completed the required full-project sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, `ops/reports`, case/review artifacts, runtime evidence, repo state, and prior outward-sync fallbacks.
@@ -1676,7 +1984,7 @@
 
 ### Strategy Delta
 - Strategy remains Telegram-first, manual-concierge, and one-canonical-paid-path-per-user.
-- The meaningful completion-pass correction is that today’s unresolved center is not delivery-state repair anymore; it is proof-backed coherence:
+- The meaningful completion-pass correction is that todayвЂ™s unresolved center is not delivery-state repair anymore; it is proof-backed coherence:
   - one blocked governing `week` case still needs review + lab reconciliation
   - one fresh paid `premium` branch still lacks canonical ownership
   - one set of safety-sensitive working-tree diffs still lacks verification
@@ -1689,10 +1997,10 @@
 - Goal 4: keep all surfaces inside the Telegram-first safety boundary while connectors remain partially unavailable.
 
 ### Connector Status
-- Obsidian: done — refreshed onboarding mirror and created a new local run note.
-- Notion: blocked — MCP initialize handshake failed on a real search call.
-- GitHub: blocked — MCP initialize handshake failed on a real repository call.
-- Google Drive: blocked — file discovery/create/upload/share tools are not exposed in-session.
+- Obsidian: done вЂ” refreshed onboarding mirror and created a new local run note.
+- Notion: blocked вЂ” MCP initialize handshake failed on a real search call.
+- GitHub: blocked вЂ” MCP initialize handshake failed on a real repository call.
+- Google Drive: blocked вЂ” file discovery/create/upload/share tools are not exposed in-session.
 - Local replay artifacts created for this run:
   - `docs/external_sync/antigravity_sync_20260513T135420Z.md`
   - `docs/external_sync/antigravity_context_snapshot_20260513T135420Z.md`
@@ -1729,63 +2037,63 @@
   5. prove runtime health or document the accepted proxy dependency
   6. replay external sync once connector access is fixed
 
-## 2026-05-13 16:50 MSK — Регулярная синхронизация (12h)
+## 2026-05-13 16:50 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Подтверждена недоступность GitHub по HTTPS в текущей среде: `git ls-remote origin` падает на `Failed to connect ... via 127.0.0.1:443` (прокси/сеть). Push не выполнен.
-- Подтверждена недоступность Notion MCP: любой вызов Notion tools падает на `MCP startup failed ... wham/apps`. Обновление страницы статуса Notion не выполнено.
-- Диск‑хайджин: `docs/DISK_HYGIENE_STATUS.md` фиксирует `10.68 GB` свободно на `C:` (2026-05-13 16:49:17 +03:00) — запас над порогом `10 GB` минимальный.
-- Рабочее дерево остаётся с незаверенным safety‑drift в коде (`voice`/`OCR`/`catalog`) и placeholder‑логикой мини‑аппа; это запрещено считать «готовым к пилот‑выдаче» без ревью/тестов.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅР° РЅРµРґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ GitHub РїРѕ HTTPS РІ С‚РµРєСѓС‰РµР№ СЃСЂРµРґРµ: `git ls-remote origin` РїР°РґР°РµС‚ РЅР° `Failed to connect ... via 127.0.0.1:443` (РїСЂРѕРєСЃРё/СЃРµС‚СЊ). Push РЅРµ РІС‹РїРѕР»РЅРµРЅ.
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅР° РЅРµРґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ Notion MCP: Р»СЋР±РѕР№ РІС‹Р·РѕРІ Notion tools РїР°РґР°РµС‚ РЅР° `MCP startup failed ... wham/apps`. РћР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂР°РЅРёС†С‹ СЃС‚Р°С‚СѓСЃР° Notion РЅРµ РІС‹РїРѕР»РЅРµРЅРѕ.
+- Р”РёСЃРєвЂ‘С…Р°Р№РґР¶РёРЅ: `docs/DISK_HYGIENE_STATUS.md` С„РёРєСЃРёСЂСѓРµС‚ `10.68 GB` СЃРІРѕР±РѕРґРЅРѕ РЅР° `C:` (2026-05-13 16:49:17 +03:00) вЂ” Р·Р°РїР°СЃ РЅР°Рґ РїРѕСЂРѕРіРѕРј `10 GB` РјРёРЅРёРјР°Р»СЊРЅС‹Р№.
+- Р Р°Р±РѕС‡РµРµ РґРµСЂРµРІРѕ РѕСЃС‚Р°С‘С‚СЃСЏ СЃ РЅРµР·Р°РІРµСЂРµРЅРЅС‹Рј safetyвЂ‘drift РІ РєРѕРґРµ (`voice`/`OCR`/`catalog`) Рё placeholderвЂ‘Р»РѕРіРёРєРѕР№ РјРёРЅРёвЂ‘Р°РїРїР°; СЌС‚Рѕ Р·Р°РїСЂРµС‰РµРЅРѕ СЃС‡РёС‚Р°С‚СЊ В«РіРѕС‚РѕРІС‹Рј Рє РїРёР»РѕС‚вЂ‘РІС‹РґР°С‡РµВ» Р±РµР· СЂРµРІСЊСЋ/С‚РµСЃС‚РѕРІ.
 
-### Текущий этап
-- Controlled concierge pilot. Public launch по‑прежнему заблокирован до отдельного решения.
-- Активен режим ручной оплаты: `PAYMENT_MODE=manual`. Human review обязателен перед любой выдачей клиенту.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
+- Controlled concierge pilot. Public launch РїРѕвЂ‘РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РґРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ СЂРµС€РµРЅРёСЏ.
+- РђРєС‚РёРІРµРЅ СЂРµР¶РёРј СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚С‹: `PAYMENT_MODE=manual`. Human review РѕР±СЏР·Р°С‚РµР»РµРЅ РїРµСЂРµРґ Р»СЋР±РѕР№ РІС‹РґР°С‡РµР№ РєР»РёРµРЅС‚Сѓ.
 
-### Блокеры (P0/P1)
-- P0: канонический paid‑путь одного Telegram‑пользователя не зафиксирован (связь `week` ↔ `premium`: `merge-into-canonical` или `parked`).
-- P0: незаверенный safety‑drift в `WellnessBot/main.py` (voice/audio), `WellnessBot/lab_ocr.py` (фильтры строк), `WellnessBot/supplement_product_catalog.py` (границы рекомендуемости) — нельзя выпускать без решения и проверки.
-- P1: внешняя синхронизация (GitHub/Notion) заблокирована окружением (прокси/handshake MCP).
+### Р‘Р»РѕРєРµСЂС‹ (P0/P1)
+- P0: РєР°РЅРѕРЅРёС‡РµСЃРєРёР№ paidвЂ‘РїСѓС‚СЊ РѕРґРЅРѕРіРѕ TelegramвЂ‘РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅРµ Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅ (СЃРІСЏР·СЊ `week` в†” `premium`: `merge-into-canonical` РёР»Рё `parked`).
+- P0: РЅРµР·Р°РІРµСЂРµРЅРЅС‹Р№ safetyвЂ‘drift РІ `WellnessBot/main.py` (voice/audio), `WellnessBot/lab_ocr.py` (С„РёР»СЊС‚СЂС‹ СЃС‚СЂРѕРє), `WellnessBot/supplement_product_catalog.py` (РіСЂР°РЅРёС†С‹ СЂРµРєРѕРјРµРЅРґСѓРµРјРѕСЃС‚Рё) вЂ” РЅРµР»СЊР·СЏ РІС‹РїСѓСЃРєР°С‚СЊ Р±РµР· СЂРµС€РµРЅРёСЏ Рё РїСЂРѕРІРµСЂРєРё.
+- P1: РІРЅРµС€РЅСЏСЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (GitHub/Notion) Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅР° РѕРєСЂСѓР¶РµРЅРёРµРј (РїСЂРѕРєСЃРё/handshake MCP).
 
-### Следующие шаги (до следующего окна 12h)
-1. Восстановить доступ к GitHub/Notion (убрать прокси‑блокировку и/или починить MCP handshake) и повторить внешнюю синхронизацию статуса.
-2. Принять продукт‑решение по voice/audio и вернуть консервативные границы OCR/каталога (или покрыть тестами), прежде чем это станет «правдой пилота».
-3. Зафиксировать один канонический путь по кейсам одного пользователя и удерживать governing `week` в `delivery_blocked_needs_revision` до сверки review+lab‑правды.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР° 12h)
+1. Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ РґРѕСЃС‚СѓРї Рє GitHub/Notion (СѓР±СЂР°С‚СЊ РїСЂРѕРєСЃРёвЂ‘Р±Р»РѕРєРёСЂРѕРІРєСѓ Рё/РёР»Рё РїРѕС‡РёРЅРёС‚СЊ MCP handshake) Рё РїРѕРІС‚РѕСЂРёС‚СЊ РІРЅРµС€РЅСЋСЋ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЋ СЃС‚Р°С‚СѓСЃР°.
+2. РџСЂРёРЅСЏС‚СЊ РїСЂРѕРґСѓРєС‚вЂ‘СЂРµС€РµРЅРёРµ РїРѕ voice/audio Рё РІРµСЂРЅСѓС‚СЊ РєРѕРЅСЃРµСЂРІР°С‚РёРІРЅС‹Рµ РіСЂР°РЅРёС†С‹ OCR/РєР°С‚Р°Р»РѕРіР° (РёР»Рё РїРѕРєСЂС‹С‚СЊ С‚РµСЃС‚Р°РјРё), РїСЂРµР¶РґРµ С‡РµРј СЌС‚Рѕ СЃС‚Р°РЅРµС‚ В«РїСЂР°РІРґРѕР№ РїРёР»РѕС‚Р°В».
+3. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РѕРґРёРЅ РєР°РЅРѕРЅРёС‡РµСЃРєРёР№ РїСѓС‚СЊ РїРѕ РєРµР№СЃР°Рј РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Рё СѓРґРµСЂР¶РёРІР°С‚СЊ governing `week` РІ `delivery_blocked_needs_revision` РґРѕ СЃРІРµСЂРєРё review+labвЂ‘РїСЂР°РІРґС‹.
 
-## 2026-05-13 04:48 MSK — Регулярная синхронизация (12h)
+## 2026-05-13 04:48 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Подтверждена текущая «опасная зона» рабочего дерева: появились/сохраняются незаверенные продуктовые изменения в коде:
-  - `WellnessBot/main.py`: голос/аудио выключены (регрессия/решение требует явной фиксации).
-  - `WellnessBot/lab_ocr.py`: ослаблен фильтр строк OCR (риск загрязнения `parsed_biomarkers`).
-  - `WellnessBot/supplement_product_catalog.py`: расширена зона рекомендуемости (включая снятые с производства и железо) — это нельзя считать пилот‑готовым без проверки.
-- Notion sync недоступен: прямой вызов Notion tools падает на `MCP startup failed: handshaking ... wham/apps` (ошибка клиента при инициализации).
-- GitHub sync через MCP‑коннектор также недоступен по той же причине; при этом `git remote` в репозитории присутствует и потенциально может быть использован как локальный fallback.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РџРѕРґС‚РІРµСЂР¶РґРµРЅР° С‚РµРєСѓС‰Р°СЏ В«РѕРїР°СЃРЅР°СЏ Р·РѕРЅР°В» СЂР°Р±РѕС‡РµРіРѕ РґРµСЂРµРІР°: РїРѕСЏРІРёР»РёСЃСЊ/СЃРѕС…СЂР°РЅСЏСЋС‚СЃСЏ РЅРµР·Р°РІРµСЂРµРЅРЅС‹Рµ РїСЂРѕРґСѓРєС‚РѕРІС‹Рµ РёР·РјРµРЅРµРЅРёСЏ РІ РєРѕРґРµ:
+  - `WellnessBot/main.py`: РіРѕР»РѕСЃ/Р°СѓРґРёРѕ РІС‹РєР»СЋС‡РµРЅС‹ (СЂРµРіСЂРµСЃСЃРёСЏ/СЂРµС€РµРЅРёРµ С‚СЂРµР±СѓРµС‚ СЏРІРЅРѕР№ С„РёРєСЃР°С†РёРё).
+  - `WellnessBot/lab_ocr.py`: РѕСЃР»Р°Р±Р»РµРЅ С„РёР»СЊС‚СЂ СЃС‚СЂРѕРє OCR (СЂРёСЃРє Р·Р°РіСЂСЏР·РЅРµРЅРёСЏ `parsed_biomarkers`).
+  - `WellnessBot/supplement_product_catalog.py`: СЂР°СЃС€РёСЂРµРЅР° Р·РѕРЅР° СЂРµРєРѕРјРµРЅРґСѓРµРјРѕСЃС‚Рё (РІРєР»СЋС‡Р°СЏ СЃРЅСЏС‚С‹Рµ СЃ РїСЂРѕРёР·РІРѕРґСЃС‚РІР° Рё Р¶РµР»РµР·Рѕ) вЂ” СЌС‚Рѕ РЅРµР»СЊР·СЏ СЃС‡РёС‚Р°С‚СЊ РїРёР»РѕС‚вЂ‘РіРѕС‚РѕРІС‹Рј Р±РµР· РїСЂРѕРІРµСЂРєРё.
+- Notion sync РЅРµРґРѕСЃС‚СѓРїРµРЅ: РїСЂСЏРјРѕР№ РІС‹Р·РѕРІ Notion tools РїР°РґР°РµС‚ РЅР° `MCP startup failed: handshaking ... wham/apps` (РѕС€РёР±РєР° РєР»РёРµРЅС‚Р° РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё).
+- GitHub sync С‡РµСЂРµР· MCPвЂ‘РєРѕРЅРЅРµРєС‚РѕСЂ С‚Р°РєР¶Рµ РЅРµРґРѕСЃС‚СѓРїРµРЅ РїРѕ С‚РѕР№ Р¶Рµ РїСЂРёС‡РёРЅРµ; РїСЂРё СЌС‚РѕРј `git remote` РІ СЂРµРїРѕР·РёС‚РѕСЂРёРё РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ Рё РїРѕС‚РµРЅС†РёР°Р»СЊРЅРѕ РјРѕР¶РµС‚ Р±С‹С‚СЊ РёСЃРїРѕР»СЊР·РѕРІР°РЅ РєР°Рє Р»РѕРєР°Р»СЊРЅС‹Р№ fallback.
 
-### Текущий этап
-- Controlled concierge pilot. Public launch по‑прежнему заблокирован до отдельного решения.
-- Активен режим ручной оплаты: `PAYMENT_MODE=manual`. Human review обязателен перед любой выдачей клиенту.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
+- Controlled concierge pilot. Public launch РїРѕвЂ‘РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РґРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ СЂРµС€РµРЅРёСЏ.
+- РђРєС‚РёРІРµРЅ СЂРµР¶РёРј СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚С‹: `PAYMENT_MODE=manual`. Human review РѕР±СЏР·Р°С‚РµР»РµРЅ РїРµСЂРµРґ Р»СЋР±РѕР№ РІС‹РґР°С‡РµР№ РєР»РёРµРЅС‚Сѓ.
 
-### Блокеры (P0/P1)
-- P0: governing `week` кейс всё ещё требует сверки «правды по лабораториям» (загрязнённые/сомнительные `parsed_biomarkers`, `requires_lab_resubmission = true`).
-- P0: связь свежего `premium` кейса с канонической веткой всё ещё не зафиксирована как `merge-into-canonical / parked`.
-- P0: незаверенный safety‑drift в рабочем дереве (voice/OCR/catalog) — запрещено выпускать в клиентскую правду без тестов/ревью.
-- P1: внешние коннекторы (Notion/GitHub MCP) недоступны в этой сессии.
+### Р‘Р»РѕРєРµСЂС‹ (P0/P1)
+- P0: governing `week` РєРµР№СЃ РІСЃС‘ РµС‰С‘ С‚СЂРµР±СѓРµС‚ СЃРІРµСЂРєРё В«РїСЂР°РІРґС‹ РїРѕ Р»Р°Р±РѕСЂР°С‚РѕСЂРёСЏРјВ» (Р·Р°РіСЂСЏР·РЅС‘РЅРЅС‹Рµ/СЃРѕРјРЅРёС‚РµР»СЊРЅС‹Рµ `parsed_biomarkers`, `requires_lab_resubmission = true`).
+- P0: СЃРІСЏР·СЊ СЃРІРµР¶РµРіРѕ `premium` РєРµР№СЃР° СЃ РєР°РЅРѕРЅРёС‡РµСЃРєРѕР№ РІРµС‚РєРѕР№ РІСЃС‘ РµС‰С‘ РЅРµ Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅР° РєР°Рє `merge-into-canonical / parked`.
+- P0: РЅРµР·Р°РІРµСЂРµРЅРЅС‹Р№ safetyвЂ‘drift РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ (voice/OCR/catalog) вЂ” Р·Р°РїСЂРµС‰РµРЅРѕ РІС‹РїСѓСЃРєР°С‚СЊ РІ РєР»РёРµРЅС‚СЃРєСѓСЋ РїСЂР°РІРґСѓ Р±РµР· С‚РµСЃС‚РѕРІ/СЂРµРІСЊСЋ.
+- P1: РІРЅРµС€РЅРёРµ РєРѕРЅРЅРµРєС‚РѕСЂС‹ (Notion/GitHub MCP) РЅРµРґРѕСЃС‚СѓРїРЅС‹ РІ СЌС‚РѕР№ СЃРµСЃСЃРёРё.
 
-### Что готово к пилоту
-- Режим controlled concierge pilot + ручная оплата + обязательный human review остаются в силе.
-- Delivery gate остаётся в состоянии «блокировать выдачу при `needs_revision`» (по ранее проверенным артефактам).
+### Р§С‚Рѕ РіРѕС‚РѕРІРѕ Рє РїРёР»РѕС‚Сѓ
+- Р РµР¶РёРј controlled concierge pilot + СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° + РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ human review РѕСЃС‚Р°СЋС‚СЃСЏ РІ СЃРёР»Рµ.
+- Delivery gate РѕСЃС‚Р°С‘С‚СЃСЏ РІ СЃРѕСЃС‚РѕСЏРЅРёРё В«Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ РІС‹РґР°С‡Сѓ РїСЂРё `needs_revision`В» (РїРѕ СЂР°РЅРµРµ РїСЂРѕРІРµСЂРµРЅРЅС‹Рј Р°СЂС‚РµС„Р°РєС‚Р°Рј).
 
-### Что нельзя запускать публично
-- Любые публичные поверхности/демо, где:
-  - обещаются «протоколы питания/нутрицевтиков» как готовый результат без human review;
-  - расширена рекомендуемость нутрицевтиков (особенно железо/снятые продукты) без явной политики и проверки;
-  - голос/аудио меняются без продуктового решения и повторной валидации UX.
+### Р§С‚Рѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ
+- Р›СЋР±С‹Рµ РїСѓР±Р»РёС‡РЅС‹Рµ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё/РґРµРјРѕ, РіРґРµ:
+  - РѕР±РµС‰Р°СЋС‚СЃСЏ В«РїСЂРѕС‚РѕРєРѕР»С‹ РїРёС‚Р°РЅРёСЏ/РЅСѓС‚СЂРёС†РµРІС‚РёРєРѕРІВ» РєР°Рє РіРѕС‚РѕРІС‹Р№ СЂРµР·СѓР»СЊС‚Р°С‚ Р±РµР· human review;
+  - СЂР°СЃС€РёСЂРµРЅР° СЂРµРєРѕРјРµРЅРґСѓРµРјРѕСЃС‚СЊ РЅСѓС‚СЂРёС†РµРІС‚РёРєРѕРІ (РѕСЃРѕР±РµРЅРЅРѕ Р¶РµР»РµР·Рѕ/СЃРЅСЏС‚С‹Рµ РїСЂРѕРґСѓРєС‚С‹) Р±РµР· СЏРІРЅРѕР№ РїРѕР»РёС‚РёРєРё Рё РїСЂРѕРІРµСЂРєРё;
+  - РіРѕР»РѕСЃ/Р°СѓРґРёРѕ РјРµРЅСЏСЋС‚СЃСЏ Р±РµР· РїСЂРѕРґСѓРєС‚РѕРІРѕРіРѕ СЂРµС€РµРЅРёСЏ Рё РїРѕРІС‚РѕСЂРЅРѕР№ РІР°Р»РёРґР°С†РёРё UX.
 
-### Следующие шаги (до следующего окна 12h)
-1. Зафиксировать продукт‑решение по voice/audio intake: либо официально «выключено на пилоте» (и обновить тексты/доки), либо вернуть безопасный STT‑путь и покрыть проверкой.
-2. Вернуть консервативные границы в `lab_ocr.py` и `supplement_product_catalog.py` или добавить тест/бенч‑доказательство, что расширение не вредит.
-3. Очистить governing кейс: привести лабораторную часть к надёжному виду (или маркировать как недостоверную) до следующей выдачи.
-4. Восстановить MCP‑коннекторы Notion/GitHub; после восстановления повторить внешнюю синхронизацию статуса.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР° 12h)
+1. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РїСЂРѕРґСѓРєС‚вЂ‘СЂРµС€РµРЅРёРµ РїРѕ voice/audio intake: Р»РёР±Рѕ РѕС„РёС†РёР°Р»СЊРЅРѕ В«РІС‹РєР»СЋС‡РµРЅРѕ РЅР° РїРёР»РѕС‚РµВ» (Рё РѕР±РЅРѕРІРёС‚СЊ С‚РµРєСЃС‚С‹/РґРѕРєРё), Р»РёР±Рѕ РІРµСЂРЅСѓС‚СЊ Р±РµР·РѕРїР°СЃРЅС‹Р№ STTвЂ‘РїСѓС‚СЊ Рё РїРѕРєСЂС‹С‚СЊ РїСЂРѕРІРµСЂРєРѕР№.
+2. Р’РµСЂРЅСѓС‚СЊ РєРѕРЅСЃРµСЂРІР°С‚РёРІРЅС‹Рµ РіСЂР°РЅРёС†С‹ РІ `lab_ocr.py` Рё `supplement_product_catalog.py` РёР»Рё РґРѕР±Р°РІРёС‚СЊ С‚РµСЃС‚/Р±РµРЅС‡вЂ‘РґРѕРєР°Р·Р°С‚РµР»СЊСЃС‚РІРѕ, С‡С‚Рѕ СЂР°СЃС€РёСЂРµРЅРёРµ РЅРµ РІСЂРµРґРёС‚.
+3. РћС‡РёСЃС‚РёС‚СЊ governing РєРµР№СЃ: РїСЂРёРІРµСЃС‚Рё Р»Р°Р±РѕСЂР°С‚РѕСЂРЅСѓСЋ С‡Р°СЃС‚СЊ Рє РЅР°РґС‘Р¶РЅРѕРјСѓ РІРёРґСѓ (РёР»Рё РјР°СЂРєРёСЂРѕРІР°С‚СЊ РєР°Рє РЅРµРґРѕСЃС‚РѕРІРµСЂРЅСѓСЋ) РґРѕ СЃР»РµРґСѓСЋС‰РµР№ РІС‹РґР°С‡Рё.
+4. Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ MCPвЂ‘РєРѕРЅРЅРµРєС‚РѕСЂС‹ Notion/GitHub; РїРѕСЃР»Рµ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РїРѕРІС‚РѕСЂРёС‚СЊ РІРЅРµС€РЅСЋСЋ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЋ СЃС‚Р°С‚СѓСЃР°.
 
 ### Completion Delta (04:52 MSK)
 - No new benchmark, runtime, or product-shipping proof landed after the earlier same-day read.
@@ -1801,41 +2109,41 @@
   - `docs/external_sync/antigravity_context_snapshot_20260513T015214Z.md`
   - `docs/obsidian_mirror/RUN_NOTE_20260513_0452_MSK.md`
 
-## 2026-05-12 16:49 MSK — Регулярная синхронизация (12h)
+## 2026-05-12 16:49 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Исправление delivery-gate подтверждено по артефакту: у кейса `20260501T162705Z_1084557944` теперь `intake_status = delivery_blocked_needs_revision` (а не `delivered_to_client`) с `delivery_blocked_at = 2026-05-11T06:56:00Z`.
-- Мини-апп очищается от опасного демо-контента в рабочем дереве:
-  - убраны офф-политика цена `2990` и заголовок `Premium Wellness-Досье`
-  - убраны жёстко прошитые «медицинские» результаты/протоколы (D3/LCHF/дозировки)
-- Зафиксирована недоступность внешней синхронизации (Notion/GitHub) в `docs/external_sync/` из-за проблем MCP/локального git.
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РСЃРїСЂР°РІР»РµРЅРёРµ delivery-gate РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ РїРѕ Р°СЂС‚РµС„Р°РєС‚Сѓ: Сѓ РєРµР№СЃР° `20260501T162705Z_1084557944` С‚РµРїРµСЂСЊ `intake_status = delivery_blocked_needs_revision` (Р° РЅРµ `delivered_to_client`) СЃ `delivery_blocked_at = 2026-05-11T06:56:00Z`.
+- РњРёРЅРё-Р°РїРї РѕС‡РёС‰Р°РµС‚СЃСЏ РѕС‚ РѕРїР°СЃРЅРѕРіРѕ РґРµРјРѕ-РєРѕРЅС‚РµРЅС‚Р° РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ:
+  - СѓР±СЂР°РЅС‹ РѕС„С„-РїРѕР»РёС‚РёРєР° С†РµРЅР° `2990` Рё Р·Р°РіРѕР»РѕРІРѕРє `Premium Wellness-Р”РѕСЃСЊРµ`
+  - СѓР±СЂР°РЅС‹ Р¶С‘СЃС‚РєРѕ РїСЂРѕС€РёС‚С‹Рµ В«РјРµРґРёС†РёРЅСЃРєРёРµВ» СЂРµР·СѓР»СЊС‚Р°С‚С‹/РїСЂРѕС‚РѕРєРѕР»С‹ (D3/LCHF/РґРѕР·РёСЂРѕРІРєРё)
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅР° РЅРµРґРѕСЃС‚СѓРїРЅРѕСЃС‚СЊ РІРЅРµС€РЅРµР№ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё (Notion/GitHub) РІ `docs/external_sync/` РёР·-Р·Р° РїСЂРѕР±Р»РµРј MCP/Р»РѕРєР°Р»СЊРЅРѕРіРѕ git.
 
-### Текущий этап
-- Controlled concierge pilot. Public launch по-прежнему заблокирован до отдельного решения.
-- Активен режим ручной оплаты: `PAYMENT_MODE=manual`. Human review обязателен перед любой выдачей клиенту.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
+- Controlled concierge pilot. Public launch РїРѕ-РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РґРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ СЂРµС€РµРЅРёСЏ.
+- РђРєС‚РёРІРµРЅ СЂРµР¶РёРј СЂСѓС‡РЅРѕР№ РѕРїР»Р°С‚С‹: `PAYMENT_MODE=manual`. Human review РѕР±СЏР·Р°С‚РµР»РµРЅ РїРµСЂРµРґ Р»СЋР±РѕР№ РІС‹РґР°С‡РµР№ РєР»РёРµРЅС‚Сѓ.
 
-### Блокеры (P0/P1)
-- P0: «правда по лабораториям» в governing `week` кейсе всё ещё небезопасна:
+### Р‘Р»РѕРєРµСЂС‹ (P0/P1)
+- P0: В«РїСЂР°РІРґР° РїРѕ Р»Р°Р±РѕСЂР°С‚РѕСЂРёСЏРјВ» РІ governing `week` РєРµР№СЃРµ РІСЃС‘ РµС‰С‘ РЅРµР±РµР·РѕРїР°СЃРЅР°:
   - `lab_quality_check.status = missing`
   - `requires_lab_resubmission = true`
-  - `parsed_biomarkers` содержит загрязнённые строки (нарратив/протокол вместо чистых маркеров)
-- P0: связь `premium` кейса с канонической веткой не зафиксирована как `merge-into-canonical / parked`.
-- P1: runtime/transport остаётся недоказанным (`proxy=http://127.0.0.1:12334`, `/health -> 404` по последнему логу).
-- P1: внешние коннекторы недоступны в текущей сессии; см. отчёт в `docs/external_sync/`.
+  - `parsed_biomarkers` СЃРѕРґРµСЂР¶РёС‚ Р·Р°РіСЂСЏР·РЅС‘РЅРЅС‹Рµ СЃС‚СЂРѕРєРё (РЅР°СЂСЂР°С‚РёРІ/РїСЂРѕС‚РѕРєРѕР» РІРјРµСЃС‚Рѕ С‡РёСЃС‚С‹С… РјР°СЂРєРµСЂРѕРІ)
+- P0: СЃРІСЏР·СЊ `premium` РєРµР№СЃР° СЃ РєР°РЅРѕРЅРёС‡РµСЃРєРѕР№ РІРµС‚РєРѕР№ РЅРµ Р·Р°С„РёРєСЃРёСЂРѕРІР°РЅР° РєР°Рє `merge-into-canonical / parked`.
+- P1: runtime/transport РѕСЃС‚Р°С‘С‚СЃСЏ РЅРµРґРѕРєР°Р·Р°РЅРЅС‹Рј (`proxy=http://127.0.0.1:12334`, `/health -> 404` РїРѕ РїРѕСЃР»РµРґРЅРµРјСѓ Р»РѕРіСѓ).
+- P1: РІРЅРµС€РЅРёРµ РєРѕРЅРЅРµРєС‚РѕСЂС‹ РЅРµРґРѕСЃС‚СѓРїРЅС‹ РІ С‚РµРєСѓС‰РµР№ СЃРµСЃСЃРёРё; СЃРј. РѕС‚С‡С‘С‚ РІ `docs/external_sync/`.
 
-### Что готово к пилоту
-- Delivery gate больше не пропускает `delivered_to_client` при `needs_revision` (подтверждено по JSON-артефакту).
-- Ручная оплата и обязательный human review остаются в силе и описаны в артефактах.
+### Р§С‚Рѕ РіРѕС‚РѕРІРѕ Рє РїРёР»РѕС‚Сѓ
+- Delivery gate Р±РѕР»СЊС€Рµ РЅРµ РїСЂРѕРїСѓСЃРєР°РµС‚ `delivered_to_client` РїСЂРё `needs_revision` (РїРѕРґС‚РІРµСЂР¶РґРµРЅРѕ РїРѕ JSON-Р°СЂС‚РµС„Р°РєС‚Сѓ).
+- Р СѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Рё РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Р№ human review РѕСЃС‚Р°СЋС‚СЃСЏ РІ СЃРёР»Рµ Рё РѕРїРёСЃР°РЅС‹ РІ Р°СЂС‚РµС„Р°РєС‚Р°С….
 
-### Что нельзя запускать публично
-- Любые публичные поверхности/демо с жёстко прошитыми «результатами», диагнозоподобными формулировками, схемами добавок/дозировок.
-- Любой режим без human review и без ручного контроля оплаты.
+### Р§С‚Рѕ РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ
+- Р›СЋР±С‹Рµ РїСѓР±Р»РёС‡РЅС‹Рµ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё/РґРµРјРѕ СЃ Р¶С‘СЃС‚РєРѕ РїСЂРѕС€РёС‚С‹РјРё В«СЂРµР·СѓР»СЊС‚Р°С‚Р°РјРёВ», РґРёР°РіРЅРѕР·РѕРїРѕРґРѕР±РЅС‹РјРё С„РѕСЂРјСѓР»РёСЂРѕРІРєР°РјРё, СЃС…РµРјР°РјРё РґРѕР±Р°РІРѕРє/РґРѕР·РёСЂРѕРІРѕРє.
+- Р›СЋР±РѕР№ СЂРµР¶РёРј Р±РµР· human review Рё Р±РµР· СЂСѓС‡РЅРѕРіРѕ РєРѕРЅС‚СЂРѕР»СЏ РѕРїР»Р°С‚С‹.
 
-### Следующие шаги (до следующего окна 12h)
-1. Очистить governing кейс: привести `parsed_biomarkers` к надёжному набору или жёстко маркировать как «непрочитано/недостоверно», синхронизировать с фактическими follow-up файлами.
-2. Явно решить судьбу свежего `premium` кейса: `merge-into-canonical` или `parked`, и отразить это в артефактах.
-3. Доделать мини-апп: оставить только безопасный placeholder без обещаний «протоколов» до проверки эксперта.
-4. Восстановить GitHub/Notion sync: починить MCP handshake и/или перенести репозиторий из Desktop (чтобы `git` мог писать `.git/index.lock`).
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ РѕРєРЅР° 12h)
+1. РћС‡РёСЃС‚РёС‚СЊ governing РєРµР№СЃ: РїСЂРёРІРµСЃС‚Рё `parsed_biomarkers` Рє РЅР°РґС‘Р¶РЅРѕРјСѓ РЅР°Р±РѕСЂСѓ РёР»Рё Р¶С‘СЃС‚РєРѕ РјР°СЂРєРёСЂРѕРІР°С‚СЊ РєР°Рє В«РЅРµРїСЂРѕС‡РёС‚Р°РЅРѕ/РЅРµРґРѕСЃС‚РѕРІРµСЂРЅРѕВ», СЃРёРЅС…СЂРѕРЅРёР·РёСЂРѕРІР°С‚СЊ СЃ С„Р°РєС‚РёС‡РµСЃРєРёРјРё follow-up С„Р°Р№Р»Р°РјРё.
+2. РЇРІРЅРѕ СЂРµС€РёС‚СЊ СЃСѓРґСЊР±Сѓ СЃРІРµР¶РµРіРѕ `premium` РєРµР№СЃР°: `merge-into-canonical` РёР»Рё `parked`, Рё РѕС‚СЂР°Р·РёС‚СЊ СЌС‚Рѕ РІ Р°СЂС‚РµС„Р°РєС‚Р°С….
+3. Р”РѕРґРµР»Р°С‚СЊ РјРёРЅРё-Р°РїРї: РѕСЃС‚Р°РІРёС‚СЊ С‚РѕР»СЊРєРѕ Р±РµР·РѕРїР°СЃРЅС‹Р№ placeholder Р±РµР· РѕР±РµС‰Р°РЅРёР№ В«РїСЂРѕС‚РѕРєРѕР»РѕРІВ» РґРѕ РїСЂРѕРІРµСЂРєРё СЌРєСЃРїРµСЂС‚Р°.
+4. Р’РѕСЃСЃС‚Р°РЅРѕРІРёС‚СЊ GitHub/Notion sync: РїРѕС‡РёРЅРёС‚СЊ MCP handshake Рё/РёР»Рё РїРµСЂРµРЅРµСЃС‚Рё СЂРµРїРѕР·РёС‚РѕСЂРёР№ РёР· Desktop (С‡С‚РѕР±С‹ `git` РјРѕРі РїРёСЃР°С‚СЊ `.git/index.lock`).
 
 ### Plan Delta
 - Delivery-gate hardening now appears to work in storage truth, so the next direct plan is no longer `stop false delivered status` but `normalize the blocked canonical case and classify the remaining same-user premium relation`.
@@ -1920,7 +2228,7 @@
 - P0 delivery-gate bypass remains active; owner `Lead Developer + Operator`; next fix action: block `delivered_to_client` unless review is cleared or an explicit override note is recorded.
 - Governing-case lab-state unsafety remains active; owner `Lead Developer`; next fix action: reconcile actual follow-up files into the governing case before treating the case as coherent.
 - Same-user multi-path drift remains active; owner `Operator + Lead Developer`; next fix action: classify the five-branch stack into `canonical / merge-into-canonical / evidence-only / parked / archive`.
-- Mini-app price/result drift remains active; owner `Frontend / Lead Developer`; next fix action: remove off-policy `2990` pricing and hardcoded `Premium Wellness-Досье` / `Витамин D3` / `LCHF` result copy.
+- Mini-app price/result drift remains active; owner `Frontend / Lead Developer`; next fix action: remove off-policy `2990` pricing and hardcoded `Premium Wellness-Р”РѕСЃСЊРµ` / `Р’РёС‚Р°РјРёРЅ D3` / `LCHF` result copy.
 - Runtime transport dependency remains active; owner `Ops + Lead Developer`; next fix action: decide whether `127.0.0.1:12334` is required and prove one clean post-fix health path.
 - Model-path response-discipline regression remains active; owner `Lead Developer`; next fix action: harden prompt, sanitizer, and benchmark assertions against invented personalization, duplicated emergency copy, and overlong replies.
 - Google Drive capability gap remains active; owner `Tooling / Access`; next fix action: expose Google Drive file create/upload and share tools in Codex.
@@ -2309,44 +2617,44 @@
   6. Restore connector availability and replay the pending outward-sync artifacts from `docs/external_sync/`.
 
 ## 2026-05-05 21:31 MSK
-### Регулярная синхронизация (12h)
-- Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Проверено состояние репозитория: изменений в `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` нет; текущие изменения локально — только `docs/*` (планирование Hermes/отчёты/таски) + обновления хаба/пульса/стратегии.
-- Runtime-статус уточнён: по `bot.stderr.log` бот и polling подняты `2026-05-05 17:15-17:16 MSK`, TMA сервер стартовал на `http://localhost:8000`, прокси настроен `http://127.0.0.1:12334` (устойчивость и fallback требуют проверки).
-- Исправлена битая кодировка в `docs/hermes_os/self_audit_protocol.md` (теперь русский текст читабелен).
-- Политика без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
-- Блокеры без изменений: P0 delivery-gate (нельзя `delivered_to_client` при `needs_revision`/`must_rewrite_with_high_caution` без явного manual override); multi-path drift одного пользователя; mini-app содержит off-policy цену/хардкод результата и не готов к публичному запуску.
+### Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+- РџРµСЂРµС‡РёС‚Р°РЅС‹ СѓРїСЂР°РІР»СЏСЋС‰РёРµ Р°СЂС‚РµС„Р°РєС‚С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџСЂРѕРІРµСЂРµРЅРѕ СЃРѕСЃС‚РѕСЏРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёСЏ: РёР·РјРµРЅРµРЅРёР№ РІ `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` РЅРµС‚; С‚РµРєСѓС‰РёРµ РёР·РјРµРЅРµРЅРёСЏ Р»РѕРєР°Р»СЊРЅРѕ вЂ” С‚РѕР»СЊРєРѕ `docs/*` (РїР»Р°РЅРёСЂРѕРІР°РЅРёРµ Hermes/РѕС‚С‡С‘С‚С‹/С‚Р°СЃРєРё) + РѕР±РЅРѕРІР»РµРЅРёСЏ С…Р°Р±Р°/РїСѓР»СЊСЃР°/СЃС‚СЂР°С‚РµРіРёРё.
+- Runtime-СЃС‚Р°С‚СѓСЃ СѓС‚РѕС‡РЅС‘РЅ: РїРѕ `bot.stderr.log` Р±РѕС‚ Рё polling РїРѕРґРЅСЏС‚С‹ `2026-05-05 17:15-17:16 MSK`, TMA СЃРµСЂРІРµСЂ СЃС‚Р°СЂС‚РѕРІР°Р» РЅР° `http://localhost:8000`, РїСЂРѕРєСЃРё РЅР°СЃС‚СЂРѕРµРЅ `http://127.0.0.1:12334` (СѓСЃС‚РѕР№С‡РёРІРѕСЃС‚СЊ Рё fallback С‚СЂРµР±СѓСЋС‚ РїСЂРѕРІРµСЂРєРё).
+- РСЃРїСЂР°РІР»РµРЅР° Р±РёС‚Р°СЏ РєРѕРґРёСЂРѕРІРєР° РІ `docs/hermes_os/self_audit_protocol.md` (С‚РµРїРµСЂСЊ СЂСѓСЃСЃРєРёР№ С‚РµРєСЃС‚ С‡РёС‚Р°Р±РµР»РµРЅ).
+- РџРѕР»РёС‚РёРєР° Р±РµР· РёР·РјРµРЅРµРЅРёР№: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (`PAYMENT_MODE=manual`).
+- Р‘Р»РѕРєРµСЂС‹ Р±РµР· РёР·РјРµРЅРµРЅРёР№: P0 delivery-gate (РЅРµР»СЊР·СЏ `delivered_to_client` РїСЂРё `needs_revision`/`must_rewrite_with_high_caution` Р±РµР· СЏРІРЅРѕРіРѕ manual override); multi-path drift РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ; mini-app СЃРѕРґРµСЂР¶РёС‚ off-policy С†РµРЅСѓ/С…Р°СЂРґРєРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р° Рё РЅРµ РіРѕС‚РѕРІ Рє РїСѓР±Р»РёС‡РЅРѕРјСѓ Р·Р°РїСѓСЃРєСѓ.
 
 ## 2026-05-05 09:33 MSK
-### Регулярная синхронизация (12h)
-- Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Проверены директории и история: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` — новых коммитов после `b6010bb` нет; изменения локально только документальные + dev-инфраструктура.
-- Добавлены/актуализированы (без секретов): стратегический пакет `docs/2026-05-04_*` + `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`; Docker-артефакты для воспроизводимого локального запуска `WellnessBot/Dockerfile`, `WellnessBot/docker-compose.yml` (использует `.env`, который не коммитится).
-- Режим без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
-- Блокеры без изменений: P0 delivery-gate (нельзя `delivered_to_client` при `needs_revision`/`must_rewrite_with_high_caution` без явного manual override); нестабильность polling; mini-app содержит off-policy цену/хардкод результата и не готов к публичному запуску.
+### Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+- РџРµСЂРµС‡РёС‚Р°РЅС‹ СѓРїСЂР°РІР»СЏСЋС‰РёРµ Р°СЂС‚РµС„Р°РєС‚С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџСЂРѕРІРµСЂРµРЅС‹ РґРёСЂРµРєС‚РѕСЂРёРё Рё РёСЃС‚РѕСЂРёСЏ: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` вЂ” РЅРѕРІС‹С… РєРѕРјРјРёС‚РѕРІ РїРѕСЃР»Рµ `b6010bb` РЅРµС‚; РёР·РјРµРЅРµРЅРёСЏ Р»РѕРєР°Р»СЊРЅРѕ С‚РѕР»СЊРєРѕ РґРѕРєСѓРјРµРЅС‚Р°Р»СЊРЅС‹Рµ + dev-РёРЅС„СЂР°СЃС‚СЂСѓРєС‚СѓСЂР°.
+- Р”РѕР±Р°РІР»РµРЅС‹/Р°РєС‚СѓР°Р»РёР·РёСЂРѕРІР°РЅС‹ (Р±РµР· СЃРµРєСЂРµС‚РѕРІ): СЃС‚СЂР°С‚РµРіРёС‡РµСЃРєРёР№ РїР°РєРµС‚ `docs/2026-05-04_*` + `docs/2026-05-05_STRATEGIC_MASTER_PLAN.md`; Docker-Р°СЂС‚РµС„Р°РєС‚С‹ РґР»СЏ РІРѕСЃРїСЂРѕРёР·РІРѕРґРёРјРѕРіРѕ Р»РѕРєР°Р»СЊРЅРѕРіРѕ Р·Р°РїСѓСЃРєР° `WellnessBot/Dockerfile`, `WellnessBot/docker-compose.yml` (РёСЃРїРѕР»СЊР·СѓРµС‚ `.env`, РєРѕС‚РѕСЂС‹Р№ РЅРµ РєРѕРјРјРёС‚РёС‚СЃСЏ).
+- Р РµР¶РёРј Р±РµР· РёР·РјРµРЅРµРЅРёР№: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (`PAYMENT_MODE=manual`).
+- Р‘Р»РѕРєРµСЂС‹ Р±РµР· РёР·РјРµРЅРµРЅРёР№: P0 delivery-gate (РЅРµР»СЊР·СЏ `delivered_to_client` РїСЂРё `needs_revision`/`must_rewrite_with_high_caution` Р±РµР· СЏРІРЅРѕРіРѕ manual override); РЅРµСЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚СЊ polling; mini-app СЃРѕРґРµСЂР¶РёС‚ off-policy С†РµРЅСѓ/С…Р°СЂРґРєРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р° Рё РЅРµ РіРѕС‚РѕРІ Рє РїСѓР±Р»РёС‡РЅРѕРјСѓ Р·Р°РїСѓСЃРєСѓ.
 
 ## 2026-05-03 21:26 MSK
-### Регулярная синхронизация (12h)
-- Перечитаны управляющие артефакты: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
-- Проверены директории и git-история: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` — новых коммитов после утреннего sync-пакета нет; рабочее дерево чистое.
-- Режим без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
-- Блокеры без изменений: P0 delivery-gate (нельзя `delivered_to_client` при `needs_revision`/`must_rewrite_with_high_caution` без явного manual override); нестабильность polling; mini-app содержит off-policy цену/хардкод результата и не готов к публичному запуску.
+### Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+- РџРµСЂРµС‡РёС‚Р°РЅС‹ СѓРїСЂР°РІР»СЏСЋС‰РёРµ Р°СЂС‚РµС„Р°РєС‚С‹: `docs/AGENT_CONTEXT_HUB.md`, `docs/PROJECT_PULSE_LOG.md`, `docs/STRATEGY_LIVE_DELTA.md`, `docs/PRODUCT_LINE_V2_20260426.md`, `docs/MANUAL_PAYMENT_MODE_20260426.md`, `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`, `docs/PROJECT_SKILL_REGISTRY_20260425.md`.
+- РџСЂРѕРІРµСЂРµРЅС‹ РґРёСЂРµРєС‚РѕСЂРёРё Рё git-РёСЃС‚РѕСЂРёСЏ: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app` вЂ” РЅРѕРІС‹С… РєРѕРјРјРёС‚РѕРІ РїРѕСЃР»Рµ СѓС‚СЂРµРЅРЅРµРіРѕ sync-РїР°РєРµС‚Р° РЅРµС‚; СЂР°Р±РѕС‡РµРµ РґРµСЂРµРІРѕ С‡РёСЃС‚РѕРµ.
+- Р РµР¶РёРј Р±РµР· РёР·РјРµРЅРµРЅРёР№: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (`PAYMENT_MODE=manual`).
+- Р‘Р»РѕРєРµСЂС‹ Р±РµР· РёР·РјРµРЅРµРЅРёР№: P0 delivery-gate (РЅРµР»СЊР·СЏ `delivered_to_client` РїСЂРё `needs_revision`/`must_rewrite_with_high_caution` Р±РµР· СЏРІРЅРѕРіРѕ manual override); РЅРµСЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚СЊ polling; mini-app СЃРѕРґРµСЂР¶РёС‚ off-policy С†РµРЅСѓ/С…Р°СЂРґРєРѕРґ СЂРµР·СѓР»СЊС‚Р°С‚Р° Рё РЅРµ РіРѕС‚РѕРІ Рє РїСѓР±Р»РёС‡РЅРѕРјСѓ Р·Р°РїСѓСЃРєСѓ.
 
 ## 2026-05-03 09:20 MSK
-### Регулярная синхронизация (12h)
-- Перепроверены управляющие артефакты и ключевые директории: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
-- Новых изменений в коде/тестах/лендинге/mini-app не обнаружено; текущие рабочие изменения — только в `docs/*` (правила/формулировки синхронизации).
-- Режим неизменен: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
-- Ops-риск остаётся активным: повторные окна нестабильности polling (WinError 64 / proxy refusal `127.0.0.1:12334`) считаем регрессией до явной фиксации и чистой проверки после исправления.
-- P0 остаётся активным: нельзя допускать `delivered_to_client`, пока внутренний вердикт review = `needs_revision` / `must_rewrite_with_high_caution` или нет явного manual override.
+### Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+- РџРµСЂРµРїСЂРѕРІРµСЂРµРЅС‹ СѓРїСЂР°РІР»СЏСЋС‰РёРµ Р°СЂС‚РµС„Р°РєС‚С‹ Рё РєР»СЋС‡РµРІС‹Рµ РґРёСЂРµРєС‚РѕСЂРёРё: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
+- РќРѕРІС‹С… РёР·РјРµРЅРµРЅРёР№ РІ РєРѕРґРµ/С‚РµСЃС‚Р°С…/Р»РµРЅРґРёРЅРіРµ/mini-app РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ; С‚РµРєСѓС‰РёРµ СЂР°Р±РѕС‡РёРµ РёР·РјРµРЅРµРЅРёСЏ вЂ” С‚РѕР»СЊРєРѕ РІ `docs/*` (РїСЂР°РІРёР»Р°/С„РѕСЂРјСѓР»РёСЂРѕРІРєРё СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё).
+- Р РµР¶РёРј РЅРµРёР·РјРµРЅРµРЅ: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (`PAYMENT_MODE=manual`).
+- Ops-СЂРёСЃРє РѕСЃС‚Р°С‘С‚СЃСЏ Р°РєС‚РёРІРЅС‹Рј: РїРѕРІС‚РѕСЂРЅС‹Рµ РѕРєРЅР° РЅРµСЃС‚Р°Р±РёР»СЊРЅРѕСЃС‚Рё polling (WinError 64 / proxy refusal `127.0.0.1:12334`) СЃС‡РёС‚Р°РµРј СЂРµРіСЂРµСЃСЃРёРµР№ РґРѕ СЏРІРЅРѕР№ С„РёРєСЃР°С†РёРё Рё С‡РёСЃС‚РѕР№ РїСЂРѕРІРµСЂРєРё РїРѕСЃР»Рµ РёСЃРїСЂР°РІР»РµРЅРёСЏ.
+- P0 РѕСЃС‚Р°С‘С‚СЃСЏ Р°РєС‚РёРІРЅС‹Рј: РЅРµР»СЊР·СЏ РґРѕРїСѓСЃРєР°С‚СЊ `delivered_to_client`, РїРѕРєР° РІРЅСѓС‚СЂРµРЅРЅРёР№ РІРµСЂРґРёРєС‚ review = `needs_revision` / `must_rewrite_with_high_caution` РёР»Рё РЅРµС‚ СЏРІРЅРѕРіРѕ manual override.
 
 ## 2026-05-02 21:19 MSK
-### Регулярная синхронизация (12h)
-- Сверены управляющие артефакты и репозиторий: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
-- Новых изменений в коде/тестах/лендинге/mini-app не обнаружено; актуальные изменения — только в `docs` (статус/правила/план).
-- Режим без изменений: controlled concierge pilot; public launch заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
-- P0 остаётся: нельзя допускать `delivered_to_client`, пока внутренний вердикт review не очищен или нет явного manual override.
-- Mini-app нельзя запускать публично: дрейф цены/результата и небезопасный хардкод; нужен безопасный плейсхолдер или reviewed backend-fed state.
+### Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+- РЎРІРµСЂРµРЅС‹ СѓРїСЂР°РІР»СЏСЋС‰РёРµ Р°СЂС‚РµС„Р°РєС‚С‹ Рё СЂРµРїРѕР·РёС‚РѕСЂРёР№: `docs/*`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
+- РќРѕРІС‹С… РёР·РјРµРЅРµРЅРёР№ РІ РєРѕРґРµ/С‚РµСЃС‚Р°С…/Р»РµРЅРґРёРЅРіРµ/mini-app РЅРµ РѕР±РЅР°СЂСѓР¶РµРЅРѕ; Р°РєС‚СѓР°Р»СЊРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ вЂ” С‚РѕР»СЊРєРѕ РІ `docs` (СЃС‚Р°С‚СѓСЃ/РїСЂР°РІРёР»Р°/РїР»Р°РЅ).
+- Р РµР¶РёРј Р±РµР· РёР·РјРµРЅРµРЅРёР№: controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (`PAYMENT_MODE=manual`).
+- P0 РѕСЃС‚Р°С‘С‚СЃСЏ: РЅРµР»СЊР·СЏ РґРѕРїСѓСЃРєР°С‚СЊ `delivered_to_client`, РїРѕРєР° РІРЅСѓС‚СЂРµРЅРЅРёР№ РІРµСЂРґРёРєС‚ review РЅРµ РѕС‡РёС‰РµРЅ РёР»Рё РЅРµС‚ СЏРІРЅРѕРіРѕ manual override.
+- Mini-app РЅРµР»СЊР·СЏ Р·Р°РїСѓСЃРєР°С‚СЊ РїСѓР±Р»РёС‡РЅРѕ: РґСЂРµР№С„ С†РµРЅС‹/СЂРµР·СѓР»СЊС‚Р°С‚Р° Рё РЅРµР±РµР·РѕРїР°СЃРЅС‹Р№ С…Р°СЂРґРєРѕРґ; РЅСѓР¶РµРЅ Р±РµР·РѕРїР°СЃРЅС‹Р№ РїР»РµР№СЃС…РѕР»РґРµСЂ РёР»Рё reviewed backend-fed state.
 
 ### State Read Delta
 - Completed a fresh sync read across `docs`, `WellnessBot`, `mini-app`, `ops/reports`, the current same-user submission stack, `WellnessBot/data/product_governance.json`, and the latest `bot.stderr.log` tail.
@@ -2441,41 +2749,41 @@
   5. Keep the latest benchmark reference anchored to `ops/reports/quality_report_20260501T080509Z.md` and the QA readout to `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
 
 ## 2026-05-02 09:18 MSK
-### Регулярная синхронизация (12h)
-- Перечитаны управляющие артефакты: `AGENT_CONTEXT_HUB`, `PROJECT_PULSE_LOG`, `STRATEGY_LIVE_DELTA`, `PRODUCT_LINE_V2`, `MANUAL_PAYMENT_MODE`, `ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL`, `PROJECT_SKILL_REGISTRY`.
-- Изменений в коде не выявлено; рабочие изменения текущего прогона — только в `docs` (актуализация статуса/правил).
-- Пилотный режим без изменений: controlled concierge pilot; public launch по-прежнему заблокирован; human review обязателен; ручная оплата активна (`PAYMENT_MODE=manual`).
-- Текущий P0-риск без изменений: нельзя допускать `delivered_to_client`, пока внутренний вердикт review не очищен или нет явного manual override.
+### Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
+- РџРµСЂРµС‡РёС‚Р°РЅС‹ СѓРїСЂР°РІР»СЏСЋС‰РёРµ Р°СЂС‚РµС„Р°РєС‚С‹: `AGENT_CONTEXT_HUB`, `PROJECT_PULSE_LOG`, `STRATEGY_LIVE_DELTA`, `PRODUCT_LINE_V2`, `MANUAL_PAYMENT_MODE`, `ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL`, `PROJECT_SKILL_REGISTRY`.
+- РР·РјРµРЅРµРЅРёР№ РІ РєРѕРґРµ РЅРµ РІС‹СЏРІР»РµРЅРѕ; СЂР°Р±РѕС‡РёРµ РёР·РјРµРЅРµРЅРёСЏ С‚РµРєСѓС‰РµРіРѕ РїСЂРѕРіРѕРЅР° вЂ” С‚РѕР»СЊРєРѕ РІ `docs` (Р°РєС‚СѓР°Р»РёР·Р°С†РёСЏ СЃС‚Р°С‚СѓСЃР°/РїСЂР°РІРёР»).
+- РџРёР»РѕС‚РЅС‹Р№ СЂРµР¶РёРј Р±РµР· РёР·РјРµРЅРµРЅРёР№: controlled concierge pilot; public launch РїРѕ-РїСЂРµР¶РЅРµРјСѓ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; human review РѕР±СЏР·Р°С‚РµР»РµРЅ; СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р° Р°РєС‚РёРІРЅР° (`PAYMENT_MODE=manual`).
+- РўРµРєСѓС‰РёР№ P0-СЂРёСЃРє Р±РµР· РёР·РјРµРЅРµРЅРёР№: РЅРµР»СЊР·СЏ РґРѕРїСѓСЃРєР°С‚СЊ `delivered_to_client`, РїРѕРєР° РІРЅСѓС‚СЂРµРЅРЅРёР№ РІРµСЂРґРёРєС‚ review РЅРµ РѕС‡РёС‰РµРЅ РёР»Рё РЅРµС‚ СЏРІРЅРѕРіРѕ manual override.
 
 ## 2026-05-01 21:19 MSK
 ### Delivery Delta
-- Добавлен RU-отчёт QA диалогов: `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
-- Улучшен старт `WellnessBot`: безопасный прокси-fallback (проверка доступности; лог без утечки учётных данных) + исправлен символ маркера в `/queue`.
-- `server.ps1` теперь не зависит от абсолютного пути и корректно работает из папки проекта.
+- Р”РѕР±Р°РІР»РµРЅ RU-РѕС‚С‡С‘С‚ QA РґРёР°Р»РѕРіРѕРІ: `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
+- РЈР»СѓС‡С€РµРЅ СЃС‚Р°СЂС‚ `WellnessBot`: Р±РµР·РѕРїР°СЃРЅС‹Р№ РїСЂРѕРєСЃРё-fallback (РїСЂРѕРІРµСЂРєР° РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё; Р»РѕРі Р±РµР· СѓС‚РµС‡РєРё СѓС‡С‘С‚РЅС‹С… РґР°РЅРЅС‹С…) + РёСЃРїСЂР°РІР»РµРЅ СЃРёРјРІРѕР» РјР°СЂРєРµСЂР° РІ `/queue`.
+- `server.ps1` С‚РµРїРµСЂСЊ РЅРµ Р·Р°РІРёСЃРёС‚ РѕС‚ Р°Р±СЃРѕР»СЋС‚РЅРѕРіРѕ РїСѓС‚Рё Рё РєРѕСЂСЂРµРєС‚РЅРѕ СЂР°Р±РѕС‚Р°РµС‚ РёР· РїР°РїРєРё РїСЂРѕРµРєС‚Р°.
 
 ### Metrics Delta
-- Бенчмарк: `ops/reports/quality_report_20260501T080509Z.md`
-- Непустые ответы: `20/20`
-- Дошли до модели: `9/20`
-- Детерминированные ответы: `11/20`
-- Свободное место на `C:`: ~`24.59 GB` (2026-05-01 21:19 MSK)
+- Р‘РµРЅС‡РјР°СЂРє: `ops/reports/quality_report_20260501T080509Z.md`
+- РќРµРїСѓСЃС‚С‹Рµ РѕС‚РІРµС‚С‹: `20/20`
+- Р”РѕС€Р»Рё РґРѕ РјРѕРґРµР»Рё: `9/20`
+- Р”РµС‚РµСЂРјРёРЅРёСЂРѕРІР°РЅРЅС‹Рµ РѕС‚РІРµС‚С‹: `11/20`
+- РЎРІРѕР±РѕРґРЅРѕРµ РјРµСЃС‚Рѕ РЅР° `C:`: ~`24.59 GB` (2026-05-01 21:19 MSK)
 
 ### Risks / Gaps
-- Новый риск качества: неподдержанная персонализация (выдуманные имена, фамильярность) и ранние «диагностические ярлыки» на пути модели.
-- Экстренные/кризисные шаблоны всё ещё требуют разветвления по типам риска и усиления immediate-safety вопросов.
-- Public launch остаётся заблокирован; пилот только controlled concierge + human review.
+- РќРѕРІС‹Р№ СЂРёСЃРє РєР°С‡РµСЃС‚РІР°: РЅРµРїРѕРґРґРµСЂР¶Р°РЅРЅР°СЏ РїРµСЂСЃРѕРЅР°Р»РёР·Р°С†РёСЏ (РІС‹РґСѓРјР°РЅРЅС‹Рµ РёРјРµРЅР°, С„Р°РјРёР»СЊСЏСЂРЅРѕСЃС‚СЊ) Рё СЂР°РЅРЅРёРµ В«РґРёР°РіРЅРѕСЃС‚РёС‡РµСЃРєРёРµ СЏСЂР»С‹РєРёВ» РЅР° РїСѓС‚Рё РјРѕРґРµР»Рё.
+- Р­РєСЃС‚СЂРµРЅРЅС‹Рµ/РєСЂРёР·РёСЃРЅС‹Рµ С€Р°Р±Р»РѕРЅС‹ РІСЃС‘ РµС‰С‘ С‚СЂРµР±СѓСЋС‚ СЂР°Р·РІРµС‚РІР»РµРЅРёСЏ РїРѕ С‚РёРїР°Рј СЂРёСЃРєР° Рё СѓСЃРёР»РµРЅРёСЏ immediate-safety РІРѕРїСЂРѕСЃРѕРІ.
+- Public launch РѕСЃС‚Р°С‘С‚СЃСЏ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ; РїРёР»РѕС‚ С‚РѕР»СЊРєРѕ controlled concierge + human review.
 
 ### Next 12h Focus
-- Ужать и дисциплинировать ответы модели (точность, объём, 1-й ответ по вопросу, максимум 2 гипотезы/2 вопроса).
-- Добавить анти-галлюцинацию персонализации (имена/обращения) в промпт/пост-процессор и покрыть бенчмарк-ассертами.
-- Развести сервис/логистика шаблоны, чтобы снизить повторы и «скачок стиля».
+- РЈР¶Р°С‚СЊ Рё РґРёСЃС†РёРїР»РёРЅРёСЂРѕРІР°С‚СЊ РѕС‚РІРµС‚С‹ РјРѕРґРµР»Рё (С‚РѕС‡РЅРѕСЃС‚СЊ, РѕР±СЉС‘Рј, 1-Р№ РѕС‚РІРµС‚ РїРѕ РІРѕРїСЂРѕСЃСѓ, РјР°РєСЃРёРјСѓРј 2 РіРёРїРѕС‚РµР·С‹/2 РІРѕРїСЂРѕСЃР°).
+- Р”РѕР±Р°РІРёС‚СЊ Р°РЅС‚Рё-РіР°Р»Р»СЋС†РёРЅР°С†РёСЋ РїРµСЂСЃРѕРЅР°Р»РёР·Р°С†РёРё (РёРјРµРЅР°/РѕР±СЂР°С‰РµРЅРёСЏ) РІ РїСЂРѕРјРїС‚/РїРѕСЃС‚-РїСЂРѕС†РµСЃСЃРѕСЂ Рё РїРѕРєСЂС‹С‚СЊ Р±РµРЅС‡РјР°СЂРє-Р°СЃСЃРµСЂС‚Р°РјРё.
+- Р Р°Р·РІРµСЃС‚Рё СЃРµСЂРІРёСЃ/Р»РѕРіРёСЃС‚РёРєР° С€Р°Р±Р»РѕРЅС‹, С‡С‚РѕР±С‹ СЃРЅРёР·РёС‚СЊ РїРѕРІС‚РѕСЂС‹ Рё В«СЃРєР°С‡РѕРє СЃС‚РёР»СЏВ».
 
 ## 2026-04-13 12:55 MSK
 ### Delivery Delta
 - Live reply quality layer upgraded in bot runtime.
 - Dead-end refusal replies removed from benchmark path.
 - Premium conversion CTA embedded into live chat response flow.
-- Direct intake trigger added from chat phrase: "хочу разбор".
+- Direct intake trigger added from chat phrase: "С…РѕС‡Сѓ СЂР°Р·Р±РѕСЂ".
 - Mini-app legacy multi-tier branches removed and aligned to single-path funnel.
 
 ### Metrics Delta
@@ -2555,11 +2863,11 @@
 ### Metrics Delta
 - Quality report: `ops/reports/quality_report_20260413T202756Z.md`
 - Empty replies: 0/20
-- Premium CTA phrase mentions (`хочу разбор`): 15
+- Premium CTA phrase mentions (`С…РѕС‡Сѓ СЂР°Р·Р±РѕСЂ`): 15
 
 ### Strategy Delta
 - Conversion bridge is now less templated while preserving benchmark stability.
-- Payment handoff moved from вЂњplannedвЂќ to вЂњimplemented in runtime flowвЂќ.
+- Payment handoff moved from РІР‚СљplannedРІР‚Сњ to РІР‚Сљimplemented in runtime flowРІР‚Сњ.
 
 ### Next 12h Focus
 - Run real Telegram payment smoke in production-like conditions.
@@ -2613,7 +2921,7 @@
 
 ## 2026-04-20 10:47 MSK
 ### Delivery Delta
-- Reframed bot policy from generic wellness assistant to explicit `нутрициологическая навигация`.
+- Reframed bot policy from generic wellness assistant to explicit `РЅСѓС‚СЂРёС†РёРѕР»РѕРіРёС‡РµСЃРєР°СЏ РЅР°РІРёРіР°С†РёСЏ`.
 - Added source-of-truth policy document:
   - `docs/NUTRITION_NAVIGATION_POLICY_20260420.md`
 - Rewrote prompt layer in `WellnessBot/prompts.py` to align with Olga's operating rules:
@@ -2623,7 +2931,7 @@
   - chronic-background caution,
   - red-flag escalation,
   - supplement guidance allowed in wellness format (including timing/form/dose/compatibility),
-  - references to `Сибирское здоровье` and `Vitamax` allowed when appropriate.
+  - references to `РЎРёР±РёСЂСЃРєРѕРµ Р·РґРѕСЂРѕРІСЊРµ` and `Vitamax` allowed when appropriate.
 
 ### Strategy Delta
 - Bot positioning is now explicitly premium nutrition navigation with doctor escalation boundaries, not pseudo-medical advising.
@@ -2793,7 +3101,7 @@
 
 ## 2026-04-20 14:32 MSK
 ### Execution Delta
-- Added `/applydecision <номер>`:
+- Added `/applydecision <РЅРѕРјРµСЂ>`:
   - an admin can now apply a suggested decision directly from the `/suggestdecisions` list without manual copying,
   - the accepted decision is written into governance memory with structured details: why now, next move, source signal, and analysis window.
 
@@ -3252,20 +3560,20 @@
 - Unit tests passed: 25 tests OK.
 - Bot restarted with a single active process and polling is active.
 
-## 2026-04-24 16:38 MSK вЂ” DeepSeek Connector Prepared
+## 2026-04-24 16:38 MSK РІР‚вЂќ DeepSeek Connector Prepared
 
-- Разделены настройки текстовой LLM и распознавания голоса: LLM_* теперь отвечает за модель разборов/ответов, STT_* — за голосовые сообщения.
-- Подготовлен безопасный мастер подключения DeepSeek: ops\set-deepseek-token.cmd / ops\set-deepseek-token.ps1.
-- DeepSeek настроен через OpenAI-compatible режим: LLM_PROVIDER=openai_compatible, LLM_BASE_URL=https://api.deepseek.com, LLM_API_MODE=chat_completions, модель по умолчанию deepseek-v4-flash.
-- Yandex SpeechKit сохранён для голосовых через STT_PROVIDER=yandex_speechkit, чтобы подключение DeepSeek не ломало аудио/voice intake.
-- ops\bot-start.ps1 обновлён: IAM-токен Яндекса теперь может обновляться отдельно для STT и не перезаписывает DeepSeek LLM_API_KEY.
-- Проверка: py_compile OK, python -m unittest discover -s tests OK, 25 тестов пройдены.
-- Live bot перезапущен в текущем режиме Яндекс LLM до ввода реального DeepSeek API key.
+- Р Р°Р·РґРµР»РµРЅС‹ РЅР°СЃС‚СЂРѕР№РєРё С‚РµРєСЃС‚РѕРІРѕР№ LLM Рё СЂР°СЃРїРѕР·РЅР°РІР°РЅРёСЏ РіРѕР»РѕСЃР°: LLM_* С‚РµРїРµСЂСЊ РѕС‚РІРµС‡Р°РµС‚ Р·Р° РјРѕРґРµР»СЊ СЂР°Р·Р±РѕСЂРѕРІ/РѕС‚РІРµС‚РѕРІ, STT_* вЂ” Р·Р° РіРѕР»РѕСЃРѕРІС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ.
+- РџРѕРґРіРѕС‚РѕРІР»РµРЅ Р±РµР·РѕРїР°СЃРЅС‹Р№ РјР°СЃС‚РµСЂ РїРѕРґРєР»СЋС‡РµРЅРёСЏ DeepSeek: ops\set-deepseek-token.cmd / ops\set-deepseek-token.ps1.
+- DeepSeek РЅР°СЃС‚СЂРѕРµРЅ С‡РµСЂРµР· OpenAI-compatible СЂРµР¶РёРј: LLM_PROVIDER=openai_compatible, LLM_BASE_URL=https://api.deepseek.com, LLM_API_MODE=chat_completions, РјРѕРґРµР»СЊ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ deepseek-v4-flash.
+- Yandex SpeechKit СЃРѕС…СЂР°РЅС‘РЅ РґР»СЏ РіРѕР»РѕСЃРѕРІС‹С… С‡РµСЂРµР· STT_PROVIDER=yandex_speechkit, С‡С‚РѕР±С‹ РїРѕРґРєР»СЋС‡РµРЅРёРµ DeepSeek РЅРµ Р»РѕРјР°Р»Рѕ Р°СѓРґРёРѕ/voice intake.
+- ops\bot-start.ps1 РѕР±РЅРѕРІР»С‘РЅ: IAM-С‚РѕРєРµРЅ РЇРЅРґРµРєСЃР° С‚РµРїРµСЂСЊ РјРѕР¶РµС‚ РѕР±РЅРѕРІР»СЏС‚СЊСЃСЏ РѕС‚РґРµР»СЊРЅРѕ РґР»СЏ STT Рё РЅРµ РїРµСЂРµР·Р°РїРёСЃС‹РІР°РµС‚ DeepSeek LLM_API_KEY.
+- РџСЂРѕРІРµСЂРєР°: py_compile OK, python -m unittest discover -s tests OK, 25 С‚РµСЃС‚РѕРІ РїСЂРѕР№РґРµРЅС‹.
+- Live bot РїРµСЂРµР·Р°РїСѓС‰РµРЅ РІ С‚РµРєСѓС‰РµРј СЂРµР¶РёРјРµ РЇРЅРґРµРєСЃ LLM РґРѕ РІРІРѕРґР° СЂРµР°Р»СЊРЅРѕРіРѕ DeepSeek API key.
 
 Next gate:
-- Ввести DeepSeek API key через ops\set-deepseek-token.cmd, затем перезапустить бота и провести live smoke: текстовый вопрос, голосовое, intake/PDF.
+- Р’РІРµСЃС‚Рё DeepSeek API key С‡РµСЂРµР· ops\set-deepseek-token.cmd, Р·Р°С‚РµРј РїРµСЂРµР·Р°РїСѓСЃС‚РёС‚СЊ Р±РѕС‚Р° Рё РїСЂРѕРІРµСЃС‚Рё live smoke: С‚РµРєСЃС‚РѕРІС‹Р№ РІРѕРїСЂРѕСЃ, РіРѕР»РѕСЃРѕРІРѕРµ, intake/PDF.
 
-## 2026-04-24 18:02 MSK вЂ” DeepSeek Key Connected, Balance Gate Found
+## 2026-04-24 18:02 MSK РІР‚вЂќ DeepSeek Key Connected, Balance Gate Found
 
 - DeepSeek API key was written to env safely and tested through https://api.deepseek.com.
 - API authentication reached DeepSeek successfully, but the provider returned 402 Insufficient Balance.
@@ -3273,7 +3581,7 @@ Next gate:
 - Current active route: Yandex Foundation Models for text + Yandex SpeechKit for voice.
 - Next gate: top up DeepSeek balance, then switch LLM_PROVIDER=openai_compatible, LLM_API_KEY=DEEPSEEK_API_KEY, LLM_MODEL=deepseek-v4-flash, LLM_API_MODE=chat_completions, LLM_BASE_URL=https://api.deepseek.com and run smoke again.
 
-## 2026-04-24 20:54 MSK вЂ” Direct DeepSeek Activated
+## 2026-04-24 20:54 MSK РІР‚вЂќ Direct DeepSeek Activated
 
 - DeepSeek balance was topped up by the owner.
 - Active LLM switched from yandex_foundation to direct DeepSeek via OpenAI-compatible mode.
@@ -3285,7 +3593,7 @@ Next gate:
 Next gate:
 - Run Telegram live E2E: short text question, voice message, intake start, then controlled dossier branch.
 
-## 2026-04-24 21:02 MSK вЂ” Dossier Actionability Upgrade
+## 2026-04-24 21:02 MSK РІР‚вЂќ Dossier Actionability Upgrade
 
 - Incorporated owner critique: dossier was safe but too generic and needed stronger actionable value.
 - DOSSIER_DRAFT_PROMPT now requires phased plans: 24-72h, 7 days, 2-4 weeks, 1 month, 3 months.
@@ -3296,7 +3604,7 @@ Next gate:
 - Safety filter removes high-risk supplement items such as iodine/selenium/iron in complex or uncertain cases.
 - Verification: py_compile OK, unittest discover OK (25 tests), local action-floor smoke OK, live bot restarted successfully.
 
-## 2026-04-24 21:11 MSK вЂ” Accuracy / Medical Error Prevention Upgrade
+## 2026-04-24 21:11 MSK РІР‚вЂќ Accuracy / Medical Error Prevention Upgrade
 
 - Owner clarified that the product must behave like a drafting instrument for an experienced expert and must minimize medical-error risk.
 - Critical infrastructure fix: lab_ocr.recognize_text() no longer depends on active LLM_API_KEY; when text LLM is DeepSeek, Yandex OCR now uses separate Yandex credentials from STT_*.
@@ -3306,7 +3614,7 @@ Next gate:
 - PDF safe-action layer now injects a visible accuracy protocol and final accuracy note: uncertain labs must be resent or manually confirmed; medical decisions remain doctor-level.
 - Verification: py_compile OK, unittest discover OK (27 tests), action-floor smoke OK, live bot restarted successfully.
 
-## 2026-04-24 21:56 MSK вЂ” Complex Case E2E Smoke / Safety Filters
+## 2026-04-24 21:56 MSK РІР‚вЂќ Complex Case E2E Smoke / Safety Filters
 
 - Ran controlled complex-case smoke through direct DeepSeek: draft generation, internal judge, normalized JSON, PDF render.
 - Output files:
@@ -3319,7 +3627,7 @@ Next gate:
 - Critical product finding: safety is improved, but judge still flags premium-value issues: repetition, overloaded sections, missing one-page executive summary, need stronger first-week action card and grouped doctor questions.
 - Decision: do not treat this as final launch-quality PDF without human review. Next architecture step is PDF/dossier structure redesign, not more prompt/filter tweaking.
 
-## 2026-04-24 22:21 MSK вЂ” Live Bot Smoke Test / Dossier Orchestration Fix
+## 2026-04-24 22:21 MSK РІР‚вЂќ Live Bot Smoke Test / Dossier Orchestration Fix
 
 - Ran live Telegram test with owner as client: intake progressed, documents uploaded, manual payment confirmed, dossier generation started.
 - DeepSeek text calls returned 200 OK.
@@ -3331,7 +3639,7 @@ equires_lab_resubmission=true, parsed biomarkers remained empty.
 - Sent recovered test PDF to admin Telegram chat via bot proxy.
 - Current product signal: safe behavior on uncertain labs is correct; PDF quality still requires human review and later structure redesign.
 
-## 2026-04-24 23:10 MSK вЂ” Premium Dossier / 30-Day Support Upgrade
+## 2026-04-24 23:10 MSK РІР‚вЂќ Premium Dossier / 30-Day Support Upgrade
 
 - Owner critique incorporated: PDF must feel like premium personal navigation, not a generic wellness article.
 - Added premium first pages to the dossier: 14-day executive map, 3-step recovery protocol, personalized 3-day start, doctor questions, circadian checklist, and 30-day support offer.
@@ -3339,7 +3647,7 @@ equires_lab_resubmission=true, parsed biomarkers remained empty.
 - Added client material: docs/CLIENT_CIRCADIAN_QUICK_WIN_CHECKLIST.md.
 - Added 30-day post-dossier support path: after delivery, clients can send analyses, photos, questions, and reactions; bot appends follow-ups to the case and responds as ongoing support.
 - Photo-complaint route added: bot asks location/duration/dynamics/pain/itch/bleeding/temperature, does not diagnose by photo, and routes to appropriate medical escalation when needed.
-- Premium PDF sections renamed and shortened: "Питание На Первые 7 Дней", "Сон, Стресс И Мягкая Нагрузка", "Точность, Анализы И Маршрут", "Хронологический План".
+- Premium PDF sections renamed and shortened: "РџРёС‚Р°РЅРёРµ РќР° РџРµСЂРІС‹Рµ 7 Р”РЅРµР№", "РЎРѕРЅ, РЎС‚СЂРµСЃСЃ Р РњСЏРіРєР°СЏ РќР°РіСЂСѓР·РєР°", "РўРѕС‡РЅРѕСЃС‚СЊ, РђРЅР°Р»РёР·С‹ Р РњР°СЂС€СЂСѓС‚", "РҐСЂРѕРЅРѕР»РѕРіРёС‡РµСЃРєРёР№ РџР»Р°РЅ".
 - Safety/product filter now caps generic sections, overwrites risky internal strategy fields, prevents supplement-form leakage, and marks uncertain lab values as requiring PDF/photo verification.
 - Added concrete cycle/krovopoterya diary prompt for heavy menstruation.
 - Verification: py_compile OK, unittest discover OK (27 tests), complex-case DeepSeek smoke OK; final judge result moved into minor-revision territory, with remaining critique mainly about premium brevity vs. medical-boundary constraints.
@@ -3348,10 +3656,10 @@ Decision:
 - Bot can continue controlled pilot testing with mandatory human review before client PDF delivery.
 - Not yet "fully autonomous medical-grade". It is a premium nutrition-navigation assistant with safety gates, expert review, and 30-day guided follow-up.
 
-## 2026-04-24 23:24 MSK вЂ” Lab OCR Client Confirmation Gate
+## 2026-04-24 23:24 MSK РІР‚вЂќ Lab OCR Client Confirmation Gate
 
 - Decision fixed: bot accepts client files, photos, PDFs and analyses, but OCR values are not treated as final unless the client confirms them.
-- Added client confirmation message after successful OCR: bot lists recognized biomarkers and asks "да, верно" or corrections.
+- Added client confirmation message after successful OCR: bot lists recognized biomarkers and asks "РґР°, РІРµСЂРЅРѕ" or corrections.
 - Added `lab_confirmation_status`: pending_client_confirmation, client_confirmed, client_correction_needed.
 - If the client confirms values, the dossier can use them as client-confirmed data.
 - If the client sends corrections, old OCR values are not treated as facts; the case is marked for manual verification / resubmission.
@@ -3360,16 +3668,16 @@ Decision:
 - PDF logic now treats pending or corrected OCR values as uncertain, not as confirmed lab facts.
 - Verification: py_compile OK, unittest discover OK (28 tests).
 
-## 2026-04-24 23:40 MSK вЂ” Lab PDF / Manual Values Reading Upgrade
+## 2026-04-24 23:40 MSK РІР‚вЂќ Lab PDF / Manual Values Reading Upgrade
 
 - Owner clarified: clients may send laboratory PDFs or manually type their biomarkers; bot must read both carefully and ask clarification only when unsure.
 - Added embedded PDF text extraction via pypdf before Yandex OCR. Laboratory PDFs are now read as text first, avoiding unnecessary OCR failures on machine-readable lab files.
 - OCR remains fallback for image/scanned files; if text/values are unclear, client confirmation/resubmission gate still applies.
-- Added manual biomarker parsing for client-typed values. Short text like "Ферритин 18 нг/мл" can now be structured instead of stored only as a note.
+- Added manual biomarker parsing for client-typed values. Short text like "Р¤РµСЂСЂРёС‚РёРЅ 18 РЅРі/РјР»" can now be structured instead of stored only as a note.
 - Manual values are marked as client-provided text; unclear text remains a note and is not forced into numeric facts.
 - Verification: py_compile OK, unittest discover OK (29 tests).
 
-## 2026-04-25 вЂ” Project Skill System / Medical Skill DB
+## 2026-04-25 РІР‚вЂќ Project Skill System / Medical Skill DB
 
 - Created a project skill registry: docs/PROJECT_SKILL_REGISTRY_20260425.md.
 - Added new reusable project skills:
@@ -3392,7 +3700,7 @@ Decision:
 Decision:
 - All valuable project learning should become an operational artifact: code rule, test, skill, template, checklist, or registry entry. Chat-only knowledge is treated as not yet operationalized.
 
-## 2026-04-25 вЂ” Supplement Product Catalog v1
+## 2026-04-25 РІР‚вЂќ Supplement Product Catalog v1
 
 - Owner approved adding Siberian Wellness / Vitamax product knowledge for supplement orientation.
 - Created structured product catalog:
@@ -3467,7 +3775,7 @@ Decision:
   3. Use the delivered case to redesign the first page and doctor-route structure once.
 
 ## 2026-04-25 Intake Expansion Delta
-- Expanded Telegram intake from a compressed 12-step flow to a 21-step premium questionnaire based on `D:\ДОПОБУЧЕНИЕ\Эксперт БИО\анкета расширенная.docx`.
+- Expanded Telegram intake from a compressed 12-step flow to a 21-step premium questionnaire based on `D:\Р”РћРџРћР‘РЈР§Р•РќРР•\Р­РєСЃРїРµСЂС‚ Р‘РРћ\Р°РЅРєРµС‚Р° СЂР°СЃС€РёСЂРµРЅРЅР°СЏ.docx`.
 - New captured blocks: anthropometrics, work/lifestyle, energy pattern, food behavior, GI/gallbladder/bile-flow details, female hormone context, emotional stress, risk details/medications/supplements, motivation/body context.
 - New fields are persisted into `profile` and `medical_context`, restored for 30-day follow-up, and included in dossier/follow-up context.
 - Verification: `py_compile` OK; `unittest discover -s tests` OK, 37 tests.
@@ -3481,7 +3789,7 @@ Decision:
 
 ## 2026-04-25 Antigravity DeepSeek Auditor Delta
 - DeepSeek v4 is now connected to Antigravity through MCP server `deepseek-v4` and tool `deepseek_v4_chat`.
-- Technical verification: English API smoke returned `OK`; Russian UTF-8 smoke returned `ГОТОВО`; config paths are valid; API key remains outside Antigravity config.
+- Technical verification: English API smoke returned `OK`; Russian UTF-8 smoke returned `Р“РћРўРћР’Рћ`; config paths are valid; API key remains outside Antigravity config.
 - Created operating protocol: `docs/ANTIGRAVITY_DEEPSEEK_AUDITOR_PROTOCOL_20260425.md`.
 - First raw auditor output drifted into a generic product-picker bot and is marked invalid/off-context.
 - First constrained Russian run was corrupted by PowerShell encoding and is marked invalid.
@@ -3490,10 +3798,10 @@ Decision:
 - DeepSeek recommendation to remove all branded nutraceutical references/dosages is not adopted wholesale; project policy keeps Siberian Wellness/Vitamax as cautious, transparent, human-reviewed nutraceutical orientation.
 
 ## 2026-04-26 Intake Navigation + Premium Brevity Delta
-- Added text navigation for premium intake: `назад`, `шаг назад`, `повтори вопрос`, `дальше`, `готово`, `можно дальше`, `продолжить`, `пропустить`.
+- Added text navigation for premium intake: `РЅР°Р·Р°Рґ`, `С€Р°Рі РЅР°Р·Р°Рґ`, `РїРѕРІС‚РѕСЂРё РІРѕРїСЂРѕСЃ`, `РґР°Р»СЊС€Рµ`, `РіРѕС‚РѕРІРѕ`, `РјРѕР¶РЅРѕ РґР°Р»СЊС€Рµ`, `РїСЂРѕРґРѕР»Р¶РёС‚СЊ`, `РїСЂРѕРїСѓСЃС‚РёС‚СЊ`.
 - Navigation commands are no longer saved as accidental answers to questionnaire fields.
-- If the client says `дальше` before answering a required step, the bot repeats the current question and asks for a short answer or `пропустить`.
-- Red-flag step is protected: `РЅРµС‚` remains a valid red-flag answer, not a generic skip command.
+- If the client says `РґР°Р»СЊС€Рµ` before answering a required step, the bot repeats the current question and asks for a short answer or `РїСЂРѕРїСѓСЃС‚РёС‚СЊ`.
+- Red-flag step is protected: `Р Р…Р ВµРЎвЂљ` remains a valid red-flag answer, not a generic skip command.
 - Premium prompt tightened: first give priorities, avoid repetition and generic free-advice wording, use timing of symptoms/meals/coffee/medications/energy as accuracy data, and structure corrections by 3 days / 2 weeks / 1-3 months.
 - Verification: py_compile OK; unittest discover OK, 37 tests; bot restarted at 00:47 MSK without TelegramConflictError.
 
@@ -3618,9 +3926,9 @@ Decision:
 ## 2026-04-26 Product Line V2
 - Accepted the new product architecture: demo-result preview + 3 paid packages.
 - Paid products now represented in bot code and payment context:
-  - `week`: Разбор на 7 дней, 1 000 ₽
-  - `premium`: Персональный разбор на 30 дней, 6 900 ₽
-  - `vip`: VIP-сопровождение на 30 дней, 14 900 ₽
+  - `week`: Р Р°Р·Р±РѕСЂ РЅР° 7 РґРЅРµР№, 1 000 в‚Ѕ
+  - `premium`: РџРµСЂСЃРѕРЅР°Р»СЊРЅС‹Р№ СЂР°Р·Р±РѕСЂ РЅР° 30 РґРЅРµР№, 6 900 в‚Ѕ
+  - `vip`: VIP-СЃРѕРїСЂРѕРІРѕР¶РґРµРЅРёРµ РЅР° 30 РґРЅРµР№, 14 900 в‚Ѕ
 - Start menu now routes into product selection, result examples, process explanation, and operator contact.
 - Payment context now stores selected product code, name, title, description, and amount; legacy premium price remains compatible.
 - Created `docs/PRODUCT_LINE_V2_20260426.md` and marked the old one-off price policy as superseded for multi-product use.
@@ -3712,88 +4020,88 @@ Decision:
   2. Do not deliver the current `20260425T214914Z_<REDACTED_ID>` PDF; first obtain readable labs or manual biomarkers and regenerate from confirmed facts only.
   3. Add or verify a hard lab-gate block before draft/PDF generation, then deduplicate governance memory and log the correction outcome.
 
-## 2026-04-27 12:20 MSK — Регулярная синхронизация (github-notion-12)
+## 2026-04-27 12:20 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (github-notion-12)
 
-### Итог
-- Обновлён `docs/AGENT_CONTEXT_HUB.md`: добавлен краткий RU-статус (этап/блокеры/риски/что нельзя публично).
-- Notion: создана страница статуса прогона — `Antigravity Sync Run - 2026-04-27 12:20 MSK`: https://www.notion.so/34f8a9de1d41816b82fbd1174dab9712
-- GitHub: remote не настроен (в репозитории `git remote -v` пусто), поэтому push не выполнен; отчёт: `docs/external_sync/github_20260427_1220_msk.md`.
+### РС‚РѕРі
+- РћР±РЅРѕРІР»С‘РЅ `docs/AGENT_CONTEXT_HUB.md`: РґРѕР±Р°РІР»РµРЅ РєСЂР°С‚РєРёР№ RU-СЃС‚Р°С‚СѓСЃ (СЌС‚Р°Рї/Р±Р»РѕРєРµСЂС‹/СЂРёСЃРєРё/С‡С‚Рѕ РЅРµР»СЊР·СЏ РїСѓР±Р»РёС‡РЅРѕ).
+- Notion: СЃРѕР·РґР°РЅР° СЃС‚СЂР°РЅРёС†Р° СЃС‚Р°С‚СѓСЃР° РїСЂРѕРіРѕРЅР° вЂ” `Antigravity Sync Run - 2026-04-27 12:20 MSK`: https://www.notion.so/34f8a9de1d41816b82fbd1174dab9712
+- GitHub: remote РЅРµ РЅР°СЃС‚СЂРѕРµРЅ (РІ СЂРµРїРѕР·РёС‚РѕСЂРёРё `git remote -v` РїСѓСЃС‚Рѕ), РїРѕСЌС‚РѕРјСѓ push РЅРµ РІС‹РїРѕР»РЅРµРЅ; РѕС‚С‡С‘С‚: `docs/external_sync/github_20260427_1220_msk.md`.
 
-### Текущий этап
-- Controlled concierge pilot. Публичный запуск заблокирован до отдельного решения.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
+- Controlled concierge pilot. РџСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РґРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ СЂРµС€РµРЅРёСЏ.
 
-### Блокеры и риски
-- Две активные ветки по одному пользователю → риск «двух правд» и неправильной выдачи.
-- Lab-gate: недопустима генерация/выдача при `requires_lab_resubmission=true`.
-- Human review обязателен перед любой выдачей клиенту.
+### Р‘Р»РѕРєРµСЂС‹ Рё СЂРёСЃРєРё
+- Р”РІРµ Р°РєС‚РёРІРЅС‹Рµ РІРµС‚РєРё РїРѕ РѕРґРЅРѕРјСѓ РїРѕР»СЊР·РѕРІР°С‚РµР»СЋ в†’ СЂРёСЃРє В«РґРІСѓС… РїСЂР°РІРґВ» Рё РЅРµРїСЂР°РІРёР»СЊРЅРѕР№ РІС‹РґР°С‡Рё.
+- Lab-gate: РЅРµРґРѕРїСѓСЃС‚РёРјР° РіРµРЅРµСЂР°С†РёСЏ/РІС‹РґР°С‡Р° РїСЂРё `requires_lab_resubmission=true`.
+- Human review РѕР±СЏР·Р°С‚РµР»РµРЅ РїРµСЂРµРґ Р»СЋР±РѕР№ РІС‹РґР°С‡РµР№ РєР»РёРµРЅС‚Сѓ.
 
-### Следующие шаги (12 часов)
-1. Зафиксировать одну активную ветку на пользователя; остальные архивировать/слить.
-2. Проверить/ввести жёсткий lab-gate блок на генерацию артефактов.
-3. Получить читаемые анализы/ручной ввод биомаркеров, перегенерировать из подтверждённых фактов и прогнать judge + human review.
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (12 С‡Р°СЃРѕРІ)
+1. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РѕРґРЅСѓ Р°РєС‚РёРІРЅСѓСЋ РІРµС‚РєСѓ РЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ; РѕСЃС‚Р°Р»СЊРЅС‹Рµ Р°СЂС…РёРІРёСЂРѕРІР°С‚СЊ/СЃР»РёС‚СЊ.
+2. РџСЂРѕРІРµСЂРёС‚СЊ/РІРІРµСЃС‚Рё Р¶С‘СЃС‚РєРёР№ lab-gate Р±Р»РѕРє РЅР° РіРµРЅРµСЂР°С†РёСЋ Р°СЂС‚РµС„Р°РєС‚РѕРІ.
+3. РџРѕР»СѓС‡РёС‚СЊ С‡РёС‚Р°РµРјС‹Рµ Р°РЅР°Р»РёР·С‹/СЂСѓС‡РЅРѕР№ РІРІРѕРґ Р±РёРѕРјР°СЂРєРµСЂРѕРІ, РїРµСЂРµРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ РёР· РїРѕРґС‚РІРµСЂР¶РґС‘РЅРЅС‹С… С„Р°РєС‚РѕРІ Рё РїСЂРѕРіРЅР°С‚СЊ judge + human review.
 
-## 2026-04-28 12:16 MSK — Регулярная синхронизация (github-notion-12)
+## 2026-04-28 12:16 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (github-notion-12)
 
-### Итог
+### РС‚РѕРі
 
-- Прочитан актуальный контекст по проекту (опорные документы в `docs/`).
-- Обновлён `docs/AGENT_CONTEXT_HUB.md`: добавлен RU-снимок статуса (этап/блокеры/риски/что готово к пилоту/что нельзя публично).
-- Git hygiene: `bot.stderr.log` исключён из контроля версий (через `.gitignore` + снятие с индекса).
-- Safety-check: `python -m compileall WellnessBot` проходит; destructive-команды не использовались.
+- РџСЂРѕС‡РёС‚Р°РЅ Р°РєС‚СѓР°Р»СЊРЅС‹Р№ РєРѕРЅС‚РµРєСЃС‚ РїРѕ РїСЂРѕРµРєС‚Сѓ (РѕРїРѕСЂРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ РІ `docs/`).
+- РћР±РЅРѕРІР»С‘РЅ `docs/AGENT_CONTEXT_HUB.md`: РґРѕР±Р°РІР»РµРЅ RU-СЃРЅРёРјРѕРє СЃС‚Р°С‚СѓСЃР° (СЌС‚Р°Рї/Р±Р»РѕРєРµСЂС‹/СЂРёСЃРєРё/С‡С‚Рѕ РіРѕС‚РѕРІРѕ Рє РїРёР»РѕС‚Сѓ/С‡С‚Рѕ РЅРµР»СЊР·СЏ РїСѓР±Р»РёС‡РЅРѕ).
+- Git hygiene: `bot.stderr.log` РёСЃРєР»СЋС‡С‘РЅ РёР· РєРѕРЅС‚СЂРѕР»СЏ РІРµСЂСЃРёР№ (С‡РµСЂРµР· `.gitignore` + СЃРЅСЏС‚РёРµ СЃ РёРЅРґРµРєСЃР°).
+- Safety-check: `python -m compileall WellnessBot` РїСЂРѕС…РѕРґРёС‚; destructive-РєРѕРјР°РЅРґС‹ РЅРµ РёСЃРїРѕР»СЊР·РѕРІР°Р»РёСЃСЊ.
 
-### Репозиторий / изменения (кратко)
+### Р РµРїРѕР·РёС‚РѕСЂРёР№ / РёР·РјРµРЅРµРЅРёСЏ (РєСЂР°С‚РєРѕ)
 
-- Крупное расширение `WellnessBot/` (governance/кейсы/платёжный флоу/генераторы артефактов), усиление `ops/` и `infra/deploy/`.
-- Обновлены витрины `landing/` и `mini-app/` (важно: это не сигнал готовности к public launch).
-- В `docs/` добавлен большой слой операционных документов/протоколов/чеклистов.
+- РљСЂСѓРїРЅРѕРµ СЂР°СЃС€РёСЂРµРЅРёРµ `WellnessBot/` (governance/РєРµР№СЃС‹/РїР»Р°С‚С‘Р¶РЅС‹Р№ С„Р»РѕСѓ/РіРµРЅРµСЂР°С‚РѕСЂС‹ Р°СЂС‚РµС„Р°РєС‚РѕРІ), СѓСЃРёР»РµРЅРёРµ `ops/` Рё `infra/deploy/`.
+- РћР±РЅРѕРІР»РµРЅС‹ РІРёС‚СЂРёРЅС‹ `landing/` Рё `mini-app/` (РІР°Р¶РЅРѕ: СЌС‚Рѕ РЅРµ СЃРёРіРЅР°Р» РіРѕС‚РѕРІРЅРѕСЃС‚Рё Рє public launch).
+- Р’ `docs/` РґРѕР±Р°РІР»РµРЅ Р±РѕР»СЊС€РѕР№ СЃР»РѕР№ РѕРїРµСЂР°С†РёРѕРЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ/РїСЂРѕС‚РѕРєРѕР»РѕРІ/С‡РµРєР»РёСЃС‚РѕРІ.
 
-### Блокеры / риски
+### Р‘Р»РѕРєРµСЂС‹ / СЂРёСЃРєРё
 
-1. Одна активная ветка на пользователя `<REDACTED_ID>` (иначе риск «двух правд»).
-2. Lab-gate: нельзя выдавать/считать готовыми артефакты при `requires_lab_resubmission=true`.
-3. GitHub push заблокирован: `git remote -v` пусто (remote не настроен).
-4. Диск `C:` ниже `10 GB` свободного места — риск деградации среды.
+1. РћРґРЅР° Р°РєС‚РёРІРЅР°СЏ РІРµС‚РєР° РЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ `<REDACTED_ID>` (РёРЅР°С‡Рµ СЂРёСЃРє В«РґРІСѓС… РїСЂР°РІРґВ»).
+2. Lab-gate: РЅРµР»СЊР·СЏ РІС‹РґР°РІР°С‚СЊ/СЃС‡РёС‚Р°С‚СЊ РіРѕС‚РѕРІС‹РјРё Р°СЂС‚РµС„Р°РєС‚С‹ РїСЂРё `requires_lab_resubmission=true`.
+3. GitHub push Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ: `git remote -v` РїСѓСЃС‚Рѕ (remote РЅРµ РЅР°СЃС‚СЂРѕРµРЅ).
+4. Р”РёСЃРє `C:` РЅРёР¶Рµ `10 GB` СЃРІРѕР±РѕРґРЅРѕРіРѕ РјРµСЃС‚Р° вЂ” СЂРёСЃРє РґРµРіСЂР°РґР°С†РёРё СЃСЂРµРґС‹.
 
 ### Connector status
 
-- Notion: выполнить обновление страницы статуса прогона (создать/обновить страницу с executive summary без секретов).
-- GitHub: blocked (remote не настроен) — отчёт добавлен в `docs/external_sync/`.
+- Notion: РІС‹РїРѕР»РЅРёС‚СЊ РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚СЂР°РЅРёС†С‹ СЃС‚Р°С‚СѓСЃР° РїСЂРѕРіРѕРЅР° (СЃРѕР·РґР°С‚СЊ/РѕР±РЅРѕРІРёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ СЃ executive summary Р±РµР· СЃРµРєСЂРµС‚РѕРІ).
+- GitHub: blocked (remote РЅРµ РЅР°СЃС‚СЂРѕРµРЅ) вЂ” РѕС‚С‡С‘С‚ РґРѕР±Р°РІР»РµРЅ РІ `docs/external_sync/`.
 
-## 2026-04-29 21:16 MSK — Регулярная синхронизация (github-notion-12)
+## 2026-04-29 21:16 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (github-notion-12)
 
-### Итог
+### РС‚РѕРі
 
-- Перепроверен актуальный контекст и опорные документы (стратегия, продуктовая линейка, ручная оплата, протокол аудитора, реестр навыков).
-- Зафиксирован ключевой вывод по качеству диалогов: бенч 20/20 без пустых ответов, но `0/20` запросов доходит до модели из‑за избыточного роутера (см. `docs/WELLNESS_DIALOGUE_QA_20260429.md`).
-- Мелкий, но критичный runtime‑фикс: разбиение админ‑дайджеста на чанки перед отправкой в Telegram, чтобы не падать на лимитах длины (`WellnessBot/main.py`).
+- РџРµСЂРµРїСЂРѕРІРµСЂРµРЅ Р°РєС‚СѓР°Р»СЊРЅС‹Р№ РєРѕРЅС‚РµРєСЃС‚ Рё РѕРїРѕСЂРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹ (СЃС‚СЂР°С‚РµРіРёСЏ, РїСЂРѕРґСѓРєС‚РѕРІР°СЏ Р»РёРЅРµР№РєР°, СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р°, РїСЂРѕС‚РѕРєРѕР» Р°СѓРґРёС‚РѕСЂР°, СЂРµРµСЃС‚СЂ РЅР°РІС‹РєРѕРІ).
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅ РєР»СЋС‡РµРІРѕР№ РІС‹РІРѕРґ РїРѕ РєР°С‡РµСЃС‚РІСѓ РґРёР°Р»РѕРіРѕРІ: Р±РµРЅС‡ 20/20 Р±РµР· РїСѓСЃС‚С‹С… РѕС‚РІРµС‚РѕРІ, РЅРѕ `0/20` Р·Р°РїСЂРѕСЃРѕРІ РґРѕС…РѕРґРёС‚ РґРѕ РјРѕРґРµР»Рё РёР·вЂ‘Р·Р° РёР·Р±С‹С‚РѕС‡РЅРѕРіРѕ СЂРѕСѓС‚РµСЂР° (СЃРј. `docs/WELLNESS_DIALOGUE_QA_20260429.md`).
+- РњРµР»РєРёР№, РЅРѕ РєСЂРёС‚РёС‡РЅС‹Р№ runtimeвЂ‘С„РёРєСЃ: СЂР°Р·Р±РёРµРЅРёРµ Р°РґРјРёРЅвЂ‘РґР°Р№РґР¶РµСЃС‚Р° РЅР° С‡Р°РЅРєРё РїРµСЂРµРґ РѕС‚РїСЂР°РІРєРѕР№ РІ Telegram, С‡С‚РѕР±С‹ РЅРµ РїР°РґР°С‚СЊ РЅР° Р»РёРјРёС‚Р°С… РґР»РёРЅС‹ (`WellnessBot/main.py`).
 
-### Текущий этап
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї
 
-- Controlled concierge pilot; public launch заблокирован до отдельного решения.
-- Активный пилотный режим оплаты: `PAYMENT_MODE=manual`.
-- Human review обязателен перед любой клиентской выдачей.
+- Controlled concierge pilot; public launch Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ РґРѕ РѕС‚РґРµР»СЊРЅРѕРіРѕ СЂРµС€РµРЅРёСЏ.
+- РђРєС‚РёРІРЅС‹Р№ РїРёР»РѕС‚РЅС‹Р№ СЂРµР¶РёРј РѕРїР»Р°С‚С‹: `PAYMENT_MODE=manual`.
+- Human review РѕР±СЏР·Р°С‚РµР»РµРЅ РїРµСЂРµРґ Р»СЋР±РѕР№ РєР»РёРµРЅС‚СЃРєРѕР№ РІС‹РґР°С‡РµР№.
 
-### Блокеры / риски
+### Р‘Р»РѕРєРµСЂС‹ / СЂРёСЃРєРё
 
-1. Runtime‑to‑storage mismatch: живой `week` runtime указывает на `week_runtime_20260427T173913Z`, но соответствующий submission JSON отсутствует.
-2. Same‑user drift: один и тот же пользователь держит `week` runtime + 2 ветки `premium`; нужна одна активная платная траектория.
-3. Disk hygiene: `C:` ниже целевого порога `10 GB` свободного места.
+1. RuntimeвЂ‘toвЂ‘storage mismatch: Р¶РёРІРѕР№ `week` runtime СѓРєР°Р·С‹РІР°РµС‚ РЅР° `week_runtime_20260427T173913Z`, РЅРѕ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РёР№ submission JSON РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚.
+2. SameвЂ‘user drift: РѕРґРёРЅ Рё С‚РѕС‚ Р¶Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРµСЂР¶РёС‚ `week` runtime + 2 РІРµС‚РєРё `premium`; РЅСѓР¶РЅР° РѕРґРЅР° Р°РєС‚РёРІРЅР°СЏ РїР»Р°С‚РЅР°СЏ С‚СЂР°РµРєС‚РѕСЂРёСЏ.
+3. Disk hygiene: `C:` РЅРёР¶Рµ С†РµР»РµРІРѕРіРѕ РїРѕСЂРѕРіР° `10 GB` СЃРІРѕР±РѕРґРЅРѕРіРѕ РјРµСЃС‚Р°.
 
-### Следующие шаги (12 часов)
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (12 С‡Р°СЃРѕРІ)
 
-1. Починить/сбросить `week_runtime_20260427T173913Z`, чтобы runtime и storage совпали.
-2. Зафиксировать одну активную ветку (week или premium) для текущего пользователя, остальные — заморозить/архивировать.
-3. Сузить роутер: оставить детерминизм только для emergency/crisis/узких FAQ, всё остальное — отдавать модели с проверкой на «не выдумывать факты».
+1. РџРѕС‡РёРЅРёС‚СЊ/СЃР±СЂРѕСЃРёС‚СЊ `week_runtime_20260427T173913Z`, С‡С‚РѕР±С‹ runtime Рё storage СЃРѕРІРїР°Р»Рё.
+2. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ РѕРґРЅСѓ Р°РєС‚РёРІРЅСѓСЋ РІРµС‚РєСѓ (week РёР»Рё premium) РґР»СЏ С‚РµРєСѓС‰РµРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ, РѕСЃС‚Р°Р»СЊРЅС‹Рµ вЂ” Р·Р°РјРѕСЂРѕР·РёС‚СЊ/Р°СЂС…РёРІРёСЂРѕРІР°С‚СЊ.
+3. РЎСѓР·РёС‚СЊ СЂРѕСѓС‚РµСЂ: РѕСЃС‚Р°РІРёС‚СЊ РґРµС‚РµСЂРјРёРЅРёР·Рј С‚РѕР»СЊРєРѕ РґР»СЏ emergency/crisis/СѓР·РєРёС… FAQ, РІСЃС‘ РѕСЃС‚Р°Р»СЊРЅРѕРµ вЂ” РѕС‚РґР°РІР°С‚СЊ РјРѕРґРµР»Рё СЃ РїСЂРѕРІРµСЂРєРѕР№ РЅР° В«РЅРµ РІС‹РґСѓРјС‹РІР°С‚СЊ С„Р°РєС‚С‹В».
 
-## 2026-05-01 — Регулярная синхронизация (github-notion-12)
+## 2026-05-01 вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (github-notion-12)
 
-### Итог
-- Зафиксирован аудит внешнего проекта Google AI Studio `moy-projekt`: это UI/UX‑макет (React/Vite), **не** замена backend‑бота. Док: `docs/GOOGLE_AI_STUDIO_MOY_PROJEKT_AUDIT_20260501.md`.
-- В боте усилен «пример результата»: `PRODUCT_EXAMPLES_TEXT` теперь отдаёт конкретный безопасный демо‑фрагмент со структурой результата (без диагнозов/лечения) — `WellnessBot/texts.py`.
-- Добавлены защитные исключения в `.gitignore`, чтобы не коммитить внешние клоны и локальные артефакты синхронизации (`external/`, `docs/external_sync/`, `docs/obsidian_mirror/RUN_NOTE_*.md`).
-- Санитизация: из статусных документов удалены длинные идентификаторы (Telegram ID и связанные артефакт‑ID), чтобы не публиковать персональные данные в GitHub.
+### РС‚РѕРі
+- Р—Р°С„РёРєСЃРёСЂРѕРІР°РЅ Р°СѓРґРёС‚ РІРЅРµС€РЅРµРіРѕ РїСЂРѕРµРєС‚Р° Google AI Studio `moy-projekt`: СЌС‚Рѕ UI/UXвЂ‘РјР°РєРµС‚ (React/Vite), **РЅРµ** Р·Р°РјРµРЅР° backendвЂ‘Р±РѕС‚Р°. Р”РѕРє: `docs/GOOGLE_AI_STUDIO_MOY_PROJEKT_AUDIT_20260501.md`.
+- Р’ Р±РѕС‚Рµ СѓСЃРёР»РµРЅ В«РїСЂРёРјРµСЂ СЂРµР·СѓР»СЊС‚Р°С‚Р°В»: `PRODUCT_EXAMPLES_TEXT` С‚РµРїРµСЂСЊ РѕС‚РґР°С‘С‚ РєРѕРЅРєСЂРµС‚РЅС‹Р№ Р±РµР·РѕРїР°СЃРЅС‹Р№ РґРµРјРѕвЂ‘С„СЂР°РіРјРµРЅС‚ СЃРѕ СЃС‚СЂСѓРєС‚СѓСЂРѕР№ СЂРµР·СѓР»СЊС‚Р°С‚Р° (Р±РµР· РґРёР°РіРЅРѕР·РѕРІ/Р»РµС‡РµРЅРёСЏ) вЂ” `WellnessBot/texts.py`.
+- Р”РѕР±Р°РІР»РµРЅС‹ Р·Р°С‰РёС‚РЅС‹Рµ РёСЃРєР»СЋС‡РµРЅРёСЏ РІ `.gitignore`, С‡С‚РѕР±С‹ РЅРµ РєРѕРјРјРёС‚РёС‚СЊ РІРЅРµС€РЅРёРµ РєР»РѕРЅС‹ Рё Р»РѕРєР°Р»СЊРЅС‹Рµ Р°СЂС‚РµС„Р°РєС‚С‹ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёРё (`external/`, `docs/external_sync/`, `docs/obsidian_mirror/RUN_NOTE_*.md`).
+- РЎР°РЅРёС‚РёР·Р°С†РёСЏ: РёР· СЃС‚Р°С‚СѓСЃРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ СѓРґР°Р»РµРЅС‹ РґР»РёРЅРЅС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹ (Telegram ID Рё СЃРІСЏР·Р°РЅРЅС‹Рµ Р°СЂС‚РµС„Р°РєС‚вЂ‘ID), С‡С‚РѕР±С‹ РЅРµ РїСѓР±Р»РёРєРѕРІР°С‚СЊ РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ РІ GitHub.
 
-## 2026-05-01 09:17 MSK — Регулярная синхронизация (github-notion-12)
+## 2026-05-01 09:17 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (github-notion-12)
 
 ### State Read Delta
 - Completed a full sync read across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`.
@@ -3889,18 +4197,18 @@ Decision:
   4. Cut `route_live_reply()` back to safety/logistics coverage and rerun the benchmark so symptom prompts can actually test model quality.
   5. Keep the current premium PDF frozen until readable labs or manual biomarker text exist and the dossier is regenerated from confirmed facts only.
 
-## 2026-05-01 — GitHub single source of truth
+## 2026-05-01 вЂ” GitHub single source of truth
 
 ### Delivery Delta
-- Создан единый безопасный центр разработки для GitHub: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`.
-- В документ сведены: цель проекта, продуктовая линейка, текущий этап, архитектура, безопасность, ручная оплата, AI/Antigravity, хранение данных, блокеры, pilot-ready/public-launch критерии и ссылки на опорные документы.
-- `docs/AGENT_CONTEXT_HUB.md` обновлён ссылкой на единый source of truth.
+- РЎРѕР·РґР°РЅ РµРґРёРЅС‹Р№ Р±РµР·РѕРїР°СЃРЅС‹Р№ С†РµРЅС‚СЂ СЂР°Р·СЂР°Р±РѕС‚РєРё РґР»СЏ GitHub: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`.
+- Р’ РґРѕРєСѓРјРµРЅС‚ СЃРІРµРґРµРЅС‹: С†РµР»СЊ РїСЂРѕРµРєС‚Р°, РїСЂРѕРґСѓРєС‚РѕРІР°СЏ Р»РёРЅРµР№РєР°, С‚РµРєСѓС‰РёР№ СЌС‚Р°Рї, Р°СЂС…РёС‚РµРєС‚СѓСЂР°, Р±РµР·РѕРїР°СЃРЅРѕСЃС‚СЊ, СЂСѓС‡РЅР°СЏ РѕРїР»Р°С‚Р°, AI/Antigravity, С…СЂР°РЅРµРЅРёРµ РґР°РЅРЅС‹С…, Р±Р»РѕРєРµСЂС‹, pilot-ready/public-launch РєСЂРёС‚РµСЂРёРё Рё СЃСЃС‹Р»РєРё РЅР° РѕРїРѕСЂРЅС‹Рµ РґРѕРєСѓРјРµРЅС‚С‹.
+- `docs/AGENT_CONTEXT_HUB.md` РѕР±РЅРѕРІР»С‘РЅ СЃСЃС‹Р»РєРѕР№ РЅР° РµРґРёРЅС‹Р№ source of truth.
 
 ### Safety Delta
-- В GitHub не переносятся секреты, `.env`, токены, клиентские анализы/PDF/фото, `WellnessBot/data`, runtime-данные и персональные идентификаторы.
-- Документ предназначен для передачи разработчикам/аудиторам без раскрытия чувствительных данных.
+- Р’ GitHub РЅРµ РїРµСЂРµРЅРѕСЃСЏС‚СЃСЏ СЃРµРєСЂРµС‚С‹, `.env`, С‚РѕРєРµРЅС‹, РєР»РёРµРЅС‚СЃРєРёРµ Р°РЅР°Р»РёР·С‹/PDF/С„РѕС‚Рѕ, `WellnessBot/data`, runtime-РґР°РЅРЅС‹Рµ Рё РїРµСЂСЃРѕРЅР°Р»СЊРЅС‹Рµ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂС‹.
+- Р”РѕРєСѓРјРµРЅС‚ РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅ РґР»СЏ РїРµСЂРµРґР°С‡Рё СЂР°Р·СЂР°Р±РѕС‚С‡РёРєР°Рј/Р°СѓРґРёС‚РѕСЂР°Рј Р±РµР· СЂР°СЃРєСЂС‹С‚РёСЏ С‡СѓРІСЃС‚РІРёС‚РµР»СЊРЅС‹С… РґР°РЅРЅС‹С….
 
-## 2026-05-01 — Disk blocker cleared
+## 2026-05-01 вЂ” Disk blocker cleared
 
 ### Ops Delta
 - Restored C: free space above the project safety floor: now approximately $freeGb GB free.
@@ -3910,7 +4218,7 @@ Decision:
 - No project code, secrets, .env, client files, analysis uploads, PDF/photo data, or WellnessBot/data were deleted.
 - Disk pressure is no longer the immediate blocker for PDF/batch-artifact work.
 
-## 2026-05-01 — Runtime/storage mismatch fix
+## 2026-05-01 вЂ” Runtime/storage mismatch fix
 
 ### Delivery Delta
 - Fixed the root cause of orphan intake sessions: `start_session()` now persists an initial submission immediately with `intake_status=consent_pending`.
@@ -3925,7 +4233,7 @@ Decision:
 - The repaired local submission remains inside ignored `WellnessBot/data` and was not staged for GitHub.
 - No client files, uploads, lab PDFs/photos, tokens, or `.env` files were published.
 
-## 2026-05-01 — Live router narrowed and benchmark rerun
+## 2026-05-01 вЂ” Live router narrowed and benchmark rerun
 
 ### Delivery Delta
 - Narrowed `route_live_reply()` so symptom/lab questions now reach the model instead of being fully answered by deterministic templates.
@@ -3942,13 +4250,13 @@ Decision:
   - routed by deterministic template: `11/20`
   - reached model layer: `9/20`
   - symptom/lab prompts reaching model: `1,2,3,4,5,6,7,8,16`
-- Safety scan did not find the explicit high-risk phrases checked in the report: `лечебная доза`, `начинайте приём`, `вам нужно принимать`, `выраженный дефицит`, `назнач`.
+- Safety scan did not find the explicit high-risk phrases checked in the report: `Р»РµС‡РµР±РЅР°СЏ РґРѕР·Р°`, `РЅР°С‡РёРЅР°Р№С‚Рµ РїСЂРёС‘Рј`, `РІР°Рј РЅСѓР¶РЅРѕ РїСЂРёРЅРёРјР°С‚СЊ`, `РІС‹СЂР°Р¶РµРЅРЅС‹Р№ РґРµС„РёС†РёС‚`, `РЅР°Р·РЅР°С‡`.
 
 ### Remaining Quality Risk
 - Model-led answers are more personalized, but still sometimes sound too medically confident around functional thyroid/GI interpretations.
 - Next hardening: add a stricter live-answer critic/sanitizer or prompt rule for avoiding overly confident functional-medicine claims in short first-line chat.
 
-## 2026-05-01 — Live answer sanitizer added
+## 2026-05-01 вЂ” Live answer sanitizer added
 
 ### Delivery Delta
 - Added `sanitize_live_reply()` as a post-model safety guard for first-line live chat answers.
@@ -3959,9 +4267,9 @@ Decision:
 - Unit tests passed: `44` tests OK.
 
 ### Safety Delta
-- Guarded phrases include examples like `лечебная доза`, `выраженный дефицит`, `вам нужно принимать`, `начните/начинайте приём`, and direct diagnosis-like `у вас гипотиреоз` patterns.
+- Guarded phrases include examples like `Р»РµС‡РµР±РЅР°СЏ РґРѕР·Р°`, `РІС‹СЂР°Р¶РµРЅРЅС‹Р№ РґРµС„РёС†РёС‚`, `РІР°Рј РЅСѓР¶РЅРѕ РїСЂРёРЅРёРјР°С‚СЊ`, `РЅР°С‡РЅРёС‚Рµ/РЅР°С‡РёРЅР°Р№С‚Рµ РїСЂРёС‘Рј`, and direct diagnosis-like `Сѓ РІР°СЃ РіРёРїРѕС‚РёСЂРµРѕР·` patterns.
 
-## 2026-05-01 — Verification pass and TMA local route fixed
+## 2026-05-01 вЂ” Verification pass and TMA local route fixed
 
 ### Verification Delta
 - Bot runtime is running and polling `@zinchenko_wellness_ai_1_bot`.
@@ -4112,27 +4420,350 @@ Decision:
   4. Verify the proxy dependency on `127.0.0.1:12334` and add a documented no-proxy fallback if the listener is not guaranteed.
   5. Keep the latest benchmark reference anchored to `ops/reports/quality_report_20260501T080509Z.md` and the QA readout to `docs/WELLNESS_DIALOGUE_QA_20260501.md`.
 
-## 2026-05-08 16:40 MSK — Регулярная синхронизация (12h)
+## 2026-05-08 16:40 MSK вЂ” Р РµРіСѓР»СЏСЂРЅР°СЏ СЃРёРЅС…СЂРѕРЅРёР·Р°С†РёСЏ (12h)
 
-### Что изменилось
-- Актуализирован `docs/AGENT_CONTEXT_HUB.md` (добавлен короткий RU-статус; GitHub remote снова достижим).
-- Переписан на русский внутренний QA-отчёт `docs/WELLNESS_DIALOGUE_QA_20260506.md` (без клиентских данных).
-- Обнаружены новые артефакты для синка: `docs/posters/*` (плакаты/стандарты, общий контент).
+### Р§С‚Рѕ РёР·РјРµРЅРёР»РѕСЃСЊ
+- РђРєС‚СѓР°Р»РёР·РёСЂРѕРІР°РЅ `docs/AGENT_CONTEXT_HUB.md` (РґРѕР±Р°РІР»РµРЅ РєРѕСЂРѕС‚РєРёР№ RU-СЃС‚Р°С‚СѓСЃ; GitHub remote СЃРЅРѕРІР° РґРѕСЃС‚РёР¶РёРј).
+- РџРµСЂРµРїРёСЃР°РЅ РЅР° СЂСѓСЃСЃРєРёР№ РІРЅСѓС‚СЂРµРЅРЅРёР№ QA-РѕС‚С‡С‘С‚ `docs/WELLNESS_DIALOGUE_QA_20260506.md` (Р±РµР· РєР»РёРµРЅС‚СЃРєРёС… РґР°РЅРЅС‹С…).
+- РћР±РЅР°СЂСѓР¶РµРЅС‹ РЅРѕРІС‹Рµ Р°СЂС‚РµС„Р°РєС‚С‹ РґР»СЏ СЃРёРЅРєР°: `docs/posters/*` (РїР»Р°РєР°С‚С‹/СЃС‚Р°РЅРґР°СЂС‚С‹, РѕР±С‰РёР№ РєРѕРЅС‚РµРЅС‚).
 
-### Состояние репозитория
-- Изменения в рабочем дереве: только `docs/*` (код в `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` не тронут).
-- Внешние коннекторы: GitHub — доступен; Notion — требует проверки/авторизации; Google Drive — недоступен в текущей Codex-сессии.
+### РЎРѕСЃС‚РѕСЏРЅРёРµ СЂРµРїРѕР·РёС‚РѕСЂРёСЏ
+- РР·РјРµРЅРµРЅРёСЏ РІ СЂР°Р±РѕС‡РµРј РґРµСЂРµРІРµ: С‚РѕР»СЊРєРѕ `docs/*` (РєРѕРґ РІ `WellnessBot/`, `ops/`, `tests/`, `landing/`, `mini-app/` РЅРµ С‚СЂРѕРЅСѓС‚).
+- Р’РЅРµС€РЅРёРµ РєРѕРЅРЅРµРєС‚РѕСЂС‹: GitHub вЂ” РґРѕСЃС‚СѓРїРµРЅ; Notion вЂ” С‚СЂРµР±СѓРµС‚ РїСЂРѕРІРµСЂРєРё/Р°РІС‚РѕСЂРёР·Р°С†РёРё; Google Drive вЂ” РЅРµРґРѕСЃС‚СѓРїРµРЅ РІ С‚РµРєСѓС‰РµР№ Codex-СЃРµСЃСЃРёРё.
 
-### Текущий этап / блокеры
-- Этап: controlled concierge pilot; публичный запуск заблокирован.
-- P0 блокер: «delivery gate» — нельзя допускать `delivered_to_client` при `needs_revision` без явного override.
-- P0 риск: параллельные платные ветки у одного пользователя — нужен один канонический paid-path на Telegram user.
+### РўРµРєСѓС‰РёР№ СЌС‚Р°Рї / Р±Р»РѕРєРµСЂС‹
+- Р­С‚Р°Рї: controlled concierge pilot; РїСѓР±Р»РёС‡РЅС‹Р№ Р·Р°РїСѓСЃРє Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ.
+- P0 Р±Р»РѕРєРµСЂ: В«delivery gateВ» вЂ” РЅРµР»СЊР·СЏ РґРѕРїСѓСЃРєР°С‚СЊ `delivered_to_client` РїСЂРё `needs_revision` Р±РµР· СЏРІРЅРѕРіРѕ override.
+- P0 СЂРёСЃРє: РїР°СЂР°Р»Р»РµР»СЊРЅС‹Рµ РїР»Р°С‚РЅС‹Рµ РІРµС‚РєРё Сѓ РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ вЂ” РЅСѓР¶РµРЅ РѕРґРёРЅ РєР°РЅРѕРЅРёС‡РµСЃРєРёР№ paid-path РЅР° Telegram user.
 
-### Следующие шаги (до следующего 12h окна)
-1. Зафиксировать docs-снимок аккуратным коммитом и отправить в GitHub (без секретов/PII).
-2. Проверить доступ к Notion и обновить страницу статуса (только санитизированный executive summary).
+### РЎР»РµРґСѓСЋС‰РёРµ С€Р°РіРё (РґРѕ СЃР»РµРґСѓСЋС‰РµРіРѕ 12h РѕРєРЅР°)
+1. Р—Р°С„РёРєСЃРёСЂРѕРІР°С‚СЊ docs-СЃРЅРёРјРѕРє Р°РєРєСѓСЂР°С‚РЅС‹Рј РєРѕРјРјРёС‚РѕРј Рё РѕС‚РїСЂР°РІРёС‚СЊ РІ GitHub (Р±РµР· СЃРµРєСЂРµС‚РѕРІ/PII).
+2. РџСЂРѕРІРµСЂРёС‚СЊ РґРѕСЃС‚СѓРї Рє Notion Рё РѕР±РЅРѕРІРёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ СЃС‚Р°С‚СѓСЃР° (С‚РѕР»СЊРєРѕ СЃР°РЅРёС‚РёР·РёСЂРѕРІР°РЅРЅС‹Р№ executive summary).
 
 # Project Pulse Log
+
+## 2026-06-14 16:32 MSK - Process Truth Correction Addendum
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Freshest runtime continuity proof is still `bot.stderr.log`, which shows:
+  - startup and polling at `2026-06-13 16:32:34 -> 16:32:50 +03:00`
+  - `TelegramNetworkError: Request timeout error` at `2026-06-14 00:41:45 +03:00`
+  - `ProxyTimeoutError` at `2026-06-14 00:42:47 +03:00`
+  - reconnect at `2026-06-14 00:43:30 +03:00`
+- Runtime startup still explicitly logs `proxy=http://127.0.0.1:10808`.
+- `WellnessBot/data/runtime_state.json` still mounts `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log`, one stored daily-log entry, and no `canonical_path` or `case_relation`.
+- Current process truth changed materially relative to the earlier June 14 run:
+  - the process table now shows an active `WellnessBot/main.py` Python chain at `2026-06-14 16:32:26 +03:00`
+  - parent: PID `12300`, `.venv\Scripts\python.exe`, created `2026-06-13 16:32:25 +03:00`
+  - child: PID `20032`, `Python312\python.exe`, created `2026-06-13 16:32:26 +03:00`
+  - runtime is therefore process-verified again, but the dual-process chain needs confirmation as intentional supervision rather than duplicate-runner drift
+- Same-user current commercial state is still unresolved across multiple live rails:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `500 RUB`, `manual_payment_confirmed`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `500 RUB`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits`, `6900 RUB`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `300 RUB`, `manual_payment_confirmed`
+  - `20260606T202509Z_1084557944` = `habits`, `6900 RUB`, `manual_payment_confirmed`, and mounted as active runtime state
+- `WellnessBot/data/submissions/20260531T183007Z_1084557944.json` still combines `offer = basic`, `amount_rub = 14900`, `intake_status = delivered_to_client`, and `internal_review.judge_verdict = fail_major_issues`.
+- Current `C:` free space is `10717425664` bytes (`~9.98 GiB`) at `2026-06-14 16:32:26 +03:00`; this slips back under the project floor by a narrow margin.
+- Working-tree truth is still dominated by docs churn plus `ops/bot-status.ps1`; no tracked control changes are currently visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`.
+- Immediate regression callouts:
+  - thin disk floor breach; owner `Ops`; next fix action push `C:` back above the `10 GiB` floor and rebuild a safer buffer before more artifact-heavy work
+  - runtime chain ambiguity; owner `Ops + Lead Developer`; next fix action confirm whether the `.venv` parent plus `Python312` child chain is the intended supervision model and collapse to one governed runner if not
+  - explicit proxy dependency; owner `Lead Developer + Ops`; next fix action decide whether `http://127.0.0.1:10808` is mandatory, then make direct fallback or explicit proxy policy real in code
+  - same-user paid-path sprawl; owner `Operator + Lead Developer`; next fix action declare one canonical current commercial path across the June 2 / June 3 / June 6 stack, then freeze, archive, merge, or refund the non-canonical rails
+  - duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next fix action choose the canonical `habits` rail between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - mini-app monetization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the `1000 RUB` tier and PDF/support promises or align them to the governed offer map
+  - root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the YooKassa, guaranteed-PDF, and off-map pricing claims from `index.html`
+  - batch QA observability and transport ambiguity; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` for per-prompt partial artifacts and make `WellnessBot/ai_drafting.py` explicit about proxy or `trust_env` policy
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260614_1632_MSK.md`.
+- Notion: blocked because a live `_search` call fails with `failed to get client` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)` during MCP initialize.
+- Exact Notion access request: `restore the Notion connector in this Codex session; the MCP initialize request to https://chatgpt.com/backend-api/wham/apps must succeed before run-note and hub writes can resume`
+- GitHub: blocked because a live `_get_users_recent_prs_in_repo` call fails with `failed to get client` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)` during MCP initialize.
+- Exact GitHub access request: `restore the GitHub connector in this Codex session; the MCP initialize request to https://chatgpt.com/backend-api/wham/apps must succeed before status-artifact sync can resume`
+- Google Drive: blocked because no Google Drive file discovery, create, upload, or share tools are exposed in this Codex session even after tool discovery.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Plan Delta
+- The next execution packet is now:
+  1. confirm whether the active two-process `WellnessBot/main.py` chain is intentional supervision or duplicate-runner drift
+  2. recover `C:` back above the `10 GiB` floor with safer margin
+  3. decide the proxy or direct-connection policy for the `openai_compatible` path
+  4. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  5. add a same-user same-offer and same-ladder duplicate guard at paid-branch creation or confirmation time
+  6. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  7. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  8. harden `WellnessBot/ai_drafting.py` with an explicit transport policy
+  9. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  10. reduce mini-app `1000 RUB` / dossier / PDF / support promises until the live ladder is explicit
+  11. restore Notion and GitHub connector startup and expose Google Drive write tools
+  12. re-run the batch benchmark only after steps `1-10`
+
+### Strategy Delta
+- The strategic picture corrected again inside the same day:
+  - bot liveness is no longer absent; it is process-verified again
+  - the new runtime question is whether the parent-child Python chain is intentional or a duplicate-runner risk
+  - disk headroom slipped back under the floor, so ops margin becomes urgent again
+  - the proxy-backed transport path remains the live failure clue because the freshest reconnect and timeout evidence still runs through `127.0.0.1:10808`
+- The main execution-credibility gap remains a five-part bundle:
+  - unresolved same-user paid-path ownership
+  - higher-ticket delivery truth still contradicts failed review
+  - full benchmark still cannot finish because transport failures collapse the batch
+  - root and mini-app still outrun the approved Telegram-first operating model
+  - external sync remains blocked by connector startup failures plus missing Google Drive write tools
+
+### Goals Delta
+- Goal 1: recover `C:` above the `10 GiB` floor and rebuild a safer buffer.
+- Goal 2: confirm one intentional supervised runtime chain.
+- Goal 3: canonicalize the current same-user paid stack.
+- Goal 4: block duplicate same-user same-offer and same-ladder paid-path creation before another payment lands.
+- Goal 5: repair the `14900 RUB` delivered-case contradiction.
+- Goal 6: restore benchmark observability under prompt-level model failures and transport ambiguity.
+- Goal 7: collapse root and mini-app claims to one truthful offer map.
+- Goal 8: restore Notion and GitHub connector startup and expose Google Drive write tools.
+
+### Next 12h Priorities
+1. Confirm whether the active `.venv` parent plus `Python312` child `WellnessBot/main.py` chain is intentional.
+2. Push `C:` back above the `10 GiB` floor and log the new baseline.
+3. Decide whether the local proxy at `127.0.0.1:10808` is required, and add an explicit direct fallback if not.
+4. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+5. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+6. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+7. Audit and repair `20260531T183007Z_1084557944`.
+8. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+9. Patch `WellnessBot/ai_drafting.py` so the `openai_compatible` transport path stops inheriting an implicit proxy path by accident.
+10. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+11. Reduce mini-app `1000 RUB` tier plus dossier / PDF / support promises until the live ladder is approved.
+12. Restore Notion and GitHub connector startup, then enable Google Drive file discovery/create/upload/share permissions.
+13. Re-run the batch benchmark only after steps `1`, `3`, `8`, `9`, `10`, and `11`.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where the bot is process-verified again, but runtime topology, disk margin, commercialization control, delivery truth, QA observability, surface truth, and connector reliability remain incoherent.
+- Objective: recover disk headroom, confirm one intentional supervised runtime chain, collapse the current same-user paid stack to one canonical path, repair the delivered-case contradiction, restore benchmark observability, align public surfaces to the approved Telegram-first manual-review model, and recover outward-sync connector startup.
+- Constraints: Telegram-first only; `PAYMENT_MODE=manual`; human review remains mandatory before delivery; one canonical paid path per Telegram user; latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`; current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`; the full batch still fails on prompt `1`; Notion and GitHub connector startup both fail during MCP initialize in this session; Google Drive file discovery/create/upload/share tools are unavailable in this session; `C:` free space is `10717425664` bytes (`~9.98 GiB`) at `2026-06-14 16:32:26 +03:00`; the process table now shows a live parent-child `WellnessBot/main.py` chain that still needs confirmation as intentional.
+- Immediate next actions:
+  1. confirm the runtime supervision chain
+  2. recover disk margin
+  3. decide the proxy or direct-connection policy
+  4. canonicalize the June 2 / June 3 / June 6 same-user paid stack
+  5. block new duplicate paid creation
+  6. repair the delivered-case contradiction
+  7. neutralize mini-app and root-page overclaims
+  8. patch partial-artifact QA capture and explicit transport behavior
+  9. restore Notion and GitHub connector startup, then enable Google Drive write access
+
+## 2026-06-14 04:31 MSK - Runtime Reality Sync
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Freshest runtime artifact is now `bot.stderr.log`, not `bot.stderr`.
+- Freshest startup and polling proof now sits at:
+  - `2026-06-13 16:32:34 -> 16:32:50 +03:00` startup with `proxy=http://127.0.0.1:10808`
+  - `2026-06-14 00:41:45 -> 00:43:30 +03:00` timeout, proxy timeout, and reconnect
+- No active `WellnessBot/main.py` process was detected at `2026-06-14 04:31:43 +03:00`, so the June 14 reconnect is only last-known-good polling evidence, not proof that the bot is still live right now.
+- The mounted runtime rail in `WellnessBot/data/runtime_state.json` still points to `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log`, and one stored daily-log message.
+- Same-user current commercial state still remains unresolved across multiple current rails:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260606T202509Z_1084557944` = `habits`, `manual_payment_confirmed`, and still mounted as active runtime state
+- `20260531T183007Z_1084557944` still remains `delivered_to_client` while `internal_review.judge_verdict = fail_major_issues`.
+- Current `C:` free space is `10781048832` bytes (`~10.04 GiB`) at `2026-06-14 04:31:43 +03:00`; the `10 GB` floor is technically restored, but the operating margin is only about `0.04 GiB`.
+- Working-tree truth still shows docs-focused tracked churn plus `ops/bot-status.ps1`; no tracked changes are currently visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`.
+- Immediate regression callouts:
+  - bot process is not currently verified; owner `Ops + Lead Developer`; next fix action restore supervised `WellnessBot/main.py` execution or explicitly record that the bot is intentionally down, then clear or explain the stale `.bot.lock`
+  - proxy dependency is now explicit in runtime logs; owner `Lead Developer + Ops`; next fix action decide whether `http://127.0.0.1:10808` is mandatory, add direct-fallback behavior if not, and make startup logging plus transport policy explicit in code
+  - same-user paid-path sprawl; owner `Operator + Lead Developer`; next fix action declare one canonical current commercial path across the June 2 / June 3 / June 6 stack, then freeze, archive, merge, or refund the non-canonical rails
+  - duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next fix action choose the canonical `habits` path between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - mini-app monetization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the `1000 RUB` tier and PDF/support promises or align them to the governed offer map
+  - root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the YooKassa, guaranteed-PDF, and off-map pricing claims from `index.html`
+  - batch QA observability and transport ambiguity; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` for per-prompt partial artifacts and make `WellnessBot/ai_drafting.py` explicit about proxy or `trust_env` policy
+  - external connector startup regression; owner `Tooling / Access`; next fix action restore Notion and GitHub connector startup in-session before the next outward-sync attempt
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260614_0431_MSK.md`.
+- Notion: blocked because live `_search` and `_notion_get_users` calls both failed before any read or write could initialize.
+- Exact Notion reason: `failed to get client` caused by `MCP startup failed: handshaking with MCP server failed` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)` during the initialize request.
+- Exact Notion access request: `restore the Notion connector in this Codex session; the MCP initialize request to https://chatgpt.com/backend-api/wham/apps must succeed before run-note and hub writes can resume`
+- GitHub: blocked because live `_search_installed_reposito_caf5f759e3c9` and `_fetch_file` calls both failed before any read or write could initialize.
+- Exact GitHub reason: `failed to get client` caused by `MCP startup failed: handshaking with MCP server failed` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)` during the initialize request.
+- Exact GitHub access request: `restore the GitHub connector in this Codex session; the MCP initialize request to https://chatgpt.com/backend-api/wham/apps must succeed before status-artifact sync can resume`
+- Google Drive: blocked because no Google Drive file discovery/create/upload/share tools were exposed by tool discovery in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+- Local replay artifacts were still written for later connector replay:
+  - `docs/external_sync/antigravity_sync_20260614T013143Z.md`
+  - `docs/external_sync/antigravity_context_snapshot_20260614T013143Z.md`
+  - `docs/external_sync/2026-06-14_0431_sync_status.md`
+  - `docs/external_sync/2026-06-14_0431_sync_blocked.md`
+
+### Plan Delta
+- Disk recovery drops from an active breach to a thin-margin monitor item because `C:` is back above `10 GB`, but only barely.
+- Runtime liveness moves ahead of disk as the top ops question because the freshest log shows a reconnect while the current process table shows no active `WellnessBot/main.py`.
+- The next execution packet is now:
+  1. verify or restore supervised `WellnessBot/main.py` liveness and resolve the stale `.bot.lock`
+  2. make the proxy path explicit and add a direct fallback if the local proxy at `127.0.0.1:10808` is not guaranteed
+  3. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  4. add a same-user same-offer and same-ladder duplicate guard so another paid branch cannot open while older paid state is unresolved
+  5. audit and repair the `14900 RUB` delivered-case contradiction
+  6. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  7. restore Notion and GitHub connector startup and enable Google Drive write access
+  8. re-run the batch benchmark only after steps `1-6`
+  9. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  10. reduce mini-app `1000 RUB` / dossier / PDF / support promises until the live ladder is explicit
+
+### Strategy Delta
+- Runtime liveness is no longer a stale June 7 question; the newer June 14 evidence proves the bot recovered recently, but not that it is currently running.
+- The main June 14 correction is:
+  - disk is back above the floor, so raw storage pressure is no longer the governing blocker
+  - proxy dependence is now directly evidenced by startup logs and a `ProxyTimeoutError`, not just inferred from benchmark stack traces
+  - the current execution-credibility gap is now a five-part bundle: bot process absence, unresolved same-user paid ownership, the delivered-case contradiction, the unfinished batch benchmark, and root plus mini-app overclaims
+- Landing still remains the comparatively safest public surface; root and mini-app are still the active cleanup targets.
+
+### Goals Delta
+- Goal 1: keep `C:` above the `10 GB` floor and recover a safer buffer above `12 GB`.
+- Goal 2: restore verifiable supervised bot liveness with an explicit proxy or direct-connection policy.
+- Goal 3: collapse the current same-user paid stack into one canonical path.
+- Goal 4: prevent same-user same-offer and same-ladder paid re-entry while an older paid path is unresolved.
+- Goal 5: repair the delivered-case contradiction before higher-ticket proof counts as valid.
+- Goal 6: make the benchmark survive prompt-level model failures and transport ambiguity.
+- Goal 7: remove root and mini-app pricing or dossier overclaims before treating those surfaces as trustworthy.
+- Goal 8: restore Notion and GitHub connector startup and enable Google Drive write access for the next outward-sync cycle.
+
+### Next 12h Priorities
+1. Verify whether the bot should be running right now and restore supervised `WellnessBot/main.py` execution if it should.
+2. Decide whether the local proxy at `127.0.0.1:10808` is required, and add an explicit direct fallback if not.
+3. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+4. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+5. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+6. Audit and repair `20260531T183007Z_1084557944`.
+7. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+8. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit or fragile proxy path by accident.
+9. Restore Notion and GitHub connector startup, then replay the local sync payloads externally.
+10. Enable Google Drive file discovery/create/upload/share permissions in-session.
+11. Re-run the batch benchmark only after steps `1`, `2`, `7`, and `8`.
+12. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims, then reduce the mini-app `1000 RUB` tier plus dossier / PDF / support promises until the live ladder is approved.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where the latest logs prove the bot recently recovered, but the current process table does not prove it is still running, while commercialization control, delivery truth, public-surface truth, and external connector reliability remain incoherent.
+- Objective: restore verifiable bot liveness first, then collapse the same-user paid stack to one canonical path, repair the delivered-case contradiction, restore benchmark observability, align public surfaces to the approved Telegram-first manual-review model, and recover outward-sync connector startup.
+- Constraints: Telegram-first only; `PAYMENT_MODE=manual`; human review remains mandatory before delivery; one canonical paid path per Telegram user; text-only intake remains the only proven live modality; latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`; current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`; the full batch still fails on prompt `1`; Notion and GitHub connector startup both fail during MCP initialize in this session; Google Drive file discovery/create/upload/share tools are unavailable in this session; disk is above `10 GB` again but with only a thin margin.
+- Immediate next actions:
+  1. verify or restore supervised bot liveness
+  2. decide the proxy or direct-connection policy
+  3. canonicalize the June 2 / June 3 / June 6 same-user paid stack
+  4. block new duplicate paid creation
+  5. repair the delivered-case contradiction
+  6. neutralize mini-app and root-page overclaims
+  7. patch partial-artifact QA capture and explicit transport behavior
+  8. restore Notion and GitHub connector startup, then enable Google Drive write access
+
+## 2026-06-13 04:29 MSK - Connector Fallback Sync
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation for this run remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- No newer runtime proof displaced the June 7 reconnect sequence `2026-06-07 13:59:45 -> 13:59:57 +03:00`; the mounted runtime rail still points to `20260606T202509Z_1084557944` with `offer = habits` and `step = habits_daily_log`.
+- Same-user current commercial state remains unresolved across multiple current rails:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `manual_payment_pending`
+  - `20260603T113045Z_1084557944` = `habits`, `manual_payment_confirmed`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `manual_payment_confirmed`
+  - `20260606T202509Z_1084557944` = `habits`, `manual_payment_confirmed`, and mounted as active runtime state
+- Current `C:` free space is `6665936896` bytes (`~6.21 GiB`) at `2026-06-13 04:28:47 +03:00`; this is better than the June 9 read but the `10 GB` floor remains breached.
+- Working-tree truth still shows docs-focused tracked churn plus `ops/bot-status.ps1`; no tracked changes are currently visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`.
+- Immediate regression callouts:
+  - disk floor breach; owner `Ops`; next fix action restore `C:` above `10 GB` before more artifact-heavy work or new benchmark runs
+  - same-user paid-path sprawl; owner `Operator + Lead Developer`; next fix action declare one canonical current commercial path across the June 2 / June 3 / June 6 stack, then freeze, archive, merge, or refund the non-canonical rails
+  - duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next fix action choose the canonical `habits` path between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  - delivered-case review contradiction; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate the `delivered_to_client` state if `fail_major_issues` still stands
+  - mini-app monetization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the `1000 RUB` tier and PDF/support promises or align them to the governed offer map
+  - root-page payment and proof overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the YooKassa, guaranteed-PDF, and off-map pricing claims from `index.html`
+  - batch QA observability and transport ambiguity; owner `Lead Developer`; next fix action patch `ops/quality_probe.py` for per-prompt partial artifacts and make `WellnessBot/ai_drafting.py` explicit about proxy or `trust_env` policy
+  - external connector startup regression; owner `Tooling / Access`; next fix action restore Notion and GitHub connector startup in-session before the next outward-sync attempt
+
+### Connector Status
+- Obsidian: local mirror refresh completed, including a new run note at `docs/obsidian_mirror/RUN_NOTE_20260613_0429_MSK.md`.
+- Notion: blocked because a real connector call could not start.
+- Exact Notion reason: `failed to get client` caused by `MCP startup failed: handshaking with MCP server failed` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)` during the initialize request.
+- Exact Notion access request: `restore the Notion connector in this Codex session; the MCP initialize request to https://chatgpt.com/backend-api/wham/apps must succeed before run-note and hub writes can resume`
+- GitHub: blocked because a real connector call could not start.
+- Exact GitHub reason: `failed to get client` caused by `MCP startup failed: handshaking with MCP server failed` and `error sending request for url (https://chatgpt.com/backend-api/wham/apps)` during the initialize request.
+- Exact GitHub access request: `restore the GitHub connector in this Codex session; the MCP initialize request to https://chatgpt.com/backend-api/wham/apps must succeed before status-artifact sync can resume`
+- Google Drive: blocked because no Google Drive file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+- Local replay artifacts were still written for later connector replay:
+  - `docs/external_sync/antigravity_sync_20260613T012847Z.md`
+  - `docs/external_sync/antigravity_context_snapshot_20260613T012847Z.md`
+  - `docs/external_sync/2026-06-13_0429_sync_status.md`
+  - `docs/external_sync/2026-06-13_0429_sync_blocked.md`
+
+### Plan Delta
+- External sync can no longer be treated as complete from tool exposure alone; this cycle is local-complete and external-blocked until a real connector call succeeds.
+- Disk recovery stays first even though headroom improved versus June 9, because the environment is still below the `10 GB` floor.
+- The next execution packet is now:
+  1. restore `C:` above `10 GB`
+  2. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  3. add a same-user same-offer and same-ladder duplicate guard so another paid branch cannot open while older paid state is unresolved
+  4. audit and repair the `14900 RUB` delivered-case contradiction
+  5. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  6. patch `WellnessBot/ai_drafting.py` so the `openai_compatible` transport path stops inheriting an implicit proxy path
+  7. restore Notion and GitHub connector startup and re-enable outward sync
+  8. re-run the batch benchmark only after steps `5-6`
+  9. remove root-page YooKassa, guaranteed-PDF, and off-map price claims
+  10. reduce mini-app `1000 RUB` / dossier / PDF / support promises until the live ladder is explicit
+
+### Strategy Delta
+- Runtime liveness is still not the main unknown because no newer evidence displaced the June 7 recovery proof.
+- The main June 13 correction is connector health, not product progress:
+  - disk improved from `~4.10 GiB` to `~6.21 GiB` but still remains below the operating floor
+  - the same user still spans multiple unresolved paid rails
+  - the older delivered paid case still conflicts with failed review
+  - root and mini-app copy still promise payment, pricing, or dossier outcomes that the approved pilot does not support
+  - Notion and GitHub were callable in earlier cycles but are blocked in this session by MCP startup failure before any write can begin
+- Landing remains the comparatively safest public surface; root and mini-app are still the active cleanup targets.
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: collapse the current same-user paid stack into one canonical path.
+- Goal 3: prevent same-user same-offer and same-ladder paid re-entry while an older paid path is unresolved.
+- Goal 4: repair the delivered-case contradiction before higher-ticket proof counts as valid.
+- Goal 5: make the benchmark survive prompt-level model failures and transport ambiguity.
+- Goal 6: remove root and mini-app pricing or dossier overclaims before treating those surfaces as trustworthy.
+- Goal 7: restore Notion and GitHub connector startup and enable Google Drive write access for the next outward-sync cycle.
+
+### Next 12h Priorities
+1. Restore `C:` above the `10 GB` floor and log the new baseline.
+2. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+3. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+4. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+5. Audit and repair `20260531T183007Z_1084557944`.
+6. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+7. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+8. Restore Notion and GitHub connector startup, then replay the local sync payloads externally.
+9. Enable Google Drive file discovery/create/upload/share permissions in-session.
+10. Re-run the batch benchmark only after steps `6-7`.
+11. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+12. Reduce the mini-app `1000 RUB` tier plus dossier / PDF / support promises until the live ladder is approved.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime remains live enough for a controlled pilot, but commercialization control, delivery truth, public-surface truth, and connector reliability are still incoherent.
+- Objective: restore disk headroom first, then collapse the current same-user paid stack to one canonical path, repair the delivered-case contradiction, restore benchmark observability, align public surfaces to the approved Telegram-first manual-review model, and recover outward-sync connector startup.
+- Constraints: Telegram-first only; `PAYMENT_MODE=manual`; human review remains mandatory before delivery; one canonical paid path per Telegram user; text-only intake remains the only proven live modality; disk is still below `10 GB`; latest completed benchmark is `ops/reports/quality_report_20260531T083403Z.md`; current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`; the full batch still fails on prompt `1`; Notion and GitHub connector startup both fail during MCP initialize in this session; Google Drive file discovery/create/upload/share tools are unavailable in this session.
+- Immediate next actions:
+  1. restore `C:` above the `10 GB` floor
+  2. canonicalize the June 2 / June 3 / June 6 same-user paid stack
+  3. block new duplicate paid creation
+  4. repair the delivered-case contradiction
+  5. neutralize mini-app and root-page overclaims
+  6. patch partial-artifact QA capture and explicit proxy behavior
+  7. restore Notion and GitHub connector startup, then replay the local sync payloads externally
 
 ## 2026-06-05 23:49 MSK - Sync Contract Addendum
 
@@ -4162,3 +4793,4 @@ Decision:
 - Goal 2: clear or renew expired continuity state before the next live paid interaction.
 - Goal 3: collapse the same-user paid stack into one canonical commercial path.
 - Goal 4: repair the delivery gate and benchmark observability before more growth claims.
+

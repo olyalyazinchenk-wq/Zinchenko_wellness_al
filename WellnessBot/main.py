@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import asyncio
 import logging
@@ -123,6 +123,7 @@ from texts import (
     TIER_DESCRIPTIONS,
     TIER_BASIC_DESC,
     UNKNOWN_STATE_TEXT,
+    RED_FLAGS_INFO_TEXT,
 )
 
 
@@ -275,11 +276,11 @@ def restore_runtime_state() -> None:
 def start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="💬 Нутри-чат", callback_data="tier_nutri_chat")],
-            [InlineKeyboardButton(text="🥗 Привычки и тарелка", callback_data="tier_habits")],
-            [InlineKeyboardButton(text="📋 Стандартный разбор", callback_data="tier_standard")],
-            [InlineKeyboardButton(text="👑 Премиум с анализами", callback_data="tier_premium")],
-            [InlineKeyboardButton(text="Выбрать: 🧬 Разбор Осипова — 7 000 ₽", callback_data="tier_osipov")],
+            [InlineKeyboardButton(text="🍽️ Экспресс-аудит «Моя тарелка» — 1 490 ₽", callback_data="tier_nutri_chat")],
+            [InlineKeyboardButton(text="🥗 Умный куратор (Сопровождение) — 14 900 ₽", callback_data="tier_habits")],
+            [InlineKeyboardButton(text="📋 Дефицит-чек / Карта симптомов — 3 900 ₽", callback_data="tier_standard")],
+            [InlineKeyboardButton(text="👑 Wellness-Паспорт с анализами — 14 900 ₽", callback_data="tier_premium")],
+            [InlineKeyboardButton(text="🧬 Разбор ХМС по Осипову — 5 900 ₽", callback_data="tier_osipov")],
             [InlineKeyboardButton(text="🧪 Сдать анализы", callback_data="show_labs_link"),
              InlineKeyboardButton(text="💼 Мои тарифы", callback_data="choose_product")],
         ]
@@ -289,13 +290,26 @@ def start_keyboard() -> InlineKeyboardMarkup:
 def product_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="Пробный вход: Нутри-чат — 300 ₽ / 2 дня", callback_data="tier_nutri_chat")],
-            [InlineKeyboardButton(text="Выбрать: 🥗 Привычки и тарелка — 6 900 ₽", callback_data="tier_habits")],
-            [InlineKeyboardButton(text="Выбрать: 📋 Стандартный разбор — 10 000 ₽", callback_data="tier_standard")],
-            [InlineKeyboardButton(text="Выбрать: 👑 Премиум с анализами — 14 900 ₽", callback_data="tier_premium")],
-            [InlineKeyboardButton(text="Выбрать: 🧬 Разбор Осипова — 7 000 ₽", callback_data="tier_osipov")],
+            [InlineKeyboardButton(text="🍽️ Экспресс-аудит «Моя тарелка» — 1 490 ₽", callback_data="tier_nutri_chat")],
+            [InlineKeyboardButton(text="🥗 Умный куратор (Сопровождение) — 14 900 ₽", callback_data="tier_habits")],
+            [InlineKeyboardButton(text="📋 Дефицит-чек / Карта симптомов — 3 900 ₽", callback_data="tier_standard")],
+            [InlineKeyboardButton(text="👑 Wellness-Паспорт с анализами — 14 900 ₽", callback_data="tier_premium")],
+            [InlineKeyboardButton(text="🧬 Разбор ХМС по Осипову — 5 900 ₽", callback_data="tier_osipov")],
             [InlineKeyboardButton(text="Посмотреть пример результата", callback_data="show_examples")],
         ]
+    )
+
+
+def main_menu_keyboard() -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(
+        keyboard=[
+            [KeyboardButton(text="🔍 Диагностика симптомов (Бесплатно)")],
+            [KeyboardButton(text="🛍️ Выбрать программу"), KeyboardButton(text="📊 Мои отчеты")],
+            [KeyboardButton(text="📝 Заполнить анкету"), KeyboardButton(text="🩸 Сдать анализы")],
+            [KeyboardButton(text="💬 Задать вопрос эксперту"), KeyboardButton(text="🚨 Красные флаги")],
+        ],
+        resize_keyboard=True,
+        one_time_keyboard=False
     )
 
 
@@ -319,14 +333,14 @@ def labs_keyboard() -> InlineKeyboardMarkup:
 
 
 TIER_NAMES = {
-    "nutri_chat": "Нутри-чат",
-    "habits": "Привычки и тарелка",
-    "standard": "Стандартный нутрициологический разбор",
-    "premium": "Премиум-разбор с анализами",
-    "osipov": "Разбор ХМС/ГХ-МС по Осипову",
-    "screening": "Нутри-чат",
-    "basic": "Стандартный нутрициологический разбор",
-    "full": "Премиум-разбор с анализами",
+    "nutri_chat": "Экспресс-аудит «Моя тарелка»",
+    "habits": "Умный куратор: Сопровождение",
+    "standard": "Дефицит-чек / Карта симптомов",
+    "premium": "Персональный Wellness-Паспорт",
+    "osipov": "Код Микробиома: ХМС по Осипову",
+    "screening": "Экспресс-аудит «Моя тарелка»",
+    "basic": "Дефицит-чек / Карта симптомов",
+    "full": "Персональный Wellness-Паспорт",
 }
 
 INTAKE_STEP_ORDER = [
@@ -2492,29 +2506,14 @@ async def build_dossier_after_payment(
 async def cmd_start(message: types.Message) -> None:
     clear_session(message.from_user.id)
     reset_chat_session(message.from_user.id)
-    await message.answer(PRODUCT_MENU_TEXT, reply_markup=product_keyboard(), parse_mode="HTML")
+    await message.answer(START_TEXT, reply_markup=main_menu_keyboard(), parse_mode="HTML")
 
 
 @dp.message(Command("reset"))
 async def cmd_reset(message: types.Message) -> None:
     clear_session(message.from_user.id)
     reset_chat_session(message.from_user.id)
-    await message.answer(PRODUCT_MENU_TEXT, reply_markup=product_keyboard(), parse_mode="HTML")
-
-
-@dp.message(Command("chat"))
-async def cmd_chat(message: types.Message) -> None:
-    clear_session(message.from_user.id)
-    reset_chat_session(message.from_user.id)
-    await message.answer(
-        "Режим живого диалога включён. Пишите вопрос обычным сообщением, я отвечу как нейросетевой ассистент."
-    )
-
-
-@dp.message(Command("chat_reset"))
-async def cmd_chat_reset(message: types.Message) -> None:
-    reset_chat_session(message.from_user.id)
-    await message.answer("Контекст живого диалога очищен.")
+    await message.answer(START_TEXT, reply_markup=main_menu_keyboard(), parse_mode="HTML")
 
 
 @dp.message(Command("queue"))
@@ -3032,7 +3031,16 @@ async def process_consent_yes(callback_query: types.CallbackQuery) -> None:
 
     await bot.send_message(callback_query.from_user.id, "Спасибо. Согласие зафиксировано.")
 
-    if is_instant_paid_product(tier):
+    if tier == "screening":
+        session["step"] = "awaiting_screening_symptoms"
+        touch_session()
+        await bot.send_message(
+            callback_query.from_user.id,
+            "Пожалуйста, опишите своими словами 1-3 симптома или жалобы, которые вас беспокоят "
+            "(например: <i>«постоянная усталость по утрам, выпадение волос, вздутие после еды»</i>).",
+            parse_mode="HTML"
+        )
+    elif is_instant_paid_product(tier):
         session["step"] = "awaiting_product_payment"
         touch_session()
         await finalize_submission(callback_query.message, session)
@@ -3046,7 +3054,7 @@ async def process_consent_yes(callback_query: types.CallbackQuery) -> None:
 @dp.callback_query(lambda c: c.data == "consent_no")
 async def process_consent_no(callback_query: types.CallbackQuery) -> None:
     clear_session(callback_query.from_user.id)
-    await bot.send_message(callback_query.from_user.id, CONSENT_DECLINED_TEXT, reply_markup=start_keyboard())
+    await bot.send_message(callback_query.from_user.id, CONSENT_DECLINED_TEXT, reply_markup=main_menu_keyboard())
     await bot.answer_callback_query(callback_query.id)
 
 
@@ -3266,6 +3274,48 @@ async def handle_voice(message: types.Message) -> None:
 
 
 
+def get_user_approved_reports(user_id: int) -> list[dict[str, Any]]:
+    reports = []
+    submissions_dir = settings.submissions_dir
+    if not submissions_dir.exists():
+        return reports
+    for path in submissions_dir.glob(f"*_{user_id}.json"):
+        try:
+            with open(path, "r", encoding="utf-8-sig") as f:
+                data = json.load(f)
+            pdf_path = data.get("pdf_path")
+            if pdf_path and Path(pdf_path).exists():
+                reports.append(data)
+        except Exception:
+            continue
+    reports.sort(key=lambda r: r.get("status_updated_at") or r.get("created_at") or "", reverse=True)
+    return reports
+
+
+@dp.callback_query(lambda c: c.data and c.data.startswith("getpdf_"))
+async def process_get_report_pdf(callback_query: types.CallbackQuery) -> None:
+    submission_id = callback_query.data.replace("getpdf_", "")
+    submission = load_submission(settings.submissions_dir, submission_id)
+    if not submission:
+        await bot.answer_callback_query(callback_query.id, "Отчет не найден.", show_alert=True)
+        return
+    pdf_path = submission.get("pdf_path")
+    if not pdf_path or not Path(pdf_path).exists():
+        await bot.answer_callback_query(callback_query.id, "Файл отчета не найден на сервере.", show_alert=True)
+        return
+    
+    await bot.answer_callback_query(callback_query.id)
+    await bot.send_chat_action(callback_query.from_user.id, "upload_document")
+    from aiogram.types import FSInputFile
+    pdf_doc = FSInputFile(pdf_path)
+    offer_name = TIER_NAMES.get(submission.get("offer") or submission.get("tier"), "Wellness-Паспорт")
+    await bot.send_document(
+        callback_query.from_user.id,
+        pdf_doc,
+        caption=f"Ваш {offer_name} от нутрициолога Зинченко Ольги Викторовны."
+    )
+
+
 @dp.message()
 async def handle_message(message: types.Message) -> None:
     if not message.text:
@@ -3277,6 +3327,100 @@ async def handle_message(message: types.Message) -> None:
 
     session = get_session(message.from_user.id)
     text = message.text.strip()
+
+    # --- Persistent Menu Handlers ---
+    if text == "🔍 Диагностика симптомов (Бесплатно)":
+        clear_session(message.from_user.id)
+        reset_chat_session(message.from_user.id)
+        session = start_session(message.from_user, tier="screening")
+        await message.answer(
+            "Рада приветствовать вас в блоке бесплатной экспресс-диагностики!\n\n"
+            "Здесь вы можете описать свои симптомы, а я предложу возможные нутрициологические гипотезы и сориентирую по дальнейшим действиям.\n\n"
+            f"{CONSENT_TEXT}",
+            reply_markup=consent_keyboard(),
+            parse_mode="HTML"
+        )
+        return
+
+    if text == "🛍️ Выбрать программу":
+        clear_session(message.from_user.id)
+        reset_chat_session(message.from_user.id)
+        await message.answer(PRODUCT_MENU_TEXT, reply_markup=product_keyboard(), parse_mode="HTML")
+        return
+
+    if text == "📊 Мои отчеты":
+        reports = get_user_approved_reports(message.from_user.id)
+        if not reports:
+            await message.answer(
+                "У вас пока нет готовых Wellness-Паспортов или отчетов.\n\n"
+                "Чтобы получить персональный отчет, выберите подходящую программу в меню, пройдите анкету и пришлите анализы.",
+                reply_markup=main_menu_keyboard()
+            )
+            return
+
+        from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+        inline_keyboard = []
+        for r in reports:
+            offer_name = TIER_NAMES.get(r.get("offer") or r.get("tier"), "Wellness-Паспорт")
+            date_str = ""
+            created_at = r.get("created_at")
+            if created_at:
+                try:
+                    date_str = datetime.fromisoformat(created_at.replace("Z", "+00:00")).strftime("%d.%m.%Y")
+                except Exception:
+                    date_str = created_at[:10]
+            btn_text = f"📄 {offer_name} ({date_str})"
+            inline_keyboard.append([InlineKeyboardButton(text=btn_text, callback_data=f"getpdf_{r['submission_id']}")])
+
+        markup = InlineKeyboardMarkup(inline_keyboard=inline_keyboard)
+        await message.answer(
+            "📎 <b>Ваши готовые отчеты:</b>\n\n"
+            "Нажмите на кнопку с датой, чтобы скачать нужный Wellness-Паспорт в формате PDF.",
+            reply_markup=markup,
+            parse_mode="HTML"
+        )
+        return
+
+    if text == "📝 Заполнить анкету":
+        if not session:
+            await message.answer(
+                "У вас нет активной сессии для заполнения анкеты.\n\n"
+                "Пожалуйста, выберите программу в меню, чтобы начать.",
+                reply_markup=product_keyboard()
+            )
+            return
+
+        step = session.get("step")
+        if step == "consent":
+            await message.answer(CONSENT_TEXT, reply_markup=consent_keyboard())
+        elif step == "awaiting_product_payment":
+            await message.answer("Ожидаем оплату выбранной программы. Если оплата проведена, ожидайте подтверждения от команды.")
+        elif step in INTAKE_STEP_ORDER:
+            await message.answer(f"Продолжаем заполнение анкеты.")
+            await send_step_prompt(message.chat.id, step)
+        else:
+            await message.answer("Анкета заполнена или находится на проверке.")
+        return
+
+    if text == "🩸 Сдать анализы":
+        await message.answer(
+            "🩸 <b>Сдача анализов со скидкой</b>\n\n"
+            "нутрициолог Зинченко Ольга Викторовна рекомендует не сдавать анализы наугад — это сэкономит ваш бюджет.\n\n"
+            "Вы можете заказать анализы со скидкой в удобной лаборатории рядом с вашим домом через наш реферальный кабинет в <b>HelloDoc</b>. "
+            "Результаты вы сможете прислать напрямую в этот бот.\n\n"
+            "🔗 <a href='https://hellodoc.app/s/27u6a/'>Сдать анализы со скидкой через HelloDoc</a>\n"
+            "Резервная ссылка: <a href='https://hellodoc.app/s/gdgjq/'>HelloDoc Резерв</a>",
+            parse_mode="HTML"
+        )
+        return
+
+    if text == "💬 Задать вопрос эксперту":
+        await message.answer(OPERATOR_HELP_TEXT)
+        return
+
+    if text == "🚨 Красные флаги":
+        await message.answer(RED_FLAGS_INFO_TEXT, parse_mode="HTML")
+        return
 
     # SCREENING MODE: user sent symptoms after choosing 500 RUB tier
     if session and session.get("step") == "awaiting_screening_symptoms":
@@ -3534,7 +3678,24 @@ async def handle_message(message: types.Message) -> None:
         return
 
     if step == "lab_notes":
-        session["lab_notes"] = text
+        if text == "Нет анализов (хочу сдать)":
+            await message.answer(
+                "🩸 <b>У вас нет готовых анализов на руках?</b>\n\n"
+                "нутрициолог Зинченко Ольга Викторовна рекомендует не сдавать анализы наугад — это сэкономит ваш бюджет.\n\n"
+                "Специально под вашу программу мы подготовили реферальное направление на анализы со скидкой в лаборатории-партнеры через сервис <b>HelloDoc</b>.\n\n"
+                "<b>Как это работает:</b>\n"
+                "1. Перейдите по ссылке ниже.\n"
+                "2. Выберите удобный адрес лаборатории в вашем городе.\n"
+                "3. Оплатите заказ со скидкой и сдайте кровь без очередей.\n"
+                "4. Когда результаты будут готовы, пришлите их сюда в чат в формате PDF или фото бланков.\n\n"
+                "🔗 <a href='https://hellodoc.app/s/27u6a/'>Сдать анализы со скидкой через HelloDoc</a>\n"
+                "Резервная ссылка: <a href='https://hellodoc.app/s/gdgjq/'>HelloDoc Резерв</a>",
+                parse_mode="HTML"
+            )
+            session["lab_notes"] = "Клиент выбрал сдачу анализов через HelloDoc."
+        else:
+            session["lab_notes"] = text
+        
         touch_session()
         session["contact"] = "telegram_current_chat"
         session["step"] = "red_flags"
