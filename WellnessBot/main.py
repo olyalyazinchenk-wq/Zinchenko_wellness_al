@@ -115,6 +115,7 @@ from texts import (
     LABS_GUIDANCE_TEXT,
     MANUAL_HANDOFF_REVIEW_TEXT,
     MANUAL_HANDOFF_START_TEXT,
+    MANUAL_HANDOFF_INSTANT_START_TEXT,
     OPERATOR_HELP_TEXT,
     PRODUCT_EXAMPLES_TEXT,
     PRODUCT_MENU_TEXT,
@@ -2148,6 +2149,9 @@ async def finalize_submission(message: types.Message, session: dict[str, Any]) -
     submission["payment_context"] = build_payment_context(session, now_iso=utc_now_iso())
     use_telegram_invoice = settings.payment_mode == "telegram" and bool(settings.tg_payment_token)
 
+    tier = str(session.get("tier") or session.get("offer") or "standard").strip().lower()
+    is_instant = is_instant_paid_product(tier)
+
     if use_telegram_invoice:
         update_submission_status(
             submission,
@@ -2186,15 +2190,27 @@ async def finalize_submission(message: types.Message, session: dict[str, Any]) -
             submission["payment_error"] = str(exc)[:500]
             save_submission_state(settings.submissions_dir, submission)
             await notify_admins(submission, draft_text=None)
-            await message.answer(
-                "Анкета сохранена, но сейчас не удалось открыть оплату автоматически. "
-                "Команда получила ваш кейс и свяжется с вами здесь, в Telegram."
-            )
+            if is_instant:
+                await message.answer(
+                    "Заявка создана, но сейчас не удалось открыть оплату автоматически. "
+                    "Команда получила ваш запрос и свяжется с вами здесь, в Telegram."
+                )
+            else:
+                await message.answer(
+                    "Анкета сохранена, но сейчас не удалось открыть оплату автоматически. "
+                    "Команда получила ваш кейс и свяжется с вами здесь, в Telegram."
+                )
             return
-        await message.answer(
-            "Анкета успешно собрана. Для старта выбранного разбора оплатите его, "
-            "нажав на кнопку выше. После оплаты нейросеть сразу приступит к работе."
-        )
+        if is_instant:
+            await message.answer(
+                "Заявка успешно создана. Для начала программы оплатите её, "
+                "нажав на кнопку выше. После оплаты доступ будет открыт автоматически."
+            )
+        else:
+            await message.answer(
+                "Анкета успешно собрана. Для старта выбранного разбора оплатите его, "
+                "нажав на кнопку выше. После оплаты нейросеть сразу приступит к работе."
+            )
         return
 
     mark_manual_payment_pending(
@@ -2209,7 +2225,10 @@ async def finalize_submission(message: types.Message, session: dict[str, Any]) -
     submission["manual_handoff_started_at"] = utc_now_iso()
     save_submission_state(settings.submissions_dir, submission)
     await notify_admins_manual_handoff(submission)
-    await message.answer(MANUAL_HANDOFF_START_TEXT)
+    if is_instant:
+        await message.answer(MANUAL_HANDOFF_INSTANT_START_TEXT)
+    else:
+        await message.answer(MANUAL_HANDOFF_START_TEXT)
 
 
 @dp.pre_checkout_query()
@@ -2910,6 +2929,64 @@ async def cmd_llmprobe(message: types.Message) -> None:
     )
 
 
+async def notify_admins_habits_log(user_id: int, full_name: str, text: str, photo_file_id: str | None = None) -> None:
+    if not settings.admin_chat_ids:
+        return
+
+    caption = (
+        f"🥗 <b>Новый отчет по тарифу «Привычки и тарелка»</b>\n\n"
+        f"👤 Клиент: {full_name} (ID: {user_id})\n\n"
+        f"📝 Сообщение: {text}"
+    )
+
+    for admin_chat_id in settings.admin_chat_ids:
+        try:
+            if photo_file_id:
+                # Telegram captions are capped at 1024 characters
+                await bot.send_photo(
+                    admin_chat_id,
+                    photo=photo_file_id,
+                    caption=caption[:1020],
+                    parse_mode="HTML"
+                )
+            else:
+                await bot.send_message(
+                    admin_chat_id,
+                    caption[:4000],
+                    parse_mode="HTML"
+                )
+        except Exception:
+            logger.exception("Failed to notify admin of habits log for user %s", user_id)
+
+
+# Handler to route admin replies back to clients in Habits or live support mode
+@dp.message(lambda message: is_admin(message.from_user.id) and message.reply_to_message is not None)
+async def handle_admin_reply_to_client(message: types.Message) -> None:
+    replied = message.reply_to_message
+    text_to_search = (replied.text or replied.caption or "")
+    
+    import re
+    match = re.search(r"\(ID:\s*(\d+)\)", text_to_search)
+    if not match:
+        return
+
+    try:
+        client_user_id = int(match.group(1))
+    except (ValueError, TypeError):
+        return
+
+    try:
+        await bot.copy_message(
+            chat_id=client_user_id,
+            from_chat_id=message.chat.id,
+            message_id=message.message_id
+        )
+        await message.reply(f"✅ Ответ успешно отправлен клиенту (ID: {client_user_id}).")
+    except Exception as exc:
+        logger.exception("Failed to forward admin reply to client %s", client_user_id)
+        await message.reply(f"❌ Не удалось отправить ответ клиенту: {exc}")
+
+
 def build_habits_daily_report(text: str, *, has_photo: bool = False) -> str:
     lower = text.lower()
     positives = []
@@ -3187,6 +3264,11 @@ async def handle_photo_upload(message: types.Message) -> None:
         session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "kind": "plate_photo", "caption": caption, "stored_path": str(destination)})
         touch_session()
         await message.answer(build_habits_daily_report(caption, has_photo=True))
+        
+        # Forward the meal photo report to curators/admins
+        full_name = session.get("full_name") or message.from_user.full_name or "Клиент"
+        photo_file_id = message.photo[-1].file_id
+        await notify_admins_habits_log(message.from_user.id, full_name, caption, photo_file_id)
         return
     if session and session.get("step") == "osipov_upload":
         upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "osipov"
@@ -3484,6 +3566,10 @@ async def handle_message(message: types.Message) -> None:
         session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "text": text})
         touch_session()
         await message.answer(build_habits_daily_report(text))
+        
+        # Forward the meal text report to curators/admins
+        full_name = session.get("full_name") or message.from_user.full_name or "Клиент"
+        await notify_admins_habits_log(message.from_user.id, full_name, text)
         return
 
     if session and session.get("step") == "osipov_context":
@@ -3808,54 +3894,6 @@ async def cmd_tma(message: types.Message) -> None:
         return
 
     session = get_session(message.from_user.id)
-    if session and session.get("step") == "paid_nutri_chat":
-        if settings.llm_provider == "disabled" or not settings.llm_api_key or not settings.llm_model:
-            await message.answer("Сейчас AI-ответы временно недоступны. Напишите вопрос позже или обратитесь к оператору.")
-            return
-        try:
-            await bot.send_chat_action(message.chat.id, "typing")
-            history = get_chat_history(message.from_user.id)
-            nutri_prompt = (
-                "Режим оплаченного тарифа Нутри-чат. Отвечай только на русском языке как нутрициологический помощник. "
-                "Не ставь диагнозы, не обещай лечение, не отменяй лекарства. Используй формулировки: предварительная нутрициологическая гипотеза, возможная причина, что стоит проверить, что обсудить с врачом. "
-                "Структура ответа: 1) кратко понять вопрос, 2) если данных мало - уточнить 1-2 важных детали, 3) объяснить возможную связь с питанием/режимом/ЖКТ/желчеоттоком/сном/стрессом, 4) дать 1-3 практических шага, 5) отметить красные флаги и врача, если актуально.\n\n"
-                f"Вопрос клиента: {text}"
-            )
-            reply = await asyncio.to_thread(generate_live_reply, settings, history, nutri_prompt)
-        except Exception:
-            logger.exception("Paid nutri-chat response failed for user %s", message.from_user.id)
-            await message.answer("Сейчас не удалось подготовить ответ. Попробуйте ещё раз через минуту или напишите оператору.")
-            return
-        if not reply:
-            await message.answer("Не удалось сформировать ответ. Попробуйте переформулировать вопрос чуть конкретнее.")
-            return
-        append_chat_message(message.from_user.id, "user", text)
-        append_chat_message(message.from_user.id, "assistant", reply)
-        await message.answer(reply[:TELEGRAM_MESSAGE_SAFE_LIMIT])
-        return
-    if session and session.get("step") == "habits_daily_log":
-        session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "text": text})
-        touch_session()
-        await message.answer(build_habits_daily_report(text))
-        return
-
-    if session and session.get("step") == "osipov_context":
-        session["osipov_context"] = text
-        session["step"] = "osipov_upload"
-        touch_session()
-        await message.answer(
-            "Контекст сохранён. Теперь пришлите PDF или фото анализа ХМС/ГХ-МС по Осипову.\n\n"
-            "Я не буду ставить диагноз по анализу, а подготовлю нутрициологическую интерпретацию: микробные маркеры, связь с жалобами, что требует врача и что можно поддержать питанием/ЖКТ/микробиотой."
-        )
-        return
-
-    if session and session.get("step") == "osipov_upload":
-        session["osipov_extra_note"] = text
-        touch_session()
-        await message.answer(
-            "Комментарий сохранён. Пришлите сам анализ PDF или фото. Если файла пока нет, можно вернуться позже в этот чат."
-        )
-        return
     if not session:
         await message.answer(
             "Мини-приложение доступно только для активного кейса. Сначала начните или продолжите intake в этом чате."
@@ -3901,54 +3939,6 @@ async def handle_tma_api(request):
         return web.json_response({"error": "Invalid user_id"}, status=400)
 
     session = get_session(numeric_user_id)
-    if session and session.get("step") == "paid_nutri_chat":
-        if settings.llm_provider == "disabled" or not settings.llm_api_key or not settings.llm_model:
-            await message.answer("Сейчас AI-ответы временно недоступны. Напишите вопрос позже или обратитесь к оператору.")
-            return
-        try:
-            await bot.send_chat_action(message.chat.id, "typing")
-            history = get_chat_history(message.from_user.id)
-            nutri_prompt = (
-                "Режим оплаченного тарифа Нутри-чат. Отвечай только на русском языке как нутрициологический помощник. "
-                "Не ставь диагнозы, не обещай лечение, не отменяй лекарства. Используй формулировки: предварительная нутрициологическая гипотеза, возможная причина, что стоит проверить, что обсудить с врачом. "
-                "Структура ответа: 1) кратко понять вопрос, 2) если данных мало - уточнить 1-2 важных детали, 3) объяснить возможную связь с питанием/режимом/ЖКТ/желчеоттоком/сном/стрессом, 4) дать 1-3 практических шага, 5) отметить красные флаги и врача, если актуально.\n\n"
-                f"Вопрос клиента: {text}"
-            )
-            reply = await asyncio.to_thread(generate_live_reply, settings, history, nutri_prompt)
-        except Exception:
-            logger.exception("Paid nutri-chat response failed for user %s", message.from_user.id)
-            await message.answer("Сейчас не удалось подготовить ответ. Попробуйте ещё раз через минуту или напишите оператору.")
-            return
-        if not reply:
-            await message.answer("Не удалось сформировать ответ. Попробуйте переформулировать вопрос чуть конкретнее.")
-            return
-        append_chat_message(message.from_user.id, "user", text)
-        append_chat_message(message.from_user.id, "assistant", reply)
-        await message.answer(reply[:TELEGRAM_MESSAGE_SAFE_LIMIT])
-        return
-    if session and session.get("step") == "habits_daily_log":
-        session.setdefault("daily_logs", []).append({"created_at": utc_now_iso(), "text": text})
-        touch_session()
-        await message.answer(build_habits_daily_report(text))
-        return
-
-    if session and session.get("step") == "osipov_context":
-        session["osipov_context"] = text
-        session["step"] = "osipov_upload"
-        touch_session()
-        await message.answer(
-            "Контекст сохранён. Теперь пришлите PDF или фото анализа ХМС/ГХ-МС по Осипову.\n\n"
-            "Я не буду ставить диагноз по анализу, а подготовлю нутрициологическую интерпретацию: микробные маркеры, связь с жалобами, что требует врача и что можно поддержать питанием/ЖКТ/микробиотой."
-        )
-        return
-
-    if session and session.get("step") == "osipov_upload":
-        session["osipov_extra_note"] = text
-        touch_session()
-        await message.answer(
-            "Комментарий сохранён. Пришлите сам анализ PDF или фото. Если файла пока нет, можно вернуться позже в этот чат."
-        )
-        return
     if not session:
         return web.json_response({"error": "No active TMA session"}, status=404)
 
