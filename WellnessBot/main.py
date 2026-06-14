@@ -923,6 +923,119 @@ def ensure_list(value: Any) -> list[str]:
     return [line for line in lines if line]
 
 
+import re
+
+EMOJI_REGEX = re.compile(
+    r"[\U00010000-\U0010ffff]"
+    r"|[\u2600-\u27bf]"
+    r"|[\u2300-\u23ff]"
+    r"|[\u2b50-\u2b55]"
+)
+
+def clean_text_basic(val: Any) -> Any:
+    if val is None:
+        return ""
+    if isinstance(val, list):
+        return [clean_text_basic(item) for item in val if item]
+    if isinstance(val, dict):
+        return {key: clean_text_basic(value) for key, value in val.items()}
+    
+    text = str(val)
+    text = EMOJI_REGEX.sub("", text)
+    text = text.replace("**", "").replace("*", "").replace("__", "").replace("_", "").replace("`", "")
+    text = re.sub(r"^#+\s*", "", text)
+    return text.strip()
+
+def clean_list_item(val: Any) -> Any:
+    if val is None:
+        return ""
+    if isinstance(val, list):
+        return [clean_list_item(item) for item in val if item]
+    if isinstance(val, dict):
+        return {key: clean_list_item(value) for key, value in val.items()}
+    
+    text = str(val)
+    text = EMOJI_REGEX.sub("", text)
+    text = text.replace("**", "").replace("*", "").replace("__", "").replace("_", "").replace("`", "")
+    text = re.sub(r"^#+\s*", "", text)
+    text = text.strip()
+    # Remove leading bullets, dashes, list numbers (e.g. "1. ", "• ", "- ")
+    text = re.sub(r"^(?:[•\-\u2013\u2014\*]|\d+[\.\)]+)\s*", "", text)
+    return text.strip()
+
+def clean_pdf_data_symbols(data: dict[str, Any]) -> dict[str, Any]:
+    """Clean all emojis, markdown symbols, and duplicate bullets from PDF data fields before rendering."""
+    cleaned = {}
+    for key, val in data.items():
+        if key in {
+            "working_hypotheses",
+            "support_priorities",
+            "diet_strategy",
+            "lifestyle",
+            "additional_control"
+        }:
+            cleaned[key] = clean_list_item(val)
+        elif key == "schemes":
+            clean_schemes = []
+            if isinstance(val, list):
+                for s in val:
+                    if isinstance(s, dict):
+                        clean_schemes.append({
+                            "time": clean_text_basic(s.get("time", "")),
+                            "name": clean_list_item(s.get("name", "")),
+                            "comment": clean_text_basic(s.get("comment", ""))
+                        })
+            cleaned[key] = clean_schemes
+        elif key == "executive_summary":
+            ex = {}
+            if isinstance(val, dict):
+                for sub_key, sub_val in val.items():
+                    if sub_key in {"headline", "paragraph"}:
+                        ex[sub_key] = clean_text_basic(sub_val)
+                    else:
+                        ex[sub_key] = clean_list_item(sub_val)
+            cleaned[key] = ex
+        elif key == "three_step_protocol":
+            clean_prot = []
+            if isinstance(val, list):
+                for p in val:
+                    if isinstance(p, dict):
+                        clean_prot.append({
+                            "title": clean_text_basic(p.get("title", "")),
+                            "body": clean_text_basic(p.get("body", ""))
+                        })
+            cleaned[key] = clean_prot
+        elif key == "plan_3_days":
+            clean_plan = []
+            if isinstance(val, list):
+                for d in val:
+                    if isinstance(d, dict):
+                        clean_plan.append({
+                            "day": clean_text_basic(d.get("day", "")),
+                            "focus": clean_text_basic(d.get("focus", "")),
+                            "actions": clean_list_item(d.get("actions", []))
+                        })
+            cleaned[key] = clean_plan
+        elif key == "doctor_questions":
+            clean_doc = []
+            if isinstance(val, list):
+                for d in val:
+                    if isinstance(d, dict):
+                        clean_doc.append({
+                            "specialist": clean_text_basic(d.get("specialist", "")),
+                            "questions": clean_list_item(d.get("questions", []))
+                        })
+            cleaned[key] = clean_doc
+        elif key in {"client_profile", "main_request", "final_conclusion", "analysis_confidence", "mini_example"}:
+            cleaned[key] = clean_text_basic(val)
+        else:
+            if isinstance(val, (str, list, dict)):
+                cleaned[key] = clean_text_basic(val)
+            else:
+                cleaned[key] = val
+    return cleaned
+
+
 def normalize_dossier_pdf_data(raw_data: dict[str, Any]) -> dict[str, Any]:
     """Map the LLM dossier schema into the HTML PDF template schema."""
     profile = raw_data.get("profile") if isinstance(raw_data.get("profile"), dict) else {}
@@ -952,7 +1065,7 @@ def normalize_dossier_pdf_data(raw_data: dict[str, Any]) -> dict[str, Any]:
     additional_control.extend(ensure_list(raw_data.get("gi_status")))
     additional_control.extend(ensure_list(strategy.get("control")))
 
-    return {
+    res = {
         **raw_data,
         "client_profile": raw_data.get("client_profile") or client_profile or "Клиент",
         "main_request": raw_data.get("main_request") or raw_data.get("request") or "",
@@ -964,6 +1077,7 @@ def normalize_dossier_pdf_data(raw_data: dict[str, Any]) -> dict[str, Any]:
         "final_conclusion": raw_data.get("final_conclusion") or raw_data.get("expert_conclusion") or "",
         "schemes": raw_data.get("schemes") if isinstance(raw_data.get("schemes"), list) else [],
     }
+    return clean_pdf_data_symbols(res)
 
 
 def build_premium_value_packaging(pdf_data: dict[str, Any], submission: dict[str, Any]) -> dict[str, Any]:
@@ -2111,9 +2225,13 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
         caption=(
             "Ваше досье готово. Начните с первой страницы: там карта ближайших 14 дней, "
             "план на 3 дня и стоп-сигналы.\n\n"
-            "В течение 30 дней можно присылать сюда анализы, УЗИ, выписки за последние 6 месяцев, фото жалоб и вопросы по плану. "
+            "Если вам потребуется сдать назначенные анализы, вы можете сделать это со скидкой через наш кабинет в <b>HelloDoc</b>:\n"
+            "🔗 <a href='https://hellodoc.app/s/27u6a/'>Сдать анализы со скидкой через HelloDoc</a>\n"
+            "Резервная ссылка: <a href='https://hellodoc.app/s/gdgjq/'>HelloDoc Резерв</a>\n\n"
+            "В течение 30 дней можно присылать сюда новые анализы, УЗИ, выписки за последние 6 месяцев, фото жалоб и вопросы по плану. "
             "Я помогу аккуратно скорректировать маршрут без диагнозов и самоназначений."
-        )
+        ),
+        parse_mode="HTML"
     )
     update_submission_status(submission, intake_status="delivered_to_client", now_iso=utc_now_iso())
     submission["delivered_at"] = utc_now_iso()
@@ -3901,7 +4019,13 @@ async def handle_message(message: types.Message) -> None:
             session["lab_notes"] = "Стандартный тариф: лабораторные анализы не разбираются; бот формирует список анализов к сдаче."
             session["step"] = "red_flags"
             touch_session()
-            await message.answer("В стандартном тарифе я не разбираю лабораторные анализы. В итоговом разборе составлю список анализов, которые стоит сдать, и дам ссылку Holodoc.")
+            await message.answer(
+                "В стандартном тарифе я не разбираю лабораторные анализы. В итоговом разборе составлю список анализов, которые стоит сдать.\n\n"
+                "Вы можете сдать их со скидкой в лаборатории рядом с вашим домом через наш реферальный кабинет в <b>HelloDoc</b>:\n"
+                "🔗 <a href='https://hellodoc.app/s/27u6a/'>Сдать анализы со скидкой через HelloDoc</a>\n"
+                "Резервная ссылка: <a href='https://hellodoc.app/s/gdgjq/'>HelloDoc Резерв</a>",
+                parse_mode="HTML"
+            )
             await send_step_prompt(message.chat.id, "red_flags")
             return
         session["step"] = "lab_notes"
