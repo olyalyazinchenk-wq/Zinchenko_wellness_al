@@ -3990,17 +3990,55 @@ async def process_vision_background(session: dict, file_path: Path, settings: An
     )
     logger.info("Vision AI completed for session %s", session["submission_id"])
 
+def get_timezone_offset_for_city(city: str | None) -> int:
+    # Default to Moscow Time (UTC+3)
+    if not city:
+        return 3
+    city_lower = str(city).lower().strip()
+    if any(x in city_lower for x in ("москв", "питер", "спб", "краснодар", "сочи", "ростов", "казан", "нижн", "ворон")):
+        return 3
+    if any(x in city_lower for x in ("калининград",)):
+        return 2
+    if any(x in city_lower for x in ("самар", "саратов", "ульян", "астрах", "ижевск")):
+        return 4
+    if any(x in city_lower for x in ("екатерин", "екат", "пермь", "уфа", "челябинск", "тюмень", "оренбург")):
+        return 5
+    if any(x in city_lower for x in ("омск",)):
+        return 6
+    if any(x in city_lower for x in ("новосибирск", "нск", "красноярск", "томск", "кемерово", "барнаул", "новокузнецк")):
+        return 7
+    if any(x in city_lower for x in ("иркутск", "улан-удэ")):
+        return 8
+    if any(x in city_lower for x in ("якутск", "чита")):
+        return 9
+    if any(x in city_lower for x in ("владивосток", "хабаровск")):
+        return 10
+    if any(x in city_lower for x in ("магадан", "сахалин")):
+        return 11
+    if any(x in city_lower for x in ("камчат", "петропавловск")):
+        return 12
+    return 3
+
+
 async def nurture_engine_loop():
-    """Background task to gently remind users to complete their intake or upload labs."""
-    import time
+    """Background task to gently remind users to complete their intake or upload labs, and send daily habit reminders."""
     logger.info("Nurture engine started.")
     while True:
         try:
+            # Get current UTC time
+            now_utc = datetime.now(timezone.utc)
+            current_hour_utc = now_utc.hour
+            today_str = now_utc.date().isoformat()
+            
             for user_id_str, session in list(user_sessions.items()):
-                user_id = int(user_id_str)
+                try:
+                    user_id = int(user_id_str)
+                except (ValueError, TypeError):
+                    continue
+                
                 step = session.get("step")
                 
-                # Check if the user is stuck on 'lab_notes'
+                # 1. Check if the user is stuck on 'lab_notes'
                 if step == "lab_notes" and not session.get("nurture_sent"):
                     try:
                         name = session.get("full_name", "Здравствуйте").split(" ")[0]
@@ -4014,10 +4052,60 @@ async def nurture_engine_loop():
                         logger.info("Nurture message sent to %s", user_id)
                     except Exception as e:
                         logger.error("Failed to send nurture to %s: %s", user_id, e)
+                
+                # 2. Habits daily log reminders (Water and sleep!)
+                if step == "habits_daily_log":
+                    # Get client's local hour
+                    city_name = session.get("city") or session.get("profile", {}).get("city")
+                    offset = get_timezone_offset_for_city(city_name)
+                    local_hour = (current_hour_utc + offset) % 24
+                    
+                    reminders_sent = session.setdefault("last_habit_reminders", {})
+                    
+                    # A. Sleep reminder: at 22:00 local time (1 hour before 23:00)
+                    if local_hour == 22:
+                        key = f"sleep_22_{today_str}"
+                        if not reminders_sent.get(key):
+                            try:
+                                name = (session.get("full_name") or session.get("profile", {}).get("full_name") or "Здравствуйте").split(" ")[0]
+                                await bot.send_message(
+                                    user_id,
+                                    f"🌙 <b>{name}, пора готовиться ко сну!</b>\n\n"
+                                    f"До 23:00 остался 1 час. Это лучшее время, чтобы отложить все гаджеты, "
+                                    f"выпить немного теплой воды (если хочется) и настроить организм на восстановление, "
+                                    f"чтобы уснуть до 23:00.\n\n"
+                                    f"Спокойной ночи! 😴",
+                                    parse_mode="HTML"
+                                )
+                                reminders_sent[key] = True
+                                touch_session()
+                                logger.info("Sent sleep reminder to %s", user_id)
+                            except Exception as e:
+                                logger.error("Failed to send sleep reminder to %s: %s", user_id, e)
+                                
+                    # B. Water reminders: e.g. at 11:00, 15:00, 19:00 local time
+                    elif local_hour in {11, 15, 19}:
+                        key = f"water_{local_hour}_{today_str}"
+                        if not reminders_sent.get(key):
+                            try:
+                                name = (session.get("full_name") or session.get("profile", {}).get("full_name") or "Здравствуйте").split(" ")[0]
+                                if local_hour == 11:
+                                    msg = f"💧 <b>{name}, время чистой воды!</b>\n\nНе забывайте пить воду в первой половине дня для бодрости и хорошего желчеоттока."
+                                elif local_hour == 15:
+                                    msg = f"💧 <b>{name}, пора сделать пару глотков!</b>\n\nСтакан чистой теплой воды поможет избежать ложного чувства голода и поддержит энергию во второй половине дня."
+                                else:
+                                    msg = f"💧 <b>{name}, вечерний стакан воды!</b>\n\nВыпейте немного чистой теплой воды, чтобы поддержать гидратацию, но не слишком много перед сном."
+                                
+                                await bot.send_message(user_id, msg, parse_mode="HTML")
+                                reminders_sent[key] = True
+                                touch_session()
+                                logger.info("Sent water reminder (%s) to %s", local_hour, user_id)
+                            except Exception as e:
+                                logger.error("Failed to send water reminder (%s) to %s: %s", local_hour, user_id, e)
         except Exception as e:
             logger.exception("Nurture engine error: %s", e)
             
-        await asyncio.sleep(60 * 60) # Run every hour
+        await asyncio.sleep(60 * 30) # Run every 30 minutes
 
 
 async def send_product_digest_to_admins(payload: dict[str, Any]) -> bool:
