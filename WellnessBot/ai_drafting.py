@@ -381,12 +381,26 @@ def looks_english_heavy(reply: str | None) -> bool:
     return latin_count >= 40 and latin_count > cyrillic_count * 1.5
 
 
+def sanitize_client_formatting(text: str) -> str:
+    """Remove model formatting artifacts while preserving readable paragraphs."""
+    cleaned = text.replace("\r\n", "\n").replace("\r", "\n")
+    cleaned = re.sub(r"```(?:[a-zA-Z0-9_-]+)?\s*", "", cleaned)
+    cleaned = cleaned.replace("```", "")
+    cleaned = re.sub(r"\[([^\]]+)\]\((https?://[^)]+)\)", r"\1: \2", cleaned)
+    cleaned = re.sub(r"(?m)^[ \t]*#{1,6}[ \t]*", "", cleaned)
+    cleaned = re.sub(r"(?m)^[ \t]*>+[ \t]*", "", cleaned)
+    cleaned = re.sub(r"(?m)^[ \t]*(?:[-*+]|[•▪▫◦●○◆◇▶►✓✔★☆])[ \t]+", "", cleaned)
+    cleaned = re.sub(r"(?m)^[ \t]*(?:[-*_~][ \t]*){3,}$", "", cleaned)
+    cleaned = re.sub(r"</?(?:b|strong|i|em|u|code)>", "", cleaned, flags=re.IGNORECASE)
+    cleaned = cleaned.replace("**", "").replace("__", "")
+    cleaned = cleaned.replace("*", "").replace("`", "").replace("~", "")
+    cleaned = re.sub(r"(?m)[ \t]+$", "", cleaned)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
 def sanitize_live_reply(reply: str) -> str:
-    sanitized = reply
-    # Telegram users should not see raw Markdown artifacts from the model.
-    sanitized = re.sub(r"\*\*(.*?)\*\*", r"\1", sanitized)
-    sanitized = re.sub(r"(?m)^\s*[\*\-]\s+", "", sanitized)
-    sanitized = sanitized.replace("*", "")
+    sanitized = sanitize_client_formatting(reply)
     replacements = (
         ("лечебная доза", "дозировка, которую стоит подбирать после оценки данных"),
         ("выраженный дефицит", "зона возможного дефицитного риска"),
@@ -408,7 +422,7 @@ def sanitize_live_reply(reply: str) -> str:
         sanitized,
         flags=re.IGNORECASE,
     )
-    return sanitized
+    return sanitize_client_formatting(sanitized)
 
 
 def finalize_live_reply(reply: str | None, user_text: str) -> str:
@@ -559,7 +573,7 @@ def generate_live_reply_yandex_foundation(
         return None
     message = alternatives[0].get("message", {})
     text = message.get("text", "").strip()
-    return text or None
+    return finalize_live_reply(text or None, user_text)
 
 
 def extract_chat_completion_text(response) -> str | None:
@@ -1027,14 +1041,16 @@ def generate_screening_reply(
             ],
             temperature=0.3,
         )
-        return (extract_chat_completion_text(response) or "").strip() or None
+        text = (extract_chat_completion_text(response) or "").strip()
+        return sanitize_client_formatting(text) if text else None
 
     response = client.responses.create(
         model=settings.llm_model,
         instructions=SCREENING_PROMPT,
         input=screening_input,
     )
-    return (response.output_text or "").strip() or None
+    text = (response.output_text or "").strip()
+    return sanitize_client_formatting(text) if text else None
 
 
 def generate_screening_yandex(
@@ -1083,5 +1099,5 @@ def generate_screening_yandex(
         return None
     message = alternatives[0].get("message", {})
     text = message.get("text", "").strip()
-    return text or None
+    return sanitize_client_formatting(text) if text else None
 

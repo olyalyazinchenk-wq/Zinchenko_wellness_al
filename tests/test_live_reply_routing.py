@@ -10,7 +10,12 @@ BOT_DIR = PROJECT_ROOT / "WellnessBot"
 if str(BOT_DIR) not in sys.path:
     sys.path.insert(0, str(BOT_DIR))
 
-from ai_drafting import finalize_live_reply, route_live_reply, sanitize_live_reply  # noqa: E402
+from ai_drafting import (  # noqa: E402
+    finalize_live_reply,
+    route_live_reply,
+    sanitize_client_formatting,
+    sanitize_live_reply,
+)
 
 
 class LiveReplyRoutingTests(unittest.TestCase):
@@ -58,6 +63,28 @@ class LiveReplyRoutingTests(unittest.TestCase):
 
         self.assertNotIn("Начните приём", reply)
         self.assertIn("хочу разбор", reply.lower())
+
+    def test_client_formatting_removes_markdown_and_bullet_symbols(self) -> None:
+        raw_reply = (
+            "## Возможные гипотезы\n\n"
+            "* **Железодефицитный риск**\n"
+            "• `Недостаток сна`\n"
+            "> Что стоит уточнить\n"
+            "1. Ферритин и общий анализ крови"
+        )
+
+        cleaned = sanitize_client_formatting(raw_reply)
+
+        self.assertEqual(
+            cleaned,
+            "Возможные гипотезы\n\n"
+            "Железодефицитный риск\n"
+            "Недостаток сна\n"
+            "Что стоит уточнить\n"
+            "1. Ферритин и общий анализ крови",
+        )
+        for artifact in ("*", "#", "`", "•", ">"):
+            self.assertNotIn(artifact, cleaned)
 
 
 if __name__ == "__main__":
