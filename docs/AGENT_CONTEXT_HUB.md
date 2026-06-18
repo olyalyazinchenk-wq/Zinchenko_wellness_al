@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-06-18 21:40 MSK
+Updated: 2026-06-18 21:50 MSK
 
 ## ⚠️ ВСЕМ АГЕНТАМ (Codex / Antigravity / Hermes): ЧИТАТЬ ПЕРВЫМ ДЕЛОМ
 
@@ -11,8 +11,8 @@ Updated: 2026-06-18 21:40 MSK
 
 - Main public handoff document: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`
 - Live repo: `olyalyazinchenk-wq/Zinchenko_wellness_al`
-- Active remote branch for current working truth: `origin/master` at `73cc6b7`
-- Default remote branch is stale: `origin/main` at `3f3177e23042cb2d01388de2d70bc4fe7cdd779d`
+- Active remote branch for current working truth: `origin/master` at `fe31aec`
+- GitHub default branch: `master`
 - Local workspace: `C:\Users\HP\Desktop\Новая папка`
 
 ## Unified Agent Runtime
@@ -56,9 +56,9 @@ Updated: 2026-06-18 21:40 MSK
 - GitHub is no longer blocked in this session; the repo resolves through the GitHub connector and `git ls-remote --heads origin` confirms both `main` and `master`.
 - Google Drive is still blocked because no write-capable Drive tools are exposed in-session.
 
-### External Contributor Risk
-- The repo is not externally coherent by default because the default GitHub branch is still `main`, while the live project branch is `master`.
-- Anyone landing on default `main` sees stale project truth unless this branch split is corrected or explicitly surfaced.
+### External Contributor Entry
+- GitHub now opens on `master`, the same branch used by the live workspace.
+- Historical `main` remains non-canonical and is not an implementation source.
 
 ## Current Truth
 

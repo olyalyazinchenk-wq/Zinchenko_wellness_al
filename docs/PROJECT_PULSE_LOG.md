@@ -27,6 +27,14 @@
 - Exact legacy polling check returned no
   `/home/hermes/projects/nutrition_bot/venv/bin/python3 -m bot.main` process.
 
+### GitHub Alignment Evidence
+- Shared synchronization contract was committed as `fe31aec` and pushed to
+  `origin/master`.
+- GitHub repository default branch was changed from `main` to `master` through
+  the repository API.
+- New clones and external agents now enter the same canonical branch used by
+  the local runtime workspace.
+
 ---
 
 ## 2026-06-18 16:40 MSK — Full Sync Cycle With Recovered Connectors
