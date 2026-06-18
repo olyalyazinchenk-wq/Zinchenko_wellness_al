@@ -1,6 +1,6 @@
 # Agent Context Hub
 
-Updated: 2026-06-14 16:32 MSK
+Updated: 2026-06-18 14:49 MSK
 
 ## Unified GitHub Source Of Truth
 
@@ -10,30 +10,26 @@ Updated: 2026-06-14 16:32 MSK
 ## Quick Status
 
 - Mode: controlled concierge pilot. Public launch remains blocked.
-- Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
-- Freshest runtime proof still lives in `bot.stderr.log`, not `bot.stderr`, and includes:
-  - `2026-06-13 16:32:34-16:32:50 +03:00` startup and polling with `proxy=http://127.0.0.1:10808`
-  - `2026-06-14 00:41:45 -> 00:43:30 +03:00` timeout, proxy timeout, and reconnect
-- Current runtime truth: `WellnessBot/data/runtime_state.json` still mounts `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log`, and one stored daily-log message, and the process table now shows an active parent-child `WellnessBot/main.py` chain at `2026-06-14 16:32:26 +03:00`.
-- Lead blocker: the bot is process-verified again, but the supervision topology is still unconfirmed; the same user still spans multiple unresolved paid `nutri_chat` and `habits` rails; the older delivered paid case still conflicts with failed review; root plus mini-app still overclaim pricing or delivery truth; disk slipped back under the floor; and external sync connectors are still blocked.
-- Latest hard breach: `20260531T183007Z_1084557944` is still `delivered_to_client` while `internal_review.judge_verdict = fail_major_issues`.
-- Current disk state: `C:` free space is `10717425664` bytes (`~9.98 GiB`) at `2026-06-14 16:32:26 +03:00`; the morning recovery is already stale and the floor is narrowly breached again.
+- Payment mode: `PAYMENT_MODE=manual`. Human review is required before delivery.
+- **Bot is LIVE** — process PID 15452 confirmed running at `2026-06-18 14:46 +03:00` with proxy `http://127.0.0.1:10808`, LLM `deepseek-v4-flash`. Lock-file guard prevented duplicate start correctly.
+- **Latest commit pushed to GitHub**: `9c40b5d` at `2026-06-18 14:50 +03:00` — `feat: June 2026 bot upgrades - payment flow, reminders, PDF naming, menu`
+- **Key features shipped in this commit** (Гермес, читай внимательно):
+  - `check_and_prompt_pending_payment()` — перехват любых сообщений клиента если `intake_status == manual_payment_pending`; бот отвечает напоминанием + inline-кнопка «✅ Подтвердить оплату»
+  - `nurture_engine_loop` — автоматически отправляет напоминание об оплате через 15+ минут после создания заявки, тоже с кнопкой подтверждения
+  - Timezone-aware напоминания: вода 11/15/19ч, сон 22ч по местному времени клиента (на основе города)
+  - Динамические имена PDF-файлов и заголовки досье по продукту (обложка + футер)
+  - Пересылка фото тарелок / отчётов по привычкам кураторам
+  - Обработчик ответов кураторов клиентам (reply-to forwarding)
+  - Исправлен ложный статус «Анкета собрана» до оплаты для мгновенных тарифов
+  - Исправлен `NameError` в `prompts.py`
+- Latest hard breach (не устранён): `20260531T183007Z_1084557944` — `delivered_to_client` при `judge_verdict = fail_major_issues`. Требует human review и решения.
+- Current disk state: последнее измерение `~9.98 GiB` свободно (14 июня). Не проверялось после этого.
 - Latest completed benchmark anchor: `ops/reports/quality_report_20260531T083403Z.md`.
 - Current benchmark interpretation doc: `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
-- Current QA status: routing tests and smoke still pass, the full batch still aborts on prompt `1`, and the June 8 QA note is still reinforced by runtime startup logs that explicitly show a local proxy path.
-- Current repo delta:
-  - tracked local truth now includes the open docs sync refresh plus long-lived deltas in `docs/DISK_HYGIENE_STATUS.md`, `docs/ENGINEERING_MANDATE_20260413.md`, `docs/SPRINT_BOARD_20260413.md`, and `ops/bot-status.ps1`
-  - no tracked changes are currently visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`
-  - untracked local/runtime artifacts include `.venv_wsl/`, `bot.stderr`, `bot.stdout`, `WellnessBot/.bot.lock`, local backup files, login and audit scripts, `docs/WELLNESS_DIALOGUE_QA_20260608.md`, screenshots, and `ops/skills/graphify-codex/`
-- External sync status in this cycle:
-  - Notion: blocked at connector startup before any read or write call could begin
-  - GitHub: blocked at connector startup before any read or write call could begin
-  - Google Drive: blocked because no file discovery/create/upload/share tools are exposed
-  - local replay artifacts written:
-    - `docs/external_sync/antigravity_sync_20260614T133226Z.md`
-    - `docs/external_sync/antigravity_context_snapshot_20260614T133226Z.md`
-    - `docs/external_sync/2026-06-14_1632_sync_status.md`
-    - `docs/external_sync/2026-06-14_1632_sync_blocked.md`
+- External sync status:
+  - **GitHub: ✅ СИНХРОНИЗИРОВАНО** — `9c40b5d` запушен `2026-06-18 14:50 +03:00`
+  - Notion: требует ручного обновления (MCP коннектор недоступен в текущей сессии)
+  - Google Drive: инструменты не exposed
 
 ## Stage
 

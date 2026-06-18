@@ -1,6 +1,71 @@
 # Project Pulse Log
 
+## 2026-06-18 14:52 MSK — Bot Upgrades: Payment Flow, Habit Reminders, PDF Naming, Admin Relay
+
+### Агенты-исполнители
+- **Antigravity (Codex)** — разработка и пуш в GitHub
+- Этот лог читают: Codex / Antigravity, Гермес, DeepSeek, GitHub-модели
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference: `ops/reports/quality_report_20260531T083403Z.md`
+- Current QA interpretation: `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+- **Бот работает:** PID 15452, `2026-06-18 14:46 +03:00`, proxy `http://127.0.0.1:10808`, LLM `deepseek-v4-flash`
+- Lock-file guard предотвратил двойной запуск корректно
+- Последний коммит до этой сессии: `209a5c7` (feat: name each dossier and PDF file according to analyzed product)
+- **Новый коммит: `9c40b5d`** — `feat: June 2026 bot upgrades - payment flow, reminders, PDF naming, menu`
+
+### Что сделано в этом цикле
+
+#### 1. Платёжный flow — перехват и напоминания
+- Добавлена `check_and_prompt_pending_payment(message)` — вызывается в начале **всех** обработчиков (текст, фото, документ, голос, кнопки меню)
+- Логика: если `intake_status == manual_payment_pending`:
+  - `client_reported_payment == False` → напоминание + inline-кнопка `✅ Подтвердить оплату (я оплатил/а)`
+  - `client_reported_payment == True` → «оплата проверяется, ожидайте»
+- `nurture_engine_loop` (цикл 30 мин): напоминание об оплате через 15+ минут после перевода заявки в pending
+- Callback `clientconfirmpay_{submission_id}`: ставит `client_reported_payment = True`, сохраняет submission, уведомляет всех adminов
+- Вспомогательная функция `find_pending_manual_payment_submission(user_id)`: ищет активную заявку по статусу
+
+#### 2. Timezone-aware напоминания о здоровье
+- `get_timezone_offset_for_city(city)`: определяет UTC-смещение по городу (от Калининграда UTC+2 до Камчатки UTC+12)
+- Вода: напоминания в 11:00, 15:00, 19:00 **по местному времени клиента**
+- Сон: напоминание в 22:00 по местному времени («за 1 час до 23:00»)
+- Ключи дедупликации: `water_11_YYYY-MM-DD`, `sleep_22_YYYY-MM-DD` — одно напоминание в день
+
+#### 3. Динамические PDF-досье
+- Обложка: заголовок по продукту с переносами строк (`ДЕФИЦИТ-ЧЕК /<br>КАРТА СИМПТОМОВ`)
+- Футер каждой страницы: `OLGA ZINCHENKO · [НАЗВАНИЕ ПРОДУКТА UPPERCASE]`
+- Имя файла: латинский транслит + ID (`Deficit_Chek_Karta_Simptomov_12345.pdf`)
+
+#### 4. Кураторский relay
+- `notify_admins_habits_log(user_id, name, caption, photo_file_id)`: пересылает фото тарелок и текст всем adminам
+- `handle_admin_reply_to_client`: reply-to-message от куратора в telegram → копия клиенту
+
+#### 5. Исправления
+- `finalize_submission()`: убран ложный текст «Анкета собрана» для мгновенных тарифов (Express, Habits, Osipov) до подтверждения оплаты
+- `prompts.py`: `FORMAT_RULE_CLIENT_NUMBERING` перенесена в начало файла — устранён `NameError`
+- Удалены дублирующие обработчики TMA/API web-сервера
+
+### Connector Status
+- **GitHub: ✅ СИНХРОНИЗИРОВАНО** — коммит `9c40b5d`, бранч `master`, `2026-06-18 14:50 +03:00`
+- **Notion:** ⏳ MCP коннектор недоступен в текущей сессии. Обновить вручную или подключить Notion MCP token
+- **Google Drive:** ❌ file discovery/create/upload/share tools не exposed
+- **Obsidian mirror:** ✅ `docs/obsidian_mirror/AGENT_CONTEXT_HUB.md` обновлён
+
+### P0 Blockers (не устранены, переходят в следующий цикл)
+1. `20260531T183007Z_1084557944` — `delivered_to_client` при `judge_verdict = fail_major_issues` → **owner: Operator + Ольга** → нужен human review
+2. Один пользователь (1084557944) держит несколько платных рельсов без `canonical_path` → **owner: Operator** → выбрать канонический путь
+3. `C:` диск `~9.98 GiB` (замер 14 июня) — периодически ниже 10 GiB floor → **owner: Ops**
+
+### Plan Delta — следующие шаги
+1. Протестировать полный платёжный flow с кнопкой подтверждения в боте
+2. Обновить Notion вручную или подключить MCP token
+3. Решить P0 #1 — аудит доставленного кейса с fail_major_issues
+4. Освободить место на диске C:
+
+---
+
 ## 2026-06-14 21:25 MSK - Menu Keyboard Implementation and Codebase Cleanup
+
 
 ### Benchmark And Working-Tree Anchor
 - Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.

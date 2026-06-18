@@ -1,32 +1,76 @@
 # Agent Context Hub
 
-Updated: 2026-06-14 21:30 MSK
+Updated: 2026-06-18 14:52 MSK
+
+## ⚠️ ВСЕМ АГЕНТАМ (Codex / Antigravity / Hermes): ЧИТАТЬ ПЕРВЫМ ДЕЛОМ
+
+Эта страница — единственный общий источник правды для всех агентов проекта.
+Если документы противоречат друг другу, приоритет у более свежего. Медицинско-юридические ограничения имеют приоритет всегда.
 
 ## Unified GitHub Source Of Truth
 
 - Main public handoff document: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`
-- Use the local hub files for live operating truth and `docs/external_sync/*.md` as sanitized replay payloads for external contributors.
+- Свежие изменения кода всегда на GitHub: `olyalyazinchenk-wq/Zinchenko_wellness_al`
+- Локальный путь: `C:\Users\HP\Desktop\Новая папка\WellnessBot\`
 
-## Quick Status
+## Quick Status — 2026-06-18 14:52 MSK
 
-- Mode: controlled concierge pilot. Public launch remains blocked.
-- Payment mode: `PAYMENT_MODE=manual`. Human review is still required before delivery.
-- Freshest runtime proof still lives in `C:\Users\HP\.gemini\antigravity\brain\631f51c4-3c9a-44d8-87bc-8eb735bd9249\.system_generated\tasks\task-481.log` and shows active polling at `21:06 MSK`.
-- Current runtime truth: `WellnessBot/data/runtime_state.json` mounts `20260606T202509Z_1084557944` with `offer = habits`, `step = habits_daily_log` and active interaction.
-- Lead blocker: the bot is process-verified and active, the main menu is fully configured with persistent buttons as proposed, and code cleanup has been completed.
-- Latest completed benchmark anchor: `ops/reports/quality_report_20260531T083403Z.md`.
-- Current repo delta:
-  - tracked changes committed: `WellnessBot/main.py`, `payment_flow.py`, `pdf_generator.py`, `prompts.py`, `texts.py`, `static/prestige.html` (persistent main menu implementation and cleanup).
-  - obsolete files removed.
-- External sync status in this cycle:
-  - Notion: direct connector tool is currently unavailable/blocked at startup in this session. All status information has been written to local hub markdown files for synchronization.
-  - GitHub: staged, committed, and pushed to `olyalyazinchenk-wq/Zinchenko_wellness_al` master.
-  - Google Drive: blocked because no file discovery/create/upload/share tools are exposed
-  - local replay artifacts written:
-    - `docs/external_sync/antigravity_sync_20260614T133226Z.md`
-    - `docs/external_sync/antigravity_context_snapshot_20260614T133226Z.md`
-    - `docs/external_sync/2026-06-14_1632_sync_status.md`
-    - `docs/external_sync/2026-06-14_1632_sync_blocked.md`
+- **Режим:** controlled concierge pilot. Публичный запуск заблокирован.
+- **Оплата:** `PAYMENT_MODE=manual`. Перед выдачей клиенту — обязательный human review.
+- **Бот РАБОТАЕТ** — PID 15452 подтверждён `2026-06-18 14:46 +03:00`, proxy `http://127.0.0.1:10808`, LLM `deepseek-v4-flash`. Защита от двойного запуска сработала корректно.
+- **Последний коммит:** `9c40b5d` — `feat: June 2026 bot upgrades - payment flow, reminders, PDF naming, menu` — запушен `2026-06-18 14:50 +03:00`.
+- GitHub: ✅ синхронизировано. Notion: ⏳ требует ручного обновления (MCP недоступен). Google Drive: ❌ заблокировано.
+
+## Что изменилось в боте с 14 по 18 июня 2026
+
+### Платёжный flow
+- `check_and_prompt_pending_payment()` — перехватывает **любое** сообщение клиента (текст, фото, документ, кнопку меню) если `intake_status == manual_payment_pending`
+- Если клиент ещё не подтвердил → бот шлёт напоминание + inline-кнопка `✅ Подтвердить оплату (я оплатил/а)`
+- Если клиент уже нажал → сообщение «оплата на проверке»
+- `nurture_engine_loop` (каждые 30 мин) шлёт напоминание об оплате через 15+ минут после создания заявки с той же кнопкой
+- `clientconfirmpay_{submission_id}` callback обрабатывается, ставит `client_reported_payment = True`, уведомляет администраторов
+
+### Напоминания (timezone-aware)
+- Вода: 11:00, 15:00, 19:00 по местному времени клиента (по городу)
+- Сон: 22:00 по местному времени («за час до 23:00»)
+- Функция `get_timezone_offset_for_city()` определяет часовой пояс по городу
+
+### PDF и документы
+- Обложка досье: динамический заголовок по продукту (например `ДЕФИЦИТ-ЧЕК / КАРТА СИМПТОМОВ`)
+- Футер: `OLGA ZINCHENKO · [НАЗВАНИЕ ПРОДУКТА]`
+- Имя файла: латинский префикс (например `Deficit_Chek_Karta_Simptomov_12345.pdf`)
+
+### Кураторы
+- `notify_admins_habits_log()` — пересылает фото тарелок + текст кураторам
+- `handle_admin_reply_to_client()` — reply куратора в telegram копируется клиенту
+
+### Исправления
+- Ложный статус «Анкета собрана» до оплаты для быстрых тарифов — исправлен
+- `NameError` в `prompts.py` (FORMAT_RULE_CLIENT_NUMBERING) — исправлен
+
+## Нерешённые проблемы (P0 — требуют внимания)
+
+- ❗ `20260531T183007Z_1084557944` — `delivered_to_client` при `judge_verdict = fail_major_issues` → нужен human review и решение
+- ❗ Один пользователь держит несколько активных платных рельсов (`nutri_chat` × 3, `habits` × 2) — нужна канонизация
+- ❗ Диск `C:` на `~9.98 GiB` (замер 14 июня) — регулярно падает ниже 10 GiB floor
+
+## Ресурсы для агентов
+
+| Файл | Назначение |
+|---|---|
+| `docs/MODEL_CONTEXT_START_HERE_20260505.md` | Точка входа для любого нового агента |
+| `docs/AGENT_CONTEXT_HUB.md` | Этот файл — оперативная правда |
+| `docs/PROJECT_PULSE_LOG.md` | Хронологический лог всех изменений |
+| `docs/HERMES_PROJECT_WORKER_PROTOCOL_20260505.md` | Протокол работы для Гермеса |
+| `docs/hermes_skills/` | Навыки Гермеса |
+| `WellnessBot/main.py` | Основной код бота (4593 строки) |
+| `WellnessBot/payment_flow.py` | Платёжная логика |
+| `WellnessBot/texts.py` | Все тексты бота |
+
+## Внешняя синхронизация — 2026-06-18
+- **GitHub: ✅** — `9c40b5d` запушен `2026-06-18 14:50 +03:00`
+- **Notion:** ⏳ требует ручного обновления (MCP коннектор недоступен)
+- **Google Drive:** ❌ file tools не exposed
 
 ## Stage
 
