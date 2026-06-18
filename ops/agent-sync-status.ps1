@@ -32,15 +32,15 @@ try {
             $_ -match '^\d+ /home/hermes/projects/nutrition_bot/venv/bin/python3 -m bot\.main$'
         }
     )
-    $taskState = if ($botTask) { [string]$botTask.State } else { "Missing" }
-    if ($taskState -eq "Missing") {
+    $taskState = if ($botTask) { [string]$botTask.State } else { "Unavailable" }
+    if ($taskState -eq "Unavailable") {
         try {
             $schedule = New-Object -ComObject "Schedule.Service"
             $schedule.Connect()
             $scheduledTask = $schedule.GetFolder("\").GetTask("WellnessBot")
             $taskState = if ($scheduledTask.State -eq 4) { "Running" } else { "Present" }
         } catch {
-            $taskState = "Missing"
+            $taskState = "Unavailable"
         }
     }
 
