@@ -1,9 +1,68 @@
 # Sprint Board
 
-Date: 2026-06-14
-Status: June 14 16:31 refresh; the morning disk recovery is already stale because `C:` slipped back to `10721628160` bytes (`~9.98 GiB`), while the sprint is still blocked by no verified bot process, unchanged same-user paid-stack control, the delivered-case contradiction, root / mini-app truth drift, and transport-level QA blindness
+Date: 2026-06-18
+Status: June 18 16:34 refresh; runtime is freshly proven and the mounted rail moved to a live paid `nutri_chat` session, but the sprint is now blocked by disk collapse to `~6.53 GiB`, a hybrid `nutri_chat` / `Моя тарелка` offer map at `1490 RUB`, unresolved same-user paid-stack ownership, the delivered-case contradiction, and unchanged QA transport blindness
 Sprint owner: Chief Orchestrator
 Operating mode: controlled Telegram-first pilot truth hardening
+
+## 2026-06-18 16:34 MSK Delta
+
+What changed:
+
+- runtime is genuinely fresher than the June 14 board:
+  - `bot.stderr.log` shows startup at `2026-06-18 15:04:39 -> 15:04:40 +03:00`
+  - polling is active
+  - DeepSeek `200 OK` responses are logged at `15:19:35` and `15:19:56 +03:00`
+  - handled updates are visible through `15:20:03 +03:00`
+- process truth is live again:
+  - parent PID `15420` = `.venv\Scripts\python.exe`
+  - child PID `6760` = `Python312\python.exe`
+  - both started at `2026-06-18 15:04:33 +03:00`
+- the mounted paid rail is no longer June 6 `habits`:
+  - `runtime_state.json` now mounts `20260618T121906Z_1084557944`
+  - the mounted offer is `nutri_chat`
+  - the mounted step is `paid_nutri_chat`
+  - the paid window runs through `2026-06-20T12:19:14Z`
+- the strongest current regression is commercialization ambiguity inside live proof:
+  - `20260618T121906Z_1084557944` is confirmed paid
+  - `offer_code = nutri_chat`
+  - `offer_name = Экспресс-аудит «Моя тарелка»`
+  - `amount_rub = 1490`
+  - the live entry rail is simultaneously a paid chat runtime state and an audit-branded invoice artifact
+- same-user paid-stack control is broader and worse:
+  - `20260602T055745Z_1084557944` = confirmed `nutri_chat` at `500 RUB`
+  - `20260603T112723Z_1084557944` = confirmed `nutri_chat` at `500 RUB`
+  - `20260603T121917Z_1084557944` = confirmed `nutri_chat` at `300 RUB`
+  - `20260603T113045Z_1084557944` = confirmed `habits` at `6900 RUB`
+  - `20260606T202509Z_1084557944` = confirmed `habits` at `6900 RUB`
+  - `20260618T121906Z_1084557944` = confirmed hybrid `nutri_chat` / `Моя тарелка` at `1490 RUB`
+  - `20260531T183007Z_1084557944` still carries the `delivered_to_client` plus `fail_major_issues` breach
+- disk regression is materially worse than the June 14 board:
+  - current `C:` free space is `7012143104` bytes (`~6.53 GiB`)
+- QA truth is still unchanged where it matters:
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md` remains the current synthesis
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - the full batch still dies on prompt `1`
+- loop truth is now explicit:
+  - tracked work is still docs-only
+  - governance debt is still `151` experiments and `0` decisions
+  - no control patch landed in `WellnessBot/` or `ops/quality_probe.py`
+
+Next 12h command set:
+
+1. Recover `C:` back above `10 GiB` and log the new baseline.
+2. Decide whether `20260618T121906Z_1084557944` is canonically `nutri_chat` or canonically `Моя тарелка`.
+3. Decide one canonical path across `20260531T183007Z_1084557944`, `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, `20260606T202509Z_1084557944`, and `20260618T121906Z_1084557944`.
+4. Write `canonical_path` or explicit `case_relation` for every non-canonical rail.
+5. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any new paid branch creation.
+6. Audit `20260531T183007Z_1084557944` and repair the `delivered_to_client` plus `fail_major_issues` contradiction.
+7. Patch `ops/quality_probe.py` so prompt-level model failures still emit a partial batch artifact.
+8. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit proxy or `trust_env` policy.
+9. Collapse one approved entry-rail name and price across code, prompts, artifacts, and docs.
+10. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+11. Reduce mini-app dossier / PDF / Telegram-support promises until the public ladder is explicit.
+12. Re-run the batch benchmark only after steps `3-11` land.
+13. Freeze net-new experiments, draft backlog growth, and strategy-copy churn until one control artifact lands.
 
 ## 2026-06-14 16:31 MSK Delta
 

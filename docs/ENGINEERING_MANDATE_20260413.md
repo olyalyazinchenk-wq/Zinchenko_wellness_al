@@ -1,8 +1,8 @@
 # Engineering Mandate
 
-Date: 2026-06-14
+Date: 2026-06-18
 Issued by: Chief Orchestrator
-Status: June 14 16:31 refresh; the morning disk recovery is already stale, there is still no verified `WellnessBot/main.py` process, and engineering still has not canonicalized the unresolved June paid stack, repaired the delivered-case contradiction, or fixed the `openai_compatible` transport and batch-artifact blind spot
+Status: June 18 16:34 refresh; engineering now has fresh runtime proof again, but the live blocker shifted to commercialization ambiguity on the active paid rail, disk headroom regressed back to `~6.53 GiB`, and the unresolved same-user stack plus QA transport blind spot still remain unfixed
 
 ## Mission
 
@@ -11,6 +11,57 @@ Run one coherent Telegram paid cycle through:
 `approved offer choice -> manual concierge payment -> intake -> AI draft -> human review -> safe delivery -> same-thread follow-up`
 
 No new tariff, catalog branch, or upgrade path counts as live truth until one approved offer map and one replayable proof artifact exist. Public launch remains blocked.
+
+## 2026-06-18 16:34 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as freshly proven, not stale:
+  - startup is logged at `2026-06-18 15:04:39 -> 15:04:40 +03:00`
+  - polling is active
+  - DeepSeek `200 OK` requests are logged at `15:19:35` and `15:19:56 +03:00`
+  - handled updates are visible through `15:20:03 +03:00`
+- Treat the active runner chain as live but still requiring explicit supervision intent:
+  - parent PID `15420` = `.venv\Scripts\python.exe`
+  - child PID `6760` = `Python312\python.exe`
+  - both started at `2026-06-18 15:04:33 +03:00`
+  - do not spend the next packet rediscovering liveness; document or simplify the runner topology instead
+- Treat the mounted rail as changed and strategically more dangerous:
+  - `runtime_state.json` now mounts `20260618T121906Z_1084557944`
+  - mounted state is `offer = nutri_chat`, `step = paid_nutri_chat`
+  - the active window runs through `2026-06-20T12:19:14Z`
+  - the rail already contains live paid dialogue content
+- Treat the June 18 paid artifact as the new commercialization-control breach:
+  - `20260618T121906Z_1084557944` is confirmed paid
+  - `offer_code = nutri_chat`
+  - `offer_name = Экспресс-аудит «Моя тарелка»`
+  - `amount_rub = 1490`
+  - runtime state, product naming, and price governance have diverged inside one live case
+- Treat same-user commercialization control as broader and still unacceptable:
+  - current stack includes `nutri_chat` at `300`, `500`, `500`, and `1490 RUB`
+  - current stack also includes `habits` at `6900 RUB` twice
+  - `20260531T183007Z_1084557944` still combines `paid`, `delivered_to_client`, and `fail_major_issues`
+  - no current artifact above should count as canonical proof until relations are explicit
+- Treat disk as a renewed P0 blocker:
+  - actual `C:` free space is `7012143104` bytes (`~6.53 GiB`)
+  - do not start replay-heavy, PDF-heavy, or benchmark-heavy work before the floor is restored
+- Treat QA observability as still broken in the same two places:
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - `WellnessBot/ai_drafting.py` still lacks an explicit `http_client` plus explicit proxy or `trust_env` policy
+- Treat tracked work as mostly documentation motion:
+  - visible tracked changes are still docs-only
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- The next engineering packet is now:
+  1. recover `C:` above `10 GiB`
+  2. decide whether `20260618T121906Z_1084557944` is canonically `nutri_chat` or canonically `Моя тарелка`
+  3. declare the canonical owner of the May 31 / June 2 / June 3 / June 6 / June 18 paid stack
+  4. add a hard guard so unresolved same-user same-offer or same-ladder state blocks any new paid branch creation
+  5. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  6. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  7. patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit `http_client` plus explicit proxy or `trust_env` policy
+  8. collapse internal offer naming and pricing to one approved Telegram entry rail
+  9. only then collapse root and mini-app claims to the surviving truth
+  10. rerun one reviewed batch or paid replay only after steps `3-9` land
 
 ## 2026-06-14 16:31 Correction Set
 

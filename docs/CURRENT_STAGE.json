@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "stage_id": "controlled-concierge-pilot-2026-06-18-r1",
+  "updated_at": "2026-06-18T21:40:00+03:00",
+  "canonical_workspace_windows": "C:\\Users\\HP\\Desktop\\Новая папка",
+  "canonical_workspace_wsl": "/mnt/c/Users/HP/Desktop/Новая папка",
+  "repository": "olyalyazinchenk-wq/Zinchenko_wellness_al",
+  "branch": "master",
+  "runtime_owner": "Windows Scheduled Task: WellnessBot",
+  "runtime_entrypoint": "WellnessBot/main.py",
+  "mode": "controlled_concierge_pilot",
+  "public_launch": "blocked",
+  "payment_mode": "manual",
+  "human_review_required": true,
+  "truth_documents": [
+    "docs/AGENT_CONTEXT_HUB.md",
+    "docs/KNOWLEDGE_SYNC_HUB.md",
+    "docs/PROJECT_PULSE_LOG.md"
+  ],
+  "legacy_workspaces": [
+    "/home/hermes/projects/nutrition_bot"
+  ]
+}

@@ -1,5 +1,209 @@
 # Project Pulse Log
 
+## 2026-06-18 21:40 MSK — Single Workspace And Stage Contract
+
+### Decision
+- Codex, Antigravity, and Hermes now have one declared execution source:
+  `C:\Users\HP\Desktop\Новая папка` / `/mnt/c/Users/HP/Desktop/Новая папка`.
+- `master` is the only current implementation branch.
+- `docs/CURRENT_STAGE.json` is the machine-readable stage marker.
+- Root `AGENTS.md` is the mandatory bootstrap for all three agents.
+- `ops/agent-sync-status.ps1` is the shared drift check.
+- Windows scheduled task `WellnessBot` is the only permitted Telegram polling
+  owner. The old Hermes project `/home/hermes/projects/nutrition_bot` is legacy
+  and must remain stopped.
+
+### Current Stage
+- `stage_id = controlled-concierge-pilot-2026-06-18-r1`
+- public launch remains blocked
+- payment mode remains manual
+- human review remains mandatory
+
+### Hermes Alignment Evidence
+- Direct write access to `/home/hermes/hermes-workspace/AGENTS.md` was not
+  required. The Hermes gateway was stopped and restarted from the canonical
+  WSL workspace.
+- Gateway PID `69242` has cwd `/mnt/c/Users/HP/Desktop/Новая папка`.
+- Exact legacy polling check returned no
+  `/home/hermes/projects/nutrition_bot/venv/bin/python3 -m bot.main` process.
+
+---
+
+## 2026-06-18 16:40 MSK — Full Sync Cycle With Recovered Connectors
+
+### Что изменилось с прошлого статуса
+- Подтверждено, что локальная June 18 draft truth была в целом верной, но требовала выравнивания: бот реально жив, активный rail уже June 18 `nutri_chat`, а Notion и GitHub коннекторы снова работают в этой сессии.
+- `bot.stderr.log` подтверждает startup `2026-06-18 15:04:39 -> 15:04:40 +03:00`, live polling и DeepSeek ответы `200 OK` до `2026-06-18 15:20:03 +03:00`.
+- GitHub truth усложнилась: live branch для проекта сейчас `origin/master` на `73cc6b7`, но default branch репозитория по-прежнему `main` на `3f3177e23042cb2d01388de2d70bc4fe7cdd779d`.
+- Google Drive по-прежнему не готов к записи: file discovery/create/upload/share tools не exposed в текущей сессии.
+
+### Benchmark And Working-Tree Anchor
+- Latest benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Full batch truth is unchanged: it still aborts on prompt `1`.
+- Working-tree truth at `2026-06-18 16:40 +03:00`:
+  - tracked local churn remains in `docs/AGENT_CONTEXT_HUB.md`, `docs/DISK_HYGIENE_STATUS.md`, and `docs/PROJECT_PULSE_LOG.md`
+  - untracked operational artifacts remain present, including `WellnessBot/.bot.lock`, `ops/bot-task-run.ps1`, and `ops/skills/graphify-codex/`
+  - no new tracked control fix is visible yet in `WellnessBot/`, `landing/`, or `mini-app/`
+
+### Текущее состояние
+- Stage remains unchanged: controlled concierge pilot, `PAYMENT_MODE=manual`, human review is mandatory, and public launch is still blocked.
+- Bot runtime is live and process-verified:
+  - parent PID `15420` = `.venv\Scripts\python.exe`
+  - child PID `6760` = `Python312\python.exe`
+  - both created at `2026-06-18 15:04:33 +03:00`
+  - startup log explicitly records `proxy=http://127.0.0.1:10808`
+- Active runtime rail is now `20260618T121906Z_1084557944`:
+  - `offer = nutri_chat`
+  - `step = paid_nutri_chat`
+  - `payment_status = manual_payment_confirmed`
+  - `amount_rub = 1490`
+  - `nutri_chat_expires_at = 2026-06-20T12:19:14.119781+00:00`
+- Current disk state is still P0: `C:` free space is `7014158336` bytes (`~6.53 GiB`) at `2026-06-18 16:35:14 +03:00`.
+
+### Current Commercial And Delivery Truth
+- One Telegram user still spans unresolved paid state across six current rails, and every item still has `canonical_path = null` plus `case_relation = null`:
+  - `20260602T055745Z_1084557944` = `nutri_chat`, `500 RUB`
+  - `20260603T112723Z_1084557944` = `nutri_chat`, `500 RUB`
+  - `20260603T113045Z_1084557944` = `habits`, `6900 RUB`
+  - `20260603T121917Z_1084557944` = `nutri_chat`, `300 RUB`
+  - `20260606T202509Z_1084557944` = `habits`, `6900 RUB`
+  - `20260618T121906Z_1084557944` = `nutri_chat`, `1490 RUB`, and is the mounted active rail
+- The paid delivery contradiction remains unchanged:
+  - `20260531T183007Z_1084557944`
+  - `offer = basic`
+  - `intake_status = delivered_to_client`
+  - `internal_review.judge_verdict = fail_major_issues`
+- Governance debt also remains unchanged:
+  - `WellnessBot/data/product_governance.json` still contains `151` experiments and `0` decisions
+  - `updated_at = 2026-06-01T20:55:21Z`
+
+### Public Surface Truth
+- `landing/index.html` remains the comparatively safest public surface.
+- Root `index.html` still overclaims live product truth:
+  - `ЮKassa` / Telegram invoice language
+  - `700 ₽` entry price
+  - guaranteed PDF dossier outcome
+  - off-map premium ladder claims
+- `mini-app/index.html` still cannot be described as placeholder-only because it still promises dossier/PDF/support outcomes inside the product flow.
+
+### Connector Status
+- Obsidian: local mirror refresh completed in this cycle.
+- Notion: recovered in-session.
+  - Success probe: `_notion_get_users { user_id: "self" }`
+  - Hub target resolved: `AGENT CONTEXT HUB — Antigravity / Wellness` (`3418a9de-1d41-8117-a0e5-ff5f78a1a00b`)
+- GitHub: recovered in-session.
+  - Success probes:
+    - `_search_installed_repositories_v2` resolved `olyalyazinchenk-wq/Zinchenko_wellness_al`
+    - `git ls-remote --heads origin` confirmed `master` and `main`
+- Google Drive: blocked because no Google Drive file discovery/create/upload/share tools are exposed in this Codex session.
+- Exact Google Drive access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
+
+### Immediate Regression Callouts
+- Disk floor breach; owner `Ops`; next fix action remove or archive large user-owned installers/videos/archives until `C:` is back above `10 GiB`.
+- Same-user paid-path sprawl; owner `Operator + Lead Developer`; next fix action declare one canonical path across the June 2 / June 3 / June 6 / June 18 stack, then freeze, archive, merge, or refund the non-canonical rails.
+- Duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next fix action choose the canonical `habits` rail between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`.
+- Delivery-gate breach; owner `Lead Developer + Operator`; next fix action audit `20260531T183007Z_1084557944` and remove or remediate `delivered_to_client` if no valid override exists.
+- Root-page commercialization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize the live payment, PDF, and price claims in `index.html`.
+- Mini-app commercialization overclaim; owner `Product Strategist + Lead Developer`; next fix action remove or neutralize dossier/PDF/support promises until the governed ladder is explicit.
+- GitHub default-branch drift; owner `Lead Developer + Tooling`; next fix action align or merge `main` with the live `master` branch so external contributors do not land on stale repo truth by default.
+- Google Drive connector gap; owner `Tooling / Access`; next fix action expose file discovery/create/upload/share tools before the next Drive sync attempt.
+
+### Plan Delta
+- Connector recovery changes the execution packet:
+  1. keep local docs authoritative first
+  2. push the refreshed status to Notion and GitHub in the same cycle when probes succeed
+  3. treat Google Drive as the only outward-sync blocker in this run
+- Disk recovery moves back to the top operational priority because the latest measured headroom is only `~6.53 GiB`.
+- GitHub branch alignment becomes a new external-credibility priority because default `main` no longer reflects current working truth.
+
+### Strategy Delta
+- Strategy is no longer `restore connector startup`; it is `use recovered connectors to keep management truth current while fixing execution integrity`.
+- The lead credibility gap is now a six-part bundle:
+  - disk remains below floor
+  - same-user paid ownership is still unresolved
+  - delivered-case contradiction remains open
+  - public surfaces still overclaim
+  - Google Drive sync is still absent
+  - GitHub default branch is stale relative to the live branch
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GiB` floor and rebuild a safer margin.
+- Goal 2: collapse the same-user paid stack into one canonical path.
+- Goal 3: block same-user same-offer and same-ladder duplicate paid creation.
+- Goal 4: repair the delivered-case contradiction before higher-ticket proof is treated as valid.
+- Goal 5: remove root and mini-app commercialization overclaims.
+- Goal 6: align GitHub default-branch truth with the live branch.
+- Goal 7: keep Notion and GitHub status mirrors current while Google Drive remains blocked.
+
+### Next 12h
+1. Push `C:` back above `10 GiB`.
+2. Canonicalize the June 2 / June 3 / June 6 / June 18 same-user paid stack.
+3. Add a hard duplicate paid-branch guard.
+4. Repair `20260531T183007Z_1084557944`.
+5. Remove root and mini-app overclaims.
+6. Align `main` and `master` or make one default branch authoritative.
+7. Keep Notion and GitHub context mirrors current.
+8. Enable Google Drive file discovery/create/upload/share permissions.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot with live runtime, recovered Notion/GitHub sync, stale Google Drive exposure, and unresolved execution-control debt.
+- Objective: restore disk headroom, collapse the current same-user paid stack to one canonical path, repair the delivered-case contradiction, neutralize public-surface overclaims, and align external repo truth with the live branch.
+- Constraints:
+  - Telegram-first only
+  - `PAYMENT_MODE=manual`
+  - human review remains mandatory before delivery
+  - one canonical paid path per Telegram user
+  - latest completed benchmark reference is `ops/reports/quality_report_20260531T083403Z.md`
+  - current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - full batch still aborts on prompt `1`
+  - Google Drive file discovery/create/upload/share tools are unavailable in this session
+- Immediate next actions:
+  1. recover disk margin
+  2. canonicalize the paid stack
+  3. block further duplicate paid creation
+  4. repair the delivered-case contradiction
+  5. remove root and mini-app overclaims
+  6. align GitHub default-branch truth
+  7. keep Notion/GitHub mirrors current and request Google Drive access
+
+---
+
+## 2026-06-18 16:34 MSK — Regular Sync Snapshot
+
+### Что изменилось с прошлого статуса
+- Подтверждено живое состояние бота после дневного перезапуска: active parent-child chain `15420 -> 6760`, polling стартовал `2026-06-18 15:04 +03:00`.
+- `bot.stderr.log` подтверждает live traffic и DeepSeek ответы `200 OK` до `2026-06-18 15:20:03 +03:00`.
+- Mounted runtime truth сместилась с June 6 `habits` rail на новый paid `nutri_chat` rail `20260618T121906Z_1084557944` со step `paid_nutri_chat`.
+- GitHub remote доступен; `origin/master` уже содержит `73cc6b7`.
+- Notion connector снова отвечает в текущей сессии.
+
+### Текущее состояние
+- Этап без изменений: controlled concierge pilot, `PAYMENT_MODE=manual`, human review обязателен, public launch заблокирован.
+- Рабочее дерево по ключевым каталогам tracked-clean; остались только локальные untracked артефакты:
+  - `WellnessBot/.bot.lock`
+  - `ops/bot-task-run.ps1`
+  - `ops/skills/graphify-codex/`
+- Disk hygiene снова P0: `C:` свободно `7014158336` байт (`~6.53 GiB`) на `2026-06-18 16:34 +03:00`.
+
+### Что готово к пилоту
+- Telegram bot runtime жив и отвечает.
+- Manual payment reminders / confirmation flow уже в коде и работает на live runtime.
+- GitHub и Notion status sync снова доступны для управленческой фиксации статуса.
+
+### Что нельзя запускать публично
+- Нельзя публиковать root `index.html` и `mini-app/index.html` как truthful public offer из-за overclaim по оплате, PDF и product ladder.
+- Нельзя считать коммерческую модель чистой, пока не канонизирован same-user paid stack June 2 / June 3 / June 6 / June 18.
+- Нельзя считать delivery safe, пока не разобран кейс `20260531T183007Z_1084557944` с `delivered_to_client` при `fail_major_issues`.
+
+### Следующие шаги
+1. Поднять `C:` выше `10 GiB`.
+2. Канонизировать paid-path stack и запретить новые дубли same-user same-offer.
+3. Убрать root/mini-app overclaims до любого public-facing использования.
+4. Держать внешние статусные зеркала в GitHub/Notion синхронными, не выгружая runtime/PII артефакты.
+
+---
+
 ## 2026-06-18 14:52 MSK — Bot Upgrades: Payment Flow, Habit Reminders, PDF Naming, Admin Relay
 
 ### Агенты-исполнители

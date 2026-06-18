@@ -47,6 +47,12 @@ After tool discovery and before claiming connector success:
 - write the local fallback artifact anyway so the sync payload can be replayed later without redoing the analysis
 - include the exact startup error and the exact access request in `PROJECT_PULSE_LOG.md` and the inbox summary
 
+## Connector Recovery Rule
+If a connector that was blocked in an earlier run succeeds in the current session:
+- clear the carried-forward blocked state explicitly instead of silently leaving the old failure narrative in place
+- log the exact success probe that worked in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
+- remove stale access requests for that connector from the current run outputs
+
 ## Connector Fallback Rule
 If any connector is unavailable:
 - complete the full local refresh first
@@ -60,6 +66,13 @@ Before concluding a sync:
 - if uncommitted changes materially alter runtime behavior, product surfaces, benchmark behavior, or safety rules, log them as current project truth even if no commit exists yet
 - separate `repo head` from `working tree truth` in `PROJECT_PULSE_LOG.md` and `AGENT_CONTEXT_HUB.md`
 - if a dirty change conflicts with the standing pilot, safety, or pricing rules, call it out immediately as a regression with owner and next fix action
+
+## GitHub Default Branch Drift Rule
+Before claiming GitHub outward sync is trustworthy for external contributors:
+- compare the active local branch and its remote head against the repository default branch
+- if the default branch is stale or divergent from the live execution branch, log the split explicitly in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
+- do not present the default branch as the single source of truth until it is aligned or the authoritative branch is made explicit
+- include owner and next fix action for branch alignment whenever the split affects external contributor onboarding
 
 ## Public Surface Truth Rule
 Before carrying forward any public product or monetization narrative:
