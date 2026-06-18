@@ -1,6 +1,1063 @@
-# Strategy Live Delta
+﻿# Strategy Live Delta
 
 Rolling log for strategy and plan corrections between major strategy documents.
+
+## 2026-06-14 16:32 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this afternoon June 14 refresh:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260602T055745Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T121917Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr.log`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short --branch`
+  - current `C:` free-space measurement
+  - current `Win32_Process` sample for `WellnessBot/main.py`
+- New June 14 afternoon hard facts:
+  - current local run time is `2026-06-14 16:32:26 +03:00`
+  - no newer runtime artifact displaced the morning proof:
+    - freshest startup is still `2026-06-13 16:32:34 -> 16:32:50 +03:00`
+    - freshest reconnect is still `2026-06-14 00:41:45 -> 00:43:30 +03:00`
+    - `bot.stderr.log` shows no later handled-update or recovery event after that reconnect
+  - current process truth is no longer bot-down:
+    - parent runner PID `12300` is `.venv\Scripts\python.exe`, created `2026-06-13 16:32:25 +03:00`
+    - child runner PID `20032` is `Python312\python.exe`, created `2026-06-13 16:32:26 +03:00`
+    - runtime is process-verified again, but the dual-process chain needs explicit confirmation as intentional supervision
+  - `runtime_state.json` is unchanged:
+    - mounted rail is still `20260606T202509Z_1084557944`
+    - `offer = habits`
+    - `step = habits_daily_log`
+    - only one stored daily-log message exists
+    - there is still no deeper intake, review, delivery, `canonical_path`, or `case_relation`
+  - the unresolved same-user paid stack is unchanged and still unclassified:
+    - `20260602T055745Z_1084557944` = confirmed `nutri_chat`
+    - `20260603T112723Z_1084557944` = pending `nutri_chat`
+    - `20260603T113045Z_1084557944` = confirmed `habits`
+    - `20260603T121917Z_1084557944` = confirmed `nutri_chat`
+    - `20260606T202509Z_1084557944` = confirmed `habits`, still mounted
+    - every item above still has `canonical_path = null` and `case_relation = null`
+  - `20260531T183007Z_1084557944` is still the higher-ticket contradiction:
+    - `offer = basic`
+    - `payment_status = paid`
+    - `intake_status = delivered_to_client`
+    - `internal_review.judge_verdict = fail_major_issues`
+    - `canonical_path = null`
+    - `case_relation = null`
+  - disk recovery from the morning run is already stale:
+    - current `C:` free space is `10717425664` bytes (`~9.98 GiB`) at `2026-06-14 16:32:26 +03:00`
+    - this means the floor is no longer actually cleared, even though the slip is narrow
+  - governance debt is unchanged:
+    - `151` experiments
+    - `0` decisions
+    - `updated_at = 2026-06-01T20:55:21Z`
+    - top repeated experiment-title clusters still repeat `12`, `11`, `8`, `8`, and `5` times
+    - `docs/tasks` still holds `29` open `HERMES-20260505-*` packets
+  - QA truth is unchanged:
+    - latest interpretation doc is still `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+    - routing tests and smoke still pass
+    - full batch still dies on prompt `1`
+    - there is still no tracked control fix in `WellnessBot/ai_drafting.py` or `ops/quality_probe.py`
+  - public-surface drift was re-verified directly:
+    - `landing/index.html` remains comparatively aligned
+    - root `index.html` still sells a free first step, `700 RUB`, Telegram invoice / `YooKassa`, and guaranteed PDF dossier flow
+    - `mini-app/index.html` still presents `Персональное досье`, `PDF-досье`, and Telegram support promises as if the reviewed ladder were already explicit
+  - working-tree motion is still mostly strategy/sync docs plus `ops/bot-status.ps1`, not control fixes in `WellnessBot/` or `ops/quality_probe.py`
+  - Notion and GitHub live calls still fail at MCP initialize with the same `https://chatgpt.com/backend-api/wham/apps` request
+  - Google Drive still has no callable file discovery/create/upload/share tools exposed in this session
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- The June 14 afternoon correction is that this is still a control-recovery cycle, but with a sharper runtime read:
+  - the same runtime proof still stands
+  - bot liveness is process-verified again
+  - the supervision topology is now a control question
+  - disk already slipped back under the floor again
+- The only defensible product direction is still one canonical Telegram continuity rail with human-reviewed escalation and no extra public-surface ambition.
+
+### Value Proposition Delta
+- The safest live value proposition is still:
+  - `manual Telegram clarity, continuity support, and human-reviewed escalation when needed`
+- This afternoon did not add new product proof.
+- The main trust erosion is now not copy weakness but credibility drift:
+  - ambiguous runtime supervision topology
+  - unresolved duplicate paid rails
+  - delivered-state contradiction
+  - public claims that outrun the operating model
+
+### Monetization Delta
+- Monetization should remain contracted and manual.
+- The repeated `habits` payments still show willingness to pay, but still do not count as traction because they are unresolved same-user duplicates.
+- The `nutri_chat` rails still show entry-price elasticity, not an approved ladder.
+- The `paid` higher-ticket case remains commercially invalid as proof until the `delivered_to_client` plus `fail_major_issues` contradiction is repaired.
+- The working monetization path remains:
+  1. one canonical Telegram rail
+  2. manual payment only
+  3. human-reviewed escalation only after delivery truth, QA observability, runtime topology, and surface truth are coherent
+
+### Plan Delta
+- The next execution packet is now:
+  1. confirm whether the active two-process `WellnessBot/main.py` chain is intentional supervision or duplicate-runner drift
+  2. recover `C:` back above `10 GiB` and keep it there
+  3. write `canonical_path` or `case_relation` across the June 2 / June 3 / June 6 / May 31 same-user stack
+  4. add a duplicate same-user same-offer and same-ladder paid-branch guard in code
+  5. repair the `20260531T183007Z_1084557944` delivery contradiction
+  6. patch `ops/quality_probe.py` for per-prompt partial artifacts
+  7. patch `WellnessBot/ai_drafting.py` with explicit `http_client` plus explicit proxy or `trust_env` policy
+  8. remove root-page payment / PDF / price overclaims
+  9. reduce mini-app dossier / PDF / Telegram-support promises until the approved ladder is explicit
+  10. restore Notion and GitHub connector startup and enable Google Drive write access
+  11. rerun the batch only after steps `3-9`
+  12. freeze further strategy-only churn until one control artifact lands
+
+### Strategy Delta
+- The strategic picture changed in one important way since the morning run:
+  - bot liveness is no longer absent, but the active supervision topology still has to be confirmed
+- This means the lead story is not `recovered environment`; it is still `no control artifact landed`.
+- The main execution-credibility gap remains a five-part bundle:
+  - runtime is process-verified again, but the runner topology is still unconfirmed
+  - no canonical paid-path ownership
+  - no repair of the delivered higher-ticket contradiction
+  - no benchmark artifact beyond the May 31 anchor
+  - no collapse of root / mini-app claims to the surviving Telegram-first truth
+  - no external sync because connector startup is still blocked
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - running another strategy refresh while the June same-user stack still has zero `canonical_path` and zero `case_relation`
+- Repeated low-impact loop:
+  - rereading the same QA transport failure without patching `WellnessBot/ai_drafting.py` or `ops/quality_probe.py`
+- Repeated low-impact loop:
+  - carrying forward runtime liveness without confirming whether the current two-process chain is intended supervision or duplicate drift
+- Repeated low-impact loop:
+  - narrating temporary disk recovery instead of fixing the product-control path while the floor is still unstable
+- Repeated low-impact loop:
+  - re-verifying root and mini-app overclaims without editing the source files that contain them
+- Repeated low-impact loop:
+  - counting repeat `habits` payments as learning while duplicate same-user commercialization remains uncontrolled
+
+### Higher-Impact Replacement Action
+- Replace the loop with one code-first control packet:
+  1. confirm the active supervision chain
+  2. backfill one canonical paid path and explicit relations in the current submission stack
+  3. add the duplicate same-user paid-branch guard
+  4. patch explicit transport policy plus partial-artifact QA capture
+  5. repair the `paid` plus `fail_major_issues` contradiction
+  6. then collapse root and mini-app claims to the surviving rail and rerun the batch
+
+### Goals Delta
+- Goal 1: restore and hold `C:` above the `10 GiB` floor.
+- Goal 2: confirm one intentional supervised runtime chain.
+- Goal 3: canonicalize the current same-user paid stack.
+- Goal 4: block duplicate same-user same-offer and same-ladder paid creation.
+- Goal 5: repair the delivered-case contradiction.
+- Goal 6: restore benchmark observability under prompt-level failures.
+- Goal 7: collapse root and mini-app claims to one truthful Telegram-first story.
+
+### Next 12h Priorities
+1. Confirm whether the active `.venv` parent plus `Python312` child `WellnessBot/main.py` chain is intentional.
+2. Recover `C:` back above `10 GiB` and log the new baseline.
+3. Declare one canonical current commercial path across `20260531T183007Z_1084557944`, `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+4. Record `canonical_path` or explicit `case_relation` for every non-canonical rail.
+5. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+6. Audit and repair `20260531T183007Z_1084557944`.
+7. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+8. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path.
+9. Remove root-page free-step, YooKassa, guaranteed-PDF, and off-map pricing claims.
+10. Reduce mini-app dossier, PDF, and Telegram-support promises until the live ladder is approved.
+11. Restore Notion and GitHub connector startup, then enable Google Drive file discovery/create/upload/share permissions.
+12. Re-run the batch benchmark only after steps `3-10`.
+13. Freeze net-new strategy churn until one control artifact lands in `WellnessBot/` or `ops/`.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime is process-verified again, but the supervision topology is not yet confirmed, the same-user paid stack is still unclassified, and public-surface truth still outruns product truth.
+- Done:
+  - confirmed no newer runtime artifact displaced the June 14 00:43 reconnect
+  - confirmed an active parent-child `WellnessBot/main.py` Python chain is visible again
+  - confirmed disk slipped back to `~9.98 GiB`
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log state
+  - confirmed every current June paid rail still lacks `canonical_path` and `case_relation`
+  - re-verified root and mini-app overclaims directly from the source files
+  - confirmed Notion and GitHub live calls still fail at MCP initialize and Google Drive write tools are still not exposed
+- Next:
+  1. confirm whether the current supervision chain is intentional
+  2. recover disk above the floor again
+  3. canonicalize the same-user paid stack
+  4. hard-block duplicate paid creation
+  5. patch transport policy and partial-artifact QA capture
+  6. repair the delivered-case contradiction
+  7. neutralize root and mini-app overclaims
+
+## 2026-06-14 04:31 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this June 14 refresh:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260602T055745Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T121917Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr.log`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short`
+  - current `C:` free-space measurement
+- New June 14 hard facts:
+  - current local run time is `2026-06-14 04:31:43 +03:00`
+  - runtime is no longer stale to June 7 only because `bot.stderr.log` now adds a fresh June 14 degraded-but-recovered proxy incident:
+    - clean startup and polling start at `2026-06-13 16:32:34 -> 16:32:50 +03:00`
+    - `TelegramNetworkError: Request timeout error` at `2026-06-14 00:41:45 +03:00`
+    - `ProxyTimeoutError` at `2026-06-14 00:42:47 +03:00`
+    - reconnect at `2026-06-14 00:43:30 +03:00`
+    - the logged proxy is still `http://127.0.0.1:10808`
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944` as `offer = habits`, `step = habits_daily_log`, with one stored daily-log entry and still no deeper intake, review, delivery, `canonical_path`, or `case_relation`
+  - the same user still spans the same unresolved paid stack and every current item still lacks `canonical_path` / `case_relation`:
+    - `20260602T055745Z_1084557944` = confirmed `nutri_chat` at `500 RUB`
+    - `20260603T112723Z_1084557944` = pending `nutri_chat` at `500 RUB`
+    - `20260603T113045Z_1084557944` = confirmed `habits` at `6900 RUB`
+    - `20260603T121917Z_1084557944` = confirmed `nutri_chat` at `300 RUB`
+    - `20260606T202509Z_1084557944` = confirmed `habits` at `6900 RUB`, still mounted as active runtime state
+  - `20260531T183007Z_1084557944` still combines `offer = basic`, `amount_rub = 14900`, `intake_status = delivered_to_client`, and `internal_review.judge_verdict = fail_major_issues`
+  - `C:` recovered to `10781048832` bytes (`~10.04 GiB`) at `2026-06-14 04:31:43 +03:00`; this clears the floor again, so disk hygiene is now a monitor instead of the lead blocker
+  - no active `WellnessBot/main.py` process is currently visible in the process table, so the June 14 reconnect is last-known-good runtime proof rather than current process-verified liveness
+  - governance debt is still unchanged at `151` experiments, `0` decisions, and `updated_at = 2026-06-01T20:55:21Z`
+  - draft-backlog loop evidence is unchanged:
+    - `docs/tasks` still contains `29` open `HERMES-20260505-*` draft packets
+    - the top repeated experiment-title clusters still repeat `12`, `11`, `8`, `8`, and `5` times
+  - QA truth still did not improve after June 8:
+    - `tests/test_live_reply_routing.py` still passes
+    - `ops/quality_probe.py --mode smoke` still passes
+    - full batch still dies on prompt `1`
+    - the current clue is still transport-level: no proxy env vars in shell, but the failing stack still routes through `http_proxy`
+    - there is still no tracked control fix in `WellnessBot/ai_drafting.py` or `ops/quality_probe.py`
+  - public truth is still concentrated in root and mini-app:
+    - `landing/index.html` remains comparatively aligned
+    - root `index.html` still claims YooKassa-like Telegram payment flow, `700 / 14900 RUB`, and guaranteed PDF delivery
+    - `mini-app/index.html` still sells a `1 000 RUB` entry rail and promises dossier / PDF / Telegram support output
+  - working-tree motion is still mostly docs churn plus `ops/bot-status.ps1`; no tracked control change is visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`
+  - Notion and GitHub tools are discoverable again, but live calls still fail at MCP initialize with the same `https://chatgpt.com/backend-api/wham/apps` request
+  - Google Drive still has no callable file discovery/create/upload/share tools exposed in this session
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- June 14 tightens the operating interpretation:
+  - disk recovery does not justify surface expansion
+  - fresh proxy timeout and reconnect evidence means runtime has recent continuity, but the missing process means it should not be described as currently live without re-verification
+- The only live direction worth defending is still one canonical Telegram continuity rail with human-reviewed escalation.
+
+### Value Proposition Delta
+- The safest current value proposition is still:
+  - `manual Telegram clarity, continuity support, and human-reviewed escalation when needed`
+- June 14 adds one useful nuance:
+  - the product can still maintain continuity after a transient timeout
+  - but the promise should stay narrow because same-user paid-path control and public-surface truth are still incoherent
+- The value proposition is being weakened more by unresolved control ownership and stale public claims than by lack of new funnel work.
+
+### Monetization Delta
+- Monetization should remain contracted, not expanded.
+- The repeated `6900 RUB` `habits` payments are still the strongest willingness-to-pay signal in the current stack because the mounted active rail is still `habits`, but they still do not count as traction because they remain unresolved same-user duplicates.
+- The low-ticket `300 / 500 RUB` `nutri_chat` rails still show price elasticity, not an approved public ladder.
+- The `14900 RUB` delivered path remains commercially downgraded until the review contradiction is repaired.
+- The working monetization path for the next cycle remains:
+  1. one canonical Telegram continuity rail
+  2. manual payment only
+  3. reviewed escalation only after delivery truth, QA observability, and surface truth are coherent
+
+### Plan Delta
+- The next execution packet is now:
+  1. verify or restore supervised `WellnessBot/main.py` liveness and resolve the stale `.bot.lock`
+  2. log the recovered `C:` baseline and keep disk hygiene in monitor mode unless it drops back below `10 GB`
+  3. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  4. add a same-user same-offer and same-ladder duplicate guard at paid-branch creation or confirmation time
+  5. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  6. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  7. harden the `openai_compatible` transport path with an explicit `http_client` and explicit `trust_env` or proxy policy
+  8. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  9. reduce mini-app `1 000 RUB` / dossier / PDF / support promises until the public ladder is explicit
+  10. restore Notion and GitHub connector startup and enable Google Drive write access
+  11. re-run the batch benchmark only after steps `1-9`
+  12. freeze further strategy-churn loops until at least one control artifact lands
+
+### Strategy Delta
+- June 14 changes the strategic picture in three concrete ways:
+  - disk headroom is no longer the lead blocker because the floor is restored
+  - runtime transport fragility is fresh again because the same proxy path timed out and then recovered on June 14
+  - current bot liveness is now a distinct blocker because the process is absent despite the fresh reconnect log
+- The main execution-credibility gap is now a five-part bundle:
+  - current bot process absence despite fresh reconnect logs
+  - same-user paid-path ownership is still unresolved
+  - the delivered higher-ticket case still contradicts failing review
+  - the full benchmark still cannot finish because transport failures collapse the whole batch
+  - root and mini-app still outrun the approved Telegram-first operating model
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - refreshing strategy and sync docs while the June 2 / June 3 / June 6 paid stack still lacks any `canonical_path` or `case_relation`
+- Repeated low-impact loop:
+  - rereading the same transport failure family without landing an explicit policy fix in `WellnessBot/ai_drafting.py` or partial-artifact capture in `ops/quality_probe.py`
+- Repeated low-impact loop:
+  - counting repeated `habits` payments as monetization learning while they still reflect unresolved same-user branch multiplication
+- Repeated low-impact loop:
+  - treating recovered disk headroom as progress while no control fix has landed in the product path
+- Repeated low-impact loop:
+  - letting root and mini-app keep stale pricing and dossier promises while tracked work stays concentrated in docs
+- Repeated low-impact loop:
+  - inferring current bot liveness from reconnect logs without rechecking the active process table
+
+### Higher-Impact Replacement Action
+- Replace the loop with one bounded control packet:
+  1. restore or explicitly retire the current bot process
+  2. write the canonical owner and relation for the June 2 / June 3 / June 6 paid stack
+  3. block duplicate same-user same-offer and same-ladder paid creation
+  4. patch explicit `openai_compatible` transport policy plus partial-artifact QA capture
+  5. repair the `14900 RUB` delivery contradiction
+  6. collapse root and mini-app claims to the surviving monetization rail
+  7. rerun the batch only after those controls land
+
+### Goals Delta
+- Goal 1: keep `C:` above the `10 GB` floor now that it is recovered.
+- Goal 2: restore verifiable supervised bot liveness.
+- Goal 3: canonicalize the current same-user paid stack.
+- Goal 4: block duplicate same-user same-offer and same-ladder paid-path creation before another payment lands.
+- Goal 5: repair the `14900 RUB` delivered-case contradiction.
+- Goal 6: restore benchmark observability under prompt-level model failures and transport ambiguity.
+- Goal 7: collapse root and mini-app claims to one truthful offer map.
+- Goal 8: restore Notion and GitHub connector startup and expose Google Drive write tools.
+
+### Next 12h Priorities
+1. Verify whether the bot should be running right now and restore supervised execution if it should.
+2. Log the recovered `C:` baseline and keep disk from slipping back below `10 GB`.
+3. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+4. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+5. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+6. Audit and repair `20260531T183007Z_1084557944`.
+7. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+8. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+9. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+10. Reduce mini-app `1 000 RUB` tier plus dossier / PDF / support promises until the live ladder is approved.
+11. Restore Notion and GitHub connector startup, then enable Google Drive file discovery/create/upload/share permissions.
+12. Re-run the batch benchmark only after steps `1`, `3`, `7`, `8`, `9`, and `10`.
+13. Freeze net-new strategy churn until one control artifact lands.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where recent logs prove the bot recovered and disk is back above the floor, but current bot liveness is not process-verified and commercialization control, delivery truth, QA observability, and surface truth are still incoherent.
+- Done:
+  - confirmed fresh June 14 timeout and reconnect evidence on the same proxy-backed runtime path
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log session
+  - confirmed disk recovered above the `10 GB` floor
+  - confirmed no current `WellnessBot/main.py` process is visible
+  - confirmed Notion and GitHub are still startup-blocked in this session and Google Drive still lacks write tools
+  - confirmed the June 8 QA artifact still governs the transport story
+  - confirmed working-tree motion remains dominated by docs rather than control fixes
+- Next:
+  1. verify or restore supervised bot liveness
+  2. canonicalize the same-user paid stack
+  3. hard-block duplicate paid creation
+  4. repair the delivered-case contradiction
+  5. patch explicit transport policy plus partial-artifact QA capture
+  6. neutralize root and mini-app overclaims
+  7. rerun the batch only after those fixes land
+
+## 2026-06-13 04:29 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this June 13 refresh:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260602T055745Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T121917Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short`
+  - current `C:` free-space measurement
+- New June 13 hard facts:
+  - current local run time is `2026-06-13 04:29:05 +03:00`
+  - runtime did not gain a newer handled-update or reconnect artifact after the June 7 proof:
+    - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+    - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944` as `offer = habits`, `step = habits_daily_log`, with one stored daily-log entry and still no deeper intake, review, delivery, `canonical_path`, or `case_relation`
+  - the same user still spans the same unresolved paid stack and every current item still lacks `canonical_path` / `case_relation`:
+    - `20260602T055745Z_1084557944` = confirmed `nutri_chat` at `500 RUB`
+    - `20260603T112723Z_1084557944` = pending `nutri_chat` at `500 RUB`
+    - `20260603T113045Z_1084557944` = confirmed `habits` at `6900 RUB`
+    - `20260603T121917Z_1084557944` = confirmed `nutri_chat` at `300 RUB`
+    - `20260606T202509Z_1084557944` = confirmed `habits` at `6900 RUB`, still mounted as active runtime state
+  - `20260531T183007Z_1084557944` still combines `offer = basic`, `amount_rub = 14900`, `intake_status = delivered_to_client`, and `internal_review.judge_verdict = fail_major_issues`
+  - `C:` recovered only partway to `6665539584` bytes (`~6.21 GiB`) at `2026-06-13 04:29:05 +03:00`; this is better than the June 9 low, but still far below the `10 GB` operating floor
+  - governance debt is still unchanged at `151` experiments, `0` decisions, and `updated_at = 2026-06-01T20:55:21Z`
+  - draft-backlog loop evidence is unchanged:
+    - `docs/tasks` still contains `29` open `HERMES-20260505-*` draft packets
+    - the top repeated experiment-title clusters remain dominant
+  - QA truth still did not improve after June 8:
+    - `tests/test_live_reply_routing.py` still passes
+    - `ops/quality_probe.py --mode smoke` still passes
+    - full batch still dies on prompt `1`
+    - the current clue is still transport-level: no proxy env vars in shell, but the failing stack still routes through `http_proxy`
+    - there is still no tracked control fix in `WellnessBot/ai_drafting.py` or `ops/quality_probe.py`
+  - public truth is still concentrated in root and mini-app, and the files themselves still look stale rather than actively governed:
+    - `landing/index.html` remains comparatively aligned and its file timestamp still predates the June control loop
+    - root `index.html` still claims YooKassa-like Telegram payment flow, `700 / 14900 RUB`, and guaranteed PDF delivery
+    - `mini-app/index.html` still sells a `1 000 RUB` entry rail and promises dossier / PDF / Telegram support output
+  - working-tree motion is still mostly docs churn plus `ops/bot-status.ps1`; no tracked control change is visible in `WellnessBot/`, `tests/`, `landing/`, or `mini-app/`
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- June 13 strengthens a stricter correction: the product is not waiting for a new story, it is waiting for one control patch that makes the current story defensible.
+- The only live direction worth defending is still one canonical Telegram continuity rail with human-reviewed escalation.
+
+### Value Proposition Delta
+- The safest current value proposition is still:
+  - `manual Telegram clarity, habit accountability, and human-reviewed escalation when needed`
+- June 13 does not justify broader proof language because nothing in runtime, QA, or public surfaces improved materially beyond partial disk recovery.
+- The value proposition is now being weakened more by control incoherence than by lack of copy or funnel work.
+
+### Monetization Delta
+- Monetization should remain contracted, not expanded.
+- The repeated `6900 RUB` `habits` payments still do not count as traction because they still represent unresolved same-user branch multiplication.
+- The `14900 RUB` delivered path remains commercially downgraded until the review contradiction is repaired.
+- The working monetization path for the next cycle remains:
+  1. one canonical Telegram continuity rail
+  2. manual payment only
+  3. reviewed escalation only after delivery truth, QA observability, and surface truth are coherent
+
+### Plan Delta
+- The next execution packet is now:
+  1. restore `C:` above `10 GB` before more artifact-heavy replay, PDF, or benchmark work
+  2. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  3. add a same-user same-offer and same-ladder duplicate guard at paid-branch creation or confirmation time
+  4. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  5. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  6. harden the `openai_compatible` transport path with an explicit `http_client` and explicit `trust_env` or proxy policy
+  7. re-run the batch benchmark only after steps `1-6`
+  8. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  9. reduce mini-app `1 000 RUB` / dossier / PDF / support promises until the public ladder is explicit
+  10. freeze further strategy-churn loops until at least one control artifact lands
+
+### Strategy Delta
+- June 13 changes the strategic picture in one important way: this is now clearly a stagnation cycle, not a discovery cycle.
+- Partial disk recovery is the only meaningful operational improvement since June 9, and it still does not clear the operating floor.
+- The main execution-credibility gap is now a four-part bundle:
+  - same-user paid-path ownership is still unresolved
+  - the delivered higher-ticket case still contradicts failing review
+  - the full benchmark still cannot finish because transport failures collapse the whole batch
+  - root and mini-app still outrun the approved Telegram-first operating model
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - refreshing strategy and sync docs while the June 2 / June 3 / June 6 paid stack still lacks any `canonical_path` or `case_relation`
+- Repeated low-impact loop:
+  - rereading the same transport failure without landing an explicit policy fix in `WellnessBot/ai_drafting.py` or partial-artifact capture in `ops/quality_probe.py`
+- Repeated low-impact loop:
+  - counting repeated `habits` payments as monetization learning while they still reflect unresolved same-user branch multiplication
+- Repeated low-impact loop:
+  - letting root and mini-app keep stale pricing and dossier promises while tracked work stays concentrated in docs
+
+### Higher-Impact Replacement Action
+- Replace the loop with one bounded control packet:
+  1. free enough disk space to restore `C:` above `10 GB`
+  2. write the canonical owner and relation for the June 2 / June 3 / June 6 paid stack
+  3. block duplicate same-user same-offer and same-ladder paid creation
+  4. patch explicit `openai_compatible` transport policy plus partial-artifact QA capture
+  5. repair the `14900 RUB` delivery contradiction
+  6. collapse root and mini-app claims to the surviving monetization rail
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: canonicalize the current same-user paid stack.
+- Goal 3: block duplicate same-user same-offer and same-ladder paid-path creation before another payment lands.
+- Goal 4: repair the `14900 RUB` delivered-case contradiction.
+- Goal 5: restore benchmark observability under prompt-level model failures and transport ambiguity.
+- Goal 6: collapse root and mini-app claims to one truthful offer map.
+
+### Next 12h Priorities
+1. Restore `C:` above `10 GB` and log the new baseline.
+2. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+3. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+4. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+5. Audit and repair `20260531T183007Z_1084557944`.
+6. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+7. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+8. Re-run the batch benchmark only after steps `1-7`.
+9. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+10. Reduce mini-app `1 000 RUB` tier plus dossier / PDF / support promises until the live ladder is approved.
+11. Freeze net-new strategy churn until one control artifact lands.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime remains live enough for a controlled pilot, but commercialization control, delivery truth, QA observability, and surface truth are still incoherent because one user still spans multiple recent paid `nutri_chat` and `habits` branches, the older `14900 RUB` case still conflicts with failed review, and root plus mini-app still overclaim payment or dossier truth.
+- Done:
+  - confirmed runtime still has no newer handled-update artifact beyond the June 7 reconnect proof
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log session
+  - confirmed disk recovered only partially and still breaches the floor
+  - confirmed the June 8 QA artifact still governs the transport story
+  - confirmed working-tree motion remains dominated by docs rather than control fixes
+- Next:
+  1. restore disk headroom
+  2. canonicalize the same-user paid stack
+  3. hard-block duplicate paid creation
+  4. repair the delivered-case contradiction
+  5. patch explicit transport policy plus partial-artifact QA capture
+  6. neutralize root and mini-app overclaims
+
+## 2026-06-09 11:53 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this June 9 sync packet:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260602T055745Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T121917Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short`
+  - current `C:` free-space measurement
+- New June 9 hard facts:
+  - current local run time is `2026-06-09 11:53:55 +03:00`
+  - runtime did not gain a newer handled-update artifact after the June 7 reconnect proof:
+    - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+    - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944` as `offer = habits`, `step = habits_daily_log`, with one stored daily-log entry and still no deeper intake, review, delivery, `canonical_path`, or `case_relation`
+  - the same user still spans the same unresolved paid stack and every current item still lacks `canonical_path` / `case_relation`:
+    - `20260602T055745Z_1084557944` = confirmed `nutri_chat` at `500 RUB`
+    - `20260603T112723Z_1084557944` = pending `nutri_chat` at `500 RUB`
+    - `20260603T113045Z_1084557944` = confirmed `habits` at `6900 RUB`
+    - `20260603T121917Z_1084557944` = confirmed `nutri_chat` at `300 RUB`
+    - `20260606T202509Z_1084557944` = confirmed `habits` at `6900 RUB`, now mounted as active runtime state
+  - `20260531T183007Z_1084557944` still combines `offer = basic`, `amount_rub = 14900`, `intake_status = delivered_to_client`, and `internal_review.judge_verdict = fail_major_issues`
+  - `C:` fell to `4406906880` bytes (`~4.10 GiB`) at `2026-06-09 11:53:55 +03:00`, which is materially worse than the June 8 `~7.12 GiB` reading and far below the `10 GB` operating floor
+  - governance debt in the main runtime file is still unchanged at `151` experiments, `0` decisions, and `updated_at = 2026-06-01T20:55:21Z`
+  - duplicate-loop evidence is still concentrated in the same low-yield idea clusters:
+    - top repeated experiment titles still repeat `12`, `11`, `8`, `8`, and `5` times
+    - `docs/tasks` still contains `29` open `HERMES-20260505-*` draft packets
+  - QA truth did not improve after June 8:
+    - `tests/test_live_reply_routing.py` still passes
+    - `ops/quality_probe.py --mode smoke` still passes
+    - full batch still dies on prompt `1`
+    - the current clue is still transport-level: no proxy env vars in shell, but the failing stack still routes through `http_proxy`
+    - there is still no tracked control fix in `WellnessBot/ai_drafting.py` or `ops/quality_probe.py`
+  - public truth is still concentrated in root and mini-app:
+    - `landing/index.html` remains comparatively aligned with the Telegram-first, human-reviewed story
+    - root `index.html` still claims YooKassa-like Telegram payment flow, `700 / 14900 RUB`, and guaranteed PDF delivery
+    - `mini-app/index.html` still sells a `1 000 RUB` entry rail and promises dossier / PDF / Telegram support output
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- The only live direction worth defending right now is one canonical same-thread continuity rail in Telegram with human-reviewed escalation.
+- June 9 does not justify any surface, pricing, or ladder expansion. It justifies a control-and-recovery packet.
+
+### Value Proposition Delta
+- The safest current value proposition is still:
+  - `manual Telegram clarity, habit accountability, and human-reviewed escalation when needed`
+- The value proposition is weaker today operationally because disk collapse now threatens the environment that must deliver that promise.
+- Therefore the next proof is not more copy polish; it is one stable, canonical, replayable continuity path.
+
+### Monetization Delta
+- Monetization should contract further before it expands.
+- The strongest willingness-to-pay signal is still `habits`, but the repeated `6900 RUB` payments still do not count as traction because they remain duplicate same-user paid branches with no canonical ownership.
+- The `14900 RUB` path remains commercially downgraded until the delivered-case contradiction is repaired.
+- The working monetization path for the next cycle remains:
+  1. one canonical Telegram continuity rail
+  2. manual payment only
+  3. reviewed escalation only after delivery truth and environment stability are coherent
+
+### Plan Delta
+- The next execution packet is now:
+  1. restore `C:` above `10 GB` before more artifact-heavy replay, PDF, or benchmark work
+  2. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  3. add a same-user same-offer and same-ladder duplicate guard at paid-branch creation or confirmation time
+  4. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  5. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  6. harden the `openai_compatible` transport path with an explicit `http_client` and explicit `trust_env` or proxy policy
+  7. re-run the batch benchmark only after steps `1-6`
+  8. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  9. reduce mini-app `1 000 RUB` / dossier / PDF / support promises until the public ladder is explicit
+  10. only then normalize one approved public offer map
+
+### Strategy Delta
+- June 9 changes the strategic picture in one important way: disk pressure is a first-class blocker again, not just a background hygiene note.
+- The main execution-credibility gap is now a three-part bundle:
+  - same-user paid-path ownership is still unresolved
+  - the full benchmark still cannot finish because transport failures collapse the whole batch
+  - the workstation is back near the floor where replay and artifact generation become operationally risky
+- The June 9 correction is:
+  - do not treat the next packet as another strategy or copy refresh
+  - do not count repeat `habits` payments as monetization learning
+  - do not defer disk recovery behind control fixes that themselves need disk headroom to verify safely
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - refreshing strategy and sync docs while the June 2 / June 3 / June 6 paid stack still lacks any `canonical_path` or `case_relation`
+- Repeated low-impact loop:
+  - rereading the same batch failure without landing an explicit transport-policy fix in `WellnessBot/ai_drafting.py` or partial-artifact capture in `ops/quality_probe.py`
+- Repeated low-impact loop:
+  - counting repeated `habits` or `nutri_chat` payments as learning while they still reflect unresolved same-user branch multiplication
+- Repeated low-impact loop:
+  - expanding or preserving experiment inventory while the same repeated experiment titles still dominate governance memory and `29` draft packets remain open
+
+### Higher-Impact Replacement Action
+- Replace the loop with one bounded stabilization-and-control packet:
+  1. free enough disk space to restore `C:` above `10 GB`
+  2. write the canonical owner and relation for the June 2 / June 3 / June 6 paid stack
+  3. block duplicate same-user same-offer and same-ladder paid creation
+  4. patch explicit `openai_compatible` transport policy plus partial-artifact QA capture
+  5. only then rerun the batch benchmark and collapse root / mini-app claims to the surviving monetization rail
+
+### Goals Delta
+- Goal 1: restore `C:` above the `10 GB` floor.
+- Goal 2: canonicalize the current same-user paid stack.
+- Goal 3: block duplicate same-user same-offer and same-ladder paid-path creation before another payment lands.
+- Goal 4: repair the `14900 RUB` delivered-case contradiction.
+- Goal 5: restore benchmark observability under prompt-level model failures and transport ambiguity.
+- Goal 6: collapse root and mini-app claims to one truthful offer map.
+
+### Next 12h Priorities
+1. Restore `C:` above `10 GB` and log the new baseline.
+2. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+3. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+4. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+5. Audit and repair `20260531T183007Z_1084557944`.
+6. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+7. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+8. Re-run the batch benchmark only after steps `1-7`.
+9. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+10. Reduce mini-app `1 000 RUB` tier plus dossier / PDF / support promises until the live ladder is approved.
+11. Freeze net-new experiments and strategy churn until one control artifact lands.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime remains live enough for a controlled pilot, but commercialization control, QA observability, and environment headroom are still incoherent because one user still spans multiple recent paid `nutri_chat` and `habits` branches, the older `14900 RUB` case still conflicts with failed review, root plus mini-app still overclaim payment or dossier truth, and disk is back near the floor.
+- Done:
+  - confirmed runtime still has no newer handled-update artifact beyond the June 7 reconnect proof
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log session
+  - confirmed disk worsened materially and still breaches the floor
+  - confirmed the June 8 QA artifact still governs the transport story
+  - confirmed landing remains safer than root and mini-app
+- Next:
+  1. restore disk headroom
+  2. canonicalize the same-user paid stack
+  3. hard-block duplicate paid creation
+  4. repair the delivered-case contradiction
+  5. patch explicit transport policy plus partial-artifact QA capture
+  6. neutralize root and mini-app overclaims
+
+## 2026-06-08 11:57 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this final June 8 sync packet:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260602T055745Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T121917Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short`
+  - current `C:` free-space measurement
+- Final June 8 hard facts:
+  - current local run time is `2026-06-08 11:57:37 +03:00`
+  - runtime did not gain a newer handled-update artifact after the late June 7 refresh:
+    - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+    - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944` as `offer = habits`, `step = habits_daily_log`, with only one stored daily-log entry and still no deeper intake, review, or delivery artifact
+  - the same user now clearly spans a broader unresolved current paid stack:
+    - `20260602T055745Z_1084557944` = confirmed `nutri_chat`
+    - `20260603T112723Z_1084557944` = pending `nutri_chat`
+    - `20260603T113045Z_1084557944` = confirmed `habits`
+    - `20260603T121917Z_1084557944` = confirmed `nutri_chat`
+    - `20260606T202509Z_1084557944` = confirmed `habits`, now mounted as active runtime state
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `internal_review.judge_verdict = fail_major_issues`
+  - `C:` is `7641583616` bytes (`~7.12 GiB`) free at `2026-06-08 11:57:57 +03:00`, still below the `10 GB` operating floor
+  - governance debt in the main runtime file is unchanged at `151` experiments and `0` decisions
+  - the new June 8 QA artifact tightens the real blocker:
+    - `tests/test_live_reply_routing.py` still passes
+    - `ops/quality_probe.py --mode smoke` still passes
+    - full batch still dies on prompt `1` with `openai.APIConnectionError` caused by `httpx.ConnectError` / `[WinError 10061]`
+    - no `HTTP_PROXY` or `HTTPS_PROXY` env vars were present in the shell
+    - the failing stack still routes through `httpcore._sync.http_proxy`
+    - `WellnessBot/ai_drafting.py` still builds the `OpenAI` client without an explicit `http_client`
+  - the working tree still shows docs churn plus the local monitoring patch in `ops/bot-status.ps1`; there is still no tracked control fix visible in `WellnessBot/`, `landing/`, or `mini-app`
+  - public truth is now concentrated in two risky surfaces:
+    - `landing/index.html` remains comparatively aligned with the Telegram-first, human-reviewed story
+    - root `index.html` still claims YooKassa-like Telegram payment flow, off-map pricing, and guaranteed PDF delivery
+    - `mini-app/index.html` still sells a `1 000 в‚Ѕ` `Wellness Clarity` tier and promises dossier, PDF, and Telegram support output, so it is not placeholder-only
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- The only live direction worth defending right now is one canonical same-thread continuity rail in Telegram with human-reviewed escalation.
+- `landing/index.html` can remain the brand shell because it now stays closer to that operating model.
+- Root `index.html` and `mini-app/index.html` should not define product direction until their price, payment, and dossier promises are collapsed to the same truth as persisted runtime and submission artifacts.
+
+### Plan Delta
+- The next execution packet is now:
+  1. declare one canonical current commercial path across the June 2 / June 3 / June 6 same-user stack
+  2. add a same-user same-offer and same-ladder duplicate guard at paid-branch creation or confirmation time
+  3. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  4. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  5. harden the `openai_compatible` transport path with an explicit `http_client` and explicit `trust_env` or proxy policy
+  6. re-run the batch benchmark only after steps `4-5`
+  7. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  8. reduce mini-app `1 000 в‚Ѕ` / dossier / PDF / support promises until the public ladder is explicit
+  9. restore `C:` above `10 GB`
+  10. only then normalize one approved public offer map
+
+### Strategy Delta
+- Runtime liveness is no longer the main unknown. The system already proved degraded-but-recovered continuity on June 7.
+- The main execution-credibility gap is now commercial ownership plus surface truth:
+  - one user still spans multiple unresolved paid rails
+  - a delivered case still conflicts with failing review
+  - root and mini-app copy still promise payment, pricing, or dossier outcomes that the approved pilot does not support
+  - the full benchmark still cannot finish because transport failures collapse the whole batch
+- The June 8 correction is:
+  - do not reduce the commercialization problem to two `habits` branches when the current same-user paid stack also includes live `nutri_chat` state
+  - do not describe the mini-app as placeholder-only while it still sells price and dossier/support outcomes
+  - do use `docs/WELLNESS_DIALOGUE_QA_20260608.md` as the current QA interpretation layer even though the last completed benchmark artifact is still May 31
+
+### Goals Delta
+- Goal 1: canonicalize the current same-user paid stack.
+- Goal 2: block duplicate same-user same-offer and same-ladder paid-path creation before another payment lands.
+- Goal 3: repair the `14900 RUB` delivered-case contradiction.
+- Goal 4: restore benchmark observability under prompt-level model failures and transport ambiguity.
+- Goal 5: collapse root and mini-app claims to one truthful offer map.
+- Goal 6: restore `C:` above the `10 GB` floor.
+
+### Next 12h Priorities
+1. Declare one canonical current commercial path across `20260602T055745Z_1084557944`, `20260603T112723Z_1084557944`, `20260603T113045Z_1084557944`, `20260603T121917Z_1084557944`, and `20260606T202509Z_1084557944`.
+2. Record `canonical_path` or explicit `case_relation` for the non-canonical rails.
+3. Add a hard guard so unresolved same-user same-offer or same-ladder state blocks any further paid branch creation.
+4. Audit and repair `20260531T183007Z_1084557944`.
+5. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+6. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+7. Re-run the batch benchmark only after steps `5-6`.
+8. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+9. Reduce mini-app `1 000 в‚Ѕ` tier plus dossier / PDF / support promises until the live ladder is approved.
+10. Restore `C:` above `10 GB` and log the new baseline.
+11. Freeze net-new experiments and strategy churn until one control artifact lands.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where landing is comparatively aligned with the Telegram-first human-reviewed story, but commercialization control and QA observability remain incoherent because one user still spans multiple recent paid `nutri_chat` and `habits` branches, the older `14900 RUB` case still conflicts with failed review, and root plus mini-app still overclaim payment, price, or dossier truth.
+- Done:
+  - confirmed runtime still has no newer handled-update artifact beyond the June 7 reconnect proof
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log session
+  - confirmed disk still breaches the floor
+  - confirmed the June 8 QA artifact adds a concrete transport clue, not a new benchmark win
+  - confirmed landing is the comparatively safer public surface, while root and mini-app still outrun approved truth
+- Next:
+  1. canonicalize the current same-user paid stack
+  2. hard-block duplicate paid creation
+  3. repair the delivered-case contradiction
+  4. patch explicit transport policy plus partial-artifact QA capture
+  5. neutralize root and mini-app overclaims
+  6. restore disk headroom
+
+## 2026-06-08 11:53 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this June 8 refresh:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short`
+  - current `C:` free-space measurement
+- New June 8 hard facts:
+  - current local run time is `2026-06-08 11:53:51 +03:00`
+  - runtime did not gain a newer handled-update artifact after the late June 7 refresh:
+    - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+    - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944` as `offer = habits`, `step = habits_daily_log`, with only one stored daily-log entry and still no deeper intake, review, or delivery artifact
+  - the same user still spans the same unresolved monetization stack:
+    - `20260603T112723Z_1084557944` = pending `nutri_chat` at `500 RUB`
+    - `20260603T113045Z_1084557944` = paid `habits` at `6900 RUB`
+    - `20260606T202509Z_1084557944` = another paid `habits` at `6900 RUB`, now mounted as active runtime state
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `internal_review.judge_verdict = fail_major_issues`
+  - `C:` slipped slightly versus the late June 7 reading to `7646662656` bytes (`~7.12 GiB`), still below the `10 GB` operating floor
+  - governance debt is unchanged at `151` experiments, `0` decisions, `29` open `HERMES-20260505-*` task files, and `updated_at = 2026-06-01T20:55:21Z`
+  - the new June 8 QA artifact tightens the real blocker:
+    - `tests/test_live_reply_routing.py` still passes
+    - `ops/quality_probe.py --mode smoke` still passes
+    - full batch still dies on prompt `1` with `openai.APIConnectionError` caused by `httpx.ConnectError` / `[WinError 10061]`
+    - no `HTTP_PROXY` or `HTTPS_PROXY` env vars were present in the shell
+    - the failing stack still routes through `httpcore._sync.http_proxy`
+    - `WellnessBot/ai_drafting.py` still builds the `OpenAI` client without an explicit `http_client`
+  - the working tree still shows docs churn plus the local monitoring patch in `ops/bot-status.ps1`; there is still no live control fix visible in `WellnessBot/` or `ops/quality_probe.py`
+  - public truth is no longer split evenly across all three surfaces:
+    - `landing/index.html` is now comparatively aligned with the Telegram-first, human-reviewed story
+    - root `index.html` still claims active YooKassa-like Telegram payment flow, `700 / 14900 RUB` pricing, and guaranteed PDF delivery
+    - `mini-app/index.html` no longer carries the old `1000 RUB` claim, but it still promises a personal dossier, PDF output, and Telegram support as if the reviewed ladder were already explicit
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- The only live direction worth defending right now is one canonical same-thread continuity rail in Telegram with human-reviewed escalation.
+- `landing/index.html` can remain the brand shell because it now stays closer to that operating model.
+- Root `index.html` and `mini-app/index.html` should not define product direction until their price, payment, and dossier promises are collapsed to the same truth as persisted runtime and submission artifacts.
+
+### Value Proposition Delta
+- The safest current value proposition is:
+  - `manual Telegram clarity, habit accountability, and human-reviewed escalation when needed`
+  - not `instant Telegram invoice payment`
+  - not `guaranteed PDF dossier delivery`
+  - not `publicly proven transformation claims`
+- This remains the most defensible promise because runtime is alive enough for a controlled pilot, landing is now restrained enough to support that message, and the real failures are still commercialization ownership, delivery integrity, and QA transport visibility.
+
+### Monetization Delta
+- Monetization should keep contracting before it expands.
+- The strongest willingness-to-pay signal is still `habits`, but the repeated `6900 RUB` payments are not valid traction because they currently express duplicate same-user branch creation, not clean continuity or upgrade behavior.
+- The best current monetization hypothesis is still:
+  1. one canonical Telegram continuity rail
+  2. manual payment only
+  3. reviewed escalation only after delivery truth is coherent
+- The `14900 RUB` path should remain commercially downgraded until the delivered-case contradiction is repaired.
+
+### Plan Delta
+- The next execution packet is now:
+  1. declare the canonical owner and relation between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  2. add a same-user same-offer duplicate guard at paid-branch creation or confirmation time
+  3. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  4. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  5. harden the `openai_compatible` transport path with an explicit `http_client` and explicit `trust_env` or proxy policy
+  6. re-run the batch benchmark only after steps `4-5`
+  7. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  8. reduce mini-app dossier / PDF / support promises until the public ladder is explicit
+  9. restore `C:` above `10 GB`
+  10. only then normalize one approved public offer map
+
+### Strategy Delta
+- The lead blocker is still execution credibility, not runtime liveness.
+- June 8 makes two strategic failures sharper than the late June 7 read:
+  - commercialization control is still unresolved in persisted case state
+  - QA transport ambiguity still prevents any fresh full model-path artifact from landing
+- A useful correction: `landing/index.html` no longer deserves equal blame with root and mini-app. The live surface-truth drift is now concentrated in root `index.html` and `mini-app/index.html`.
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - refreshing strategy and sync docs while the June 3 / June 6 duplicate `habits` state is still unresolved in artifacts
+- Repeated low-impact loop:
+  - rereading the batch failure without fixing `WellnessBot/ai_drafting.py` transport policy or `ops/quality_probe.py` partial-artifact behavior
+- Repeated low-impact loop:
+  - carrying forward older `landing is the main overclaim` language after landing has already become the safer surface, which obscures the real cleanup target in root and mini-app
+
+### Higher-Impact Replacement Action
+- Replace the loop with one code-first control packet:
+  1. write the canonical owner and relation for the June 3 / June 6 `habits` stack
+  2. block duplicate same-user same-offer paid creation
+  3. patch explicit `openai_compatible` transport policy plus partial-artifact QA capture
+  4. only then clean root and mini-app promises to match the surviving monetization rail
+
+### Goals Delta
+- Goal 1: canonicalize the active `habits` continuity rail.
+- Goal 2: block duplicate same-user same-offer paid-path creation before another payment lands.
+- Goal 3: repair the `14900 RUB` delivered-case contradiction.
+- Goal 4: restore benchmark observability under prompt-level model failures and transport ambiguity.
+- Goal 5: collapse root and mini-app claims to one truthful offer map.
+- Goal 6: restore `C:` above the `10 GB` floor.
+
+### Next 12h Priorities
+1. Decide whether `20260603T113045Z_1084557944` or `20260606T202509Z_1084557944` is canonical.
+2. Record `canonical_path` or explicit `case_relation` for the June 3 / June 6 paid stack.
+3. Add a hard guard so unresolved same-user `habits` state blocks any further paid branch creation.
+4. Audit and repair `20260531T183007Z_1084557944`.
+5. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+6. Patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport stops inheriting an implicit proxy path by accident.
+7. Re-run the batch benchmark only after steps `5-6`.
+8. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+9. Reduce mini-app dossier / PDF / support promises until the live ladder is approved.
+10. Restore `C:` above `10 GB` and log the new baseline.
+11. Freeze net-new experiments and strategy churn until one control artifact lands.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where landing is now relatively aligned with the Telegram-first human-reviewed story, but commercialization control and QA observability remain incoherent because one user still spans duplicate paid `habits` branches, the older `14900 RUB` case still conflicts with failed review, and root plus mini-app still overclaim payment / price / dossier truth.
+- Done:
+  - confirmed runtime still has no newer handled-update artifact beyond June 6 late night
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log session
+  - confirmed disk slipped slightly again and still breaches the floor
+  - confirmed the June 8 QA artifact adds a concrete transport clue, not a new quality improvement
+  - confirmed landing is now the safer public surface, while root and mini-app still outrun approved truth
+- Next:
+  1. canonicalize the duplicate `habits` stack
+  2. hard-block duplicate same-user same-offer paid creation
+  3. repair the delivered-case contradiction
+  4. patch explicit transport policy plus partial-artifact QA capture
+  5. clean root and mini-app overclaims
+  6. restore disk headroom
+
+## 2026-06-07 23:52 MSK
+### Artifact Delta
+- Re-read the newest strategy-driving artifacts for this late June 7 refresh:
+  - `docs/AGENT_CONTEXT_HUB.md`
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md`
+  - `ops/reports/quality_report_20260531T083403Z.md`
+  - `WellnessBot/data/runtime_state.json`
+  - `WellnessBot/data/product_governance.json`
+  - `WellnessBot/data/submissions/20260531T183007Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T112723Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260603T113045Z_1084557944.json`
+  - `WellnessBot/data/submissions/20260606T202509Z_1084557944.json`
+  - `bot.stderr`
+  - `landing/index.html`
+  - `index.html`
+  - `mini-app/index.html`
+  - current `git status --short`
+  - current `C:` free-space measurement
+- New late June 7 hard facts:
+  - current local run time is `2026-06-07 23:52:18 +03:00`
+  - runtime is no longer stale to June 6 only:
+    - `bot.stderr` now adds `2026-06-07 13:59:45 +03:00` `ServerDisconnectedError`
+    - polling recovered at `2026-06-07 13:59:57 +03:00`
+    - there is still no later handled-update artifact beyond `2026-06-06 23:25:31 +03:00`
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944` as `offer = habits`, `step = habits_daily_log`, with only one stored daily-log entry and still no deeper intake, review, or delivery artifact
+  - the same user still spans:
+    - `20260603T112723Z_1084557944` = pending `nutri_chat`
+    - `20260603T113045Z_1084557944` = paid `habits`
+    - `20260606T202509Z_1084557944` = another paid `habits`, now mounted as active runtime state
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `internal_review.judge_verdict = fail_major_issues`
+  - `C:` improved versus the morning run to `7666851840` bytes (`~7.14 GiB`), but is still below the `10 GB` operating floor
+  - governance debt is unchanged at `151` experiments, `0` decisions, and `updated_at = 2026-06-01T20:55:21Z`
+  - the working tree still shows docs churn plus the local monitoring patch in `ops/bot-status.ps1`; no live control fix is visible in `WellnessBot/` or `ops/quality_probe.py`
+  - public truth is still split across three conflicting surfaces:
+    - `landing/index.html` still carries hardcoded proof / case-study framing
+    - `index.html` still claims active YooKassa-like Telegram payment flow, `700 / 14900 RUB` pricing, and guaranteed PDF delivery
+    - `mini-app/index.html` still sells a `1 000 RUB` single entry rail while promising a personal dossier and PDF output
+
+### Product Direction Delta
+- Product direction remains Telegram-first, text-first, and manual-concierge-only.
+- The only live direction worth defending right now is one canonical same-thread continuity rail in Telegram.
+- `habits` is the strongest current willingness-to-pay signal because it is the only repeated paid continuity rail, but it is still not approved product truth until the June 3 / June 6 duplicate stack is canonicalized.
+- Do not let `landing/index.html`, `index.html`, or `mini-app/index.html` define product direction while they still disagree with persisted runtime and submission truth.
+
+### Value Proposition Delta
+- The safest current value proposition is:
+  - `manual Telegram clarity, habit accountability, and human-reviewed escalation when needed`
+  - not `frictionless Telegram invoice payment`
+  - not `guaranteed PDF dossier delivery`
+  - not `publicly proven biomarker transformation`
+- This remains the most defensible promise because runtime now proves survival and reconnect behavior, but commercialization ownership, delivery integrity, and public proof surfaces are still incoherent.
+
+### Monetization Delta
+- Monetization should contract before it expands.
+- The best current monetization hypothesis is:
+  1. one canonical Telegram continuity rail
+  2. manual payment only
+  3. reviewed escalation only after delivery truth is coherent
+- The repeated `6900 RUB` `habits` payments are not valid growth proof yet because they currently express duplicate same-user branch creation, not clean retention or upgrade behavior.
+- The `14900 RUB` path should be treated as commercially downgraded until the delivered-case contradiction is repaired.
+
+### Plan Delta
+- The next execution packet is now:
+  1. declare the canonical owner and relation between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`
+  2. add a same-user same-offer duplicate guard at paid-branch creation or confirmation time
+  3. audit and repair the `20260531T183007Z_1084557944` delivery contradiction
+  4. patch `ops/quality_probe.py` so prompt-level model failures still emit partial artifacts
+  5. remove or neutralize landing-page proof claims
+  6. remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims
+  7. freeze mini-app price and dossier-delivery promises until the public ladder is explicit
+  8. restore `C:` above `10 GB`
+  9. only then normalize one approved public offer map
+
+### Strategy Delta
+- The lead blocker is still execution credibility, not runtime liveness.
+- The new June 7 reconnect proves the bot can recover, but it does not change the governing strategic failure:
+  - duplicate same-user paid-path creation still exists
+  - higher-ticket delivery truth is still contradicted by failed review
+  - QA still loses the whole batch on prompt-level model failure
+  - public surfaces still outrun the approved Telegram-first operating model
+
+### Inefficiency Loop Delta
+- Repeated low-impact loop:
+  - refreshing strategy and sync docs while the June 3 / June 6 duplicate `habits` state is still unresolved in artifacts
+- Repeated low-impact loop:
+  - treating reconnect proof or the local `ops/bot-status.ps1` patch as forward motion while no control patch landed in `WellnessBot/` or `ops/quality_probe.py`
+- Repeated low-impact loop:
+  - carrying forward the softer `mini-app is only a placeholder` story while the file still sells `1 000 RUB`, dossier framing, and PDF output
+
+### Higher-Impact Replacement Action
+- Replace the loop with one commercialization-truth packet:
+  1. write the canonical owner and relation for the June 3 / June 6 `habits` stack
+  2. block duplicate same-user same-offer paid creation
+  3. repair the `14900 RUB` delivery contradiction
+  4. patch partial-artifact QA capture
+  5. neutralize landing, root, and mini-app overclaims
+  6. only then decide which single public continuity rail stays live
+
+### Goals Delta
+- Goal 1: canonicalize the active `habits` continuity rail.
+- Goal 2: block duplicate same-user same-offer paid-path creation before another payment lands.
+- Goal 3: repair the `14900 RUB` delivered-case contradiction.
+- Goal 4: restore benchmark observability under prompt-level model failures.
+- Goal 5: collapse public proof and pricing to one truthful offer map.
+- Goal 6: restore `C:` above the `10 GB` floor.
+
+### Next 12h Priorities
+1. Decide whether `20260603T113045Z_1084557944` or `20260606T202509Z_1084557944` is canonical.
+2. Record `canonical_path` or explicit `case_relation` for the June 3 / June 6 paid stack.
+3. Add a hard guard so unresolved same-user `habits` state blocks any further paid branch creation.
+4. Audit and repair `20260531T183007Z_1084557944`.
+5. Patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts.
+6. Re-run the batch benchmark only after step `5`.
+7. Remove landing-page proof claims.
+8. Remove root-page YooKassa, guaranteed-PDF, and off-map pricing claims.
+9. Freeze mini-app price and dossier-delivery copy until the live ladder is approved.
+10. Restore `C:` above `10 GB` and log the new baseline.
+11. Freeze net-new experiments and strategy churn until one control artifact lands.
+
+### Context For New Model
+- Stage: controlled Telegram concierge pilot where runtime is alive enough to reconnect and continue, but commercialization control and public truth remain incoherent because one user still spans duplicate paid `habits` branches, the older `14900 RUB` case still conflicts with failed review, and public surfaces still overclaim price/payment/delivery truth.
+- Done:
+  - confirmed a newer June 7 runtime reconnect artifact exists
+  - confirmed the mounted runtime rail is still the June 6 `habits` daily-log session
+  - confirmed disk improved modestly but still breaches the floor
+  - confirmed no new core control fix landed beyond docs churn plus the local monitoring patch
+  - confirmed landing, root, and mini-app surfaces still present conflicting offer and delivery stories
+- Next:
+  1. canonicalize the duplicate `habits` stack
+  2. hard-block duplicate same-user same-offer paid creation
+  3. repair the delivered-case contradiction
+  4. patch partial-artifact QA capture
+  5. neutralize landing/root/mini-app overclaims
+  6. restore disk headroom
 
 ## 2026-06-07 11:51 MSK
 ### Artifact Delta
@@ -219,7 +1276,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
     - `submission_id = 20260606T202509Z_1084557944`
     - `offer = habits`
     - `step = habits_daily_log`
-    - first stored daily-log message is `Что делаем?`
+    - first stored daily-log message is `Р§С‚Рѕ РґРµР»Р°РµРј?`
   - the new June 6 `habits` sale is another `6900 RUB` same-user branch with:
     - `payment_status = manual_payment_confirmed`
     - no `canonical_path`
@@ -2128,18 +3185,18 @@ Rolling log for strategy and plan corrections between major strategy documents.
   - runtime is therefore not re-proven on June 1; the latest truth is still stale-negative, not current-live
 - The repo is now coding a broader product than the live strategy docs describe:
   - `WellnessBot/main.py` start and product keyboards now default to a five-offer package catalog:
-    - `Нутри-чат = 500 RUB`
-    - `Привычки и тарелка = 6900 RUB`
-    - `Стандартный разбор = 14000 RUB`
-    - `Премиум с анализами = 14900 RUB`
-    - `Разбор Осипова = 5000 RUB`
+    - `РќСѓС‚СЂРё-С‡Р°С‚ = 500 RUB`
+    - `РџСЂРёРІС‹С‡РєРё Рё С‚Р°СЂРµР»РєР° = 6900 RUB`
+    - `РЎС‚Р°РЅРґР°СЂС‚РЅС‹Р№ СЂР°Р·Р±РѕСЂ = 14000 RUB`
+    - `РџСЂРµРјРёСѓРј СЃ Р°РЅР°Р»РёР·Р°РјРё = 14900 RUB`
+    - `Р Р°Р·Р±РѕСЂ РћСЃРёРїРѕРІР° = 5000 RUB`
   - `WellnessBot/prompts.py` still frames a three-tier structure at `500 / 6900 / 14000 RUB`
   - `WellnessBot/payment_flow.py` is no longer on the old `700 / 14900 / 14900` map; it now partially aligns to the five-offer catalog
   - `mini-app/index.html` still keeps a safer single-entry placeholder at `1000 RUB`
   - the governing paid case artifact still records `week = 3900 RUB`
   - the two fresh `20260530` paid cases still record `6900 RUB`
 - Intake scope is now explicit in code:
-  - `WellnessBot/main.py` disables voice messages with `Голосовые сообщения отключены. Пожалуйста, напишите текстом.`
+  - `WellnessBot/main.py` disables voice messages with `Р“РѕР»РѕСЃРѕРІС‹Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РѕС‚РєР»СЋС‡РµРЅС‹. РџРѕР¶Р°Р»СѓР№СЃС‚Р°, РЅР°РїРёС€РёС‚Рµ С‚РµРєСЃС‚РѕРј.`
   - text-first is no longer just the safer recommendation; it is the current coded product behavior
 - Safety-sensitive prompt drift is now clearer:
   - `WellnessBot/prompts.py` instructs the `full` tier to give specific protocol steps, concrete assignments, and brand-linked support logic
@@ -2715,7 +3772,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
   2. restore `C:` above the `10 GB` floor
   3. collapse the four same-user paid paths to one canonical commercial path
   4. decide whether the package-first `500 / 6900 / 14000` ladder is approved or rolled back
-  5. preserve today’s runtime proof and explicitly document the proxy policy
+  5. preserve todayвЂ™s runtime proof and explicitly document the proxy policy
   6. add proof or rollback for `case_service.py` schema drift
   7. tighten or roll back OCR filter relaxation
   8. tighten or roll back supplement recommendability widening
@@ -2748,7 +3805,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
 2. Restore `C:` above the `10 GB` floor.
 3. Collapse the four same-user paid paths to one canonical commercial path.
 4. Decide whether the package-first `500 / 6900 / 14000` ladder is approved or must be rolled back.
-5. Preserve today’s runtime proof and explicitly document whether proxy `127.0.0.1:10808` is required or incidental.
+5. Preserve todayвЂ™s runtime proof and explicitly document whether proxy `127.0.0.1:10808` is required or incidental.
 6. Prove or roll back `case_service.py`, OCR, and supplement drift.
 7. Make `ops/quality_probe.py` emit partial artifacts on model failures, then rerun the benchmark when the endpoint is reachable.
 
@@ -3715,9 +4772,9 @@ Rolling log for strategy and plan corrections between major strategy documents.
     - one unresolved blocked `week` plus one fresh paid `premium` branch remain live
   - mini-app drift is partly reduced in the working tree:
     - `2990` pricing removed
-    - `Premium Wellness-Досье` removed
+    - `Premium Wellness-Р”РѕСЃСЊРµ` removed
     - hardcoded `Vitamin D3` / `LCHF` result content removed
-    - remaining result placeholder still promises `Персональный протокол питания и нутрицевтиков`
+    - remaining result placeholder still promises `РџРµСЂСЃРѕРЅР°Р»СЊРЅС‹Р№ РїСЂРѕС‚РѕРєРѕР» РїРёС‚Р°РЅРёСЏ Рё РЅСѓС‚СЂРёС†РµРІС‚РёРєРѕРІ`
   - a new safety concern now appears in current uncommitted product diffs:
     - `WellnessBot/lab_ocr.py` loosens OCR-line acceptance
     - `WellnessBot/supplement_product_catalog.py` broadens recommendable supplement output
@@ -4020,9 +5077,9 @@ Rolling log for strategy and plan corrections between major strategy documents.
       - `requires_lab_resubmission = true`
       - client follow-up keeps arriving anyway, including `2026-05-07T20:46:50Z`
   - the mini-app still drifts from policy:
-    - `mini-app/index.html` still hardcodes `Витамин D3: 5000 МЕ + K2`
+    - `mini-app/index.html` still hardcodes `Р’РёС‚Р°РјРёРЅ D3: 5000 РњР• + K2`
     - still hardcodes `LCHF`
-    - still uses a hardcoded `Premium Wellness-Досье` result screen
+    - still uses a hardcoded `Premium Wellness-Р”РѕСЃСЊРµ` result screen
   - current quality truth is now `2026-05-06`, not `2026-05-01`:
     - router/model split held at `11/20` deterministic and `9/20` model-path
     - clarifying-question coverage slipped to `6/9`
@@ -4183,7 +5240,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
     - `requires_lab_resubmission = true`
     - no explicit manual override note is recorded
   - the mini-app still visibly drifts from policy:
-    - off-policy `от 2 990 ₽`
+    - off-policy `РѕС‚ 2 990 в‚Ѕ`
     - hardcoded supplement-style result content remains present
   - governance/task pressure remains execution-negative:
     - `127` experiments remain accumulated in `WellnessBot/data/product_governance.json`
@@ -4427,13 +5484,13 @@ Rolling log for strategy and plan corrections between major strategy documents.
     - PDF upload
     - two photo uploads
     - OCR correction prompt
-    - user message `Ферритин 8мкг/л, референсы 10-20`
-    - user message `Создай кейс`
+    - user message `Р¤РµСЂСЂРёС‚РёРЅ 8РјРєРі/Р», СЂРµС„РµСЂРµРЅСЃС‹ 10-20`
+    - user message `РЎРѕР·РґР°Р№ РєРµР№СЃ`
   - the same case still simultaneously shows:
     - `intake_status = delivered_to_client`
     - `internal_review.judge_verdict = needs_revision`
     - no explicit manual override note
-  - `mini-app/index.html` still shows off-policy `от 2 990 ₽` pricing and still hardcodes ferritin / vitamin D / cortisol conclusions plus `Витамин D3 5000 МЕ` and `LCHF` protocol output
+  - `mini-app/index.html` still shows off-policy `РѕС‚ 2 990 в‚Ѕ` pricing and still hardcodes ferritin / vitamin D / cortisol conclusions plus `Р’РёС‚Р°РјРёРЅ D3 5000 РњР•` and `LCHF` protocol output
   - governance pressure worsened relative to the morning sync:
     - `127` experiments
     - `4` duplicate title groups
@@ -4488,7 +5545,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
   - the new ferritin correction plus uploaded follow-up files strengthen the evidence base for one `premium` upgrade brief
   - but that brief must stay blocked behind repair of the delivery-review contradiction on the same case
 - No pricing, packaging, or payment expansion is justified by the latest evidence:
-  - mini-app `от 2 990 ₽` remains off-policy
+  - mini-app `РѕС‚ 2 990 в‚Ѕ` remains off-policy
   - HERMES draft packets are not launch readiness
   - clean bot startup is not growth proof
 
@@ -4539,7 +5596,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
 - Run one execution-compression sweep, in this order:
   1. keep `20260501T162705Z_1084557944` as the only active case candidate and record whether correction is required before more follow-up output is treated as usable proof
   2. enforce that the new `2026-05-05` follow-up uploads stay attached to the same canonical path and do not create a second commercial narrative
-  3. remove the mini-app `от 2 990 ₽` price drift and hardcoded result demo
+  3. remove the mini-app `РѕС‚ 2 990 в‚Ѕ` price drift and hardcoded result demo
   4. verify whether the healthy polling path is proxy-required or proxy-optional, using the clean `2026-05-05` restart as the new baseline rather than as proof by itself
   5. freeze net-new strategy/task packet generation until at least one P0 delivery, surface, or runtime fix lands
   6. turn the fresh ferritin/lab follow-up evidence into exactly one premium-upgrade brief after the review contradiction is resolved
@@ -4554,7 +5611,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
 - Keep all new follow-up uploads on the current canonical case unless an explicit replacement decision is recorded.
 - Keep human review mandatory before delivery.
 - Keep no-diagnosis, no-treatment, urgent-care, and lab-quality rules explicit.
-- Do not let the mini-app show off-policy `от 2 990 ₽` pricing, hardcoded supplement protocols, hardcoded diet protocols, or hardcoded biomarker conclusions as if they were live truth.
+- Do not let the mini-app show off-policy `РѕС‚ 2 990 в‚Ѕ` pricing, hardcoded supplement protocols, hardcoded diet protocols, or hardcoded biomarker conclusions as if they were live truth.
 - Do not treat `delivered_to_client` as trustworthy if the internal review verdict still demands revision and no override note exists.
 - Do not treat the clean `2026-05-05 17:15 MSK` restart as proof that polling resilience is solved.
 - Do not let governance, task-packet generation, or future-stack planning outrun delivery truth, surface truth, and runtime transport proof.
@@ -5154,8 +6211,8 @@ Rolling log for strategy and plan corrections between major strategy documents.
   - the same user still also carries two unresolved paid `premium` branches:
     - `20260425T212847Z_1084557944` with `must_rewrite_with_high_caution`
     - `20260425T214914Z_1084557944` with `requires_lab_resubmission = true`
-  - follow-up already started on the delivered `week` case (`"Я сдала анализы"`)
-  - the mini-app still advertises `от 2 990 ₽` and still renders a hardcoded supplement / LCHF result demo that the reviewed Telegram backend cannot safely support
+  - follow-up already started on the delivered `week` case (`"РЇ СЃРґР°Р»Р° Р°РЅР°Р»РёР·С‹"`)
+  - the mini-app still advertises `РѕС‚ 2 990 в‚Ѕ` and still renders a hardcoded supplement / LCHF result demo that the reviewed Telegram backend cannot safely support
   - governance still contains `120` experiments, `4` duplicate title groups, and the largest duplicate group is still `x7`
 
 ### Product Direction Delta
@@ -5192,7 +6249,7 @@ Rolling log for strategy and plan corrections between major strategy documents.
   - `vip` -> `14900 RUB`
   - payment mode stays manual concierge
 - New pricing-control delta:
-  - `mini-app/index.html` currently shows `от 2 990 ₽`
+  - `mini-app/index.html` currently shows `РѕС‚ 2 990 в‚Ѕ`
   - this is out of alignment with the current pilot price truth and must not be treated as a live offer
 - Near-term monetization path:
   - keep `week` as the validated paid entry
@@ -5559,3 +6616,4 @@ Rolling log for strategy and plan corrections between major strategy documents.
 3. Review the delivered `week` case and determine whether a correction or follow-up intervention is required.
 4. Replace the mini-app demo-result mock with a safe placeholder or reviewed backend-fed state.
 5. Extend `sanitize_live_reply()` and benchmark assertions for invented names, over-familiar tone, and early diagnosis-like language.
+

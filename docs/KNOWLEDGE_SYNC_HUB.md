@@ -13,7 +13,7 @@ This hub defines what must be refreshed every run, how connector availability is
 ## Every-Run Standard
 Every run must refresh:
 - key changes since the previous run
-- latest project state across `docs`, `WellnessBot`, `mini-app`, `landing`, and `ops/reports`
+- latest project state across `docs`, `WellnessBot`, `mini-app`, `landing`, root `index.html`, and `ops/reports`
 - latest benchmark reference from `ops/reports` when one exists
 - current runtime evidence, latest paid-delivery evidence, and storage headroom
 - current blockers, risks, owners, and next fix actions
@@ -61,6 +61,13 @@ Before concluding a sync:
 - separate `repo head` from `working tree truth` in `PROJECT_PULSE_LOG.md` and `AGENT_CONTEXT_HUB.md`
 - if a dirty change conflicts with the standing pilot, safety, or pricing rules, call it out immediately as a regression with owner and next fix action
 
+## Public Surface Truth Rule
+Before carrying forward any public product or monetization narrative:
+- inspect `landing/index.html`, root `index.html`, and `mini-app/index.html`
+- if proof, payment, or pricing claims diverge across those three surfaces, log the split explicitly in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
+- do not let the most aggressive surface define current product truth
+- treat root-page YooKassa claims, guaranteed-PDF claims, and off-map price claims as active commercialization regressions until the surfaces are aligned
+
 ## Draft Current-Run Rule
 If local sync docs already contain a same-day refresh but the matching mirror or external replay artifacts are missing:
 - treat the local doc state as draft, not as completed sync truth
@@ -80,6 +87,15 @@ Before carrying forward any runtime narrative:
 - if fresh runtime evidence overturns the earlier same-day story, write the correction explicitly into `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and the outward-sync artifacts
 - do not keep a stale outage narrative active once a newer successful polling or model-call artifact exists
 
+## Process Liveness Verification Rule
+Before describing the bot as currently live:
+- check for an active `WellnessBot/main.py` process, not just a stale `.bot.lock` or a historical log tail
+- filter the match to real Python executables and ignore the diagnostic shell command if its own command line embeds the search pattern
+- if the process check returns a parent-child Python chain for `WellnessBot/main.py`, log the chain explicitly and note whether it is known-good supervision or an unresolved duplicate-runner risk
+- if the newest runtime artifact shows a successful reconnect but no current bot process exists, describe the state as `last-known-recovered but not currently process-verified`
+- log the exact process-check timestamp in `PROJECT_PULSE_LOG.md` and `AGENT_CONTEXT_HUB.md`
+- treat stale lockfiles or stale startup banners as diagnostic clues, not proof of current runtime liveness
+
 ## Transient Polling Recovery Rule
 Before treating a timeout as a fresh outage:
 - if the newest runtime artifact shows a polling timeout followed by `Connection established` without a restart banner, classify it as transient network degradation rather than bot-down state
@@ -92,6 +108,13 @@ Before carrying forward any benchmark or QA narrative:
 - if a newer completed quality report exists, treat that report as the latest benchmark reference even if the QA synthesis has not yet been refreshed
 - if the older QA synthesis still claims there is no fresh completed artifact, log it as stale and correct the benchmark reference explicitly in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
 - if benchmark-critical files changed between the stale QA synthesis and the fresh report, call out that the old QA interpretation is obsolete rather than silently carrying it forward
+
+## QA Synthesis Freshness Rule
+Before carrying forward the current QA interpretation path:
+- compare the newest `docs/WELLNESS_DIALOGUE_QA_*.md` file by actual timestamp
+- if a newer QA synthesis exists but still anchors to the same completed quality report, keep the benchmark reference unchanged and move the interpretation pointer to the newer QA file
+- if the hubs or outward-sync artifacts still point to an older QA synthesis path, correct that path explicitly instead of silently reusing the stale QA file
+- if the newer QA synthesis adds a new operational clue without changing the benchmark verdict, carry that clue forward into `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts
 
 ## Storage Floor Escalation Rule
 If the current run measures `C:` below the `10 GB` floor:

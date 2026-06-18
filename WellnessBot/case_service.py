@@ -22,6 +22,7 @@ def build_submission_payload(session: dict[str, Any]) -> dict[str, Any]:
         },
         "medical_context": {
             "symptoms": session.get("symptoms"),
+            "physical_exam": session.get("physical_exam"),
             "wellbeing_energy": session.get("wellbeing_energy"),
             "complaint_pattern": session.get("complaint_pattern"),
             "goal": session.get("goals"),
@@ -126,6 +127,7 @@ def build_session_from_submission(submission: dict[str, Any], user: Any) -> dict
         "contact": profile.get("contact"),
         "documents": submission.get("documents", []),
         "symptoms": medical.get("symptoms"),
+        "physical_exam": medical.get("physical_exam"),
         "wellbeing_energy": medical.get("wellbeing_energy"),
         "complaint_pattern": medical.get("complaint_pattern"),
         "goals": medical.get("goal") or medical.get("goals"),

@@ -1,8 +1,8 @@
 # Engineering Mandate
 
-Date: 2026-06-07
+Date: 2026-06-14
 Issued by: Chief Orchestrator
-Status: June 7 morning refresh; runtime remains proven from late June 6, but engineering still has not canonicalized the duplicate paid `habits` rail, repaired the delivered-case contradiction, or collapsed public proof/pricing to one truthful surface
+Status: June 14 16:31 refresh; the morning disk recovery is already stale, there is still no verified `WellnessBot/main.py` process, and engineering still has not canonicalized the unresolved June paid stack, repaired the delivered-case contradiction, or fixed the `openai_compatible` transport and batch-artifact blind spot
 
 ## Mission
 
@@ -11,6 +11,302 @@ Run one coherent Telegram paid cycle through:
 `approved offer choice -> manual concierge payment -> intake -> AI draft -> human review -> safe delivery -> same-thread follow-up`
 
 No new tariff, catalog branch, or upgrade path counts as live truth until one approved offer map and one replayable proof artifact exist. Public launch remains blocked.
+
+## 2026-06-14 16:31 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat this run as a stagnation correction, not a recovery correction:
+  - no newer runtime artifact displaced the morning June 14 reconnect proof
+  - no newer commercialization artifact displaced the unchanged June stack
+  - no control patch landed in `WellnessBot/` or `ops/quality_probe.py`
+- Treat runtime as `last-known-recovered but not process-verified live`:
+  - freshest startup is still `2026-06-13 16:32:34 -> 16:32:50 +03:00`
+  - freshest reconnect is still `2026-06-14 00:41:45 -> 00:43:30 +03:00`
+  - no active `python` or `py` process running `WellnessBot/main.py` is currently visible
+  - do not describe the bot as currently live until supervised process truth is restored
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - the stored session is still shallow and lacks intake depth, review artifact, delivery truth, `canonical_path`, and `case_relation`
+- Treat same-user commercialization control as unchanged and still unacceptable:
+  - `20260602T055745Z_1084557944` = confirmed `nutri_chat`
+  - `20260603T112723Z_1084557944` = pending `nutri_chat`
+  - `20260603T113045Z_1084557944` = confirmed `habits`
+  - `20260603T121917Z_1084557944` = confirmed `nutri_chat`
+  - `20260606T202509Z_1084557944` = confirmed `habits`
+  - every rail above still lacks `canonical_path` and `case_relation`
+  - `20260531T183007Z_1084557944` still combines `payment_status = paid`, `intake_status = delivered_to_client`, and `fail_major_issues`, and it also still lacks `canonical_path` and `case_relation`
+- Treat public offer / proof drift as directly re-verified:
+  - root `index.html` still presents a free first step, `700 RUB`, Telegram invoice / `YooKassa`, and guaranteed PDF delivery as if those were approved live truth
+  - `mini-app/index.html` still presents `Персональное досье`, `PDF-досье`, and Telegram-support promises as if the reviewed ladder were already explicit
+  - do not spend another packet rediscovering this drift; edit the files after the control patch is scoped
+- Treat QA observability as still a two-part engineering failure:
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md` remains the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - there is still no explicit `http_client` in `WellnessBot/ai_drafting.py`
+- Treat disk as below the floor again:
+  - actual `C:` free space is `10721628160` bytes (`~9.98 GiB`) at `2026-06-14 16:31:32 +03:00`
+  - the morning `10.04 GiB` story is already stale
+  - keep disk work bounded and practical, but do not let it displace commercialization-control and transport-control patches
+- The next engineering packet is now:
+  1. restore or explicitly retire supervised bot liveness
+  2. recover `C:` above `10 GiB`
+  3. declare the canonical owner of the May 31 / June 2 / June 3 / June 6 paid stack
+  4. add a hard guard so unresolved same-user same-offer or same-ladder state blocks any new paid branch creation
+  5. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  6. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  7. patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit `http_client` plus explicit proxy or `trust_env` policy
+  8. collapse root and mini-app claims to the surviving Telegram-first truth
+  9. rerun one reviewed batch or paid replay only after steps `3-8` land
+
+## 2026-06-14 04:30 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as fresher but still degraded on the same proxy-backed path:
+  - `bot.stderr.log` now shows startup and polling at `2026-06-13 16:32:34 -> 16:32:50 +03:00`
+  - the same run later shows `TelegramNetworkError` at `2026-06-14 00:41:45 +03:00`
+  - it then shows `ProxyTimeoutError` at `00:42:47 +03:00`
+  - polling recovered at `00:43:30 +03:00`
+  - do not spend the next engineering packet narrating runtime; land the explicit transport policy instead
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - the stored session is still shallow and lacks intake depth, review artifact, delivery truth, `canonical_path`, and `case_relation`
+- Treat same-user commercialization control as unchanged and still unacceptable across the full current stack:
+  - `20260602T055745Z_1084557944` is still a confirmed `nutri_chat` at `500 RUB`
+  - `20260603T112723Z_1084557944` still remains pending `nutri_chat` at `500 RUB`
+  - `20260603T113045Z_1084557944` is still an unresolved `6900 RUB` paid `habits` branch
+  - `20260603T121917Z_1084557944` is still a confirmed `300 RUB` `nutri_chat` branch
+  - `20260606T202509Z_1084557944` is still another unresolved `6900 RUB` paid `habits` branch
+  - every current rail above still lacks `canonical_path` and `case_relation`
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat public offer / proof drift with unchanged surface targeting:
+  - `landing/index.html` is still the safer public surface and should stop absorbing cleanup meant for other files
+  - root `index.html` still presents YooKassa-like Telegram payment flow, guaranteed PDF delivery, and `700 / 14900 RUB` pricing as if those were approved live truth
+  - `mini-app/index.html` still presents a `1 000 RUB` entry rail and dossier / PDF / Telegram-support promises as if the reviewed ladder were already explicit
+  - no public ladder is approved until code, docs, prompts, persisted artifacts, and surfaces agree
+- Treat QA observability as still a two-part engineering failure:
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md` remains the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - the active clue is still transport-level:
+    - no `HTTP_PROXY` or `HTTPS_PROXY` env vars are present in the shell
+    - the failing stack still routes through `httpcore._sync.http_proxy`
+    - `WellnessBot/ai_drafting.py` still builds the `OpenAI` client without an explicit `http_client`
+- Treat working-tree motion as mostly documentation and observability churn, not product progress:
+  - tracked changes are still mostly docs plus `ops/bot-status.ps1`
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- Treat disk as recovered but still thin:
+  - actual `C:` free space is `10783055872` bytes (`~10.04 GiB`) at `2026-06-14 04:30:47 +03:00`
+  - this clears the floor again
+  - keep it monitored, but do not let it retake the lead engineering slot unless it drops again
+- The next engineering packet is now:
+  1. log the recovered disk baseline and keep it above `10 GB`
+  2. declare the canonical owner of the June 2 / June 3 / June 6 paid stack
+  3. add a hard guard so unresolved same-user same-offer or same-ladder paid state blocks any new paid branch creation
+  4. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  5. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  6. patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit `http_client` plus explicit proxy or `trust_env` policy
+  7. remove root-page overclaims and reduce mini-app dossier / PDF claims until the ladder is explicit
+  8. normalize one approved public offer map only after steps `2-7` land
+  9. replay one reviewed paid case only after those controls land
+
+## 2026-06-13 04:29 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as alive-but-not-newer than the June 9 read:
+  - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+  - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - do not spend the next engineering packet narrating runtime unless a newer harder failure appears
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - the stored session is still shallow and lacks intake depth, review artifact, delivery truth, `canonical_path`, and `case_relation`
+- Treat same-user commercialization control as unchanged and still unacceptable across the full current stack:
+  - `20260602T055745Z_1084557944` is still a confirmed `nutri_chat` at `500 RUB`
+  - `20260603T112723Z_1084557944` still remains pending `nutri_chat` at `500 RUB`
+  - `20260603T113045Z_1084557944` is still an unresolved `6900 RUB` paid `habits` branch
+  - `20260603T121917Z_1084557944` is still a confirmed `300 RUB` `nutri_chat` branch
+  - `20260606T202509Z_1084557944` is still another unresolved `6900 RUB` paid `habits` branch
+  - every current rail above still lacks `canonical_path` and `case_relation`
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat public offer / proof drift with unchanged surface targeting:
+  - `landing/index.html` is still the safer public surface and should stop absorbing cleanup meant for other files
+  - root `index.html` still presents YooKassa-like Telegram payment flow, guaranteed PDF delivery, and `700 / 14900 RUB` pricing as if those were approved live truth
+  - `mini-app/index.html` still presents a `1 000 RUB` entry rail and dossier / PDF / Telegram-support promises as if the reviewed ladder were already explicit
+  - no public ladder is approved until code, docs, prompts, persisted artifacts, and surfaces agree
+- Treat QA observability as still a two-part engineering failure:
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md` remains the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - the active clue is still transport-level:
+    - no `HTTP_PROXY` or `HTTPS_PROXY` env vars are present in the shell
+    - the failing stack still routes through `httpcore._sync.http_proxy`
+    - `WellnessBot/ai_drafting.py` still builds the `OpenAI` client without an explicit `http_client`
+- Treat working-tree motion as mostly documentation and observability churn, not product progress:
+  - tracked changes are still mostly docs plus `ops/bot-status.ps1`
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- Treat disk as improved but still below the safe floor:
+  - actual `C:` free space is `6665539584` bytes (`~6.21 GiB`) at `2026-06-13 04:29:05 +03:00`
+  - this is better than the June 9 low, but still far below the `10 GB` operating floor
+- The next engineering packet is now:
+  1. restore disk above `10 GB`
+  2. declare the canonical owner of the June 2 / June 3 / June 6 paid stack
+  3. add a hard guard so unresolved same-user same-offer or same-ladder paid state blocks any new paid branch creation
+  4. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  5. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  6. patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit `http_client` plus explicit proxy or `trust_env` policy
+  7. remove root-page overclaims and reduce mini-app dossier / PDF claims until the ladder is explicit
+  8. normalize one approved public offer map only after steps `1-7` land
+  9. replay one reviewed paid case only after those controls land
+
+## 2026-06-09 11:55 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as alive-but-not-newer than the June 8 read:
+  - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+  - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - do not spend the next engineering packet narrating runtime unless a newer harder failure appears
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - the stored session is still shallow and lacks intake depth, review artifact, delivery truth, `canonical_path`, and `case_relation`
+- Treat same-user commercialization control as unchanged and still unacceptable across the full current stack:
+  - `20260602T055745Z_1084557944` is still a confirmed `nutri_chat` at `500 RUB`
+  - `20260603T112723Z_1084557944` still remains pending `nutri_chat` at `500 RUB`
+  - `20260603T113045Z_1084557944` is still an unresolved `6900 RUB` paid `habits` branch
+  - `20260603T121917Z_1084557944` is still a confirmed `300 RUB` `nutri_chat` branch
+  - `20260606T202509Z_1084557944` is still another unresolved `6900 RUB` paid `habits` branch
+  - every current rail above still lacks `canonical_path` and `case_relation`
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat public offer / proof drift with unchanged surface targeting:
+  - `landing/index.html` is still the safer public surface and should stop absorbing cleanup meant for other files
+  - root `index.html` still presents YooKassa-like Telegram payment flow, guaranteed PDF delivery, and `700 / 14900 RUB` pricing as if those were approved live truth
+  - `mini-app/index.html` still presents a `1 000 RUB` entry rail and dossier / PDF / Telegram-support promises as if the reviewed ladder were already explicit
+  - no public ladder is approved until code, docs, prompts, persisted artifacts, and surfaces agree
+- Treat QA observability as still a two-part engineering failure:
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md` remains the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - the active clue is still transport-level:
+    - no `HTTP_PROXY` or `HTTPS_PROXY` env vars are present in the shell
+    - the failing stack still routes through `httpcore._sync.http_proxy`
+    - `WellnessBot/ai_drafting.py` still builds the `OpenAI` client without an explicit `http_client`
+- Treat working-tree motion as mostly documentation and observability churn, not product progress:
+  - tracked changes are still mostly docs
+  - `ops/bot-status.ps1` remains a useful local monitoring patch
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- Treat disk as a fresh P0 blocker again:
+  - actual `C:` free space is `4405624832` bytes (`~4.10 GiB`) at `2026-06-09 11:54:54 +03:00`
+  - this is materially worse than the June 8 `~7.12 GiB` reading
+  - replay, benchmark, PDF, and artifact-heavy work should be considered unsafe until the floor is restored
+- The next engineering packet is now:
+  1. restore disk above `10 GB`
+  2. declare the canonical owner of the June 2 / June 3 / June 6 paid stack
+  3. add a hard guard so unresolved same-user same-offer or same-ladder paid state blocks any new paid branch creation
+  4. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  5. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  6. patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit `http_client` plus explicit proxy or `trust_env` policy
+  7. remove root-page overclaims and reduce mini-app dossier / PDF claims until the ladder is explicit
+  8. normalize one approved public offer map only after steps `1-7` land
+  9. replay one reviewed paid case only after those controls land
+
+## 2026-06-08 11:53 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as alive-but-not-newer than the late June 7 read:
+  - freshest handled updates still end at `2026-06-06 23:25:31 +03:00`
+  - freshest recovery proof is still `2026-06-07 13:59:45 -> 13:59:57 +03:00`
+  - do not spend the next engineering packet narrating runtime unless a newer harder failure appears
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - the stored session is still shallow and lacks intake depth, review artifact, delivery truth, `canonical_path`, and `case_relation`
+- Treat same-user commercialization control as unchanged and still unacceptable:
+  - `20260606T202509Z_1084557944` is still a `6900 RUB` paid `habits` branch
+  - `20260603T113045Z_1084557944` is still an older unresolved `6900 RUB` paid `habits` branch
+  - `20260603T112723Z_1084557944` still remains pending at `500 RUB`
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat public offer / proof drift with updated surface targeting:
+  - `landing/index.html` is now the safer public surface and should stop absorbing cleanup meant for other files
+  - root `index.html` still presents YooKassa-like Telegram payment flow, guaranteed PDF delivery, and `700 / 14900 RUB` pricing as if those were approved live truth
+  - `mini-app/index.html` still presents dossier / PDF / Telegram-support promises as if the reviewed ladder were already explicit
+  - persisted runtime/submission truth still contains unresolved live `6900 RUB` `habits`
+  - no public ladder is approved until code, docs, prompts, persisted artifacts, and surfaces agree
+- Treat QA observability as a two-part engineering failure:
+  - `docs/WELLNESS_DIALOGUE_QA_20260608.md` is now the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+  - the new June 8 clue is transport-level:
+    - no `HTTP_PROXY` or `HTTPS_PROXY` env vars are present in the shell
+    - the failing stack still routes through `httpcore._sync.http_proxy`
+    - `WellnessBot/ai_drafting.py` still builds the `OpenAI` client without an explicit `http_client`
+- Treat working-tree motion as mostly documentation and observability churn, not product progress:
+  - tracked changes are still mostly docs
+  - `ops/bot-status.ps1` remains a useful local monitoring patch
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- Treat disk as below the safe floor:
+  - actual `C:` free space is `7646662656` bytes (`~7.12 GiB`) at `2026-06-08 11:53:51 +03:00`
+- The next engineering packet is now:
+  1. declare the canonical owner of the June 3 / June 6 `habits` stack
+  2. add a hard guard so unresolved same-user same-offer paid state blocks any new paid branch creation
+  3. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. patch `WellnessBot/ai_drafting.py` so `openai_compatible` transport uses explicit `http_client` plus explicit proxy or `trust_env` policy
+  6. remove root-page overclaims and reduce mini-app dossier / PDF claims until the ladder is explicit
+  7. restore disk above `10 GB`
+  8. normalize one approved public offer map only after steps `1-7` land
+  9. replay one reviewed paid case only after those controls land
+
+## 2026-06-07 23:52 Correction Set
+
+Use this correction set wherever it conflicts with older June or May assumptions.
+
+- Treat runtime as alive-and-recovering, not stale-to-June-6 only:
+  - `bot.stderr` now adds `2026-06-07 13:59:45 +03:00` `ServerDisconnectedError`
+  - polling recovered at `2026-06-07 13:59:57 +03:00`
+  - there is still no later handled-update artifact beyond `2026-06-06 23:25:31 +03:00`
+  - do not spend the next engineering packet narrating runtime unless a newer harder failure appears
+- Treat the mounted `habits` rail as active but still commercially unclassified:
+  - `runtime_state.json` still mounts `20260606T202509Z_1084557944`
+  - mounted state is still `offer = habits`, `step = habits_daily_log`
+  - the stored session is still shallow and lacks intake depth, review artifact, delivery truth, `canonical_path`, and `case_relation`
+- Treat same-user commercialization control as unchanged and still unacceptable:
+  - `20260606T202509Z_1084557944` is still a `6900 RUB` paid `habits` branch
+  - `20260603T113045Z_1084557944` is still an older unresolved `6900 RUB` paid `habits` branch
+  - `20260603T112723Z_1084557944` still remains pending at `500 RUB`
+  - `20260531T183007Z_1084557944` still combines `delivered_to_client` with `fail_major_issues`
+- Treat public offer / proof drift as an engineering truth problem:
+  - `landing/index.html` still presents proof-style case framing
+  - `index.html` still presents YooKassa-like Telegram payment flow, guaranteed PDF delivery, and `700 / 14900 RUB` pricing as if those were approved live truth
+  - `mini-app/index.html` still presents a `1 000 RUB` entry rail plus dossier / PDF framing
+  - persisted runtime/submission truth still contains unresolved live `6900 RUB` `habits`
+  - no public ladder is approved until code, docs, prompts, persisted artifacts, and surfaces agree
+- Treat working-tree motion as mostly documentation and observability churn, not product progress:
+  - tracked changes are still mostly docs
+  - `ops/bot-status.ps1` remains a useful local monitoring patch
+  - no control fix landed yet in `WellnessBot/` or `ops/quality_probe.py`
+- Treat QA observability as still broken:
+  - `docs/WELLNESS_DIALOGUE_QA_20260605.md` is still the current synthesis
+  - `ops/quality_probe.py` still aborts the full batch on prompt `1`
+  - the latest trustworthy completed benchmark is still `ops/reports/quality_report_20260531T083403Z.md`
+- Treat disk as improved but still below the safe floor:
+  - actual `C:` free space is `7666851840` bytes (`~7.14 GiB`) at `2026-06-07 23:52:18 +03:00`
+- The next engineering packet is now:
+  1. declare the canonical owner of the June 3 / June 6 `habits` stack
+  2. add a hard guard so unresolved same-user same-offer paid state blocks any new paid branch creation
+  3. repair the `20260531T183007Z_1084557944` delivery-gate breach
+  4. patch `ops/quality_probe.py` so prompt-level failures still emit partial artifacts
+  5. remove landing/root overclaims and freeze mini-app price / dossier-delivery copy until the ladder is explicit
+  6. restore disk above `10 GB`
+  7. normalize one approved public offer map only after steps `1-6` land
+  8. replay one reviewed paid case only after those controls land
 
 ## 2026-06-07 11:51 Correction Set
 
