@@ -5,8 +5,9 @@
 - Stage: `controlled-concierge-pilot-2026-06-18-r1`.
 - Canonical workspace: `C:\Users\HP\Desktop\Новая папка`.
 - Canonical branch: `master`.
-- Local and remote head: `2968cdba9a77164b8bc0f4426de7affbcb5d5f8e`.
-- Working tree: 20 tracked dirty files; current behavior is not fully represented on GitHub.
+- Pre-sync local and remote head: `2968cdba9a77164b8bc0f4426de7affbcb5d5f8e`.
+- Sanitized plan/status/context artifacts were then published to `master` and verified by GitHub connector readback.
+- Working tree: 20 tracked dirty files; current bot behavior is still not fully represented on GitHub.
 - Runtime: scheduled task `Ready`, bot processes `0`; last start failed on 2026-07-01 due Telegram network/proxy connectivity.
 - Storage: 5,018,693,632 bytes free on `C:`; below the 10 GiB floor.
 - Benchmark: `ops/reports/quality_report_20260531T083403Z.md`.
