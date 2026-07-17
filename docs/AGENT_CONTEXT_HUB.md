@@ -1,18 +1,156 @@
-# Agent Context Hub
+﻿# Agent Context Hub
 
-Updated: 2026-06-18 21:50 MSK
+Updated: 2026-07-18 02:18 MSK
 
-## ⚠️ ВСЕМ АГЕНТАМ (Codex / Antigravity / Hermes): ЧИТАТЬ ПЕРВЫМ ДЕЛОМ
+## Снимок синхронизации - 2026-07-18 02:18 MSK
 
-Эта страница — единственный общий источник правды для всех агентов проекта.
-Если документы противоречат друг другу, приоритет у более свежего. Медицинско-юридические ограничения имеют приоритет всегда.
+- Stage: nutriok-controlled-build-2026-07-17-r1; режим controlled build / concierge pilot, публичный запуск заблокирован.
+- Оплата: PAYMENT_MODE=manual; перед выдачей полного результата human review обязателен.
+- Проверка: py -3.12 -m unittest discover -s tests -v — 63 теста пройдены; compileall пройден.
+- Репозиторий: ветка master, HEAD=origin/master=bd58da9; рабочее дерево не синхронизировано (TrackedDirtyFiles=24).
+- Remote GitHub доступен через git ls-remote; GitHub connector видит olyalyazinchenk-wq/Zinchenko_wellness_al. Публикация смешанной дельты не выполнялась.
+- В рабочем дереве есть крупная смешанная кодовая и документационная дельта, а также untracked-артефакты, включая потенциально секретный do_api_token.txt, VPN/SSH-скрипты, .venv_wsl, логи и lock-файл. Ничего из этого не индексируется.
+- Notion connector доступен; найден последний статусный лист «Статус проекта NutriOK — 2026-07-17 06:12 MSK». Безопасный executive status записан отдельной страницей.
+- Runtime: scheduled task WellnessBot имеет состояние Ready, процессов 0; Telegram polling не запускался, свежий proof-of-life отсутствует.
+- Диск: свободно 4,158,668,800 байт (~3.87 GiB), ниже порога 10 GiB.
+
+### Готово к ограниченному пилоту
+
+- NutriOK-каталог, ручная оплата, безопасный автоматический Express-output и review-gate покрыты текущими 63 тестами.
+- Допустимы только обезличенные контролируемые кейсы с ручной проверкой; готовность live-пилота не подтверждена до свежего runtime proof и ревью рабочей дельты.
+
+### Нельзя запускать публично
+
+- Полные уровни, красные флаги, supplement-детали и медицинские формулировки без именной approval-записи.
+- Публичный трафик, реклама, автоматическая YooKassa/Telegram-оплата и второй polling-процесс.
+- Любая публикация текущего смешанного дерева целиком; потенциальные секреты и runtime-данные должны оставаться вне Git.
+
+### Следующие шаги
+
+1. Разделить и проревьюировать кодовую дельту; опубликовать только намеренные безопасные файлы.
+2. Довести structured intake и persisted named approval до end-to-end.
+3. Восстановить один polling owner через Windows Scheduled Task и собрать свежий proof-of-life.
+4. Собрать 20 обезличенных NutriOK fixtures, пройти два benchmark-прогона и освободить диск выше 10 GiB.
+5. Описать RF cloud privacy/storage и audit controls до расширения пилота.
+
+
+
+## Снимок синхронизации - 2026-07-17 06:12 MSK
+
+- Stage: nutriok-controlled-build-2026-07-17-r1; controlled build/concierge pilot, public launch заблокирован.
+- Оплата: PAYMENT_MODE=manual; human review перед выдачей полного результата обязателен.
+- Проверка: py -3.12 -m unittest discover -s tests -v — 63 теста пройдены.
+- Репозиторий: master, HEAD и origin/master совпадают на bd58da9; рабочее дерево не синхронизировано (TrackedDirtyFiles=24).
+- Публикация не выполнялась: дерево смешивает неревьюенные изменения WellnessBot, тестов, docs и public surfaces, а также потенциально секретные untracked-файлы и runtime-артефакты.
+- GitHub: чтение remote заблокировано сетевой ошибкой через 127.0.0.1:443; локальный fallback-отчёт создан.
+- Notion: connector доступен; статус будет записан отдельной страницей без секретов и клиентских данных.
+- Runtime: Telegram polling не запускался; live task/process в текущей проверке недоступен, поэтому готовность бота к пилоту не подтверждается.
+- Ops-риск: свободное место на C: около 4.31 GiB, ниже порога 10 GiB.
+
+### Готово к ограниченному пилоту
+
+- NutriOK-каталог, ручная оплата, безопасный автоматический Express-output и review-gate покрыты текущими тестами.
+- К пилоту допустимы только обезличенные контролируемые кейсы с ручной проверкой; полноценный live-запуск не подтверждён.
+
+### Нельзя запускать публично
+
+- Полные уровни, красные флаги, supplement-детали и неподтверждённые медицинские формулировки без именной approval-записи.
+- Публичный трафик, реклама, автоматическая YooKassa/Telegram-оплата и второй polling-процесс.
+
+### Следующие шаги
+
+1. Разделить и проревьюировать текущую кодовую дельту перед публикацией.
+2. Довести structured intake и persisted named approval до end-to-end.
+3. Восстановить один polling owner через Windows Scheduled Task и собрать свежий proof-of-life.
+4. Собрать 20 обезличенных NutriOK fixtures, пройти два benchmark-прогона и освободить диск выше 10 GiB.
+
+## Current Governing Snapshot - 2026-07-17
+
+- Stage: nutriok-controlled-build-2026-07-17-r1; public launch remains blocked.
+- Canonical product: НутриОК by Olga Kovaleva; promise: Разбор, после которого понятно, что делать.
+- Canonical ladder: ОК-Старт; ОК-Экспресс 990 RUB pilot; ОК-Разбор 5,900 RUB pilot; ОК-Результат 8 14,900 RUB pilot; ОК-Ритм 1,990 RUB/month.
+- HMS/Osipov is an optional input in a full assessment, not a standalone product, diagnosis, or causal source.
+- Working-tree implementation adds the canonical catalog, legacy migration, NutriOK prompt, deterministic delivery gate, aligned Telegram menu/public surfaces, and tests.
+- Full tiers, red flags, unsafe claims, and supplement offers cannot use automatic delivery. Safe ОК-Экспресс is the only automated paid output.
+- Scheduled task WellnessBot is Ready, process count is 0, and no second poller was started.
+- Payment remains manual. RF cloud privacy/storage and production audit controls are not implemented.
+- Live Telegram intake does not yet persist primary goal, baseline, three-day diary, goal metric, and adherence end to end.
+- Latest completed benchmark remains ops/reports/quality_report_20260531T083403Z.md and predates NutriOK.
+- Unit verification: 63 tests passed; Python compilation passed.
+- GitHub master is at bd58da9 after publishing and reading back sanitized status/context artifacts. Local implementation changes remain unpublished, so full synchronization is false.
+- Notion run note and Context Hub were written and verified by exact page readback.
+- Google Drive profile is Ольга Ковалева <olyalya.zinchenk@gmail.com>; sanitized snapshot upload/share succeeded and file content was verified by fetch.
+- Obsidian mirror run note is local at docs/obsidian_mirror/RUN_NOTE_20260717_0027_MSK.md.
+- Disk is 4628213760 bytes free (~4.31 GiB), below the 10 GiB floor.
+- Demand remains unvalidated: previous 47 submissions represented only two unique Telegram users.
+
+## Plan Delta - 2026-07-17
+
+1. Persist the structured assessment contract: one goal, baseline 0-10, three-day diary, goal metric, adherence, symptoms, lifestyle, medications, allergies, and relevant labs.
+2. Persist Olga's reviewer identity, decision, timestamp, and approved artifact before every full-tier release.
+3. Build 20 de-identified NutriOK fixtures and pass two consecutive benchmark runs with zero critical defects.
+4. Restore Telegram connectivity only through the Windows scheduled task and prove one polling owner.
+5. Recover disk above 10 GiB before replay-heavy QA.
+6. Specify RF-hosted retention, deletion, encryption, access, and audit controls.
+7. Recruit five external interviews, then run the 20-buyer Express pilot without ads.
+8. Publish the implementation only after the dirty working tree is split into reviewed, intentional changes.
+
+## Strategy Delta - 2026-07-17
+
+- Sell measurable clarity and an accountable next-step process, not an automated diagnosis, giant PDF, or supplement list.
+- One primary goal and three days of evidence are the core unit of value.
+- AI structures evidence; Olga owns full-tier conclusions and every supplement detail.
+- The ladder is approved, but scale is gated: 20 Express buyers, at least 8 Full upgrades, at least 4 eight-week upgrades.
+- Previous payment is credited fully for upgrades within 30 days.
+- Supplements are optional, never commission-ranked, and require disclosure plus Olga approval.
+- No paid advertising before runtime, privacy, reviewer, payment, and benchmark gates pass.
+
+## Context For New Model - 2026-07-17
+
+### Stage
+
+NutriOK controlled build; bot down; public launch blocked.
+
+### Objective
+
+Release a differentiated full nutrition assessment that turns one chosen goal and three days of evidence into a safe, measurable action plan, with Olga accountable for every full-tier result.
+
+### Constraints
+
+- one Windows scheduled-task polling owner;
+- manual payment;
+- no diagnosis, treatment, medication changes, or guaranteed results;
+- full tiers and supplement details require Olga approval;
+- structured intake is not end-to-end yet;
+- latest benchmark predates NutriOK;
+- disk remains below floor;
+- local implementation remains unpublished.
+
+### Immediate Next Actions
+
+1. Persist structured intake and reviewer evidence.
+2. Build and run the 20-fixture NutriOK benchmark twice.
+3. Restore scheduled-task connectivity without a second poller.
+4. Recover disk above 10 GiB.
+5. Define RF cloud data controls.
+6. Recruit five external interviews and prepare the controlled pilot.
+## Historical Snapshot - 2026-06-21
+
+Updated: 2026-06-21 16:40 MSK
+
+## ВСЕМ АГЕНТАМ (Codex / Antigravity / Hermes): ЧИТАТЬ ПЕРВЫМ
+
+Эта страница — единый текущий onboarding-hub для всех агентов проекта.
+Если документы расходятся, приоритет у более свежего подтвержденного артефакта.
+Медицинско-юридические ограничения и правило одного polling owner имеют приоритет всегда.
 
 ## Unified GitHub Source Of Truth
 
 - Main public handoff document: `docs/PROJECT_DEVELOPMENT_SINGLE_SOURCE_OF_TRUTH.md`
 - Live repo: `olyalyazinchenk-wq/Zinchenko_wellness_al`
-- Active remote branch for current working truth: `origin/master` at `fe31aec`
-- GitHub default branch: `master`
+- Canonical branch: `master`
+- Local repo head in this refresh: `2968cdb`
+- `origin/master` matched local `HEAD` at the start of this refresh.
 - Local workspace: `C:\Users\HP\Desktop\Новая папка`
 
 ## Unified Agent Runtime
@@ -20,199 +158,178 @@ Updated: 2026-06-18 21:50 MSK
 - Shared stage marker: `docs/CURRENT_STAGE.json`
 - Shared bootstrap: root `AGENTS.md`
 - Shared verification: `ops/agent-sync-status.ps1`
-- Codex and Antigravity must open the Windows canonical workspace above.
-- Hermes must use `/mnt/c/Users/HP/Desktop/Новая папка` and must not run the
-  legacy `/home/hermes/projects/nutrition_bot` polling process.
-- The only Telegram polling owner is the Windows scheduled task `WellnessBot`.
+- Codex and Antigravity must use the Windows canonical workspace above.
+- Hermes must use `/mnt/c/Users/HP/Desktop/Новая папка` and must not run the legacy `/home/hermes/projects/nutrition_bot` polling process.
+- The only permitted Telegram polling owner remains the Windows scheduled task `WellnessBot`.
 
 ## Quick Status
 
 - Mode: controlled concierge pilot. Public launch remains blocked.
-- Payment mode: `PAYMENT_MODE=manual`. Human review is required before delivery.
-- Bot is live:
-  - parent PID `15420` = `.venv\Scripts\python.exe`
-  - child PID `6760` = `Python312\python.exe`
-  - startup `2026-06-18 15:04:39 -> 15:04:40 +03:00`
-  - DeepSeek `200 OK` and handled updates continue through `2026-06-18 15:20:03 +03:00`
-  - proxy is explicit: `http://127.0.0.1:10808`
-- Active runtime rail: `20260618T121906Z_1084557944` -> `nutri_chat` -> `paid_nutri_chat` -> expires `2026-06-20T12:19:14.119781+00:00`
-- Disk state: `C:` free space is only `7014158336` bytes (`~6.53 GiB`) at `2026-06-18 16:35:14 +03:00`
+- Payment mode: `PAYMENT_MODE=manual`. Human review remains required before delivery.
+- Shared sync is still unhealthy:
+  - the current `ops/agent-sync-status.ps1` run still reports `TrackedDirtyFiles = 19`, `BotTaskState = Running`, `BotProcessCount = 2`, `Published = True`, `Synchronized = False`
+- Runtime continuity is fresher than the earlier same-day hub claimed:
+  - `bot.stderr.log` now shows handled updates at `2026-06-21 08:36:49 +03:00`, `08:36:51 +03:00`, `08:36:54 +03:00`, `08:36:56 +03:00`, `08:36:58 +03:00`, and `08:37:00 +03:00`
+- `WellnessBot/data/runtime_state.json` is no longer empty:
+  - last write time is `2026-06-21 08:37:00 +03:00`
+  - mounted runtime state is `submission_id = 20260621T053653Z_1084557944`, `offer = osipov`, `step = osipov_context`, `payment_status = manual_payment_confirmed`
+  - `chat_sessions` is still empty even though `user_sessions` is not
+- Freshest persisted same-user escalation is now a new `osipov` re-entry:
+  - `20260621T053653Z_1084557944` = `osipov`, `5900 RUB`, `manual_payment_confirmed`
+  - this happens after the earlier delivered `osipov` and delivered `gut_support_18` rails that still lack review artifacts
+- Direct-delivery review-trail regression is still live:
+  - `WellnessBot/data/drafts/20260618T192846Z_1084557944.review.json` does not exist
+  - `WellnessBot/data/drafts/20260619T215149Z_1084557944.review.json` does not exist
+- Legacy P0 contradiction remains open:
+  - `20260531T183007Z_1084557944` is still `delivered_to_client` while `internal_review.judge_verdict = fail_major_issues`
+- Disk state: `C:` free space is `5226946560` bytes (`~4.87 GiB`) at `2026-06-21 16:40:06 +03:00`
 - Benchmark anchor: `ops/reports/quality_report_20260531T083403Z.md`
 - QA interpretation anchor: `docs/WELLNESS_DIALOGUE_QA_20260608.md`
-- Connector state:
-  - GitHub: recovered
-  - Notion: recovered
-  - Google Drive: blocked because file discovery/create/upload/share tools are not exposed
-
-## What Changed Since June 14
-
-### Runtime And Payment Flow
-- The active runtime truth is no longer the June 6 `habits` rail; it is now the June 18 paid `nutri_chat` rail.
-- Live runtime proof is current again, not historical-only: June 18 startup, polling, handled updates, and DeepSeek responses are all present in `bot.stderr.log`.
-- Payment-confirmation and reminder logic added earlier on June 18 is now part of the live operating context and should be treated as shipped behavior.
-
-### Connector Reality
-- Notion is no longer blocked in this session; `_notion_get_users { user_id: "self" }` succeeded.
-- GitHub is no longer blocked in this session; the repo resolves through the GitHub connector and `git ls-remote --heads origin` confirms both `main` and `master`.
-- Google Drive is still blocked because no write-capable Drive tools are exposed in-session.
-
-### External Contributor Entry
-- GitHub now opens on `master`, the same branch used by the live workspace.
-- Historical `main` remains non-canonical and is not an implementation source.
 
 ## Current Truth
 
 ### Runtime
-- `WellnessBot/data/runtime_state.json` currently uses `user_sessions` plus `chat_sessions`.
-- Active `user_sessions[1084557944]` truth:
-  - `submission_id = 20260618T121906Z_1084557944`
-  - `offer = nutri_chat`
-  - `tier = nutri_chat`
-  - `step = paid_nutri_chat`
-  - `consent_given = true`
-  - `nutri_chat_started_at = 2026-06-18T12:19:14Z`
-  - `nutri_chat_expires_at = 2026-06-20T12:19:14.119781+00:00`
-- `chat_sessions[1084557944]` already contains live paid-dialogue context.
-- The current parent-child Python chain is real runtime proof, but the intended supervision topology still should be documented explicitly.
+- The scheduled-task-owned parent-child Python chain is still alive, so the bot is not down.
+- The freshest runtime continuity proof is now the June 21 `08:36:49 -> 08:37:00 +03:00` handled-update sequence.
+- The latest runtime story is `process-verified and actively handling updates, but still not single-owner healthy`.
+- The runtime-state story is no longer `empty`, but it is still not coherent enough to trust:
+  - `user_sessions` mounts a live `osipov` case
+  - `chat_sessions` is empty
+  - polling ownership is still not proven single-instance healthy
 
-### Same-User Paid-State Conflict
-- One Telegram user still holds unresolved paid state across all of these rails:
-  - `20260602T055745Z_1084557944` = `nutri_chat`, `500 RUB`
-  - `20260603T112723Z_1084557944` = `nutri_chat`, `500 RUB`
-  - `20260603T113045Z_1084557944` = `habits`, `6900 RUB`
-  - `20260603T121917Z_1084557944` = `nutri_chat`, `300 RUB`
-  - `20260606T202509Z_1084557944` = `habits`, `6900 RUB`
-  - `20260618T121906Z_1084557944` = `nutri_chat`, `1490 RUB`, mounted as active rail
-- Every item above still has `canonical_path = null` and `case_relation = null`.
+### Same-User Commercial-State Conflict
+- One Telegram user still spans unresolved current state across all of these rails:
+  - `20260531T183007Z_1084557944` = `basic`, delivered despite failed review
+  - `20260618T121906Z_1084557944` = `nutri_chat`, `1490 RUB`
+  - `20260618T214036Z_1084557944` = second `nutri_chat`, `1490 RUB`
+  - `20260618T192846Z_1084557944` = delivered `osipov`, `5900 RUB`, `adult_confirmed = false`
+  - `20260619T215149Z_1084557944` = delivered `gut_support_18`, `6000 RUB`, sourced from the delivered `osipov`
+  - `20260621T053653Z_1084557944` = fresh `osipov`, `5900 RUB`, manual-payment-confirmed and now mounted in runtime state
+- Explicit canonical ownership is still missing across this stack.
+- The new June 21 `osipov` rail means same-user commercialization control got worse, not better.
 
 ### Delivery Truth
-- `WellnessBot/data/submissions/20260531T183007Z_1084557944.json` still combines:
+- Legacy P0 contradiction remains open:
+  - `20260531T183007Z_1084557944`
   - `offer = basic`
   - `payment_status = paid`
   - `intake_status = delivered_to_client`
   - `internal_review.judge_verdict = fail_major_issues`
-- This remains a P0 delivery-gate breach until a valid override or remediation is recorded.
+- June 18-21 specialist chain truth:
+  - `20260618T192846Z_1084557944` delivered `osipov` with `direct_delivery = true`, `adult_confirmed = false`, and no persisted review artifact
+  - `20260619T215149Z_1084557944` delivered `gut_support_18` with `direct_delivery = true`, `adult_confirmed = true`, `source_submission_id = 20260618T192846Z_1084557944`, and no persisted review artifact
+  - `20260621T053653Z_1084557944` opens a fresh `osipov` rail before the older specialist rails were review-cleared or canonically owned
+- Do not count the specialist rails as healthy pilot proof until review evidence is persisted or explicitly overridden and one canonical path is written.
 
 ### Benchmark And Governance
-- Latest completed benchmark reference is still `ops/reports/quality_report_20260531T083403Z.md`.
-- Current QA synthesis doc is still `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Latest completed benchmark reference remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA synthesis doc remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
 - Full batch still aborts on prompt `1`.
-- `WellnessBot/data/product_governance.json` still holds `151` experiments and `0` decisions with `updated_at = 2026-06-01T20:55:21Z`.
+- `WellnessBot/data/product_governance.json` still holds `151` experiments and `0` decisions.
+- Repeated experiment titles still cluster at `12`, `11`, `8`, `8`, and `5`, so loop compression is still a live requirement.
+
+### Working-Tree Truth
+- Current tracked code changes still materially alter product behavior:
+  - new `gut_support_18` offer, payment mapping, prompt, and text
+  - adult-only gating helper `is_adult_age`
+  - expanded `osipov` upload / OCR / delivery flow
+  - post-`osipov` upsell button into `gut_support_18`
+  - supplement-catalog curation and tests now encode verified SPZ03 candidates plus a heartburn exclusion
+- This remains active product-direction drift until it is governed and published or rolled back.
 
 ### Public Surface Truth
-- `landing/index.html` remains the comparatively safest surface.
-- Root `index.html` still contains live payment/PDF/price claims that outrun the approved pilot.
-- `mini-app/index.html` still promises dossier/PDF/support outcomes and cannot be described as placeholder-only.
-
-### Connector Truth
-- GitHub success probes:
-  - GitHub connector resolved `olyalyazinchenk-wq/Zinchenko_wellness_al`
-  - `git ls-remote --heads origin` returned both `main` and `master`
-- Notion success probes:
-  - `_notion_get_users { user_id: "self" }`
-  - `_search` resolved `AGENT CONTEXT HUB — Antigravity / Wellness`
-- Google Drive block:
-  - file discovery/create/upload/share tools are not exposed
-  - exact access request: `enable the Google Drive connector with file discovery/create/upload/share permissions in this Codex session`
-
-## Regressions To Fix Now
-
-- Disk floor breach; owner `Ops`; next action remove or archive large user-owned installers/videos/archives until `C:` is back above `10 GiB`.
-- Same-user paid-path sprawl; owner `Operator + Lead Developer`; next action declare one canonical current path across the June 2 / June 3 / June 6 / June 18 stack, then freeze, archive, merge, or refund the non-canonical rails.
-- Duplicate same-offer `habits` multiplication; owner `Operator + Lead Developer`; next action choose the canonical `habits` path between `20260603T113045Z_1084557944` and `20260606T202509Z_1084557944`.
-- Delivery-gate breach; owner `Lead Developer + Operator`; next action audit `20260531T183007Z_1084557944` and remove or remediate `delivered_to_client` if no valid override exists.
-- Root-page commercialization overclaim; owner `Product Strategist + Lead Developer`; next action remove or neutralize live payment, PDF, and price claims in `index.html`.
-- Mini-app commercialization overclaim; owner `Product Strategist + Lead Developer`; next action remove or neutralize dossier/PDF/support promises until the governed ladder is explicit.
-- GitHub default-branch drift; owner `Lead Developer + Tooling`; next action align or merge `main` with the live `master` branch so external contributors do not land on stale truth by default.
-- Google Drive connector gap; owner `Tooling / Access`; next action expose file discovery/create/upload/share tools before the next Drive sync attempt.
+- `landing/index.html` remains the comparatively safest surface, but it still names `Premium Wellness Dossier` and Telegram follow-up support.
+- Root `index.html` still overclaims live payment, YooKassa, PDF, dossier, and off-map pricing truth.
+- `mini-app/index.html` still overclaims dossier, PDF, expert support, and a live `1 000 ₽` entry rail.
 
 ## Plan Delta
 
-1. Keep local docs authoritative first.
-2. Use recovered Notion and GitHub connectors in the same cycle when real probes succeed.
-3. Treat Google Drive as the only outward-sync blocker in the current session.
-4. Move disk recovery back to the top operational priority.
-5. Add GitHub default-branch alignment to the execution packet because stale `main` now affects external onboarding.
+1. Restore single polling ownership first.
+2. Decide whether the non-empty `user_sessions` plus empty `chat_sessions` split is expected `osipov` behavior or a persistence regression.
+3. Persist review evidence or named manual-override proof for every direct-delivery specialist rail.
+4. Audit and canonicalize the May 31 / June 18 / June 19 / June 21 same-user stack.
+5. Decide whether `gut_support_18` is approved pilot truth or rollback-required drift.
+6. Recover `C:` above the `10 GiB` floor.
+7. Only count external sync as healthy after a real connector write and exact target readback in the current session.
 
 ## Strategy Delta
 
-- Strategy is now `use recovered connectors to keep management truth current while fixing execution integrity`.
-- The lead execution-credibility gap is a six-part bundle:
+- Strategy is now `use the June 21 08:37 handled updates as the freshest runtime continuity proof while treating same-user specialist re-entry, polling ownership, runtime-state coherence, direct-delivery review evidence, and disk headroom as the real blockers`.
+- The main execution-credibility gap is now:
+  - duplicate polling ownership is not proven fixed
+  - runtime state is refilled but still structurally incomplete
+  - the same user reopened `osipov` before older specialist rails were governed
+  - delivered specialist rails still lack review evidence
   - disk remains below floor
-  - same-user paid ownership is unresolved
-  - delivered-case contradiction remains open
+  - ungoverned `gut_support_18` expansion is still live in dirty code
   - root and mini-app still overclaim
-  - Google Drive sync is still absent
-  - GitHub default branch is stale relative to the live branch
 
-## Goals Delta
+## Loop Risk
 
-- Goal 1: restore `C:` above the `10 GiB` floor and rebuild a safer margin.
-- Goal 2: collapse the same-user paid stack into one canonical path.
-- Goal 3: block same-user same-offer and same-ladder duplicate paid creation.
-- Goal 4: repair the delivered-case contradiction before higher-ticket proof is treated as valid.
-- Goal 5: remove root and mini-app commercialization overclaims.
-- Goal 6: align GitHub default-branch truth with the live branch.
-- Goal 7: keep Notion and GitHub status mirrors current while Google Drive remains blocked.
+- Re-reading and refreshing sync docs while the same user can still reopen specialist rails is low-impact churn.
+- Adding experiments to a `151`-item governance file with `0` decisions is low-impact churn.
+- Polishing public-surface copy before same-user case ownership and review truth are governed is low-impact churn.
 
-## Next 12h Priorities
+## Higher-Impact Replacement Action
 
-1. Push `C:` back above `10 GiB`.
-2. Canonicalize the June 2 / June 3 / June 6 / June 18 same-user paid stack.
-3. Add a hard duplicate paid-branch guard.
-4. Repair `20260531T183007Z_1084557944`.
-5. Remove root and mini-app overclaims.
-6. Align `main` and `master` or make one default branch authoritative.
-7. Keep Notion and GitHub context mirrors current without publishing runtime/PII artifacts.
-8. Enable Google Drive file discovery/create/upload/share permissions.
+1. Stop the competing poller and capture one clean runtime artifact newer than `2026-06-21 08:37:00 +03:00`.
+2. Block same-user specialist re-entry until `canonical_path` or `case_relation` exists across the old and new specialist rails.
+3. Enforce `direct_delivery => persisted review artifact or named manual override`.
+4. Feature-gate or roll back `gut_support_18` until the approved ladder is explicit.
+5. Then neutralize landing/root/mini-app overclaims and return to benchmark transport work.
 
 ## Must-Not-Change Rules
 
 - Telegram-first only.
 - Manual concierge remains the official pilot mode.
+- Only one Telegram polling owner is allowed.
 - No price ladder becomes product truth until one approved map is written across code, docs, and artifacts.
 - One canonical paid path per Telegram user at a time.
 - No second paid branch for the same offer or same ladder and same user while an older paid path is still active or unresolved.
+- No new specialist re-entry for the same user while older specialist rails lack review evidence or canonical ownership.
+- `gut_support_18` must not be treated as approved pilot truth until source linkage, adult gating, supplement-safety governance, and review evidence are explicit.
 - Human review is required before delivery.
+- `direct_delivery` cannot count as healthy proof without a persisted review artifact or explicit named manual override.
 - No diagnosis or treatment framing.
 - No unsafe supplement instructions without confirmed context and review.
 - No hardcoded medical-style results on public or TMA surfaces.
 - Do not describe the mini-app as placeholder-only while price, PDF, or support promises remain live in the file.
-- Do not count a paid path as healthy if payment succeeded but the final reviewed artifact is contradicted by failing review state.
-- Do not treat governance backlog growth as execution progress.
-- Do not mark Notion or GitHub sync as healthy until a real connector call succeeds in the current session.
-- Do not treat Google Drive as available until file discovery/create/upload/share tools are actually exposed.
-- Do not present GitHub default `main` as the live source of truth while `master` remains the current execution branch.
+- Do not count a paid path as healthy if payment succeeded but review truth is missing, failing, or contradicted by commercialization drift.
+- Do not treat governance backlog growth or temp-cleanup megabytes as execution progress.
+- Do not add new experiment churn while delivery truth and canonical-path control are still unresolved.
+- Do not mark external sync as healthy until a real connector write succeeds and the exact target is re-read in the current session.
 
 ## Context For New Model
 
 ### Stage
-- Controlled Telegram concierge pilot with live runtime, recovered Notion/GitHub sync, stale Google Drive exposure, and unresolved execution-control debt.
+- Controlled Telegram concierge pilot with fresh handled updates through `2026-06-21 08:37 +03:00`, a newly mounted `osipov` runtime rail, unresolved same-user specialist duplication, missing review evidence on delivered specialist rails, and disk still below floor.
 
-### Objective
-- Restore disk headroom.
-- Collapse the same-user paid stack to one canonical path.
-- Repair the delivered-case contradiction.
-- Neutralize root and mini-app overclaims.
-- Align external repo truth with the live branch.
-- Keep Notion and GitHub mirrors current while Google Drive remains blocked.
+### Done
+- Re-read the shared coordination docs and the target strategy docs in the canonical workspace.
+- Reconfirmed the same parent-child bot chain and the still-dirty shared workspace.
+- Corrected the stale claim that `runtime_state.json` is empty.
+- Confirmed a fresh same-user `osipov` re-entry at `20260621T053653Z_1084557944`.
+- Reconfirmed the legacy delivered-case contradiction, missing specialist review artifacts, public-surface overclaims, and repeated experiment-loop pressure.
+
+### Next
+1. Stop duplicate polling.
+2. Explain or repair the `user_sessions` without `chat_sessions` split.
+3. Persist review evidence or manual override proof for direct deliveries.
+4. Canonicalize the paid stack and block duplicate paid branches.
+5. Decide whether `gut_support_18` is approved or rollback-required.
+6. Reduce landing/root/mini-app overclaims.
+7. Restore disk.
 
 ### Constraints
 - Telegram-first only.
 - `PAYMENT_MODE=manual`.
 - Human review remains mandatory before delivery.
-- One canonical commercial path per Telegram user.
-- Latest completed benchmark reference is `ops/reports/quality_report_20260531T083403Z.md`.
-- Current QA interpretation is `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
-- Full batch still aborts on prompt `1`.
-- `C:` free space is only `7014158336` bytes (`~6.53 GiB`) at `2026-06-18 16:35:14 +03:00`.
-- Google Drive file discovery/create/upload/share tools are unavailable in this session.
+- One canonical paid path per Telegram user.
+- Latest completed benchmark remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Current QA interpretation remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- The full benchmark still fails on prompt `1`.
+- `C:` free space is `5226946560` bytes (`~4.87 GiB`) at `2026-06-21 16:40:06 +03:00`.
+- Outward sync only counts as complete after target readback.
 
-### Immediate Next Actions
-1. Recover disk margin.
-2. Canonicalize the paid stack.
-3. Block further duplicate paid creation.
-4. Repair the delivered-case contradiction.
-5. Remove root and mini-app overclaims.
-6. Align GitHub default-branch truth.
-7. Keep Notion/GitHub mirrors current and request Google Drive access.
+
+
