@@ -1,7 +1,121 @@
 ﻿# Agent Context Hub
 
-Updated: 2026-07-18 02:18 MSK
+Updated: 2026-07-19 02:18 MSK
+## Снимок синхронизации - 2026-07-19 02:18 MSK
 
+- Stage не менялся: `nutriok-controlled-build-2026-07-17-r1`; controlled build / concierge pilot; public launch заблокирован.
+- Продуктовая линия остаётся `НутриОК by Olga Kovaleva`: одна цель, baseline/metric, трёхдневный дневник и безопасный следующий шаг без диагностики.
+- Проверки в этом запуске: `py -3.12 -m unittest discover -s tests -v` — 63 теста пройдены; `py -3.12 -m compileall WellnessBot tests` — успешно.
+- Repo truth: `master`, `HEAD=origin/master=a9f0734`; remote `origin` доступен; `TrackedDirtyFiles=24`, `Synchronized=False`.
+- Dirty tree смешанный: изменения в `WellnessBot`, `tests`, docs и public surfaces соседствуют с untracked `.venv_wsl`, логами, lock-файлом, VPN/SSH-скриптами и `do_api_token.txt`; blind commit/push запрещён.
+- Runtime truth: Windows Scheduled Task `WellnessBot` = `Running`; sync-check видит 2 процесса `WellnessBot/main.py` (один дочерний), поэтому чистое подтверждение единственного polling owner не получено; второй процесс требует операторской проверки.
+- Runtime proof stale: последние строки `bot.stderr` с handled updates — `2026-06-07 13:59:57 +03:00`; свежего proof-of-life в текущем запуске нет.
+- Ops truth: на `C:` свободно `2016206848` байт (`~1.88 GiB`), ниже floor `10 GiB`.
+- Внешняя синхронизация: GitHub remote читается, но публикация отложена из-за смешанного дерева; Notion будет обновлён только обезличенным статусом.
+
+### Текущие блокеры
+
+1. Разделить reviewed source changes и локальные/секретные/runtime-артефакты до любого commit/push.
+2. Разобраться с двумя процессами и получить один чистый scheduled-task runtime proof; polling вручную не запускать.
+3. Поднять свободное место C: выше 10 GiB операторской очисткой.
+4. Довести structured intake, persisted reviewer evidence и 20-case benchmark (два прохода).
+
+## Снимок синхронизации - 2026-07-18 16:45 MSK
+
+- Stage: `nutriok-controlled-build-2026-07-17-r1`; controlled build / concierge pilot; public launch remains blocked.
+- Product direction is stable: `НутриОК by Olga Kovaleva`, one primary goal plus baseline/metric/three-day diary, safe next-step clarity instead of diagnosis.
+- Verification in this session: `py -3.12 -m unittest discover -s tests -v` passed with 63 tests; `py -3.12 -m compileall WellnessBot tests` passed.
+- Repo truth: `master`, `HEAD=origin/master=a9f0734`, `Published=True`, `TrackedDirtyFiles=22`, `Synchronized=False`.
+- Runtime truth: scheduled task `WellnessBot` is `Ready`, active bot processes `0`; fresh proof-of-life is still missing and no second poller was started.
+- Ops truth: `C:` free space is `3171799040` bytes (`~2.95 GiB`), below the `10 GiB` floor and worse than the earlier same-day snapshot.
+- Benchmark truth: latest completed report is still `ops/reports/quality_report_20260531T083403Z.md`; latest QA synthesis is still `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Mixed-tree truth remains active: reviewed NutriOK product work sits alongside local secrets, logs, lockfiles, `.venv_wsl`, and other non-publishable artifacts.
+
+### Done
+
+- Re-read the required startup docs and re-ran the shared sync-status check in the canonical workspace.
+- Re-verified the governing NutriOK product contract and the current working-tree markers for ladder, menu, safety gate, and tests.
+- Re-ran the current test suite and Python compilation successfully in this session.
+- Re-measured runtime, git-sync, benchmark-reference, and storage facts for the strategy layer.
+
+### Next
+
+1. Persist goal, baseline, metric, adherence, and three-day diary end to end.
+2. Persist reviewer identity, decision, timestamp, and approved artifact for full tiers and supplement details.
+3. Build the 20-case NutriOK fixture pack and complete two benchmark passes.
+4. Capture one fresh scheduled-task runtime proof without starting a second poller.
+5. Recover `C:` above `10 GiB` and split publishable source files from local debris.
+6. Write RF retention, deletion, encryption, access, and audit controls.
+
+### Must-Not-Change Rules
+
+- Telegram-first only.
+- Manual payment only.
+- Only one Telegram polling owner is allowed: the Windows scheduled task `WellnessBot`.
+- Do not start a second poller from Codex, Hermes, WSL, or a terminal.
+- Do not reopen diagnosis, treatment, medication-change, or guaranteed-result framing.
+- `ОК-Разбор`, `ОК-Результат 8`, `ОК-Ритм`, and every supplement detail require Olga approval.
+- Do not count strategy refresh, copy polish, or offer expansion as progress while intake persistence, reviewer persistence, runtime proof, and benchmark proof are missing.
+- Do not publish the current mixed working tree as a single source snapshot.
+
+## Current Governing Snapshot - 2026-07-18
+
+- Stage: `nutriok-controlled-build-2026-07-17-r1`; public launch remains blocked.
+- Canonical product: `НутриОК by Olga Kovaleva`; promise: `Разбор, после которого понятно, что делать`.
+- Canonical ladder: `ОК-Старт`; `ОК-Экспресс 990 RUB pilot`; `ОК-Разбор 5,900 RUB pilot`; `ОК-Результат 8 14,900 RUB pilot`; `ОК-Ритм 1,990 RUB/month`.
+- Current monetization truth: manual payment only; safe `ОК-Экспресс` is the only automatic paid output; full tiers and supplement details remain Olga-reviewed.
+- Fresh verification in this session: 63 tests passed; Python compilation passed.
+- Shared repo state: `master`, `HEAD=origin/master=a9f0734`, `Published=True`, `TrackedDirtyFiles=22`, `Synchronized=False`.
+- Scheduled task `WellnessBot` is `Ready`, process count is `0`, and no second poller was started.
+- Latest completed benchmark remains `ops/reports/quality_report_20260531T083403Z.md`.
+- Latest QA interpretation remains `docs/WELLNESS_DIALOGUE_QA_20260608.md`.
+- Disk is `3171799040` bytes free (`~2.95 GiB`), below the `10 GiB` floor.
+- The dirty tree still mixes publishable NutriOK work with local runtime and secret-bearing artifacts.
+
+## Plan Delta - 2026-07-18
+
+1. Persist the structured intake contract end to end.
+2. Persist the reviewer evidence invariant.
+3. Build 20 de-identified NutriOK fixtures and complete two current-product benchmark runs.
+4. Restore fresh scheduled-task runtime proof.
+5. Recover disk above `10 GiB`.
+6. Split reviewed product files from secrets and runtime debris.
+7. Write RF cloud privacy/storage/audit controls.
+
+## Strategy Delta - 2026-07-18
+
+- Keep NutriOK controlled build as the governing direction; do not pivot again.
+- The next differentiator is not a new offer; it is a technically enforceable controlled paid cycle.
+- Strategy should now optimize for release-readiness artifacts: persisted intake, persisted reviewer evidence, benchmark proof, runtime proof, and publishable source separation.
+
+## Context For New Model - 2026-07-18
+
+### Stage
+
+NutriOK controlled build; runtime not freshly proven; public launch blocked.
+
+### Objective
+
+Release one safe, measurable, reviewer-governed NutriOK cycle that turns a chosen goal and three days of evidence into a concrete next-step plan.
+
+### Constraints
+
+- one scheduled-task poller only;
+- manual payment only;
+- no diagnosis, treatment, medication changes, or guaranteed results;
+- Olga approval for full tiers and supplement details;
+- current-product benchmark still missing;
+- disk remains below floor;
+- source tree remains mixed and unpublished.
+
+### Immediate Next Actions
+
+1. Persist structured intake.
+2. Persist reviewer evidence.
+3. Build and run the 20-case benchmark twice.
+4. Capture fresh runtime proof.
+5. Recover disk and split the dirty tree.
+6. Write RF data controls.
 ## Снимок синхронизации - 2026-07-18 02:18 MSK
 
 - Stage: nutriok-controlled-build-2026-07-17-r1; режим controlled build / concierge pilot, публичный запуск заблокирован.
@@ -330,6 +444,8 @@ Updated: 2026-06-21 16:40 MSK
 - The full benchmark still fails on prompt `1`.
 - `C:` free space is `5226946560` bytes (`~4.87 GiB`) at `2026-06-21 16:40:06 +03:00`.
 - Outward sync only counts as complete after target readback.
+
+
 
 
 
