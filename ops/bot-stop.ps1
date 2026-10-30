@@ -1,27 +1,41 @@
-$projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$venvPython = Join-Path $projectRoot ".venv\Scripts\python.exe"
-$entryPath = Join-Path $projectRoot "WellnessBot\main.py"
-
 function Get-ProjectBotProcesses {
-    $allPython = Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object {
-        $_.Name -like "python*"
+    $allProcs = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue)
+    $roots = @(
+        $allProcs | Where-Object {
+            $_.Name -like "python*" -and
+            ([string]$_.CommandLine -match 'WellnessBot[\\/]+main\.py')
+        }
+    )
+    if (-not $roots) {
+        return
     }
 
-    foreach ($proc in $allPython) {
-        $cmd = [string]$proc.CommandLine
-        $exe = [string]$proc.ExecutablePath
-        $isProjectBot = $false
+    $targetIds = New-Object 'System.Collections.Generic.HashSet[int]'
+    foreach ($r in $roots) {
+        [void]$targetIds.Add([int]$r.ProcessId)
+    }
 
-        if ($exe -eq $venvPython) { $isProjectBot = $true }
-        if ($cmd.Contains($entryPath)) { $isProjectBot = $true }
-        elseif ($cmd.Contains("WellnessBot\main.py")) { $isProjectBot = $true }
+    $added = $true
+    while ($added) {
+        $added = $false
+        foreach ($proc in $allProcs) {
+            $pidVal = [int]$proc.ProcessId
+            $ppidVal = [int]$proc.ParentProcessId
+            if (-not $targetIds.Contains($pidVal) -and $targetIds.Contains($ppidVal)) {
+                [void]$targetIds.Add($pidVal)
+                $added = $true
+            }
+        }
+    }
 
-        if ($isProjectBot) {
+    foreach ($proc in $allProcs) {
+        if ($targetIds.Contains([int]$proc.ProcessId)) {
             [pscustomobject]@{
                 ProcessId = [int]$proc.ProcessId
+                ParentProcessId = [int]$proc.ParentProcessId
                 Name = $proc.Name
-                ExecutablePath = $exe
-                CommandLine = $cmd
+                ExecutablePath = [string]$proc.ExecutablePath
+                CommandLine = [string]$proc.CommandLine
             }
         }
     }
@@ -34,5 +48,5 @@ if (-not $targets) {
     exit 0
 }
 
-$targets | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+$targets | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
 Write-Output ("Stopped {0} bot process(es)." -f $targets.Count)

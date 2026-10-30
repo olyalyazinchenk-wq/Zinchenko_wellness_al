@@ -57,6 +57,17 @@ def is_release_approved(submission: dict[str, Any] | None) -> bool:
     ):
         return True
 
+    legacy_release = submission.get("legacy_release")
+    if isinstance(legacy_release, dict):
+        expected_sha = str(legacy_release.get("artifact_sha256") or "").strip().lower()
+        pdf_path_raw = str(submission.get("pdf_path") or "").strip()
+        if expected_sha and pdf_path_raw:
+            pdf_path = Path(pdf_path_raw)
+            if pdf_path.exists() and pdf_path.is_file():
+                if compute_file_sha256(pdf_path).lower() == expected_sha:
+                    return True
+        return False
+
     auto_decision = submission.get("auto_delivery_decision")
     if isinstance(auto_decision, dict):
         return bool(auto_decision.get("allow_automatic_delivery"))

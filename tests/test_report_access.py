@@ -13,12 +13,16 @@ from unittest.mock import AsyncMock, patch
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 BOT_DIR = PROJECT_ROOT / "WellnessBot"
+OPS_DIR = PROJECT_ROOT / "ops"
 if str(BOT_DIR) not in sys.path:
     sys.path.insert(0, str(BOT_DIR))
+if str(OPS_DIR) not in sys.path:
+    sys.path.insert(0, str(OPS_DIR))
 
 os.environ.setdefault("BOT_TOKEN", "123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11")
 
 import main as bot_main  # noqa: E402
+from backfill_legacy_releases import backfill_legacy_releases  # noqa: E402
 from review_gate import (  # noqa: E402
     compute_file_sha256,
     is_release_approved,
@@ -262,6 +266,72 @@ class ReportAccessTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(saved.get("supplement_review_approved_by"), self.admin_id)
         self.assertEqual(saved.get("supplement_review_decision"), "approved")
         self.assertTrue(is_release_approved(saved))
+
+    def test_legacy_backfill_grandfathered_visible_excluded_and_tampered_hidden(self) -> None:
+        backups_dir = Path(self.temp_dir.name) / "backups"
+        pdf_safe = self.drafts_dir / "safe_legacy.pdf"
+        pdf_fail = self.drafts_dir / "fail_legacy.pdf"
+        pdf_direct = self.drafts_dir / "direct_legacy.pdf"
+        pdf_safe.write_bytes(b"%PDF-1.4 safe legacy")
+        pdf_fail.write_bytes(b"%PDF-1.4 fail legacy")
+        pdf_direct.write_bytes(b"%PDF-1.4 direct legacy")
+
+        sub_safe = f"20260423T195452Z_{self.owner_id}"
+        sub_fail = f"20260531T183007Z_{self.owner_id}"
+        sub_direct = f"20260618T192846Z_{self.owner_id}"
+
+        self._write_submission(
+            sub_safe,
+            {
+                "submission_id": sub_safe,
+                "offer": "standard",
+                "intake_status": "delivered_to_client",
+                "pdf_path": str(pdf_safe),
+                "profile": {"telegram_user_id": self.owner_id},
+            },
+        )
+        self._write_submission(
+            sub_fail,
+            {
+                "submission_id": sub_fail,
+                "offer": "basic",
+                "intake_status": "delivered_to_client",
+                "internal_review": {"judge_verdict": "fail_major_issues"},
+                "pdf_path": str(pdf_fail),
+                "profile": {"telegram_user_id": self.owner_id},
+            },
+        )
+        self._write_submission(
+            sub_direct,
+            {
+                "submission_id": sub_direct,
+                "offer": "osipov",
+                "intake_status": "delivered_to_client",
+                "direct_delivery": True,
+                "pdf_path": str(pdf_direct),
+                "profile": {"telegram_user_id": self.owner_id},
+            },
+        )
+
+        summary = backfill_legacy_releases(
+            self.submissions_dir,
+            self.drafts_dir,
+            backups_dir,
+            dry_run=False,
+        )
+        self.assertEqual(summary["delivered_with_pdf_count"], 3)
+        self.assertEqual(summary["grandfathered_count"], 1)
+        self.assertEqual(summary["excluded_count"], 2)
+        self.assertTrue(Path(summary["backup_path"]).exists())
+
+        # Grandfathered case is visible to owner; excluded cases are hidden
+        reports = list_user_approved_reports(self.submissions_dir, self.owner_id)
+        self.assertEqual([r["submission_id"] for r in reports], [sub_safe])
+
+        # Modifying the PDF invalidates the SHA-256 and hides the report
+        pdf_safe.write_bytes(b"%PDF-1.4 tampered content")
+        reports_after_tamper = list_user_approved_reports(self.submissions_dir, self.owner_id)
+        self.assertEqual(reports_after_tamper, [])
 
 
 if __name__ == "__main__":
