@@ -551,3 +551,12 @@ Deliver ten unique external paid, named-review HMS cases with zero critical defe
 - **B6 (`WellnessBot/review_gate.py`, `WellnessBot/main.py`, `tests/test_review_gate.py`)**: `_resolve_submission_product_code` переведён в fail-closed со значением по умолчанию `"ok_review"`; в `record_review` и `process_admin_approval` сохраняется `approved_artifact_sha256`, который сверяется в legacy-ветке `approved_by_admin_id`.
 - Проверки: `93 passed, 58 subtests passed` (`ops/dev.ps1 test`), `compileall` без ошибок, независимое ревью второго агента `LGTM`.
 
+## 2026-10-30 23:55 MSK - Спринты C, D и E1/E3 (SQLite Repository, 20-Case Benchmark, CI, Olga Studio & Editorial PDF)
+
+- Этап: `nutriok-controlled-build-2026-07-17-r1`; `PAYMENT_MODE=manual`, `ENABLE_TMA=false`, единственный владелец polling (`BotOwnerCount = 1`).
+- **E1/E3 (`WellnessBot/templates/nutriok_report.html.j2`, `WellnessBot/html_pdf_engine.py`, `WellnessBot/studio_server.py`, `tests/test_studio_and_pdf_report.py`)**: создан 3-страничный журнальный A4 PDF-шаблон в фирменной палитре `site/app/globals.css` и веб-студия Ольги Ковалевой с симулятором клиента на `http://127.0.0.1:8090` (коммит `443d3ad`).
+- **C2 (`WellnessBot/repo/base.py`, `WellnessBot/repo/sqlite_repo.py`, `WellnessBot/storage.py`, `ops/migrate_json_to_sqlite.py`, `tests/test_sqlite_repo.py`, `tests/test_migration.py`)**: внедрён SQLite-репозиторий (`WAL`, `foreign_keys=ON`, `user_version=1`, append-only триггеры на таблицу `reviews`), фасад в `storage.py` с сохранением JSON-бэкапов и скрипт миграции с ZIP-архивацией. Выполнена миграция и верификация: `50/50` кейсов (`Matched cases: 50/50`, `Missing in DB: 0`, `Payload mismatches: 0`, `Verification OK: True`).
+- **D1–D3 (`tests/fixtures/nutriok_cases/case_01.json..case_20.json`, `ops/nutriok_benchmark.py`, `tests/test_benchmark_fixtures.py`, `.github/workflows/ci.yml`, `site/package.json`)**: созданы 20 синтетических кейсов (5 целей × 4 профиля риска), проведены 2 последовательных прогона бенчмарка (`0` критических дефектов, средний балл `4.93 / 5.00`, отчёты в `docs/benchmarks/`), добавлен workflow GitHub Actions CI (`bot`, `secrets`, `site`).
+- Проверки: `105 passed` (`unittest discover -s tests -v`), `compileall` без ошибок, `site` тест `rendered-html.test.mjs` — `PASS`.
+
+
