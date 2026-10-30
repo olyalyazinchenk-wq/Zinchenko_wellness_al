@@ -559,4 +559,13 @@ Deliver ten unique external paid, named-review HMS cases with zero critical defe
 - **D1–D3 (`tests/fixtures/nutriok_cases/case_01.json..case_20.json`, `ops/nutriok_benchmark.py`, `tests/test_benchmark_fixtures.py`, `.github/workflows/ci.yml`, `site/package.json`)**: созданы 20 синтетических кейсов (5 целей × 4 профиля риска), проведены 2 последовательных прогона бенчмарка (`0` критических дефектов, средний балл `4.93 / 5.00`, отчёты в `docs/benchmarks/`), добавлен workflow GitHub Actions CI (`bot`, `secrets`, `site`).
 - Проверки: `105 passed` (`unittest discover -s tests -v`), `compileall` без ошибок, `site` тест `rendered-html.test.mjs` — `PASS`.
 
+## 2026-10-31 01:26 MSK - Завершение Спринтов E (E2–E5) и F (Production RF Design)
+
+- Этап: `nutriok-controlled-build-2026-07-17-r1`; `PAYMENT_MODE=manual`, `ENABLE_TMA=false`, единственный владелец polling (`BotOwnerCount = 1`).
+- **E2 / E3 (`WellnessBot/handlers/olga_cabinet.py`, `WellnessBot/main.py`, `tests/test_olga_cabinet_and_progress.py`)**: добавлены команды кабинета Ольги в Telegram `/queue` (сортировка по safety и SLA `>24h`, карточка с кнопками `Одобрить` / `Нужны правки` / `Отклонить`), `/stats` (воронка 7 и 30 дней по всем 5 тарифам + напоминание SLA `>24h`) и `/checkin` (еженедельный трекинг `AdherenceEntry`, генерация PNG мини-графика динамики и отправка черновика адаптации в очередь проверки Ольги).
+- **E4 / E5 (`ops/archive/public_legacy/`, `WellnessBot/texts.py`)**: старые публичные поверхности (`index.html`, `app.js`, `styles.css`, `landing/`, `mini-app/`) перенесены через `git mv` в `ops/archive/public_legacy/`; клиентские упоминания «Wellness-Паспорт» заменены на «Разбор НутриОК».
+- **Спринт F (`docs/PRODUCTION_RF_DESIGN.md`)**: подготовлен архитектурный проект продакшен-развёртывания в РФ (Yandex Cloud / Selectel, переход с polling на Telegram Webhook с `secret_token`, адаптер `PostgresRepository`, шифрование at-rest и бэкапов, соответствие ст. 10 и ч. 5 ст. 18 152-ФЗ, мониторинг, YooKassa 54-ФЗ и пошаговый план переключения и отката).
+- Проверки: `108 passed` (`unittest discover -s tests -v`), `compileall` без ошибок.
+
+
 

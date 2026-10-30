@@ -70,6 +70,10 @@ from handlers.nutriok_intake import (
     nutriok_router,
     send_current_nutriok_step_prompt,
 )
+from handlers.olga_cabinet import (
+    configure_olga_cabinet,
+    olga_cabinet_router,
+)
 from nutriok_safety import evaluate_delivery_gate
 from review_gate import (
     ReviewRecord,
@@ -241,6 +245,7 @@ bot_session = _create_bot_session(settings.bot_proxy_url)
 bot = Bot(token=settings.bot_token, session=bot_session)
 dp = Dispatcher()
 dp.include_router(nutriok_router)
+dp.include_router(olga_cabinet_router)
 
 SKIP_WORDS = {"пропустить", "скип", "skip", "нет", "не знаю"}
 PREMIUM_TRIGGER_MARKERS = (
@@ -3630,6 +3635,11 @@ configure_nutriok_intake(
     finalize_submission=finalize_submission,
     transcribe_voice=transcribe_nutriok_voice,
     notify_red_flag=notify_admins_red_flag,
+)
+
+configure_olga_cabinet(
+    submissions_dir_getter=lambda: settings.submissions_dir,
+    is_admin_checker=lambda uid: int(uid) in settings.admin_chat_ids,
 )
 
 
