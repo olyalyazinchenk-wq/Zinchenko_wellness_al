@@ -1,4 +1,39 @@
-﻿## 2026-07-20 02:17 MSK - Регулярная GitHub/Notion синхронизация
+## 2026-10-30 04:05 MSK - Выполнение Спринта A: безопасность отчётов, review gate, гигиена репозитория и публикация в master
+
+- **A1–A2 (Безопасность и `review_gate.py`)**: создан модуль `WellnessBot/review_gate.py` (`is_release_approved`, SHA-256 сверка PDF-артефакта, фильтрация `list_user_approved_reports`). В `WellnessBot/main.py` закрыт IDOR в `process_get_report_pdf` и `get_user_approved_reports`, удалена клиентская перезапись `supplement_review_*`, добавлена запись `approved_by_admin_id` при одобрении админом и сохранение `auto_delivery_decision` при прямой доставке. Добавлен тестовый набор `tests/test_report_access.py` (6 тестов).
+- **A3–A4 (Конфигурация и `BotOwnerCount`)**: в `.env` и `WellnessBot/.env` зафиксированы `PAYMENT_MODE=manual` и `ENABLE_TMA=false`. В `ops/agent-sync-status.ps1` и `ops/dev.ps1` внедрён подсчёт корневых владельцев процесса (`BotOwnerCount=1` при `BotProcessCount=2` для пары venv parent + child) и исключён `powershell.exe`. Задача `WellnessBot` чисто перезапущена через `ops/dev.ps1 bot-restart` (`2026-10-30 04:02:37 MSK`, активный polling подтверждён в `bot.stderr.log`).
+- **A5–A6 (Гигиена и публикация)**: создан `.gitattributes`, очищен и дополнен `.gitignore`, legacy-скрипты корня (`force_dossier.py`, `server.ps1`, `run_bot_wsl.sh`, `show_bot_logs.ps1`, `start_bot.ps1`) перенесены через `git mv` в `ops/archive/root_legacy/`. Независимое код-ревью пройдено (`LGTM`). Выполнены 6 тематических коммитов и push в `origin/master`; `TrackedDirtyFiles=0`, `Synchronized=True`, 69/69 тестов зелёные.
+
+## 2026-10-30 03:20 MSK - Полная консолидация проекта, восстановление VPN/Runtime и готовность мультиагентной среды
+
+- **Консолидация проекта**: все внешние материалы с Рабочего стола (`04_Веб_Прототипы`, `Ольга документы`) перенесены в структурированный каталог `materials/`. Инфраструктурные скрипты DigitalOcean и VPN перенесены в `ops/infra/digitalocean_vpn/`, старые скрипты архивированы в `ops/archive/`. На Рабочем столе создан Windows Junction: `Кето-Баланс (NutriOK)` -> `Новая папка`, что даёт понятную точку входа без нарушения канонического пути.
+- **Восстановление VPN и Runtime**: служба Xray на порту `127.0.0.1:10808` активна. Сетевое подключение к Telegram Bot API подтверждено (HTTP 200 OK). Windows Scheduled Task `WellnessBot` переведена в `Running`, бот активен и принимает апдейты (`@zinchenko_wellness_ai_1_bot`).
+- **Ops & Диск**: свободное место на диске `C:` составляет **71.25 GB**, критический блокер переполнения хранилища полностью снят.
+- **Тесты и качество**: 63/63 pytest/unittest тестов зелёные (`Ran 63 tests in 5.62s`). Создан единый CLI-инструмент разработчика `ops/dev.ps1` (`status`, `test`, `logs`, `bot-restart`).
+- **Синхронизация агентов**: единые протоколы (`AGENTS.md`, `CURRENT_STAGE.json`, `AGENT_CONTEXT_HUB.md`) обновлены для совместной работы Antigravity, Codex и Hermes.
+- **Внешние среды**: проверены контуры интеграций GitHub (`master`, `c9fe781`), Hermes (процесс активен), Obsidian (`docs/obsidian_mirror/`), Notion (форма экспорта ключа в `%LOCALAPPDATA%\hermes\scripts\notion-key-form.ps1`), Google AI Studio / Gemini API.
+
+## 2026-07-26 12:00 MSK - Регулярная синхронизация GitHub и Notion
+
+- Этап без изменений: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot; `PAYMENT_MODE=manual`; public launch заблокирован; human review обязателен.
+- Перечитаны обязательные coordination-файлы и целевые документы; проверены `docs`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`. Polling не запускался.
+- GitHub remote доступен (`git ls-remote --heads origin` успешно), `master` и `origin/master` указывают на `a9f0734`. В дереве 24 tracked-изменения и untracked локальные/runtime/secret-like артефакты, поэтому mixed tree не публиковался.
+- Верификация: 63 unittest пройдены, `compileall WellnessBot tests` пройдена.
+- Runtime: Scheduled Task `WellnessBot` = `Ready`, процессов `0`; последний запуск 22.07.2026 завершился `LastTaskResult=1`, свежего handled-update proof нет.
+- Ops: свободно `187547648` байт (около `179 MiB`) на `C:`, ниже floor `10 GiB`; destructive cleanup не выполнялся.
+- Notion connector/tools отсутствуют в текущей сессии; локальный fallback-отчёт создан. GitHub commit/push выполнен только для reviewed status-doc allowlist, без секретов и клиентских данных.
+- Готово к ограниченному пилоту: обезличенные кейсы, manual payment, обязательный human review и безопасная Express-ветка при safety gate. Нельзя запускать public traffic, автоматическую оплату, unattended delivery или второй poller.
+- Следующие шаги: операторская очистка диска, восстановление Telegram connectivity, свежий single-owner runtime proof, structured intake/reviewer evidence, два benchmark-прогона и отдельный reviewed publishable allowlist.
+## 2026-07-23 01:08 MSK - Private NutriOK Specialist Site Created
+
+- Создан отдельный сайт site/ для продукта НутриОК: продающий маршрут нутрициолога Ольги, услуги, безопасное объяснение ХМС по Осипову, FAQ и сегментированные переходы в Telegram-бот.
+- Визуальная система: редакционная типографика, оригинальные hero/OG-изображения, адаптивные desktop/mobile layouts, без недоказанных отзывов, квалификаций и медицинских обещаний.
+- SEO/GEO readiness: семантические разделы, видимый answer-first контент, metadata, canonical, Open Graph, JSON-LD Person/ProfessionalService/OfferCatalog; индексация намеренно выключена на controlled-build stage.
+- Продуктовые цены синхронизированы с текущим контрактом: ОК-Старт 0, ОК-Экспресс 990, ОК-Разбор 5900, ОК-Результат 8 14900, ОК-Ритм 1990/month.
+- Проверка: production build пройден; server-render test пройден; локальный HTTP вернул 200, название и Telegram-ссылка присутствуют.
+- Sites version 1 развернута приватно: https://nutriok-olga.olyalya-zinchenk.chatgpt.site.
+- Stage не менялся: nutriok-controlled-build-2026-07-17-r1; public launch остаётся заблокирован, human review обязателен, Telegram polling не запускался.
+## 2026-07-20 02:17 MSK - Регулярная GitHub/Notion синхронизация
 
 - Stage не менялся: `nutriok-controlled-build-2026-07-17-r1`; controlled build / concierge pilot, public launch заблокирован.
 - Проверены обязательные документы, repo/runtime truth и области `docs`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`; polling вручную не запускался.
@@ -422,3 +457,79 @@ Deliver ten unique external paid, named-review HMS cases with zero critical defe
 - Next: intake persistence, reviewer persistence, benchmark proof, runtime proof, disk recovery, dirty-tree split.
 - Constraints: one scheduled-task poller only, manual payment only, Olga approval for full tiers and supplement details, no diagnosis/treatment framing.
 
+
+## 2026-07-21 02:17 MSK - Regular GitHub/Notion Synchronization
+
+- Stage unchanged: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot; public launch blocked; `PAYMENT_MODE=manual`; human review required.
+- `master` and `origin/master` both point to `a9f0734`; `git ls-remote --heads origin` succeeded.
+- Worktree remains mixed: 24 tracked files changed plus untracked runtime, virtual-environment, infrastructure, and secret-like artifacts. No destructive cleanup or polling start was performed.
+- Sync script reports `BotTaskState=Running`, `BotProcessCount=2`, `Published=True`, `Synchronized=False`.
+- Verification: 63 tests passed; `py -3.12 -m compileall WellnessBot tests` passed.
+- `C:` free space: `1,455,128,576` bytes (`~1.36 GiB`), below the 10 GiB floor; operator-reviewed cleanup is required.
+- GitHub publication deferred because the current tree cannot be safely committed as a whole. Notion update requires connector write/readback; local fallback report records the sync posture.
+- Next: split a reviewed publishable allowlist, fix single-owner runtime proof, persist intake/reviewer evidence, run two current-product benchmarks, and restore disk headroom.
+## 2026-07-22 02:18 MSK - Регулярная синхронизация GitHub и Notion
+
+- Этап без изменений: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot; публичный запуск заблокирован; `PAYMENT_MODE=manual`; human review обязателен.
+- `master` и `origin/master` указывают на `a9f0734`; GitHub remote и connector доступны.
+- Рабочее дерево смешанное: 24 tracked-файла изменены, дополнительно есть локальные runtime, virtual environment, инфраструктурные и secret-like артефакты. Polling не запускался, файлы не удалялись, смешанное дерево не публиковалось.
+- `ops/agent-sync-status.ps1`: `BotTaskState=Running`, `BotProcessCount=2`, `Published=True`, `Synchronized=False`; проблема единственного владельца polling не закрыта.
+- Последнее локальное runtime-свидетельство датировано 20.07.2026; свежие submission/draft присутствуют, но клиентские данные наружу не выгружались.
+- Проверка: 63 теста пройдены; `py -3.12 -m compileall WellnessBot tests` пройдена.
+- Свободно на `C:`: `1,526,071,296` байт (около `1.42 GiB`), ниже floor `10 GiB`; нужна уборка с ручным контролем, без слепого удаления.
+- Notion синхронизируется; в GitHub допустим только узкий allowlist статусных документов. Полная синхронизация исходников отложена.
+- Готово к пилоту только: обезличенные контролируемые кейсы, ручная оплата, обязательный именованный human review. Нельзя запускать публичный трафик, автоматическую оплату, unattended delivery или второй polling-процесс.
+- Следующие шаги: разобраться с двумя polling-процессами, закрепить structured intake и reviewer evidence, провести 2 прогона набора из 20 NutriOK fixtures, восстановить диск и публиковать только проревьюированные изменения.
+
+## 2026-07-22 00:27 MSK - Bot Operational Health Check
+
+- Startup truth re-verified from the required coordination docs; stage stays `nutriok-controlled-build-2026-07-17-r1`, branch `master`, canonical workspace unchanged.
+- `ops/preflight.ps1` passed: `.venv\Scripts\python.exe`, `.env`, and `WellnessBot/main.py` are present.
+- `ops/agent-sync-status.ps1` reports `Published=True`, `TrackedDirtyFiles=24`, `BotTaskState=Ready`, `BotProcessCount=0`, `LegacyHermesPolling=False`, `Synchronized=False`.
+- `Get-ScheduledTaskInfo` for `WellnessBot` shows the latest scheduled-task run ended on `2026-07-22 22:27:27` with `LastTaskResult=1`.
+- `ops/bot-status.ps1` showed a transient `python.exe` match, but an immediate `Win32_Process` readback did not confirm a live command line; treat runtime as not process-verified.
+- Freshest runtime artifact is `bot.stderr.log` modified on `2026-07-22 22:28:54`; the tail ends with `aiogram.exceptions.TelegramNetworkError` caused by `ClientConnectorError: Cannot connect to host api.telegram.org:443`.
+- Direct connectivity check confirms the blocker layer: `Test-NetConnection api.telegram.org -Port 443` resolved DNS and pinged the host, but `TcpTestSucceeded=False`.
+- `ops/llm-smoke.ps1` passed with a non-empty assistant reply, so the LLM path is currently alive even though console encoding garbled Cyrillic output in the terminal capture.
+
+### Operational verdict
+
+- Pass: preflight, config presence, scheduled-task discovery, and LLM smoke.
+- Fail: Telegram polling runtime is down; the scheduled task exits with code `1` because outbound TCP `443` to `api.telegram.org` is failing.
+- Active blockers remain the mixed dirty tree (`24` tracked files) and low operational margin already documented in the current stage artifacts.
+
+### Immediate corrective actions
+
+1. Restore outbound access from Windows to `api.telegram.org:443` for the scheduled-task environment: VPN/proxy/firewall/ISP path must be fixed outside the bot code.
+2. After network recovery, run only the Windows scheduled task `WellnessBot` and capture one fresh handled-update proof; do not start polling from a terminal or WSL.
+3. Re-run `ops/agent-sync-status.ps1`, `ops/bot-status.ps1`, and `ops/llm-smoke.ps1` after connectivity is restored.
+
+## 2026-07-22 00:35 MSK - Proxy Fallback Fix
+
+- Root cause narrowed further: the bot had an explicit `BOT_PROXY_URL=http://127.0.0.1:10808`, direct Telegram access was blocked, and `xray.exe` plus local port `127.0.0.1:10808` were available during diagnosis.
+- The runtime failure path was self-inflicted: `WellnessBot/main.py` dropped the configured proxy after a failed precheck and switched to direct Telegram polling, which then crashed on `api.telegram.org:443`.
+- Fixed `WellnessBot/main.py` so `_create_bot_session()` keeps the configured proxy even when the quick precheck fails and lets aiogram retry through the proxy instead of forcing direct mode.
+- Verification: `py -3.12 -m py_compile .\WellnessBot\main.py` passed.
+- Live restart could not be fully verified in this run because `Start-ScheduledTask -TaskName WellnessBot` returned `Access denied`; no terminal poller was started as a workaround.
+- Next runtime action remains unchanged: start only the Windows scheduled task and confirm one fresh handled-update artifact.
+## 2026-08-30 02:17 MSK - Регулярная синхронизация GitHub и Notion
+
+- Этап: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot; `PAYMENT_MODE=manual`; public launch заблокирован; human review обязателен.
+- Проверены docs, WellnessBot, ops, tests, landing, mini-app; polling не запускался. 63 теста и compilation прошли.
+- `master=origin/master=c9fe781`; 24 tracked-изменения и untracked local/runtime/secret-like артефакты делают полный commit/push небезопасным.
+- `agent-sync-status`: `BotTaskState=Running`, `BotProcessCount=2`, `Synchronized=False`; единственный polling owner не доказан.
+- C: около `9.99 GiB` свободно, чуть ниже floor `10 GiB`.
+- Следующие шаги: один scheduled-task owner, reviewed allowlist, intake/reviewer evidence, два benchmark-прогона, восстановление диска.
+- GitHub readback успешен; Notion status page создана и проверена поиском; секреты и клиентские данные не передавались.
+
+## 2026-10-15 15:09 MSK - Регулярная синхронизация GitHub и Notion
+
+- Этап не изменён: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot; `PAYMENT_MODE=manual`; public launch заблокирован; human review обязателен.
+- Репозиторий: ветка `master`, `HEAD=origin/master=c9fe781`; рабочее дерево смешанное: 24 tracked-файла изменены, присутствуют untracked virtualenv, runtime/lock/log, token-like и другие локальные артефакты. Полная публикация не выполнялась.
+- Runtime: `WellnessBot` scheduled task = `Ready`, процессов `0`, `LegacyHermesPolling=False`; второй polling-процесс не запускался. Свежий handled-update proof не получен.
+- Проверки: `63` теста прошли; `py -3.12 -m compileall WellnessBot tests` прошёл.
+- Ops-блокер: свободно на `C:` `2,490,368` байт (`~2.4 MB`) на `2026-10-15 15:09 MSK`, существенно ниже floor `10 GiB`. Удаление файлов не выполнялось.
+- GitHub: remote доступен для чтения (`git ls-remote` успешен), но commit/push отложен: текущий набор нельзя безопасно коммитить целиком; нужна reviewed allowlist только для намеренных статусных документов.
+- Notion: будет выполнена отдельная запись только без секретов и клиентских данных; точный readback обязателен. При недоступности коннектора локальный fallback-отчёт фиксирует причину.
+- Готово к пилоту только: ограниченные обезличенные concierge-кейсы, ручная оплата, обязательный named human review. Нельзя запускать public traffic, автоматическую оплату, unattended delivery, широкий трафик или второй poller.
+- Следующие шаги: восстановить диск операторской уборкой; доказать единственного runtime-владельца; закрепить structured intake и reviewer evidence; собрать два актуальных NutriOK benchmark-прогона; опубликовать только проверенный allowlist.

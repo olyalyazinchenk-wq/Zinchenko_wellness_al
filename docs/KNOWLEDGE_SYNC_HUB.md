@@ -47,6 +47,15 @@ After tool discovery and before claiming connector success:
 - write the local fallback artifact anyway so the sync payload can be replayed later without redoing the analysis
 - include the exact startup error and the exact access request in `PROJECT_PULSE_LOG.md` and the inbox summary
 
+## Connector Write Verification Rule
+After any connector write that the run plans to count as completed:
+- verify the exact written target by readback before marking the connector `Done`
+- for Notion, re-fetch the updated hub page or the created run-note page by page ID
+- for GitHub, fetch the exact repository path from the default branch or the explicit written branch
+- for Google Drive, re-read file metadata or fetch the written file by the returned ID
+- do not treat a successful write response, connector availability probe, or local replay artifact alone as proof that outward sync actually landed
+- if readback does not show the expected artifact, downgrade the connector result to `Draft` or `Blocked`, log the exact mismatch in `PROJECT_PULSE_LOG.md`, and repeat the exact access or retry request in the inbox summary
+
 ## Connector Recovery Rule
 If a connector that was blocked in an earlier run succeeds in the current session:
 - clear the carried-forward blocked state explicitly instead of silently leaving the old failure narrative in place
@@ -67,6 +76,33 @@ Before concluding a sync:
 - separate `repo head` from `working tree truth` in `PROJECT_PULSE_LOG.md` and `AGENT_CONTEXT_HUB.md`
 - if a dirty change conflicts with the standing pilot, safety, or pricing rules, call it out immediately as a regression with owner and next fix action
 
+## External Demand Evidence Rule
+
+Before counting a payment, submission, or delivery as product demand:
+- verify that the buyer is a unique external customer rather than the founder, administrator, developer, or repeated test user
+- record collected payment evidence, delivery evidence, review approval, refund state, acquisition source, and follow-up outcome
+- do not count manual payment confirmation, duplicate rails, generated PDFs, internal Telegram users, or test invoices as revenue proof
+- label aggregates containing unverified/internal records as workflow evidence, not sales evidence
+
+## Nutrition Assessment Clinical Rule
+
+For every NutriOK artifact, prompt, public claim, and delivery:
+- separate observed facts, uncertainty, cautious hypotheses, missing information, and doctor-level questions
+- never convert a symptom, lab marker, diet pattern, HMS/GC-MS/Osipov marker, or model inference into a diagnosis, causal claim, or treatment plan
+- require persisted named Olga approval for ОК-Разбор, ОК-Результат 8, ОК-Ритм, and every supplement detail
+- allow automatic ОК-Экспресс delivery only after deterministic red-flag, unsafe-claim, and supplement-offer checks pass
+- keep partner links outside the core result until requested, suitable, disclosed, and approved
+- turn every diagnosis, invented history, unsupported causal claim, dose/course, hidden affiliate mention, or delivery bypass into a regression with owner Clinical QA + Product and a golden negative fixture
+
+## Canonical Product Ladder Rule
+
+Until the controlled pilot validates the ladder:
+- keep one brand, one promise, and the approved five-step ladder across bot, websites, Notion, GitHub, Drive, and content
+- preserve pilot prices 0 / 990 / 5900 / 14900 / 1990 monthly and the approved regular prices until a recorded decision changes them
+- credit the previous payment in full only for upgrades within 30 days
+- count only unique external paid users as demand evidence
+- require 20 Express buyers, at least 8 Full upgrades, and at least 4 eight-week upgrades before scale claims
+- paid advertising remains blocked while runtime, delivery review, safety benchmark, privacy controls, payment truth, or surface truth are failing
 ## GitHub Default Branch Drift Rule
 Before claiming GitHub outward sync is trustworthy for external contributors:
 - compare the active local branch and its remote head against the repository default branch
@@ -200,3 +236,9 @@ Before confirming any paid case as delivered:
 - if delivery still proceeds, record an explicit manual override note with who approved it and why
 - if a case reaches `delivered_to_client` without a cleared review verdict or override note, log it immediately in `PROJECT_PULSE_LOG.md` as a P0 regression with owner and next fix action
 - do not infer delivery safety from the existence of a generated PDF alone; artifact existence cannot override a failing review verdict
+
+## Direct Delivery Review Evidence Rule
+Before treating any `direct_delivery` paid rail as healthy or reusable proof:
+- verify a persisted review artifact exists, such as a matching `*.review.json`, or verify an explicit manual override note names the approver and reason
+- if delivery finished without persisted review evidence, log it immediately in `PROJECT_PULSE_LOG.md`, `AGENT_CONTEXT_HUB.md`, and outward-sync artifacts as a regression with owner and next fix action
+- do not treat direct specialist delivery as validated pilot proof until the review trail is persisted

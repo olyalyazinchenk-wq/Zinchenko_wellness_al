@@ -1,6 +1,40 @@
-﻿# Agent Context Hub
+# Agent Context Hub
 
-Updated: 2026-07-19 02:18 MSK
+Updated: 2026-10-30 04:05 MSK
+
+## Снимок синхронизации - 2026-10-30 04:05 MSK (Спринт A завершён)
+
+- **Этап**: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot, `PAYMENT_MODE=manual`, `ENABLE_TMA=false`, public launch заблокирован.
+- **Безопасность (A1–A2)**: закрыт IDOR в `getpdf_` и `get_user_approved_reports`; удалена клиентская запись `supplement_review_*`; добавлен `WellnessBot/review_gate.py` (`is_release_approved`, SHA-256 сверка артефакта, запись `approved_by_admin_id` и `auto_delivery_decision`); добавлен `tests/test_report_access.py` (6 тестов).
+- **Конфигурация и Runtime (A3–A4)**: `.env` и `WellnessBot/.env` переведены на `PAYMENT_MODE=manual`, `ENABLE_TMA=false`. `ops/agent-sync-status.ps1` и `ops/dev.ps1` считают `BotOwnerCount=1` (`BotProcessCount=2`, пара venv launcher + child). Scheduled Task `WellnessBot` перезапущена (`2026-10-30 04:02:37 MSK`, `Run polling for bot @zinchenko_wellness_ai_1_bot`).
+- **Гигиена и публикация (A5–A6)**: добавлен `.gitattributes`, обновлён `.gitignore`, legacy-скрипты корня перенесены в `ops/archive/root_legacy/`. Все 69 тестов (`pytest` / `unittest`) и `compileall` зелёные; проверенная дельта разбита на 6 атомарных коммитов и опубликована в `origin/master`.
+
+## Снимок синхронизации - 2026-10-30 03:20 MSK
+
+- **Этап**: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot, `PAYMENT_MODE=manual`, public launch заблокирован.
+- **Runtime truth**: Scheduled Task `WellnessBot` = `Running`, активных процессов `2` (venv parent + child); свежийhandled-update proof подтверждён, polling для `@zinchenko_wellness_ai_1_bot` активен.
+- **VPN / Connectivity**: локальный прокси Xray на `127.0.0.1:10808` активен, `https://api.telegram.org` отвечает `HTTP 200 OK`.
+- **Ops truth**: на `C:` свободно **71.25 GB** (выше floor `10 GiB`), блокер свободного места закрыт.
+- **Проверки**: `pytest tests -v` — 63 теста пройдены; `compileall` пройден. Создан CLI `ops/dev.ps1`.
+- **Консолидация проекта**: проект упорядочен в единую папку. Внешние материалы перенесены в `materials/`, скрипты настройки серверов и VPN — в `ops/infra/digitalocean_vpn/`, на Рабочем столе создан Junction `Кето-Баланс (NutriOK)`.
+- **Git truth**: `master`, `HEAD=origin/master=c9fe781`. Tracked dirty files содержат reviewed NutriOK-слой; секреты и локальные артефакты изолированы в `.gitignore`.
+- **Мультиагентный контур**: Hermes, Codex и Antigravity используют единый канонический workspace `C:\Users\HP\Desktop\Новая папка`.
+
+## Снимок синхронизации - 2026-07-26 12:00 MSK
+
+- Этап не менялся: `nutriok-controlled-build-2026-07-17-r1`; режим остаётся controlled concierge pilot, `PAYMENT_MODE=manual`, public launch заблокирован.
+- Прочитаны обязательные coordination-файлы и целевые документы по стратегии, продуктовой линейке, ручной оплате, аудиту и skill registry; проверены `docs`, `WellnessBot`, `ops`, `tests`, `landing`, `mini-app`.
+- Git truth: `master`, `HEAD=origin/master=a9f0734`; `git ls-remote --heads origin` успешен. Рабочее дерево содержит 24 tracked-изменения и untracked runtime/virtual-environment/infrastructure/secret-like артефакты; полная публикация запрещена.
+- Проверки: `py -3.12 -m unittest discover -s tests -v` — 63 теста пройдены; `py -3.12 -m compileall WellnessBot tests` — успешно.
+- Runtime truth: Scheduled Task `WellnessBot` = `Ready`, активных процессов `0`; последний запуск `2026-07-22 22:27:27`, `LastTaskResult=1`. Свежего handled-update proof нет; polling не запускался.
+- Ops truth: на `C:` свободно `187547648` байт (около `179 MiB`), критически ниже floor `10 GiB`; удаление файлов не выполнялось.
+- Внешний sync: GitHub remote доступен, но mixed tree не коммитится; Notion connector/tools в этой сессии недоступны, создан локальный fallback-отчёт в `docs/external_sync/`.
+
+### Текущая готовность и блокеры
+
+- К пилоту готово только: обезличенные controlled concierge кейсы, ручная оплата, безопасная `ОК-Экспресс` при safety gate и обязательном именованном human review.
+- Публично запускать нельзя: public traffic/ads, автоматическую оплату, unattended delivery, полные tiers или supplement details без approval, второй polling-процесс и mixed-tree публикацию.
+- P0: восстановить диск выше `10 GiB`; разделить reviewed source и локальные артефакты; восстановить Telegram connectivity и получить свежий single-owner runtime proof; закрепить structured intake/reviewer evidence; провести два прогона 20-case benchmark.
 ## Снимок синхронизации - 2026-07-19 02:18 MSK
 
 - Stage не менялся: `nutriok-controlled-build-2026-07-17-r1`; controlled build / concierge pilot; public launch заблокирован.
@@ -449,3 +483,59 @@ Updated: 2026-06-21 16:40 MSK
 
 
 
+
+## 2026-07-21 02:17 MSK - Regular GitHub/Notion Synchronization
+
+- Stage remains `nutriok-controlled-build-2026-07-17-r1`; operating mode remains controlled concierge pilot, `PAYMENT_MODE=manual`, and public launch is blocked.
+- Fresh checks: `master` is at `a9f0734` and matches `origin/master`; GitHub read access via `git ls-remote` succeeded.
+- The worktree is not synchronized: 24 tracked files are dirty and there are untracked virtual-environment, runtime, infrastructure, and secret-like artifacts. No sensitive files are eligible for publication.
+- `ops/agent-sync-status.ps1` reports `BotTaskState=Running`, `BotProcessCount=2`, `Published=True`, `Synchronized=False`; no polling process was started by this run.
+- Verification passed: 63 unit tests and Python compilation for `WellnessBot`/`tests`.
+- Storage risk worsened: `C:` has `1,455,128,576` bytes free (about `1.36 GiB`), below the `10 GiB` floor. Cleanup requires operator review; no deletion was performed.
+- Notion/GitHub publication of the mixed tree is deferred until an explicit allowlist separates intentional source/docs changes from secrets, logs, locks, uploads, and local tooling.
+
+### Current pilot readiness
+
+- Ready only for a limited de-identified concierge pilot with manual payment and mandatory named human review.
+- Not ready for public launch, automated payment, unattended delivery, broad traffic, or a second polling process.
+- Immediate priorities: establish single-owner runtime truth, persist structured intake and reviewer evidence, build/run the 20-case NutriOK benchmark twice, recover disk headroom, and publish only a reviewed allowlist.
+## 2026-07-22 02:18 MSK - Regular GitHub/Notion Synchronization
+
+- Stage remains `nutriok-controlled-build-2026-07-17-r1`; operating mode remains controlled concierge pilot, `PAYMENT_MODE=manual`, and public launch is blocked.
+- `master` and `origin/master` still point to `a9f0734`; GitHub remote and connector are reachable.
+- The worktree remains mixed: 24 tracked files are dirty, with additional local runtime, virtual-environment, infrastructure, and secret-like artifacts. This run did not start polling, delete files, or publish the mixed tree.
+- `ops/agent-sync-status.ps1` reports `BotTaskState=Running`, `BotProcessCount=2`, `Published=True`, `Synchronized=False`; the single-owner runtime issue remains unresolved.
+- Latest local runtime evidence is from 2026-07-20, with fresh submissions/drafts present; it was not copied to external systems and its client data remains local.
+- Verification passed: 63 unit tests and Python compilation for `WellnessBot`/`tests`.
+- Storage risk worsened: `C:` has `1,526,071,296` bytes free (about `1.42 GiB`), below the `10 GiB` floor. Cleanup requires operator review; no deletion was performed.
+- Notion status sync is available; GitHub publication is limited to the reviewed status-doc allowlist. Full source synchronization remains deferred.
+
+### Current pilot readiness
+
+- Ready only for a limited de-identified concierge pilot with manual payment and mandatory named human review.
+- Not ready for public launch, automated payment, unattended delivery, broad traffic, or a second polling process.
+- Immediate priorities: reconcile the duplicate polling ownership, persist structured intake and reviewer evidence, build/run the 20-case NutriOK benchmark twice, recover disk headroom, and publish only reviewed intentional source changes.
+## Снимок синхронизации - 2026-08-30 02:17 MSK
+
+- Этап: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot, `PAYMENT_MODE=manual`, public launch заблокирован, human review обязателен.
+- Git: `master` и `origin/master` совпадают на `c9fe781`; mixed tree не публиковался: 24 tracked-изменения плюс untracked virtualenv, runtime/lock/log, инфраструктурные и secret-like артефакты.
+- Проверки: 63 unittest и `compileall WellnessBot tests` прошли. `git diff --check` показывает whitespace/EOF замечания в неревьюенных изменениях.
+- Runtime: `agent-sync-status` сообщает `BotTaskState=Running`, `BotProcessCount=2`, `Synchronized=False`; единственный polling owner не подтверждён, polling не запускался.
+- C: свободно `10723606528` байт, около `9.99 GiB`, чуть ниже floor `10 GiB`; удаления не выполнялись.
+- Notion: обезличенная status page создана в текущем запуске. GitHub commit/push mixed tree отложены.
+
+### Готовность и P0
+
+- К пилоту готово только: ограниченные обезличенные concierge-кейсы, ручная оплата, безопасная Express-ветка при safety gate и обязательном именованном human review.
+- Публично запускать нельзя: public traffic/ads, автоматическую оплату, unattended delivery, полные tiers или supplement details без approval, второй polling-процесс и смешанное дерево.
+- P0: разобраться с двумя процессами; разделить reviewed source и чувствительные артефакты; закрепить intake/reviewer evidence; провести два 20-case benchmark; вернуть C: выше 10 GiB.
+
+## 2026-10-15 15:09 MSK - Regular GitHub/Notion Synchronization
+
+- Stage unchanged: `nutriok-controlled-build-2026-07-17-r1`; controlled concierge pilot, `PAYMENT_MODE=manual`, public launch blocked, human review mandatory.
+- Fresh repo truth: `master=origin/master=c9fe781`; `ops/agent-sync-status.ps1` reports `Published=True`, `TrackedDirtyFiles=24`, `BotTaskState=Ready`, `BotProcessCount=0`, `LegacyHermesPolling=False`, `Synchronized=False`.
+- Verification passed: 63 unit tests and `py -3.12 -m compileall WellnessBot tests`.
+- Worktree is unsafe for whole-tree publication: tracked changes span WellnessBot, docs, tests, root/landing/mini-app; untracked `.venv_wsl`, lock/log files, token-like scripts, uploads/runtime artifacts, and other local debris are present. No secrets, client data, uploads, or runtime artifacts were staged.
+- Storage is a P0 operational blocker: `C:` has `2,490,368` bytes free at `2026-10-15 15:09 +03:00`, far below the `10 GiB` floor. No cleanup or deletion was performed.
+- Pilot readiness: only limited de-identified concierge cases with manual payment and named human review. Do not launch public traffic, automated payment, unattended delivery, broad traffic, or a second polling process.
+- Next actions: operator-reviewed disk recovery; split a reviewed publication allowlist; prove one scheduled-task runtime owner after network readiness; persist structured intake and reviewer evidence; run two current NutriOK benchmark passes; keep public surfaces aligned with pilot truth.
