@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ product_name | default('Разбор НутриОК by Olga Kovaleva') }}</title>
+    <style>
+        :root {
+            --paper: #f5f1e8;
+            --bright: #fffdf7;
+            --ink: #171912;
+            --muted: #575a50;
+            --green: #c7f04b;
+            --green-soft: #eef9c8;
+            --coral: #ff6b4a;
+            --coral-soft: #fff0ec;
+            --blue: #3154d8;
+            --blue-soft: #eef2ff;
+            --line: rgba(23, 25, 18, 0.16);
+            --line-strong: #171912;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--paper);
+            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.48;
+            font-size: 13px;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 18mm 18mm 20mm;
+            margin: 0 auto;
+            background: var(--paper);
+            position: relative;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        /* Editorial Typography */
+        .serif {
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 4px 9px;
+            border-radius: 999px;
+            border: 1px solid var(--ink);
+            background: var(--bright);
+        }
+
+        .kicker.lime {
+            background: var(--green);
+            color: var(--ink);
+        }
+
+        .kicker.blue {
+            background: var(--blue);
+            color: var(--bright);
+            border-color: var(--blue);
+        }
+
+        .kicker.coral {
+            background: var(--coral);
+            color: var(--bright);
+            border-color: var(--coral);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 12px;
+            border-bottom: 1.5px solid var(--ink);
+            margin-bottom: 18px;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-mark {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: var(--green);
+            border: 1.5px solid var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 15px;
+            line-height: 1.05;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-top: 2px;
+        }
+
+        /* Hero Cover Box */
+        .cover-hero {
+            background: var(--ink);
+            color: var(--bright);
+            border-radius: 14px;
+            padding: 26px 28px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 18px;
+            border: 1.5px solid var(--ink);
+        }
+
+        .cover-hero-grid {
+            display: grid;
+            grid-template-columns: 1.35fr 0.65fr;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cover-title {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 34px;
+            line-height: 1.02;
+            font-weight: 400;
+            margin: 12px 0 10px;
+        }
+
+        .cover-title mark {
+            background: var(--green);
+            color: var(--ink);
+            padding: 0 6px;
+            border-radius: 4px;
+        }
+
+        .cover-subtitle {
+            color: rgba(255, 253, 247, 0.82);
+            font-size: 13.5px;
+            margin: 0;
+            max-width: 440px;
+        }
+
+        /* Point A Card */
+        .point-a-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .card {
+            background: var(--bright);
+            border: 1.25px solid var(--ink);
+            border-radius: 10px;
+            padding: 16px 18px;
+        }
+
+        .card.featured {
+            background: var(--green-soft);
+            box-shadow: 4px 4px 0 var(--ink);
+        }
+
+        .card-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 6px;
+        }
+
+        .baseline-meter {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin: 6px 0 8px;
+        }
+
+        .baseline-number {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 40px;
+            line-height: 1;
+            color: var(--ink);
+        }
+
+        .baseline-max {
+            font-size: 16px;
+            color: var(--muted);
+        }
+
+        .scale-bar {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+            margin-top: 8px;
+        }
+
+        .scale-segment {
+            height: 8px;
+            border-radius: 99px;
+            border: 1px solid var(--ink);
+            background: var(--paper);
+        }
+
+        .scale-segment.active {
+            background: var(--green);
+        }
+
+        /* Summary 3 columns */
+        .summary-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .summary-box {
+            background: var(--bright);
+            border: 1px solid var(--ink);
+            border-radius: 8px;
+            padding: 13px 14px;
+        }
+
+        .summary-box.stop-box {
+            background: var(--coral-soft);
+            border-color: var(--coral);
+        }
+
+        .summary-box h4 {
+            margin: 0 0 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .clean-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .clean-list li {
+            position: relative;
+            padding-left: 14px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            line-height: 1.38;
+        }
+
+        .clean-list li::before {
+            content: "●";
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 9px;
+            color: var(--blue);
+        }
+
+        .stop-box .clean-list li::before {
+            color: var(--coral);
+        }
+
+        /* Olga Review Stamp */
+        .review-stamp {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            background: var(--blue-soft);
+            border: 1.5px solid var(--blue);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+        }
+
+        .stamp-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stamp-seal {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--blue);
+            color: var(--bright);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        /* Section Titles */
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--ink);
+            padding-bottom: 8px;
+            margin-bottom: 14px;
+        }
+
+        .section-header h2 {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 24px;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        /* Diary Patterns */
+        .pattern-card {
+            background: var(--bright);
+            border: 1.25px solid var(--ink);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 11px;
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            gap: 12px;
+        }
+
+        .pattern-idx {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: var(--green);
+            border: 1px solid var(--ink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .diary-quote {
+            margin: 6px 0;
+            padding: 7px 10px;
+            background: var(--paper);
+            border-left: 3px solid var(--blue);
+            font-style: italic;
+            font-size: 11.8px;
+            color: #2c2f26;
+        }
+
+        /* Plate Constructor */
+        .plate-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .plate-item {
+            background: var(--bright);
+            border: 1px solid var(--ink);
+            border-radius: 8px;
+            padding: 11px 12px;
+        }
+
+        .plate-item strong {
+            display: block;
+            font-size: 11.5px;
+            margin-bottom: 4px;
+        }
+
+        .plate-item p {
+            margin: 0;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* 7-Day Plan Cards */
+        .days-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .day-card {
+            background: var(--bright);
+            border: 1px solid var(--ink);
+            border-radius: 8px;
+            padding: 11px 13px;
+        }
+
+        .day-card.day-highlight {
+            background: var(--green-soft);
+            border-width: 1.5px;
+        }
+
+        .day-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .day-tag {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 2px 7px;
+            background: var(--ink);
+            color: var(--bright);
+            border-radius: 4px;
+        }
+
+        .day-why {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* Disclaimers & Next Step */
+        .cta-banner {
+            background: var(--ink);
+            color: var(--bright);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .cta-btn {
+            background: var(--green);
+            color: var(--ink);
+            font-weight: 700;
+            font-size: 12px;
+            padding: 9px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .disclaimer-box {
+            border-top: 1px solid var(--line);
+            padding-top: 8px;
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.38;
+        }
+
+        .page-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--line);
+            padding-top: 8px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PAGE 1: COVER + POINT A + EXECUTIVE SUMMARY -->
+    <div class="page">
+        <div>
+            <div class="top-bar">
+                <div class="brand-row">
+                    <div class="brand-mark">ОК</div>
+                    <div class="brand-text">
+                        <strong>НутриОК by Olga Kovaleva</strong>
+                        <span>Персональная нутрициологическая навигация</span>
+                    </div>
+                </div>
+                <div>
+                    <span class="kicker lime">{{ product_name | default('ОК-Разбор') }}</span>
+                </div>
+            </div>
+
+            <div class="cover-hero">
+                <div class="cover-hero-grid">
+                    <div>
+                        <span class="kicker coral">Фокус: {{ goal_label | default('Энергия и ресурс') }}</span>
+                        <h1 class="cover-title">
+                            Разбор, после которого <mark>понятно, что делать</mark>
+                        </h1>
+                        <p class="cover-subtitle">
+                            {{ executive_summary.headline | default('Пошаговый маршрут по питанию, режиму и привычкам на основе вашей анкеты и 3-дневного дневника.') }}
+                        </p>
+                    </div>
+                    <div style="text-align: right;">
+                        <svg width="130" height="130" viewBox="0 0 130 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="65" cy="65" r="56" stroke="rgba(255,253,247,0.18)" stroke-width="10"/>
+                            <circle cx="65" cy="65" r="56" stroke="#c7f04b" stroke-width="10"
+                                stroke-dasharray="351.8"
+                                stroke-dashoffset="{{ 351.8 - (351.8 * (baseline_score | default(4) | int) / 10.0) }}"
+                                stroke-linecap="round"
+                                transform="rotate(-90 65 65)"/>
+                            <text x="65" y="62" text-anchor="middle" fill="#fffdf7" font-family="Georgia, serif" font-size="32">{{ baseline_score | default(4) }}/10</text>
+                            <text x="65" y="82" text-anchor="middle" fill="#c7f04b" font-size="10" font-weight="bold" letter-spacing="1">ТОЧКА А</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Point A: Baseline & Metric -->
+            <div class="point-a-grid">
+                <div class="card featured">
+                    <div class="card-label">Ваша Точка А (Исходная оценка)</div>
+                    <div class="baseline-meter">
+                        <span class="baseline-number">{{ baseline_score | default(4) }}</span>
+                        <span class="baseline-max">из 10 баллов · {{ created_date | default('30.10.2026') }}</span>
+                    </div>
+                    <div style="font-size: 12px; font-weight: 600;">
+                        Главная цель: {{ goal_label | default('Стабильная энергия без спадов после обеда') }}
+                    </div>
+                    <div class="scale-bar">
+                        {% set score_val = (baseline_score | default(4) | int) %}
+                        {% for i in range(1, 11) %}
+                        <div class="scale-segment {% if i <= score_val %}active{% endif %}"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-label">Профиль и Метрика Отслеживания</div>
+                    <div style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">
+                        {{ client_name | default('Клиент НутриОК') }}
+                    </div>
+                    <div style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">
+                        {{ client_profile | default('Персональный разбор дневника питания и образа жизни') }}
+                    </div>
+                    <div style="padding: 8px 10px; background: var(--paper); border-radius: 6px; border: 1px solid var(--line); font-size: 11.5px;">
+                        <strong>Метрика цели:</strong> {{ goal_metric | default('Бодрость после обеда (0–10) и количество дней с полноценным завтраком') }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Summary Boxes -->
+            <div class="summary-3col">
+                <div class="summary-box">
+                    <h4>3 главных наблюдения</h4>
+                    <ul class="clean-list">
+                        {% for item in executive_summary.key_findings %}
+                        {% if item %}<li>{{ item }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="summary-box">
+                    <h4>3 первых шага</h4>
+                    <ul class="clean-list">
+                        {% for item in executive_summary.top_actions %}
+                        {% if item %}<li>{{ item }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="summary-box stop-box">
+                    <h4>Стоп-сигналы (к врачу)</h4>
+                    <ul class="clean-list">
+                        {% for item in executive_summary.stop_signals %}
+                        {% if item %}<li>{{ item }}</li>{% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if review_stamp %}
+            <div class="review-stamp">
+                <div class="stamp-badge">
+                    <div class="stamp-seal">✓</div>
+                    <div>
+                        <strong style="display: block; font-size: 13px;">Проверено лично: {{ review_stamp.reviewer_name | default('Ольга Ковалева, нутрициолог') }}</strong>
+                        <span style="font-size: 11px; color: var(--muted);">
+                            Дата верификации: {{ review_stamp.decided_at }} · Статус: Одобрено к выдаче клиенту
+                        </span>
+                    </div>
+                </div>
+                <div style="text-align: right; font-family: monospace; font-size: 10px; color: var(--blue);">
+                    SHA-256 VERIFIED<br>
+                    {{ (review_stamp.artifact_sha256 or 'verified')[:16] }}…
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="page-footer">
+            <span>НУТРИОК BY OLGA KOVALEVA · ПЕРСОНАЛЬНЫЙ РАЗБОР</span>
+            <span>СТРАНИЦА 01 / 03</span>
+        </div>
+    </div>
+
+    <!-- PAGE 2: 3 PATTERNS FROM DIARY + PLATE VISUAL -->
+    <div class="page">
+        <div>
+            <div class="section-header">
+                <h2>3 паттерна из вашего 3-дневного дневника</h2>
+                <span class="kicker blue">Анализ фактического рациона</span>
+            </div>
+
+            {% for pat in patterns_from_diary %}
+            <div class="pattern-card">
+                <div class="pattern-idx">0{{ loop.index }}</div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <strong style="font-size: 14px;">{{ pat.title }}</strong>
+                        <span style="font-size: 11px; color: var(--blue); font-weight: 600;">{{ pat.day_ref | default('Дневник питания') }}</span>
+                    </div>
+                    {% if pat.quote %}
+                    <div class="diary-quote">«{{ pat.quote }}»</div>
+                    {% endif %}
+                    <div style="font-size: 12px; color: var(--ink);">
+                        <strong>Почему это важно для вашей цели:</strong> {{ pat.explanation }}
+                    </div>
+                    <div style="font-size: 12px; color: #2b4c10; margin-top: 3px; font-weight: 600;">
+                        → Мягкая замена: {{ pat.correction }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="section-header" style="margin-top: 18px;">
+                <h2>Ваша формула тарелки и ритма дня</h2>
+                <span class="kicker lime">Ориентир без подсчёта калорий</span>
+            </div>
+
+            <div class="plate-grid">
+                {% for block in plate_formula %}
+                <div class="plate-item">
+                    <span class="kicker" style="margin-bottom: 6px;">{{ block.share }}</span>
+                    <strong>{{ block.title }}</strong>
+                    <p>{{ block.examples }}</p>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if three_step_protocol %}
+            <div class="card" style="margin-top: 14px;">
+                <div class="card-label">Приоритеты поддержки на 14 дней</div>
+                {% for item in three_step_protocol %}
+                <div style="padding: 6px 0; {% if not loop.last %}border-bottom: 1px solid var(--line);{% endif %}">
+                    <strong style="font-size: 12.5px;">{{ loop.index }}. {{ item.title }}</strong>
+                    <div style="font-size: 11.8px; color: var(--muted);">{{ item.body }}</div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="page-footer">
+            <span>НУТРИОК BY OLGA KOVALEVA · ПАТТЕРНЫ ДНЕВНИКА</span>
+            <span>СТРАНИЦА 02 / 03</span>
+        </div>
+    </div>
+
+    <!-- PAGE 3: 7-DAY CARD PLAN + HOW TO MEASURE + DISCLAIMERS -->
+    <div class="page">
+        <div>
+            <div class="section-header">
+                <h2>План действий на 7 дней (по шагам)</h2>
+                <span class="kicker lime">1 день = 1 простой фокус</span>
+            </div>
+
+            <div class="days-grid">
+                {% for item in plan_7_days %}
+                <div class="day-card {% if loop.index in [1, 7] %}day-highlight{% endif %}">
+                    <div class="day-top">
+                        <span class="day-tag">{{ item.day }}</span>
+                        <span style="font-size: 11px; font-weight: 700;">{{ item.focus }}</span>
+                    </div>
+                    <div style="font-size: 12px; font-weight: 600;">{{ item.action }}</div>
+                    <div class="day-why">Зачем: {{ item.why }}</div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="card" style="margin-bottom: 12px;">
+                <div class="card-label">Как измерять прогресс через 7 дней (Чек-лист самопроверки)</div>
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 14px; align-items: center;">
+                    <ul class="clean-list">
+                        {% for check in measurement_checklist %}
+                        <li>{{ check }}</li>
+                        {% endfor %}
+                    </ul>
+                    <div style="background: var(--paper); border: 1px solid var(--ink); border-radius: 8px; padding: 10px 12px; text-align: center;">
+                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase;">Контрольный замер через 7 дней</div>
+                        <div class="serif" style="font-size: 24px; margin: 4px 0;">Точка А: {{ baseline_score | default(4) }}/10 → Цель: {{ target_score | default(8) }}/10</div>
+                        <div style="font-size: 11px; color: var(--muted);">Оцените метрику в боте в конце недели</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cta-banner">
+                <div>
+                    <strong style="font-size: 14px; display: block;">Следующий шаг в Telegram-боте НутриОК</strong>
+                    <span style="font-size: 11.5px; color: rgba(255,253,247,0.8);">
+                        Откройте @zinchenko_wellness_ai_1_bot, чтобы отметить прогресс за неделю или задать вопрос по маршруту.
+                    </span>
+                </div>
+                <a class="cta-btn" href="https://t.me/zinchenko_wellness_ai_1_bot">Открыть @zinchenko_wellness_ai_1_bot →</a>
+            </div>
+
+            <div class="disclaimer-box">
+                <strong>Важное правовое и медицинское уведомление:</strong> Настоящий материал носит исключительно информационно-просветительский и нутрициологический характер (коррекция рациона и пищевых привычек), <strong>не является медицинской услугой, клиническим диагнозом или назначением лечения</strong> и не заменяет очную консультацию врача. При упоминании биологически активных добавок (БАД): БАД не являются лекарственным средством и требуют согласования с лечащим врачом при наличии хронических заболеваний, приёме медикаментов, беременности или грудном вскармливании. Материал может содержать партнёрские ссылки на лабораторные сервисы и каталоги с прозрачной маркировкой.
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>НУТРИОК BY OLGA KOVALEVA · МАРШРУТ НА 7 ДНЕЙ</span>
+            <span>СТРАНИЦА 03 / 03</span>
+        </div>
+    </div>
+
+</body>
+</html>
