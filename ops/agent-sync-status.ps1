@@ -12,14 +12,20 @@ try {
     $trackedDirty = @(git status --short --untracked-files=no)
     $botTask = Get-ScheduledTask -TaskName "WellnessBot" -ErrorAction SilentlyContinue
     $botProcessCount = -1
+    $botOwnerCount = -1
     try {
-        $botProcesses = @(
+        $procs = @(
             Get-CimInstance Win32_Process -ErrorAction Stop | Where-Object {
-                $_.Name -like "python*" -and
-                ([string]$_.CommandLine).Contains("WellnessBot\main.py")
+                $_.CommandLine -like "*WellnessBot*main.py*" -and $_.Name -eq "python.exe"
             }
         )
-        $botProcessCount = $botProcesses.Count
+        $owners = @(
+            $procs | Where-Object {
+                $procs.ProcessId -notcontains $_.ParentProcessId
+            }
+        )
+        $botProcessCount = $procs.Count
+        $botOwnerCount = $owners.Count
     } catch {
         # Some agent shells cannot query Win32_Process. Task state remains the
         # portable runtime ownership signal in that environment.
@@ -55,12 +61,14 @@ try {
         TrackedDirtyFiles = $trackedDirty.Count
         BotTaskState = $taskState
         BotProcessCount = if ($botProcessCount -ge 0) { $botProcessCount } else { "Unavailable" }
+        BotOwnerCount = if ($botOwnerCount -ge 0) { $botOwnerCount } else { "Unavailable" }
         LegacyHermesPolling = $legacyPolling.Count -gt 0
         Synchronized = (
             $branch -eq $stage.branch -and
             $head -eq $remoteHead -and
             $trackedDirty.Count -eq 0 -and
-            $legacyPolling.Count -eq 0
+            $legacyPolling.Count -eq 0 -and
+            ($botOwnerCount -lt 0 -or $botOwnerCount -le 1)
         )
     } | Format-List
 } finally {

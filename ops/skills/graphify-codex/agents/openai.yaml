@@ -1,0 +1,4 @@
+interface:
+  display_name: "Graphify Codex"
+  short_description: "Graphify repo graph workflow"
+  default_prompt: "Use this skill to build, inspect, and query Graphify knowledge graphs for the current repository, falling back to manual graph-oriented analysis when Graphify is unavailable."
