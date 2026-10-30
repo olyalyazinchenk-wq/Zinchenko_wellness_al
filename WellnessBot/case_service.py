@@ -10,6 +10,7 @@ def build_submission_payload(session: dict[str, Any]) -> dict[str, Any]:
     return {
         "submission_id": session["submission_id"],
         "offer": session["offer"],
+        "product_code": session.get("tier") or session.get("offer") or "standard",
         "profile": {
             "telegram_user_id": session["telegram_user_id"],
             "telegram_username": session.get("telegram_username"),
@@ -58,6 +59,15 @@ def build_submission_payload(session: dict[str, Any]) -> dict[str, Any]:
         "vision_analysis": session.get("vision_analysis"),
         "source_submission_id": session.get("source_submission_id"),
         "adult_confirmed": session.get("adult_confirmed", False),
+        "pd_consent_at": session.get("pd_consent_at"),
+        "primary_goal": session.get("primary_goal"),
+        "baseline_score": session.get("baseline_score"),
+        "goal_metric": session.get("goal_metric"),
+        "nutrition_diary": session.get("nutrition_diary", []),
+        "medications": session.get("medications", ""),
+        "allergies": session.get("allergies", ""),
+        "lifestyle": session.get("lifestyle", ""),
+        "intake": session.get("nutriok_intake") or session.get("intake"),
         "intake_status": "submitted",
         "consent_given": session.get("consent_given", False),
     }
@@ -161,5 +171,14 @@ def build_session_from_submission(submission: dict[str, Any], user: Any) -> dict
         "requires_lab_resubmission": submission.get("requires_lab_resubmission", False),
         "source_submission_id": submission.get("source_submission_id"),
         "adult_confirmed": submission.get("adult_confirmed", False),
+        "pd_consent_at": submission.get("pd_consent_at"),
+        "primary_goal": submission.get("primary_goal"),
+        "baseline_score": submission.get("baseline_score"),
+        "goal_metric": submission.get("goal_metric"),
+        "nutrition_diary": submission.get("nutrition_diary", []),
+        "medications": submission.get("medications", ""),
+        "allergies": submission.get("allergies", ""),
+        "lifestyle": submission.get("lifestyle", ""),
+        "nutriok_intake": submission.get("intake"),
         "consent_given": submission.get("consent_given", False),
     }

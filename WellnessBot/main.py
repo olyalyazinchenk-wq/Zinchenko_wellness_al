@@ -64,9 +64,22 @@ from payment_flow import (
     validate_payment_event,
 )
 from medical_skill_database import build_medical_skill_context
+from handlers.nutriok_intake import (
+    ACTIVE_NUTRIOK_STEPS,
+    configure_nutriok_intake,
+    nutriok_router,
+    send_current_nutriok_step_prompt,
+)
 from nutriok_safety import evaluate_delivery_gate
-from review_gate import is_release_approved, list_user_approved_reports
+from review_gate import (
+    ReviewRecord,
+    is_release_approved,
+    list_user_approved_reports,
+    record_review,
+    release_or_raise,
+)
 from supplement_protocols import build_supplement_scheme_entries
+from voice_processor import handle_voice_to_text
 from governance_service import (
     GOVERNANCE_EXPERIMENT_STATUSES,
     aggregate_product_insight_counts,
@@ -227,6 +240,7 @@ logger.info(
 bot_session = _create_bot_session(settings.bot_proxy_url)
 bot = Bot(token=settings.bot_token, session=bot_session)
 dp = Dispatcher()
+dp.include_router(nutriok_router)
 
 SKIP_WORDS = {"пропустить", "скип", "skip", "нет", "не знаю"}
 PREMIUM_TRIGGER_MARKERS = (
@@ -1966,6 +1980,20 @@ def build_growth_preview_lines(report_text: str | None) -> list[str]:
     return lines
 
 
+pending_admin_review_notes: dict[int, str] = {}
+
+
+def build_admin_review_keyboard(submission_id: str) -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="✅ Одобрить", callback_data=f"approve_{submission_id}")],
+            [InlineKeyboardButton(text="✏️ Нужны правки", callback_data=f"changes_{submission_id}")],
+            [InlineKeyboardButton(text="❌ Отклонить", callback_data=f"reject_{submission_id}")],
+            [InlineKeyboardButton(text="🔄 Перегенерировать PDF", callback_data=f"regen_{submission_id}")],
+        ]
+    )
+
+
 async def notify_admins(
     submission: dict[str, Any],
     draft_text: str | None,
@@ -2005,13 +2033,7 @@ async def notify_admins(
     
     markup = None
     if draft_text and "pdf_path" in submission:
-        markup = InlineKeyboardMarkup(
-            inline_keyboard=[
-                [InlineKeyboardButton(text="✅ Одобрить и отправить клиенту", callback_data=f"approve_{submission['submission_id']}")],
-                [InlineKeyboardButton(text="🔄 Перегенерировать PDF", callback_data=f"regen_{submission['submission_id']}")],
-                [InlineKeyboardButton(text="✏️ Это черновик (требует правок)", callback_data=f"draft_only_{submission['submission_id']}")]
-            ]
-        )
+        markup = build_admin_review_keyboard(submission["submission_id"])
 
     for admin_chat_id in settings.admin_chat_ids:
         try:
@@ -2295,6 +2317,20 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
         )
 
     approved_now_iso = utc_now_iso()
+    effective_admin_ids = set(settings.admin_chat_ids) | {callback_query.from_user.id}
+    reviewer_name = (
+        getattr(callback_query.from_user, "full_name", None)
+        or getattr(callback_query.from_user, "username", None)
+        or f"admin_{callback_query.from_user.id}"
+    )
+    record_review(
+        submission,
+        reviewer_id=callback_query.from_user.id,
+        reviewer_name=reviewer_name,
+        decision="approved",
+        artifact_path=pdf_path,
+        admin_ids=effective_admin_ids,
+    )
     submission["approved_by_admin_id"] = callback_query.from_user.id
     submission["approved_at"] = approved_now_iso
     if submission.get("supplement_review_required"):
@@ -2303,8 +2339,9 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
         submission["supplement_review_decision"] = "approved"
     save_submission_state(settings.submissions_dir, submission)
 
+    released_pdf_path = release_or_raise(submission)
     from aiogram.types import FSInputFile
-    pdf_doc = FSInputFile(pdf_path)
+    pdf_doc = FSInputFile(str(released_pdf_path))
     
     await bot.send_document(
         client_id,
@@ -2372,11 +2409,7 @@ async def process_admin_regen(callback_query: types.CallbackQuery) -> None:
             callback_query.from_user.id, 
             document=pdf_doc, 
             caption=f"✅ Обновлённый PDF готов для {submission_id}. Можно одобрять.",
-            reply_markup=InlineKeyboardMarkup(
-                inline_keyboard=[
-                    [InlineKeyboardButton(text="✅ Одобрить и отправить", callback_data=f"approve_{submission_id}")]
-                ]
-            )
+            reply_markup=build_admin_review_keyboard(submission_id),
         )
     except Exception as e:
         logger.exception("Manual regeneration failed")
@@ -2384,18 +2417,75 @@ async def process_admin_regen(callback_query: types.CallbackQuery) -> None:
     
     await bot.answer_callback_query(callback_query.id)
 
-@dp.callback_query(lambda c: c.data and c.data.startswith("draft_only_"))
+@dp.callback_query(
+    lambda c: c.data and (c.data.startswith("changes_") or c.data.startswith("draft_only_"))
+)
 async def process_admin_draft(callback_query: types.CallbackQuery) -> None:
     if not is_admin(callback_query.from_user.id):
         return
-    submission_id = callback_query.data.replace("draft_only_", "")
+    raw_data = callback_query.data or ""
+    if raw_data.startswith("changes_"):
+        submission_id = raw_data.replace("changes_", "", 1)
+    else:
+        submission_id = raw_data.replace("draft_only_", "", 1)
     submission = load_submission(settings.submissions_dir, submission_id)
     if submission:
+        effective_admin_ids = set(settings.admin_chat_ids) | {callback_query.from_user.id}
+        reviewer_name = (
+            getattr(callback_query.from_user, "full_name", None)
+            or getattr(callback_query.from_user, "username", None)
+            or f"admin_{callback_query.from_user.id}"
+        )
+        record_review(
+            submission,
+            reviewer_id=callback_query.from_user.id,
+            reviewer_name=reviewer_name,
+            decision="changes_requested",
+            artifact_path=submission.get("pdf_path") or "",
+            notes="Запрошены правки администратором",
+            admin_ids=effective_admin_ids,
+        )
         update_submission_status(submission, intake_status="draft_requires_edits", now_iso=utc_now_iso())
         save_submission_state(settings.submissions_dir, submission)
+        pending_admin_review_notes[callback_query.from_user.id] = submission_id
     await bot.send_message(
         callback_query.from_user.id, 
-        "Окей, файл останется черновиком. Вы можете внести правки в JSON файл на сервере и перегенерировать документ."
+        "✏️ Кейс переведён в статус «Нужны правки». Напишите следующим сообщением комментарий к правкам "
+        "(или внесите правки в черновик и нажмите «Перегенерировать PDF»)."
+    )
+    await bot.answer_callback_query(callback_query.id)
+
+
+@dp.callback_query(lambda c: c.data and c.data.startswith("reject_"))
+async def process_admin_reject(callback_query: types.CallbackQuery) -> None:
+    if not is_admin(callback_query.from_user.id):
+        return
+    submission_id = (callback_query.data or "").replace("reject_", "", 1)
+    submission = load_submission(settings.submissions_dir, submission_id)
+    if not submission:
+        await bot.answer_callback_query(callback_query.id, "Кейс не найден.")
+        return
+
+    effective_admin_ids = set(settings.admin_chat_ids) | {callback_query.from_user.id}
+    reviewer_name = (
+        getattr(callback_query.from_user, "full_name", None)
+        or getattr(callback_query.from_user, "username", None)
+        or f"admin_{callback_query.from_user.id}"
+    )
+    record_review(
+        submission,
+        reviewer_id=callback_query.from_user.id,
+        reviewer_name=reviewer_name,
+        decision="rejected",
+        artifact_path=submission.get("pdf_path") or "",
+        notes="Отклонено администратором",
+        admin_ids=effective_admin_ids,
+    )
+    update_submission_status(submission, intake_status="rejected_by_admin", now_iso=utc_now_iso())
+    save_submission_state(settings.submissions_dir, submission)
+    await bot.send_message(
+        callback_query.from_user.id,
+        f"❌ Кейс {submission_id} отклонён и заблокирован для отправки клиенту.",
     )
     await bot.answer_callback_query(callback_query.id)
 
@@ -2885,18 +2975,24 @@ async def build_dossier_after_payment(
         return
     delivered = False
     if client_chat_id and submission.get("pdf_path") and Path(str(submission["pdf_path"])).exists():
-        from aiogram.types import FSInputFile
-        pdf_doc = FSInputFile(str(submission["pdf_path"]))
-        await bot.send_document(
-            client_chat_id,
-            document=pdf_doc,
-            caption=(
-                "Ваш персональный нутрициологический разбор готов.\n\n"
-                "Это не диагноз и не замена врачу. Используйте документ как навигацию: что видно по питанию, привычкам, анализам/жалобам, "
-                "какие вопросы обсудить со специалистом и какие шаги можно начать безопасно."
-            ),
-        )
-        delivered = True
+        try:
+            released_pdf_path = release_or_raise(submission)
+            from aiogram.types import FSInputFile
+            pdf_doc = FSInputFile(str(released_pdf_path))
+            await bot.send_document(
+                client_chat_id,
+                document=pdf_doc,
+                caption=(
+                    "Ваш персональный нутрициологический разбор готов.\n\n"
+                    "Это не диагноз и не замена врачу. Используйте документ как навигацию: что видно по питанию, привычкам, анализам/жалобам, "
+                    "какие вопросы обсудить со специалистом и какие шаги можно начать безопасно."
+                ),
+            )
+            delivered = True
+        except (PermissionError, FileNotFoundError):
+            logger.warning("Automatic PDF release blocked by release_or_raise for %s", submission.get("submission_id"))
+            await notify_admins(submission, draft_text, judge_report_text, growth_report_text)
+            return
     elif client_chat_id and draft_text:
         await bot.send_message(
             client_chat_id,
@@ -2943,6 +3039,7 @@ async def cmd_start(message: types.Message) -> None:
     clear_session(message.from_user.id)
     reset_chat_session(message.from_user.id)
     await message.answer(START_TEXT, reply_markup=main_menu_keyboard(), parse_mode="HTML")
+    await message.answer("Выберите подходящий формат НутриОК:", reply_markup=start_keyboard())
 
 
 @dp.message(Command("reset"))
@@ -2950,6 +3047,7 @@ async def cmd_reset(message: types.Message) -> None:
     clear_session(message.from_user.id)
     reset_chat_session(message.from_user.id)
     await message.answer(START_TEXT, reply_markup=main_menu_keyboard(), parse_mode="HTML")
+    await message.answer("Выберите подходящий формат НутриОК:", reply_markup=start_keyboard())
 
 
 @dp.message(Command("queue"))
@@ -3481,13 +3579,57 @@ def merge_session_content_into_submission(
     latest = build_submission_payload(session)
     merged = dict(submission or latest)
     for key in (
-        "offer", "profile", "medical_context", "documents", "parsed_biomarkers",
+        "offer", "product_code", "profile", "medical_context", "intake",
+        "primary_goal", "baseline_score", "goal_metric", "nutrition_diary",
+        "medications", "allergies", "lifestyle", "pd_consent_at",
+        "documents", "parsed_biomarkers",
         "lab_confirmation_status", "lab_confirmation_needed", "pending_biomarker_confirmation",
         "lab_quality_check", "requires_lab_resubmission", "vision_analysis", "consent_given",
         "source_submission_id", "adult_confirmed",
     ):
         merged[key] = latest.get(key)
     return merged
+
+
+def save_submission_from_session(session: dict[str, Any]) -> dict[str, Any]:
+    submission_id = session.get("submission_id")
+    existing = load_submission(settings.submissions_dir, submission_id) if submission_id else None
+    merged = merge_session_content_into_submission(existing, session)
+    if submission_id:
+        save_submission_state(settings.submissions_dir, merged)
+    return merged
+
+
+async def transcribe_nutriok_voice(file_id: str) -> str | None:
+    return await handle_voice_to_text(bot, file_id, settings)
+
+
+async def notify_admins_red_flag(session: dict[str, Any], flags: list[str]) -> None:
+    if not settings.admin_chat_ids:
+        return
+    text = (
+        "🚨 <b>Красный флаг в анкете НутриОК</b>\n"
+        f"ID: <code>{session.get('submission_id')}</code>\n"
+        f"Клиент: {session.get('telegram_full_name') or session.get('telegram_user_id')}\n"
+        f"Маркеры: {', '.join(flags)}"
+    )
+    for admin_chat_id in settings.admin_chat_ids:
+        try:
+            await bot.send_message(admin_chat_id, text, parse_mode="HTML")
+        except Exception:
+            logger.exception("Failed to notify admin %s about red flag", admin_chat_id)
+
+
+configure_nutriok_intake(
+    get_session=get_session,
+    start_session=start_session,
+    clear_session=clear_session,
+    touch_session=touch_session,
+    save_submission_from_session=save_submission_from_session,
+    finalize_submission=finalize_submission,
+    transcribe_voice=transcribe_nutriok_voice,
+    notify_red_flag=notify_admins_red_flag,
+)
 
 
 async def process_osipov_submission(message: types.Message, session: dict[str, Any]) -> None:
@@ -4002,16 +4144,20 @@ async def process_get_report_pdf(callback_query: types.CallbackQuery) -> None:
     if not is_release_approved(submission):
         await bot.answer_callback_query(callback_query.id, "Отчет еще на проверке у Ольги.", show_alert=True)
         return
-    pdf_path = submission.get("pdf_path")
-    if not pdf_path or not Path(pdf_path).exists():
+    try:
+        released_pdf_path = release_or_raise(submission)
+    except FileNotFoundError:
         await bot.answer_callback_query(callback_query.id, "Файл отчета не найден на сервере.", show_alert=True)
+        return
+    except PermissionError:
+        await bot.answer_callback_query(callback_query.id, "Отчет еще на проверке у Ольги.", show_alert=True)
         return
     
     await bot.answer_callback_query(callback_query.id)
     await bot.send_chat_action(callback_query.from_user.id, "upload_document")
 
     from aiogram.types import FSInputFile
-    pdf_doc = FSInputFile(pdf_path)
+    pdf_doc = FSInputFile(str(released_pdf_path))
     offer_name = TIER_NAMES.get(submission.get("offer") or submission.get("tier"), "Wellness-Паспорт")
     await bot.send_document(
         callback_query.from_user.id,
@@ -4031,6 +4177,30 @@ async def handle_message(message: types.Message) -> None:
 
     session = get_session(message.from_user.id)
     text = message.text.strip()
+
+    if is_admin(message.from_user.id) and message.from_user.id in pending_admin_review_notes:
+        submission_id = pending_admin_review_notes.pop(message.from_user.id, None)
+        if submission_id:
+            submission = load_submission(settings.submissions_dir, submission_id)
+            if submission:
+                effective_admin_ids = set(settings.admin_chat_ids) | {message.from_user.id}
+                reviewer_name = (
+                    getattr(message.from_user, "full_name", None)
+                    or getattr(message.from_user, "username", None)
+                    or f"admin_{message.from_user.id}"
+                )
+                record_review(
+                    submission,
+                    reviewer_id=message.from_user.id,
+                    reviewer_name=reviewer_name,
+                    decision="changes_requested",
+                    artifact_path=submission.get("pdf_path") or "",
+                    notes=text,
+                    admin_ids=effective_admin_ids,
+                )
+                save_submission_state(settings.submissions_dir, submission)
+                await message.answer(f"✅ Комментарий к правкам для {submission_id} сохранён в истории ревью.")
+                return
 
     # --- Persistent Menu Handlers ---
     if text == "🔍 Диагностика симптомов (Бесплатно)":

@@ -41,7 +41,9 @@ COPY nutriok_product.py .
 COPY nutriok_prompt.py .
 COPY nutriok_safety.py .
 COPY nutriok_texts.py .
+COPY intake_schema.py .
 COPY review_gate.py .
+COPY handlers ./handlers
 COPY helix_master_catalog.py .
 COPY test_data.py .
 

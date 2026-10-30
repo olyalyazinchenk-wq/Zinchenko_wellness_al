@@ -1,6 +1,17 @@
 # Agent Context Hub
 
-Updated: 2026-10-30 04:05 MSK
+Updated: 2026-10-30 12:40 MSK
+
+## Снимок синхронизации - 2026-10-30 12:40 MSK (Задачи A7–A8 и Спринт B завершены)
+
+- **Этап**: `nutriok-controlled-build-2026-07-17-r1` (не меняется до Спринта E включительно); `PAYMENT_MODE=manual`, `ENABLE_TMA=false`, public launch заблокирован.
+- **A7–A8**: выполнен бэкфилл безопасных прежних релизов через `ops/backfill_legacy_releases.py` (3 из 8 открыты по `legacy_release` + SHA-256; 5 исключены на ревью Ольге); в `ops/bot-stop.ps1` настроена точная остановка только `WellnessBot\main.py` и его дочерних процессов без убийства сторонних `.venv\Scripts\python.exe`.
+- **Спринт B (B1–B4)**:
+  - `WellnessBot/intake_schema.py`: `DiaryDay`, `AdherenceEntry`, `NutriOKIntake` (`to_dict`, `from_dict`, `validation_errors()`), метрики по 5 целям.
+  - `WellnessBot/handlers/nutriok_intake.py`: нативный диалог анкеты НутриОК в Telegram (`nutriok_router` перед legacy-хендлерами), прогресс-бар `● ● ● ○ ○ ○ ○  Шаг 3 из 7`, `/continue`, короткий поток `ok_start` и 7/8-шаговый платный поток с поддержкой текста, голоса (STT) и фото в 3-дневном дневнике.
+  - `WellnessBot/review_gate.py`: `ReviewRecord`, `record_review`, `release_or_raise(submission) -> Path` во всех точках отправки PDF клиенту, 3 кнопки ревью для Ольги («Одобрить», «Нужны правки» с комментарием, «Отклонить»).
+  - `WellnessBot/nutriok_safety.py`: словоформы regex (`ё→е`) для красных флагов, РПП, суицидальных маркеров, высокорисковых лекарств (`awaiting_safety_review`), беременности/ГВ + БАД и возраста `< 18`.
+- **Тесты и ревью**: `91 passed` (`ops/dev.ps1 test`), `compileall` без ошибок, независимое ревью второго агента `LGTM`.
 
 ## Снимок синхронизации - 2026-10-30 04:05 MSK (Спринт A завершён)
 

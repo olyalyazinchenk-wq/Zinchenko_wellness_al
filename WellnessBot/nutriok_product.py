@@ -131,6 +131,17 @@ def upgrade_amount_due(
     return max(0, target_price - source_price)
 
 
+def _has_diary_content(day: Any) -> bool:
+    if isinstance(day, dict):
+        return bool(str(day.get("meals_text") or "").strip() or day.get("photo_file_ids"))
+    if hasattr(day, "meals_text") or hasattr(day, "photo_file_ids"):
+        return bool(
+            str(getattr(day, "meals_text", "") or "").strip()
+            or getattr(day, "photo_file_ids", None)
+        )
+    return bool(str(day or "").strip())
+
+
 def validate_assessment_payload(payload: dict[str, Any], raw_code: str | None) -> list[str]:
     code = normalize_product_code(raw_code)
     errors: list[str] = []
@@ -144,7 +155,7 @@ def validate_assessment_payload(payload: dict[str, Any], raw_code: str | None) -
 
     if code != "ok_start":
         diary = payload.get("nutrition_diary")
-        if not isinstance(diary, list) or len([day for day in diary if str(day).strip()]) < 3:
+        if not isinstance(diary, list) or len([day for day in diary if _has_diary_content(day)]) < 3:
             errors.append("Для платного разбора нужен дневник питания за 3 дня.")
 
     return errors
