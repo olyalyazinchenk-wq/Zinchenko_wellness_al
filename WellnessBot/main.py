@@ -2252,6 +2252,15 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
             override_note,
         )
 
+    approved_now_iso = utc_now_iso()
+    submission["approved_by_admin_id"] = callback_query.from_user.id
+    submission["approved_at"] = approved_now_iso
+    if submission.get("supplement_review_required"):
+        submission["supplement_review_approved_by"] = callback_query.from_user.id
+        submission["supplement_review_approved_at"] = approved_now_iso
+        submission["supplement_review_decision"] = "approved"
+    save_submission_state(settings.submissions_dir, submission)
+
     from aiogram.types import FSInputFile
     pdf_doc = FSInputFile(pdf_path)
     
@@ -3655,29 +3664,20 @@ async def handle_voice(message: types.Message) -> None:
 
 
 def get_user_approved_reports(user_id: int) -> list[dict[str, Any]]:
-    reports = []
-    submissions_dir = settings.submissions_dir
-    if not submissions_dir.exists():
-        return reports
-    for path in submissions_dir.glob(f"*_{user_id}.json"):
-        try:
-            with open(path, "r", encoding="utf-8-sig") as f:
-                data = json.load(f)
-            pdf_path = data.get("pdf_path")
-            if pdf_path and Path(pdf_path).exists():
-                reports.append(data)
-        except Exception:
-            continue
-    reports.sort(key=lambda r: r.get("status_updated_at") or r.get("created_at") or "", reverse=True)
-    return reports
+    return list_user_approved_reports(settings.submissions_dir, user_id)
 
 
 @dp.callback_query(lambda c: c.data and c.data.startswith("getpdf_"))
 async def process_get_report_pdf(callback_query: types.CallbackQuery) -> None:
     submission_id = callback_query.data.replace("getpdf_", "")
     submission = load_submission(settings.submissions_dir, submission_id)
-    if not submission:
+    owner_id = int(((submission or {}).get("profile") or {}).get("telegram_user_id") or 0)
+    requester = callback_query.from_user.id
+    if not submission or (owner_id != requester and not is_admin(requester)):
         await bot.answer_callback_query(callback_query.id, "Отчет не найден.", show_alert=True)
+        return
+    if not is_release_approved(submission):
+        await bot.answer_callback_query(callback_query.id, "Отчет еще на проверке у Ольги.", show_alert=True)
         return
     pdf_path = submission.get("pdf_path")
     if not pdf_path or not Path(pdf_path).exists():
@@ -3686,6 +3686,7 @@ async def process_get_report_pdf(callback_query: types.CallbackQuery) -> None:
     
     await bot.answer_callback_query(callback_query.id)
     await bot.send_chat_action(callback_query.from_user.id, "upload_document")
+
     from aiogram.types import FSInputFile
     pdf_doc = FSInputFile(pdf_path)
     offer_name = TIER_NAMES.get(submission.get("offer") or submission.get("tier"), "Wellness-Паспорт")
