@@ -3,57 +3,31 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
+from nutriok_product import (
+    LEGACY_PRODUCT_ALIASES,
+    PRODUCT_OFFERS as NUTRIOK_PRODUCT_OFFERS,
+    normalize_product_code as normalize_nutriok_product_code,
+)
 
 PRODUCT_OFFERS = {
-    "nutri_chat": {
-        "name": "Экспресс-аудит «Моя тарелка»",
-        "price_rub": 1490,
-        "invoice_title": "Экспресс-аудит «Моя тарелка»",
-        "invoice_description": "Анализ дневника питания за 3 дня, оценка баланса макронутриентов и питьевого режима от Зинченко Ольги Викторовны.",
-    },
-    "habits": {
-        "name": "Умный куратор: Сопровождение",
-        "price_rub": 14900,
-        "invoice_title": "Умный куратор: Сопровождение",
-        "invoice_description": "Сопровождение питания: ежедневный разбор тарелок по фото/описанию, трекинг привычек от Зинченко Ольги Викторовны.",
-    },
-    "standard": {
-        "name": "Дефицит-чек / Карта симптомов",
-        "price_rub": 3900,
-        "invoice_title": "Дефицит-чек / Карта симптомов",
-        "invoice_description": "Анализ жалоб, симптомов дефицитов, образа жизни, сна, ЖКТ и желчеоттока от Зинченко Ольги Викторовны.",
-    },
-    "premium": {
-        "name": "Персональный Wellness-Паспорт",
-        "price_rub": 14900,
-        "invoice_title": "Персональный Wellness-Паспорт",
-        "invoice_description": "Глубокий разбор анкеты, питания, жалоб и расширенной панели анализов от Зинченко Ольги Викторовны.",
-    },
-    "vip": {
-        "name": "Персональный Wellness-Паспорт",
-        "price_rub": 14900,
-        "invoice_title": "Персональный Wellness-Паспорт",
-        "invoice_description": "Глубокий разбор анкеты, питания, жалоб и расширенной панели анализов от Зинченко Ольги Викторовны.",
-    },
-    "osipov": {
-        "name": "Код Микробиома: ХМС по Осипову",
-        "price_rub": 5900,
-        "invoice_title": "Код Микробиома: ХМС по Осипову",
-        "invoice_description": "Детальный разбор анализа ХМС по Осипову, связь с ЖКТ, питанием и схема поддержки от Зинченко Ольги Викторовны.",
-    },
+    code: {
+        "name": offer.name,
+        "price_rub": offer.pilot_price_rub,
+        "regular_price_rub": offer.regular_price_rub,
+        "invoice_title": offer.name,
+        "invoice_description": offer.result,
+    }
+    for code, offer in NUTRIOK_PRODUCT_OFFERS.items()
 }
 PRODUCT_ALIASES = {
-    "screening": "nutri_chat",
-    "week": "nutri_chat",
-    "basic": "standard",
-    "month": "standard",
-    "premium_wellness_dossier": "standard",
-    "full": "premium",
+    **LEGACY_PRODUCT_ALIASES,
+    "month": "ok_review",
+    "premium_wellness_dossier": "ok_review",
 }
 
 def normalize_product_code(raw_code: str | None) -> str:
-    code = (raw_code or "standard").strip().lower()
-    return PRODUCT_ALIASES.get(code, code if code in PRODUCT_OFFERS else "standard")
+    code = str(raw_code or "ok_review").strip().lower()
+    return PRODUCT_ALIASES.get(code, normalize_nutriok_product_code(code))
 
 
 def get_product_offer(raw_code: str | None) -> dict[str, Any]:
@@ -64,7 +38,16 @@ def get_product_offer(raw_code: str | None) -> dict[str, Any]:
     return offer
 
 
-PREMIUM_PRICE_RUB = 14900
+def is_adult_age(age: Any) -> bool:
+    if isinstance(age, bool):
+        return False
+    if isinstance(age, (int, float)):
+        return int(age) >= 18
+    digits = "".join(character for character in str(age or "") if character.isdigit())
+    return bool(digits) and int(digits[:3]) >= 18
+
+
+PREMIUM_PRICE_RUB = PRODUCT_OFFERS["ok_result_8"]["price_rub"]
 PREMIUM_PRICE_KOPECKS = PREMIUM_PRICE_RUB * 100
 PAYMENT_STATUS_PAID = "paid"
 PAYMENT_STATUS_MANUAL_PENDING = "manual_payment_pending"

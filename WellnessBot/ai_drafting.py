@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 import logging
@@ -9,12 +9,15 @@ from openai import OpenAI
 
 from config import Settings
 from medical_skill_database import build_medical_skill_context
+from nutriok_prompt import NUTRIOK_SYSTEM_PROMPT
 from prompts import (
     BASIC_DOSSIER_DRAFT_PROMPT,
     DOSSIER_DRAFT_PROMPT,
     DOSSIER_GROWTH_ARCHITECT_PROMPT,
     DOSSIER_JUDGE_PROMPT,
     FULL_DOSSIER_DRAFT_PROMPT,
+    GUT_SUPPORT_18_PROMPT,
+    OSIPOV_ANALYSIS_PROMPT,
     LIVE_CHAT_PROMPT,
     PREMIUM_BASIC_PROMPT,
     PREMIUM_FULL_PROMPT,
@@ -25,11 +28,17 @@ from prompts import (
 )
 
 TIER_PROMPTS = {
+    "ok_start": NUTRIOK_SYSTEM_PROMPT,
+    "ok_express": NUTRIOK_SYSTEM_PROMPT,
+    "ok_review": NUTRIOK_SYSTEM_PROMPT,
+    "ok_result_8": NUTRIOK_SYSTEM_PROMPT,
+    "ok_rhythm": NUTRIOK_SYSTEM_PROMPT,
     "nutri_chat": SCREENING_PROMPT,
     "habits": SCREENING_PROMPT,
     "standard": PREMIUM_BASIC_PROMPT,
     "premium": PREMIUM_FULL_PROMPT,
-    "osipov": PREMIUM_FULL_PROMPT,
+    "osipov": OSIPOV_ANALYSIS_PROMPT,
+    "gut_support_18": GUT_SUPPORT_18_PROMPT,
     "screening": SCREENING_PROMPT,
     "basic": PREMIUM_BASIC_PROMPT,
     "full": PREMIUM_FULL_PROMPT,
@@ -39,9 +48,14 @@ TIER_PROMPTS = {
 
 # Mapping: which dossier prompt to use for which tier
 TIER_DOSSIER_PROMPTS = {
+    "ok_express": BASIC_DOSSIER_DRAFT_PROMPT,
+    "ok_review": FULL_DOSSIER_DRAFT_PROMPT,
+    "ok_result_8": FULL_DOSSIER_DRAFT_PROMPT,
+    "ok_rhythm": FULL_DOSSIER_DRAFT_PROMPT,
     "standard": BASIC_DOSSIER_DRAFT_PROMPT,
     "premium": FULL_DOSSIER_DRAFT_PROMPT,
     "osipov": FULL_DOSSIER_DRAFT_PROMPT,
+    "gut_support_18": FULL_DOSSIER_DRAFT_PROMPT,
     "basic": BASIC_DOSSIER_DRAFT_PROMPT,
     "full": FULL_DOSSIER_DRAFT_PROMPT,
 }

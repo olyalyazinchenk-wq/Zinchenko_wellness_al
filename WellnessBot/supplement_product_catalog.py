@@ -4,7 +4,7 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 
-SUPPLEMENT_CATALOG_VERSION = "2026-04-25-v1"
+SUPPLEMENT_CATALOG_VERSION = "2026-06-20-v2"
 
 
 @dataclass(frozen=True, slots=True)
@@ -178,6 +178,76 @@ PRODUCTS: dict[str, SupplementProduct] = {
         hard_exclusions=("fish_allergy", "anticoagulants_or_bleeding_without_doctor", "planned_surgery_without_doctor"),
         recommendation_role="alternative_vitamax",
     ),
+    "vitamax_endoflora_8251": SupplementProduct(
+        key="vitamax_endoflora_8251",
+        brand="Vitamax / SPZ-03",
+        name="ЭндоФлора, 60 капсул",
+        source_url="https://spz03.ru/catalog/detail/endoflora-banka-60-kaps-8251/",
+        availability_status="active_official_page_verified_2026_06_20",
+        category="synbiotic_gut_microbiome",
+        form="capsules",
+        active_components=(
+            "инулин",
+            "камедь акации Фибрегам B",
+            "B. bifidum",
+            "B. longum",
+            "B. adolescentis",
+            "B. breve",
+            "B. infantis",
+            "B. lactis",
+        ),
+        linked_markers=("osipov_microbiome",),
+        linked_goals=("gut_microbiome_support",),
+        label_use=(
+            "Официальная страница: взрослым по 1-2 капсулы утром натощак за 30-40 минут до еды "
+            "и/или вечером через 1-2 часа после еды; для общей поддержки указан курс 1 месяц."
+        ),
+        safety_notes=(
+            "Инулин и камедь акации могут временно усиливать газообразование и вздутие; начинать с нижней границы этикетки и оценивать переносимость.",
+            "Не использовать вместо обследования при крови в стуле, температуре, сильной боли, стойкой диарее или снижении веса.",
+            "При выраженном иммунодефиците, беременности/ГВ и тяжёлых хронических заболеваниях сначала согласовать со специалистом.",
+            "Официальное противопоказание: индивидуальная непереносимость компонентов.",
+        ),
+        hard_exclusions=("acute_gi_red_flags", "severe_immunocompromise_without_doctor"),
+        recommendation_role="primary_vitamax_spz03_gut",
+    ),
+    "vitamax_ksf_pro_8253": SupplementProduct(
+        key="vitamax_ksf_pro_8253",
+        brand="Vitamax / SPZ-03",
+        name="Комплекс сильных ферментов Про, 60 таблеток",
+        source_url="https://spz03.ru/catalog/detail/kompleks-silynyh-fermentov-pro-banka-60-kaps-8253/",
+        availability_status="active_official_page_verified_2026_06_20",
+        category="digestive_enzymes",
+        form="tablets",
+        active_components=(
+            "панкреатин",
+            "пепсин",
+            "желчные кислоты",
+            "бетаин гидрохлорид",
+            "амилаза",
+            "липаза",
+            "протеазы",
+            "лактаза",
+            "бромелаин",
+            "папаин",
+        ),
+        linked_markers=(),
+        linked_goals=("digestive_enzyme_support",),
+        label_use="Официальная страница: взрослым по 1-2 таблетки 1-2 раза в день во время еды, не менее 1 месяца.",
+        safety_notes=(
+            "Из-за пепсина и бетаина HCl не предлагать автоматически при изжоге, рефлюксе, гастрите или язвенной болезни.",
+            "Из-за желчных кислот не предлагать без оценки желчного пузыря при камнях, билиарной обструкции, острой боли справа или желтухе.",
+            "При панкреатите, беременности/ГВ, лекарствах и хронических заболеваниях требуется согласование со специалистом.",
+            "Официальное противопоказание: индивидуальная непереносимость компонентов.",
+        ),
+        hard_exclusions=(
+            "active_heartburn_or_reflux",
+            "gastritis_or_peptic_ulcer_without_doctor",
+            "gallstones_or_biliary_obstruction_unknown",
+            "pancreatitis_without_doctor",
+        ),
+        recommendation_role="conditional_vitamax_spz03_gut",
+    ),
 }
 
 
@@ -200,6 +270,12 @@ GOAL_TO_PRODUCT_KEYS: dict[str, tuple[str, ...]] = {
     ),
     "iron_support": (
         "sw_organic_iron_500627",
+    ),
+    "gut_microbiome_support": (
+        "vitamax_endoflora_8251",
+    ),
+    "digestive_enzyme_support": (
+        "vitamax_ksf_pro_8253",
     ),
 }
 
@@ -247,8 +323,11 @@ def get_candidate_products_for_goals(goals: list[str]) -> list[dict[str, Any]]:
     return products
 
 
-def build_supplement_context(medical_skill_context: dict[str, Any], medical_context: dict[str, Any]) -> dict[str, Any]:
-    del medical_context
+def build_supplement_context(
+    medical_skill_context: dict[str, Any],
+    medical_context: dict[str, Any],
+    offer_code: str | None = None,
+) -> dict[str, Any]:
     goals: list[str] = []
     for item in medical_skill_context.get("biomarker_analysis", []):
         marker_key = item.get("marker_key")
@@ -257,6 +336,17 @@ def build_supplement_context(medical_skill_context: dict[str, Any], medical_cont
             for goal in MARKER_TO_GOALS.get(marker_key, ()):
                 if goal not in goals:
                     goals.append(goal)
+
+    combined_gi_context = " ".join(
+        str(medical_context.get(key) or "")
+        for key in ("symptoms", "digestion", "osipov_context", "osipov_ocr_text")
+    ).lower()
+    if offer_code in {"osipov", "gut_support_18"} or combined_gi_context.strip():
+        goals.append("gut_microbiome_support")
+    if offer_code == "gut_support_18" and not any(
+        marker in combined_gi_context for marker in ("изжог", "рефлюкс", "гастрит", "язв", "камн", "панкреат")
+    ):
+        goals.append("digestive_enzyme_support")
 
     candidates = get_candidate_products_for_goals(goals)
     recommendable_candidates = [
@@ -276,5 +366,7 @@ def build_supplement_context(medical_skill_context: dict[str, Any], medical_cont
             "Сначала предлагать Siberian Wellness, затем Vitamax как альтернативу.",
             "При беременности, ГВ, детях, онкологии, антикоагулянтах, щитовидной железе, почках или кровоточивости выводить врачебную осторожность.",
             "Если врач уже назначил схему, бот может помочь разложить время приема, совместимость и наблюдение реакции, не меняя назначение.",
+            "Для SPZ-03 всегда указывать партнёрский промокод 844131 и раскрывать, что он может дать скидку владельцу кода.",
+            "При активной изжоге не включать КСФ Про из-за пепсина, бетаина HCl и желчных кислот.",
         ],
     }

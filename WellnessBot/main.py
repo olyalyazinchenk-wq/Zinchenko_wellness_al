@@ -57,11 +57,16 @@ from payment_flow import (
     PREMIUM_PRICE_RUB,
     build_payment_context,
     is_payment_confirmed_for_dossier,
+    is_adult_age,
     mark_manual_payment_confirmed,
     mark_manual_payment_pending,
     parse_invoice_payload,
     validate_payment_event,
 )
+from medical_skill_database import build_medical_skill_context
+from nutriok_safety import evaluate_delivery_gate
+from review_gate import is_release_approved, list_user_approved_reports
+from supplement_protocols import build_supplement_scheme_entries
 from governance_service import (
     GOVERNANCE_EXPERIMENT_STATUSES,
     aggregate_product_insight_counts,
@@ -128,6 +133,15 @@ from texts import (
 )
 
 
+from nutriok_texts import (
+    ABOUT_TEXT,
+    CONSENT_TEXT,
+    PRODUCT_EXAMPLES_TEXT,
+    PRODUCT_MENU_TEXT,
+    START_TEXT,
+    TIER_DESCRIPTIONS,
+)
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
@@ -184,15 +198,15 @@ def _test_proxy_connectivity(proxy_url: str, timeout: float = 3.0) -> bool:
 
 
 def _create_bot_session(proxy_url: str | None) -> AiohttpSession | None:
-    """Create an AiohttpSession with optional proxy and connectivity check."""
+    """Create an AiohttpSession with optional proxy and avoid direct fallback."""
     if not proxy_url:
         return None
     if not _test_proxy_connectivity(proxy_url):
         logger.warning(
-            "Proxy connectivity check failed — falling back to direct connection.",
+            "Proxy connectivity check failed — keeping configured proxy and letting aiogram retry.",
         )
-        return None
-    logger.info("Using proxy: %s", _format_proxy_for_logs(proxy_url))
+    else:
+        logger.info("Using proxy: %s", _format_proxy_for_logs(proxy_url))
     return AiohttpSession(proxy=proxy_url)
 
 
@@ -229,6 +243,7 @@ PREMIUM_TRIGGER_MARKERS = (
 )
 user_sessions: dict[int, dict[str, Any]] = {}
 chat_sessions: dict[int, list[dict[str, str]]] = {}
+osipov_processing_tasks: dict[int, asyncio.Task[None]] = {}
 MAX_CHAT_HISTORY = 12
 TELEGRAM_CAPTION_SAFE_LIMIT = 900
 TELEGRAM_MESSAGE_SAFE_LIMIT = 3500
@@ -277,11 +292,11 @@ def restore_runtime_state() -> None:
 def start_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="🍽️ Экспресс-аудит «Моя тарелка» — 1 490 ₽", callback_data="tier_nutri_chat")],
-            [InlineKeyboardButton(text="🥗 Умный куратор (Сопровождение) — 14 900 ₽", callback_data="tier_habits")],
-            [InlineKeyboardButton(text="📋 Дефицит-чек / Карта симптомов — 3 900 ₽", callback_data="tier_standard")],
-            [InlineKeyboardButton(text="👑 Wellness-Паспорт с анализами — 14 900 ₽", callback_data="tier_premium")],
-            [InlineKeyboardButton(text="🧬 Разбор ХМС по Осипову — 5 900 ₽", callback_data="tier_osipov")],
+            [InlineKeyboardButton(text="ОК-Старт — бесплатно", callback_data="tier_ok_start")],
+            [InlineKeyboardButton(text="ОК-Экспресс — 990 ₽", callback_data="tier_ok_express")],
+            [InlineKeyboardButton(text="ОК-Разбор — 5 900 ₽", callback_data="tier_ok_review")],
+            [InlineKeyboardButton(text="ОК-Результат 8 — 14 900 ₽", callback_data="tier_ok_result_8")],
+            [InlineKeyboardButton(text="ОК-Ритм — 1 990 ₽/мес", callback_data="tier_ok_rhythm")],
             [InlineKeyboardButton(text="🧪 Сдать анализы", callback_data="show_labs_link"),
              InlineKeyboardButton(text="💼 Мои тарифы", callback_data="choose_product")],
         ]
@@ -291,11 +306,11 @@ def start_keyboard() -> InlineKeyboardMarkup:
 def product_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text="🍽️ Экспресс-аудит «Моя тарелка» — 1 490 ₽", callback_data="tier_nutri_chat")],
-            [InlineKeyboardButton(text="🥗 Умный куратор (Сопровождение) — 14 900 ₽", callback_data="tier_habits")],
-            [InlineKeyboardButton(text="📋 Дефицит-чек / Карта симптомов — 3 900 ₽", callback_data="tier_standard")],
-            [InlineKeyboardButton(text="👑 Wellness-Паспорт с анализами — 14 900 ₽", callback_data="tier_premium")],
-            [InlineKeyboardButton(text="🧬 Разбор ХМС по Осипову — 5 900 ₽", callback_data="tier_osipov")],
+            [InlineKeyboardButton(text="ОК-Старт — бесплатно", callback_data="tier_ok_start")],
+            [InlineKeyboardButton(text="ОК-Экспресс — 990 ₽", callback_data="tier_ok_express")],
+            [InlineKeyboardButton(text="ОК-Разбор — 5 900 ₽", callback_data="tier_ok_review")],
+            [InlineKeyboardButton(text="ОК-Результат 8 — 14 900 ₽", callback_data="tier_ok_result_8")],
+            [InlineKeyboardButton(text="ОК-Ритм — 1 990 ₽/мес", callback_data="tier_ok_rhythm")],
             [InlineKeyboardButton(text="Посмотреть пример результата", callback_data="show_examples")],
         ]
     )
@@ -334,11 +349,17 @@ def labs_keyboard() -> InlineKeyboardMarkup:
 
 
 TIER_NAMES = {
+    "ok_start": "ОК-Старт",
+    "ok_express": "ОК-Экспресс",
+    "ok_review": "ОК-Разбор",
+    "ok_result_8": "ОК-Результат 8",
+    "ok_rhythm": "ОК-Ритм",
     "nutri_chat": "Экспресс-аудит «Моя тарелка»",
     "habits": "Умный куратор: Сопровождение",
     "standard": "Дефицит-чек / Карта симптомов",
     "premium": "Персональный Wellness-Паспорт",
     "osipov": "Код Микробиома: ХМС по Осипову",
+    "gut_support_18": "Программа поддержки ЖКТ и микробиома 18+",
     "screening": "Экспресс-аудит «Моя тарелка»",
     "basic": "Дефицит-чек / Карта симптомов",
     "full": "Персональный Wellness-Паспорт",
@@ -1046,6 +1067,7 @@ def get_product_filename_prefix(offer_code: str | None) -> str:
         "premium": "Personalny_Wellness_Pasport",
         "full": "Personalny_Wellness_Pasport",
         "osipov": "Kod_Mikrobioma_HMS_Osipov",
+        "gut_support_18": "Programma_Podderzhki_ZHKT_18plus",
     }
     return mapping.get(offer_code, "Wellness_Dossier")
 
@@ -1096,6 +1118,7 @@ def normalize_dossier_pdf_data(raw_data: dict[str, Any], submission: dict[str, A
         "premium": "ПЕРСОНАЛЬНЫЙ<br>WELLNESS-ПАСПОРТ",
         "full": "ПЕРСОНАЛЬНЫЙ<br>WELLNESS-ПАСПОРТ",
         "osipov": "КОД МИКРОБИОМА:<br>ХМС ПО ОСИПОВУ",
+        "gut_support_18": "ПОДДЕРЖКА ЖКТ И<br>МИКРОБИОМА 18+",
     }
     product_title = title_mapping.get(offer_code, "ПЕРСОНАЛЬНОЕ<br>WELLNESS ДОСЬЕ")
 
@@ -1639,6 +1662,25 @@ def apply_safe_action_floor(pdf_data: dict[str, Any], submission: dict[str, Any]
             item for item in schemes
             if not is_supplement_or_medication_hint(item)
         ][:3]
+
+    supplement_context = build_medical_skill_context(submission).get("supplement_context", {})
+    supplement_schemes = build_supplement_scheme_entries(supplement_context)
+    if supplement_schemes:
+        pdf_data["schemes"] = phased_plan[:2] + supplement_schemes + phased_plan[2:4]
+        pdf_data["additional_control"] = merge_unique(
+            ensure_list(pdf_data.get("additional_control")),
+            [
+                "Нутрицевтическая схема сформирована только из версионируемого каталога; перед отправкой клиенту требуется проверка специалистом.",
+                "Не добавлять к схеме другие БАДы и не менять этикеточный приём без повторной проверки лекарств, аллергий, диагнозов и переносимости.",
+            ],
+        )
+    elif supplement_context.get("recommendation_status") == "blocked_safety_context":
+        missing_context = supplement_context.get("safety_assessment", {}).get("missing_safety_context", [])
+        if missing_context:
+            pdf_data["additional_control"] = merge_unique(
+                ensure_list(pdf_data.get("additional_control")),
+                ["До подбора БАДов уточнить: " + "; ".join(str(item) for item in missing_context) + "."],
+            )
 
     if complex_background or not has_labs:
         for field in (
@@ -2434,11 +2476,17 @@ async def activate_paid_product(chat_id: int, session: dict[str, Any]) -> None:
         await bot.send_message(chat_id, osipov_context_prompt())
         return
 async def finalize_submission(message: types.Message, session: dict[str, Any]) -> None:
+    tier = str(session.get("tier") or session.get("offer") or "standard").strip().lower()
+    if tier == "gut_support_18" and not (
+        session.get("adult_confirmed") or is_adult_age(session.get("age"))
+    ):
+        await message.answer("Программа доступна только клиентам 18+. Укажите возраст или выберите другой продукт.")
+        return
+
     submission = build_submission_payload(session)
     submission["payment_context"] = build_payment_context(session, now_iso=utc_now_iso())
     use_telegram_invoice = settings.payment_mode == "telegram" and bool(settings.tg_payment_token)
 
-    tier = str(session.get("tier") or session.get("offer") or "standard").strip().lower()
     is_instant = is_instant_paid_product(tier)
 
     if use_telegram_invoice:
@@ -2665,8 +2713,12 @@ async def build_dossier_after_payment(
     *,
     progress_chat_id: int | None = None,
     client_chat_id: int | None = None,
+    clear_session_on_delivery: bool = True,
 ) -> None:
-    submission = load_submission(settings.submissions_dir, session["submission_id"]) or build_submission_payload(session)
+    submission = merge_session_content_into_submission(
+        load_submission(settings.submissions_dir, session["submission_id"]),
+        session,
+    )
     submission_path = settings.submissions_dir / f"{session['submission_id']}.json"
     progress_chat_id = progress_chat_id or (message.chat.id if message else session.get("telegram_user_id"))
     client_chat_id = client_chat_id or session.get("telegram_user_id")
@@ -2735,8 +2787,11 @@ async def build_dossier_after_payment(
                 "needs_market_rework": False,
                 "review_flags": [],
             }
-            # [OBSIDIAN SYNC] Automatically export the draft to the expert's Second Brain
-            await asyncio.to_thread(export_to_obsidian, session, draft_text)
+            # Obsidian export must never block delivery to the client.
+            try:
+                await asyncio.to_thread(export_to_obsidian, session, draft_text)
+            except Exception:
+                logger.exception("Non-blocking Obsidian export failed for %s", session["submission_id"])
             
             # Generation of Premium PDF from strictly structured JSON
             try:
@@ -2786,6 +2841,48 @@ async def build_dossier_after_payment(
 
     logger.info("Saved submission %s to %s", session["submission_id"], submission_path)
 
+    supplement_context = build_medical_skill_context(submission).get("supplement_context", {})
+    supplement_protocols = supplement_context.get("protocol_recommendations", [])
+    if supplement_protocols:
+        submission["supplement_review_required"] = True
+        submission["supplement_protocol_version"] = supplement_context.get("protocol_version")
+        submission["supplement_protocol_product_keys"] = [
+            str(item.get("product_key") or "")
+            for item in supplement_protocols
+            if isinstance(item, dict) and item.get("product_key")
+        ]
+        update_submission_status(
+            submission,
+            intake_status="awaiting_supplement_protocol_review",
+            now_iso=utc_now_iso(),
+        )
+        save_submission_state(settings.submissions_dir, submission)
+        if client_chat_id:
+            await bot.send_message(
+                client_chat_id,
+                "Разбор и персональная схема нутрицевтической поддержки подготовлены. "
+                "Перед отправкой специалист проверяет совместимость, противопоказания и этикеточный приём.",
+            )
+        await notify_admins(submission, draft_text, judge_report_text, growth_report_text)
+        return
+
+    delivery_decision = evaluate_delivery_gate(tier, draft_text, submission)
+    submission["delivery_gate"] = delivery_decision.as_dict()
+    submission["auto_delivery_decision"] = delivery_decision.as_dict()
+    if not delivery_decision.allow_automatic_delivery:
+        update_submission_status(
+            submission,
+            intake_status=delivery_decision.status,
+            now_iso=utc_now_iso(),
+        )
+        save_submission_state(settings.submissions_dir, submission)
+        if client_chat_id:
+            await bot.send_message(
+                client_chat_id,
+                "Черновик готов и передан Ольге на проверку. До её одобрения бот не отправит персональный разбор автоматически.",
+            )
+        await notify_admins(submission, draft_text, judge_report_text, growth_report_text)
+        return
     delivered = False
     if client_chat_id and submission.get("pdf_path") and Path(str(submission["pdf_path"])).exists():
         from aiogram.types import FSInputFile
@@ -2814,7 +2911,24 @@ async def build_dossier_after_payment(
         submission["delivered_at"] = utc_now_iso()
         submission["direct_delivery"] = True
         save_submission_state(settings.submissions_dir, submission)
-        clear_session(int(session["telegram_user_id"]))
+        if str(submission.get("offer") or "").strip().lower() == "osipov" and client_chat_id:
+            await bot.send_message(
+                client_chat_id,
+                "После расшифровки можно перейти к отдельной программе поддержки ЖКТ и микробиома 18+.\n\n"
+                "В неё входят поэтапный план, проверка противопоказаний и совместимости, контрольные точки и "
+                "подходящие варианты Vitamax из проверенного каталога. Для Vitamax действует промокод 844131.\n\n"
+                "Стоимость программы — 6 000 ₽. Это нутрициологическая поддержка, не лечение и не гарантия результата.",
+                reply_markup=InlineKeyboardMarkup(
+                    inline_keyboard=[
+                        [InlineKeyboardButton(
+                            text="Мне 18+, перейти к программе — 6 000 ₽",
+                            callback_data=f"gut18_{submission['submission_id']}",
+                        )]
+                    ]
+                ),
+            )
+        if clear_session_on_delivery:
+            clear_session(int(session["telegram_user_id"]))
         return
 
     if client_chat_id:
@@ -3329,13 +3443,204 @@ def osipov_context_prompt() -> str:
         "🧬 Разбор ХМС/ГХ-МС по Осипову\n\n"
         "Напишите коротко контекст перед файлом:\n"
         "1. основные жалобы по ЖКТ;\n"
-        "1. стул, вздутие, боли;\n"
-        "1. питание, сладкое, молочные продукты, переносимость клетчатки;\n"
-        "1. хронические заболевания ЖКТ, удалён ли желчный пузырь;\n"
-        "1. лекарства, добавки, аллергии;\n"
-        "1. беременность/ГВ, если актуально.\n\n"
+        "2. стул, вздутие, боли;\n"
+        "3. питание, сладкое, молочные продукты, переносимость клетчатки;\n"
+        "4. хронические заболевания ЖКТ, удалён ли желчный пузырь;\n"
+        "5. лекарства, добавки, аллергии;\n"
+        "6. беременность/ГВ, если актуально.\n\n"
         "После этого пришлите PDF или фото анализа."
     )
+
+
+def osipov_upload_keyboard() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="Добавить ещё файлы", callback_data="osipov_add_more")],
+            [InlineKeyboardButton(text="Завершил(а) загрузку", callback_data="osipov_finish_upload")],
+        ]
+    )
+
+
+def append_unique_osipov_document(session: dict[str, Any], document: dict[str, Any]) -> bool:
+    documents = session.setdefault("documents", [])
+    unique_id = document.get("telegram_file_unique_id")
+    stored_path = document.get("stored_path")
+    for existing in documents:
+        if unique_id and existing.get("telegram_file_unique_id") == unique_id:
+            return False
+        if stored_path and existing.get("stored_path") == stored_path:
+            return False
+    documents.append(document)
+    return True
+
+
+def merge_session_content_into_submission(
+    submission: dict[str, Any] | None,
+    session: dict[str, Any],
+) -> dict[str, Any]:
+    latest = build_submission_payload(session)
+    merged = dict(submission or latest)
+    for key in (
+        "offer", "profile", "medical_context", "documents", "parsed_biomarkers",
+        "lab_confirmation_status", "lab_confirmation_needed", "pending_biomarker_confirmation",
+        "lab_quality_check", "requires_lab_resubmission", "vision_analysis", "consent_given",
+        "source_submission_id", "adult_confirmed",
+    ):
+        merged[key] = latest.get(key)
+    return merged
+
+
+async def process_osipov_submission(message: types.Message, session: dict[str, Any]) -> None:
+    if session.get("step") != "osipov_upload":
+        return
+
+    session["step"] = "osipov_processing"
+    touch_session()
+    await message.answer("Файлы приняты. Начинаю распознавание и подготовку расшифровки.")
+
+    recognized_pages: list[str] = []
+    documents = [
+        item for item in session.get("documents", [])
+        if str(item.get("kind", "")).startswith("osipov_")
+    ]
+    for page_number, document in enumerate(documents, start=1):
+        stored_path = Path(str(document.get("stored_path") or ""))
+        if not stored_path.exists():
+            continue
+        try:
+            raw_text = ((await recognize_text(stored_path, settings)) or "").strip()
+        except Exception:
+            logger.exception("Osipov OCR failed for %s", stored_path)
+            continue
+        if raw_text:
+            recognized_pages.append(f"Страница {page_number}:\n{raw_text}")
+
+    if not recognized_pages:
+        session["step"] = "osipov_upload"
+        touch_session()
+        await message.answer(
+            "Не удалось уверенно прочитать показатели. Пришлите PDF или более чёткие фото всех страниц, "
+            "по одной странице целиком без бликов. Расшифровка начнётся автоматически после загрузки."
+        )
+        return
+
+    session["osipov_ocr_text"] = "\n\n".join(recognized_pages)
+    existing = load_submission(settings.submissions_dir, session["submission_id"])
+    submission = merge_session_content_into_submission(existing, session)
+    save_submission_state(settings.submissions_dir, submission)
+    touch_session()
+    await build_dossier_after_payment(message, session)
+
+
+async def send_osipov_upload_confirmation(message: types.Message, session: dict[str, Any]) -> None:
+    file_count = sum(
+        1 for item in session.get("documents", [])
+        if str(item.get("kind", "")).startswith("osipov_")
+    )
+    await message.answer(
+        f"Анализы приняты. Получено файлов: {file_count}.\n\n"
+        "Вы завершили загрузку всех фотографий и файлов с результатами анализов или хотите добавить ещё?",
+        reply_markup=osipov_upload_keyboard(),
+    )
+
+
+async def schedule_osipov_upload_confirmation(message: types.Message, session: dict[str, Any]) -> None:
+    user_id = message.from_user.id
+    previous_task = osipov_processing_tasks.get(user_id)
+    if previous_task and not previous_task.done():
+        previous_task.cancel()
+
+    async def run_after_album() -> None:
+        try:
+            await asyncio.sleep(3)
+            await send_osipov_upload_confirmation(message, session)
+        except asyncio.CancelledError:
+            return
+        except Exception:
+            logger.exception("Osipov upload confirmation failed for user %s", user_id)
+        finally:
+            if osipov_processing_tasks.get(user_id) is asyncio.current_task():
+                osipov_processing_tasks.pop(user_id, None)
+
+    osipov_processing_tasks[user_id] = asyncio.create_task(run_after_album())
+
+
+@dp.callback_query(lambda c: c.data == "osipov_add_more")
+async def process_osipov_add_more(callback_query: types.CallbackQuery) -> None:
+    session = get_session(callback_query.from_user.id)
+    if not session or session.get("step") != "osipov_upload":
+        await bot.answer_callback_query(callback_query.id, text="Загрузка уже завершена.", show_alert=True)
+        return
+    await callback_query.message.edit_reply_markup(reply_markup=None)
+    await callback_query.message.answer("Пришлите дополнительные фото или PDF анализа.")
+    await bot.answer_callback_query(callback_query.id)
+
+
+@dp.callback_query(lambda c: c.data == "osipov_finish_upload")
+async def process_osipov_finish_upload(callback_query: types.CallbackQuery) -> None:
+    session = get_session(callback_query.from_user.id)
+    documents = session.get("documents", []) if session else []
+    if not session or session.get("step") != "osipov_upload":
+        await bot.answer_callback_query(callback_query.id, text="Загрузка уже завершена.", show_alert=True)
+        return
+    if not any(str(item.get("kind", "")).startswith("osipov_") for item in documents):
+        await bot.answer_callback_query(callback_query.id, text="Сначала пришлите хотя бы один файл.", show_alert=True)
+        return
+    await callback_query.message.edit_reply_markup(reply_markup=None)
+    await bot.answer_callback_query(callback_query.id)
+    await process_osipov_submission(callback_query.message, session)
+
+
+@dp.callback_query(lambda c: c.data and c.data.startswith("gut18_"))
+async def process_gut_support_18_offer(callback_query: types.CallbackQuery) -> None:
+    source_submission_id = callback_query.data.replace("gut18_", "", 1)
+    source = load_submission(settings.submissions_dir, source_submission_id)
+    if not source:
+        await bot.answer_callback_query(callback_query.id, text="Исходный разбор не найден.", show_alert=True)
+        return
+
+    owner_id = int(source.get("profile", {}).get("telegram_user_id") or 0)
+    if owner_id != callback_query.from_user.id:
+        await bot.answer_callback_query(callback_query.id, text="Это предложение доступно владельцу разбора.", show_alert=True)
+        return
+
+    source_age = source.get("profile", {}).get("age")
+    if source_age not in (None, "") and not is_adult_age(source_age):
+        await bot.answer_callback_query(callback_query.id, text="Программа доступна только с 18 лет.", show_alert=True)
+        return
+
+    active = get_session(callback_query.from_user.id)
+    if active and active.get("tier") == "gut_support_18" and active.get("step") == "awaiting_product_payment":
+        active_submission = load_submission(settings.submissions_dir, active["submission_id"]) or {}
+        if active_submission.get("payment_context"):
+            await bot.answer_callback_query(callback_query.id, text="Счёт уже сформирован.", show_alert=True)
+            return
+        session = active
+    else:
+        source_session = build_session_from_submission(source, callback_query.from_user)
+        session = start_session(callback_query.from_user, tier="gut_support_18")
+        protected_fields = {"submission_id", "offer", "tier", "step", "telegram_user_id"}
+        for key, value in source_session.items():
+            if key not in protected_fields:
+                session[key] = value
+        session["source_submission_id"] = source_submission_id
+        session["adult_confirmed"] = True
+        session["consent_given"] = True
+        session["step"] = "awaiting_product_payment"
+        touch_session()
+
+    try:
+        await callback_query.message.edit_reply_markup(reply_markup=None)
+    except Exception:
+        logger.info("Could not remove gut support offer button for %s", callback_query.from_user.id)
+    try:
+        await bot.answer_callback_query(callback_query.id)
+    except Exception:
+        logger.info("Gut support callback answer expired for %s", callback_query.from_user.id)
+    await callback_query.message.answer(
+        "Вы подтвердили, что вам исполнилось 18 лет. Формирую оплату программы поддержки ЖКТ и микробиома."
+    )
+    await finalize_submission(callback_query.message, session)
 
 
 @dp.callback_query(lambda c: c.data and c.data.startswith("tier_"))
@@ -3348,7 +3653,13 @@ async def process_tier_selection(callback_query: types.CallbackQuery) -> None:
     reset_chat_session(user_id)
 
     session = start_session(callback_query.from_user, tier=tier)
-    if tier == "nutri_chat":
+    if tier == "ok_start":
+        session["product_mode"] = "screening"
+    elif tier == "ok_express":
+        session["product_mode"] = "standard_no_labs"
+    elif tier in {"ok_review", "ok_result_8", "ok_rhythm"}:
+        session["product_mode"] = "premium_labs"
+    elif tier == "nutri_chat":
         session["product_mode"] = "nutri_chat"
     if tier == "habits":
         session["product_mode"] = "daily_habits"
@@ -3359,7 +3670,7 @@ async def process_tier_selection(callback_query: types.CallbackQuery) -> None:
     elif tier == "osipov":
         session["product_mode"] = "osipov"
 
-    await bot.send_message(user_id, TIER_DESCRIPTIONS.get(tier, TIER_DESCRIPTIONS["standard"]), parse_mode="HTML")
+    await bot.send_message(user_id, TIER_DESCRIPTIONS.get(tier, TIER_DESCRIPTIONS["ok_review"]), parse_mode="HTML")
     await bot.send_message(user_id, CONSENT_TEXT, reply_markup=consent_keyboard())
     await bot.answer_callback_query(callback_query.id)
 
@@ -3411,7 +3722,7 @@ async def process_consent_yes(callback_query: types.CallbackQuery) -> None:
 
     await bot.send_message(callback_query.from_user.id, "Спасибо. Согласие зафиксировано.")
 
-    if tier == "screening":
+    if tier in {"screening", "ok_start"}:
         session["step"] = "awaiting_screening_symptoms"
         touch_session()
         await bot.send_message(
@@ -3488,13 +3799,19 @@ async def handle_document_upload(message: types.Message) -> None:
         upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "osipov"
         upload_dir.mkdir(parents=True, exist_ok=True)
         original_name = message.document.file_name or "osipov_analysis.pdf"
-        file_name = sanitize_filename(f"{utc_now_iso().replace(':', '').replace('-', '')}_{original_name}")
+        file_name = sanitize_filename(f"{message.message_id}_{original_name}")
         destination = upload_dir / file_name
         await bot.download(message.document, destination=destination)
-        session.setdefault("documents", []).append({"kind": "osipov_document", "file_name": file_name, "stored_path": str(destination)})
-        session["step"] = "done"
+        append_unique_osipov_document(session, {
+            "kind": "osipov_document",
+            "telegram_file_id": message.document.file_id,
+            "telegram_file_unique_id": message.document.file_unique_id,
+            "file_name": file_name,
+            "stored_path": str(destination),
+            "mime_type": message.document.mime_type,
+        })
         touch_session()
-        await message.answer("Анализ Осипова принят. Я сохраню его как отдельный платный блок и подготовлю разбор: микробные маркеры, связь с жалобами, что требует врача и план нутрициологической поддержки.")
+        await schedule_osipov_upload_confirmation(message, session)
         return
     if not session or session.get("step") != "lab_notes":
         followup_case = find_active_followup_case(message.from_user.id)
@@ -3580,13 +3897,19 @@ async def handle_photo_upload(message: types.Message) -> None:
     if session and session.get("step") == "osipov_upload":
         upload_dir = case_upload_dir(settings.uploads_dir, session["submission_id"]) / "osipov"
         upload_dir.mkdir(parents=True, exist_ok=True)
-        file_name = sanitize_filename(f"{utc_now_iso().replace(':', '').replace('-', '')}_osipov_photo.jpg")
+        photo = message.photo[-1]
+        file_name = sanitize_filename(f"{message.message_id}_{photo.file_unique_id}_osipov_photo.jpg")
         destination = upload_dir / file_name
-        await bot.download(message.photo[-1], destination=destination)
-        session.setdefault("documents", []).append({"kind": "osipov_photo", "file_name": file_name, "stored_path": str(destination)})
-        session["step"] = "done"
+        await bot.download(photo, destination=destination)
+        append_unique_osipov_document(session, {
+            "kind": "osipov_photo",
+            "telegram_file_id": photo.file_id,
+            "telegram_file_unique_id": photo.file_unique_id,
+            "file_name": file_name,
+            "stored_path": str(destination),
+        })
         touch_session()
-        await message.answer("Фото анализа Осипова принято. Если цифры читаются плохо, я попрошу прислать PDF или более чёткое фото. Разбор будет оформлен как отдельный блок без диагнозов и без назначения лекарств.")
+        await schedule_osipov_upload_confirmation(message, session)
         return
     if not session or session.get("step") != "lab_notes":
         followup_case = find_active_followup_case(message.from_user.id)
@@ -4520,7 +4843,11 @@ def export_to_obsidian(session: dict, content: str) -> None:
     if not vault_path.exists():
         return
         
-    client_name = session.get("full_name", "Anonymous").replace(" ", "_")
+    client_name = str(
+        session.get("full_name")
+        or session.get("telegram_full_name")
+        or "Anonymous"
+    ).strip().replace(" ", "_")
     case_id = session.get("submission_id")
     file_name = f"{client_name}_{case_id}.md"
     target = vault_path / file_name

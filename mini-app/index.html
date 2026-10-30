@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wellness Clarity — Разбор кейса</title>
+    <title>НутриОК — полный разбор</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -287,8 +287,8 @@
     <div class="app">
         <div class="app-header">
             <div class="app-logo">
-                Wellness Clarity
-                <span>by Ольга Зинченко</span>
+                НутриОК
+                <span>by Olga Kovaleva · прототип</span>
             </div>
             <div class="app-step-indicator" id="stepIndicator"></div>
         </div>
@@ -296,32 +296,37 @@
         <div class="app-body" id="appBody">
             <!-- Screen 1: Tier Selection -->
             <div class="screen active" id="screenTier">
-                <div class="tier-select-title">Начать разбор кейса</div>
-                <div class="tier-select-sub">Один входной путь: ясность, следующий шаг и затем Персональное досье при необходимости</div>
+                <div class="tier-select-title">Выберите формат НутриОК</div>
+                <div class="tier-select-sub">Одна цель, дневник питания и понятный следующий шаг. Сейчас это прототип интерфейса контролируемого пилота.</div>
 
-                <div class="tier-option" onclick="selectTier('premium')">
-                    <div class="tier-option-header">
-                        <div class="tier-option-icon">💎</div>
-                        <div>
-                            <div class="tier-option-name">Wellness Clarity</div>
-                            <div class="tier-option-audience">Женщины 28-45 • fatigue • ЖКТ • unclear symptoms</div>
-                        </div>
-                    </div>
-                    <div class="tier-option-desc">Спокойно собираем ваш кейс, выделяем главное, определяем следующий шаг и при необходимости переводим в Персональное досье с проверкой эксперта</div>
-                    <div class="tier-option-price">1 000 ₽</div>
+                <div class="tier-option" onclick="selectTier('ok_express')">
+                    <div class="tier-option-header"><div class="tier-option-icon">01</div><div><div class="tier-option-name">ОК-Экспресс</div><div class="tier-option-audience">3 дня питания · без анализов и БАДов</div></div></div>
+                    <div class="tier-option-desc">Три главных паттерна и план на 7 дней. Автоматическая выдача только после safety-проверки.</div>
+                    <div class="tier-option-price">990 ₽ <small>пилот</small></div>
+                </div>
+
+                <div class="tier-option" onclick="selectTier('ok_review')">
+                    <div class="tier-option-header"><div class="tier-option-icon">02</div><div><div class="tier-option-name">ОК-Разбор</div><div class="tier-option-audience">полный профиль · стратегия на 30 дней</div></div></div>
+                    <div class="tier-option-desc">Симптомы, питание, образ жизни и только нужные анализы. Финальный результат проверяет Ольга.</div>
+                    <div class="tier-option-price">5 900 ₽ <small>пилот</small></div>
+                </div>
+
+                <div class="tier-option" onclick="selectTier('ok_result_8')">
+                    <div class="tier-option-header"><div class="tier-option-icon">08</div><div><div class="tier-option-name">ОК-Результат 8</div><div class="tier-option-audience">разбор · 8 недель сопровождения</div></div></div>
+                    <div class="tier-option-desc">Ежедневные действия до 15 минут, недельная адаптация и контроль выбранной метрики.</div>
+                    <div class="tier-option-price">14 900 ₽ <small>пилот</small></div>
                 </div>
             </div>
-
             <!-- Screen 2: Consent -->
             <div class="screen" id="screenConsent">
                 <div class="form-label">Соглашение</div>
                 <div class="form-question">Перед началом</div>
                 <div class="form-hint">
                     Продолжая, вы подтверждаете, что:<br><br>
-                    ✦ Добровольно передаёте симптомы и wellness-контекст<br>
+                    ✦ Добровольно передаёте данные о питании, самочувствии и образе жизни<br>
                     ✦ Понимаете, что бот не заменяет врача<br>
-                    ✦ Согласны на AI-обработку для подготовки досье<br>
-                    ✦ Финальный вывод проходит проверку экспертом
+                    ✦ Согласны на AI-обработку для подготовки структурированного черновика<br>
+                    ✦ ОК-Разбор и ОК-Результат 8 выдаются только после проверки Ольги
                 </div>
             </div>
 
@@ -364,15 +369,15 @@
                         <div class="gen-step active" id="genStep1"><div class="gen-step-dot"></div> Обработка анкеты и симптомов</div>
                         <div class="gen-step" id="genStep2"><div class="gen-step-dot"></div> Анализ загруженных документов</div>
                         <div class="gen-step" id="genStep3"><div class="gen-step-dot"></div> Сопоставление с базой знаний</div>
-                        <div class="gen-step" id="genStep4"><div class="gen-step-dot"></div> Формирование Wellness-Досье</div>
+                        <div class="gen-step" id="genStep4"><div class="gen-step-dot"></div> Формирование черновика НутриОК</div>
                     </div>
                 </div>
             </div>
 
             <!-- Screen: Result -->
             <div class="screen" id="screenResult">
-                <div class="result-badge">✓ Досье сформировано</div>
-                <div class="result-title" id="resultTitle">Персональное досье</div>
+                <div class="result-badge">✓ Демо-черновик сформирован</div>
+                <div class="result-title" id="resultTitle">Структура результата НутриОК</div>
                 <div class="result-sub" id="resultSub"></div>
                 <div id="resultContent"></div>
                 <div class="result-disclaimer">Данный разбор не является медицинским диагнозом. При критических отклонениях обратитесь к врачу очно.</div>
@@ -399,18 +404,21 @@
         if (tg) { tg.ready(); tg.expand(); }
 
         // ─── Intake Steps Config ───
+        const baseIntakeSteps = [
+            { key: 'name', q: 'Как к вам обращаться?', hint: 'Имя и фамилия', type: 'input', placeholder: 'Ольга Ковалева' },
+            { key: 'age', q: 'Сколько вам полных лет?', hint: '', type: 'input', placeholder: '35' },
+            { key: 'primary_goal', q: 'Выберите одну главную цель', hint: 'Один цикл — одна измеримая цель', type: 'textarea', placeholder: 'Например: больше энергии', chips: ['Энергия','Пищеварение','Вес и аппетит','Кожа и волосы','Сон и стресс'] },
+            { key: 'baseline_score', q: 'Как вы оцениваете состояние сейчас?', hint: 'Число от 0 до 10, где 10 — желаемое состояние', type: 'input', placeholder: '4' },
+            { key: 'symptoms', q: 'Что беспокоит сильнее всего?', hint: 'Опишите 1-3 главных проявления', type: 'textarea', placeholder: 'Когда возникает, что усиливает или уменьшает...' },
+            { key: 'nutrition_diary', q: 'Дневник питания за 3 дня', hint: 'Время, еда и напитки, голод/сытость, самочувствие после еды', type: 'textarea', placeholder: 'День 1: ...\nДень 2: ...\nДень 3: ...' },
+            { key: 'background', q: 'Диагнозы, лекарства, аллергии и БАДы?', hint: 'Ничего не отменяйте ради разбора', type: 'textarea', placeholder: 'Перечислите или напишите «нет»' },
+            { key: 'red_flags', q: 'Есть ли опасные симптомы прямо сейчас?', hint: 'Острая боль, кровотечение, потеря сознания, затруднение дыхания', type: 'input', placeholder: 'Нет' },
+        ];
         const intakeSteps = {
-            premium: [
-                { key: 'name', q: 'Как к вам обращаться?', hint: 'Имя и фамилия', type: 'input', placeholder: 'Алина Иванова' },
-                { key: 'age', q: 'Сколько вам полных лет?', hint: '', type: 'input', placeholder: '32' },
-                { key: 'city', q: 'Город и часовой пояс?', hint: '', type: 'input', placeholder: 'Москва, UTC+3' },
-                { key: 'symptoms', q: 'Что беспокоит сильнее всего?', hint: 'Опишите 3-5 главных симптомов', type: 'textarea', placeholder: 'Усталость с утра, выпадение волос, тревожность...', chips: ['Усталость','Выпадение волос','Плохой сон','Тревожность','Набор веса','Акне','Вздутие'] },
-                { key: 'goals', q: 'Какой результат хотите через 8 недель?', hint: '', type: 'textarea', placeholder: 'Хочу просыпаться с энергией...' },
-                { key: 'background', q: 'Диагнозы, лекарства, БАДы?', hint: 'Что уже принимаете или принимали', type: 'textarea', placeholder: 'Гипотиреоз, L-тироксин 50 мкг...' },
-                { key: 'red_flags', q: 'Есть ли сейчас критические состояния?', hint: 'Острая боль, кровотечения, высокая температура, беременность с осложнениями', type: 'input', placeholder: 'Нет' },
-            ]
+            ok_express: baseIntakeSteps,
+            ok_review: baseIntakeSteps,
+            ok_result_8: baseIntakeSteps,
         };
-
         // ─── Navigation ───
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -448,11 +456,11 @@
             } else if (state.currentScreen === 'intake') {
                 footer.style.display = 'block';
                 const steps = intakeSteps[state.tier];
-                btnP.textContent = state.intakeStep === steps.length - 1 ? 'Далее → Анализы' : 'Далее';
+                btnP.textContent = state.intakeStep === steps.length - 1 ? (state.tier === 'ok_express' ? 'Подготовить демо-черновик' : 'Далее → Анализы') : 'Далее';
                 btnS.style.display = 'none';
             } else if (state.currentScreen === 'upload') {
                 footer.style.display = 'block';
-                btnP.textContent = 'Сгенерировать Досье';
+                btnP.textContent = 'Подготовить демо-черновик';
                 btnS.style.display = 'block';
                 btnS.textContent = 'Пропустить анализы';
             } else if (state.currentScreen === 'gen') {
@@ -560,7 +568,7 @@
 
         // ─── Result ───
         function showResult() {
-            document.getElementById('resultTitle').textContent = 'Персональное досье';
+            document.getElementById('resultTitle').textContent = 'Структура результата НутриОК';
             document.getElementById('resultSub').textContent = `Подготовлено для ${state.data.name || 'вас'}`;
 
             // Safe demo placeholder — no hardcoded medical findings
@@ -568,15 +576,15 @@
             content.innerHTML = `
                 <div class="result-section">
                     <div class="result-section-title">Что внутри досье</div>
-                    <div class="result-item">Анализ симптомов и образа жизни</div>
-                    <div class="result-item">Разбор лабораторных показателей (при наличии)</div>
-                    <div class="result-item">Индивидуальные ориентиры по питанию и поддержке (после проверки эксперта)</div>
+                    <div class="result-item">Одна главная цель и исходная оценка 0-10</div>
+                    <div class="result-item">Факты из дневника питания, симптомов и образа жизни</div>
+                    <div class="result-item">Три приоритета и измеримый план следующего шага</div>
                 </div>
                 <div class="result-section">
                     <div class="result-section-title">Формат</div>
-                    <div class="result-item">PDF-досье с проверкой эксперта-нутрициолога</div>
-                    <div class="result-item">Поддержка в Telegram по выбранному пакету</div>
-                    <div class="result-item">Корректировка маршрута по анализам и обратной связи</div>
+                    <div class="result-item">ОК-Разбор и ОК-Результат 8 — только после проверки Ольги</div>
+                    <div class="result-item">ОК-Экспресс — без анализов, БАДов и медицинских обещаний</div>
+                    <div class="result-item">Анализы — только если они меняют решение</div>
                 </div>`;
             showScreen('result');
         }

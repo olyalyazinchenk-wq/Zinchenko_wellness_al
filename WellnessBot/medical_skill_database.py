@@ -9,6 +9,7 @@ from nutrition_reference_ranges import (
     parse_numeric_value,
 )
 from supplement_product_catalog import build_supplement_context
+from supplement_protocols import apply_supplement_protocol_guard
 
 
 MEDICAL_SKILL_DB_VERSION = "2026-04-25-v1"
@@ -443,7 +444,15 @@ def build_medical_skill_context(submission: dict[str, Any]) -> dict[str, Any]:
             "Использовать нутрициологические ориентиры как навигацию, а не как медицинское заключение.",
         ],
     }
-    context["supplement_context"] = build_supplement_context(context, medical_context)
+    context["supplement_context"] = build_supplement_context(
+        context,
+        medical_context,
+        offer_code=str(submission.get("offer") or submission.get("tier") or ""),
+    )
+    context["supplement_context"] = apply_supplement_protocol_guard(
+        context["supplement_context"],
+        submission,
+    )
     return context
 
 

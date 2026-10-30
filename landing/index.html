@@ -1,393 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ольга Зинченко — Wellness Clarity в Telegram</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #050505;
-            --surface: #0a0a0a;
-            --surface-hover: #111111;
-            --border: rgba(255, 255, 255, 0.08);
-            --gold: #d4af37;
-            --gold-glow: rgba(212, 175, 55, 0.15);
-            --text-main: #f5f5f7;
-            --text-muted: #86868b;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text-main);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Subtle radial glow in background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: -20vh;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80vw;
-            height: 60vh;
-            background: radial-gradient(ellipse at center, var(--gold-glow) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .container {
-            max-width: 1040px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 32px 0;
-        }
-
-        .logo {
-            font-size: 1.25rem;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
-            text-decoration: none;
-        }
-
-        .logo span {
-            color: var(--text-muted);
-            font-weight: 400;
-        }
-
-        .btn-header {
-            padding: 10px 24px;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            color: var(--text-main);
-            font-size: 0.85rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-header:hover {
-            background: var(--text-main);
-            color: var(--bg);
-        }
-
-        /* Hero */
-        .hero {
-            padding: 120px 0 100px;
-            text-align: center;
-        }
-
-        .eyebrow {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 100px;
-            border: 1px solid var(--border);
-            color: var(--gold);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 32px;
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 6vw, 4.5rem);
-            font-weight: 600;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 680px;
-            margin: 0 auto 48px;
-            line-height: 1.6;
-        }
-
-        .hero p strong { color: var(--text-main); font-weight: 500; }
-
-        .btn-primary {
-            display: inline-block;
-            padding: 18px 48px;
-            border-radius: 100px;
-            background: var(--text-main);
-            color: var(--bg);
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transform: skewX(-20deg);
-            animation: shine 4s infinite;
-        }
-
-        @keyframes shine {
-            0% { left: -100% }
-            20% { left: 200% }
-            100% { left: 200% }
-        }
-
-        .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
-        }
-
-        /* Bento Grid (Pain Points & Why us) */
-        .bento-section {
-            padding: 100px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .section-header {
-            margin-bottom: 64px;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            letter-spacing: -1px;
-            margin-bottom: 16px;
-        }
-
-        .section-header p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-        }
-
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
-
-        .bento-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
-            transition: background 0.3s ease, border-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .bento-card:hover {
-            background: var(--surface-hover);
-            border-color: rgba(212, 175, 55, 0.3);
-        }
-
-        .card-wide { grid-column: span 8; }
-        .card-square { grid-column: span 4; }
-        .card-half { grid-column: span 6; }
-
-        .bento-card h3 {
-            font-size: 1.5rem;
-            font-weight: 500;
-            margin-bottom: 16px;
-            color: var(--text-main);
-        }
-
-        .bento-card p {
-            color: var(--text-muted);
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .bento-card .highlight {
-            color: var(--gold);
-            font-weight: 500;
-            margin-top: 16px;
-            display: block;
-        }
-
-        /* Case Study */
-        .case-section {
-            padding: 100px 0;
-        }
-
-        .case-box {
-            background: linear-gradient(145deg, #111 0%, #050505 100%);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 32px;
-            padding: 64px;
-            display: flex;
-            align-items: center;
-            gap: 64px;
-            box-shadow: 0 20px 80px rgba(0,0,0,0.5);
-        }
-
-        .case-text { flex: 1; }
-        .case-stats { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
-
-        .case-quote {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-style: italic;
-            line-height: 1.4;
-            margin-bottom: 24px;
-        }
-
-        .stat-item {
-            border-left: 2px solid var(--border);
-            padding-left: 24px;
-        }
-
-        .stat-item .label { color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;}
-        .stat-item .value { font-size: 2.5rem; font-weight: 600; color: var(--gold); line-height: 1;}
-        .stat-item .delta { color: #5b6; font-size: 0.85rem; margin-top: 8px;}
-
-        /* Final CTA */
-        .final-cta {
-            padding: 120px 0;
-            text-align: center;
-            background: radial-gradient(ellipse at bottom, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
-        }
-
-        .final-cta h2 {
-            font-size: 3rem;
-            font-weight: 600;
-            letter-spacing: -1px;
-            margin-bottom: 32px;
-        }
-
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 0;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-        }
-
-        @media (max-width: 900px) {
-            .case-box { flex-direction: column; padding: 40px; }
-            .card-wide, .card-square, .card-half { grid-column: span 12; }
-            .hero h1 { font-size: 2.5rem; }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="НутриОК by Olga Kovaleva — полный нутрициологический разбор с понятным планом действий.">
+  <title>НутриОК by Olga Kovaleva — полный нутрициологический разбор</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Prata&display=swap" rel="stylesheet">
+  <style>
+    :root{--paper:#f3efdf;--ink:#15211a;--green:#b8e62e;--coral:#ef6a4b;--line:rgba(21,33,26,.2);--white:#fffdf4}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Onest,sans-serif;line-height:1.45}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.28;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,#000,transparent 72%)}
+    a{color:inherit}.wrap{width:min(1180px,calc(100% - 36px));margin:auto;position:relative}.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0;border-bottom:1px solid var(--line)}
+    .logo{font-weight:800;font-size:20px;letter-spacing:-.04em}.logo small{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+    .pill,.cta{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ink);border-radius:999px;padding:12px 18px;text-decoration:none;font-weight:700;background:var(--green);box-shadow:4px 4px 0 var(--ink);transition:.18s}
+    .pill:hover,.cta:hover{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:58px;padding:78px 0 64px;align-items:end}.eyebrow{font-weight:700;text-transform:uppercase;font-size:12px;letter-spacing:.14em;margin-bottom:18px}
+    h1{font-family:Prata,serif;font-size:clamp(50px,7.5vw,104px);line-height:.96;letter-spacing:-.055em;margin:0;max-width:900px}.accent{display:inline-block;background:var(--green);padding:0 .08em;transform:rotate(-1deg)}
+    .hero-copy{font-size:20px;margin:0 0 26px}.note{font-size:13px;border-left:4px solid var(--coral);padding-left:14px}.stamp{width:168px;height:168px;border:2px solid var(--ink);border-radius:50%;display:grid;place-items:center;text-align:center;font-weight:800;transform:rotate(7deg);margin:36px 0 0 auto;background:var(--white)}
+    section{padding:72px 0;border-top:1px solid var(--line)}h2{font-family:Prata,serif;font-size:clamp(36px,5vw,64px);line-height:1.05;margin:0 0 34px;letter-spacing:-.04em}.lead{font-size:19px;max-width:720px}
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.step{background:var(--white);border:1px solid var(--ink);padding:24px;min-height:220px;box-shadow:5px 5px 0 var(--ink)}.num{font-family:Prata;font-size:48px;color:var(--coral)}.step h3{margin:24px 0 9px;font-size:18px}.step p{margin:0;font-size:14px}
+    .goals{display:flex;flex-wrap:wrap;gap:10px}.goal{border:1px solid var(--ink);border-radius:999px;padding:11px 16px;background:var(--white);font-weight:600}
+    .plans{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:stretch}.plan{border:1px solid var(--ink);padding:22px 18px;background:var(--white);display:flex;flex-direction:column;min-height:330px}.plan.featured{background:var(--green);transform:translateY(-10px);box-shadow:6px 6px 0 var(--ink)}.plan-tag{font-size:10px;text-transform:uppercase;letter-spacing:.12em;font-weight:800}.plan h3{font-size:21px;margin:18px 0 8px}.price{font-family:Prata;font-size:34px;margin:0 0 18px}.regular{font-size:12px;opacity:.65}.plan p{font-size:13px;margin:0 0 18px}.plan .who{margin-top:auto;border-top:1px solid var(--line);padding-top:15px;font-weight:600}
+    .proof{display:grid;grid-template-columns:1fr 1fr;gap:36px}.metric{background:var(--ink);color:var(--paper);padding:32px}.metric strong{font-family:Prata;font-size:72px;color:var(--green);display:block}.rules{padding:10px 0}.rules li{margin:0 0 14px}
+    .final{background:var(--coral);border:1px solid var(--ink);padding:48px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;box-shadow:8px 8px 0 var(--ink)}.final h2{margin:0}.final .cta{background:var(--paper);white-space:nowrap}
+    footer{padding:34px 0 50px;font-size:12px;display:flex;justify-content:space-between;gap:20px}.disclosure{max-width:720px}
+    @media(max-width:980px){.hero,.proof{grid-template-columns:1fr}.hero{gap:28px}.stamp{margin:18px 0}.steps{grid-template-columns:1fr 1fr}.plans{grid-template-columns:1fr 1fr}.plan.featured{transform:none}.final{grid-template-columns:1fr}}
+    @media(max-width:620px){.wrap{width:min(100% - 24px,1180px)}.top .pill{display:none}.hero{padding:52px 0}.hero-copy{font-size:17px}.steps,.plans{grid-template-columns:1fr}.step{min-height:0}.plan{min-height:260px}.final{padding:28px}.final .cta{white-space:normal}footer{display:block}.disclosure{margin-bottom:18px}}
+  </style>
 </head>
 <body>
+  <header class="wrap top">
+    <div class="logo">НутриОК <small>by Olga Kovaleva</small></div>
+    <a class="pill" href="https://t.me/zinchenko_wellness_ai_1_bot" target="_blank" rel="noopener">Заявка на пилот</a>
+  </header>
 
-<div class="container">
-    <header>
-        <a href="#" class="logo">Zinchenko <span>Wellness Clarity</span></a>
-        <a href="https://t.me/zinchenko_wellness_ai_1_bot" class="btn-header" target="_blank">Начать разбор</a>
-    </header>
-</div>
-
-<section class="hero">
-    <div class="container">
-        <div class="eyebrow">Wellness clarity in Telegram</div>
-        <h1>Вам сказали, что анализы «в норме».<br>Но вы чувствуете, что это не так.</h1>
-        <p>Сначала — ясность и спокойный следующий шаг. Затем, если нужно, — <strong>Premium Wellness Dossier</strong> с human review и сопровождением прямо в Telegram.</p>
-        <a href="https://t.me/zinchenko_wellness_ai_1_bot" class="btn-primary" target="_blank">Получить первую ясность →</a>
+  <main>
+    <div class="wrap hero">
+      <div>
+        <div class="eyebrow">Полный нутрициологический разбор</div>
+        <h1>Разбор, после которого <span class="accent">понятно</span>, что делать.</h1>
+      </div>
+      <div>
+        <p class="hero-copy">Не список добавок и не универсальная диета. Одна главная цель, факты из вашего контекста, приоритеты и измеримый план следующего шага.</p>
+        <a class="cta" href="https://t.me/zinchenko_wellness_ai_1_bot" target="_blank" rel="noopener">Начать с ОК-Старт</a>
+        <p class="note">Идёт контролируемый пилот. Оплата подтверждается вручную. Полные персональные разборы выдаются только после проверки Ольги.</p>
+        <div class="stamp">ПИТАНИЕ<br>СИМПТОМЫ<br>ОБРАЗ ЖИЗНИ<br>АНАЛИЗЫ</div>
+      </div>
     </div>
-</section>
 
-<section class="bento-section">
-    <div class="container">
-        <div class="section-header">
-            <h2>Знакомая ситуация?</h2>
-            <p>Почему хаотичные советы и общие ответы не дают настоящей ясности.</p>
+    <section>
+      <div class="wrap">
+        <h2>Не «всё здоровье».<br>Одна цель за один цикл.</h2>
+        <div class="goals" aria-label="Главные цели">
+          <span class="goal">Энергия</span><span class="goal">Пищеварение</span><span class="goal">Вес и аппетит</span><span class="goal">Кожа и волосы</span><span class="goal">Сон и стресс</span>
         </div>
+      </div>
+    </section>
 
-        <div class="bento-grid">
-            <div class="bento-card card-wide">
-                <h3>«Сплю 9 часов и всё равно не высыпаюсь»</h3>
-                <p>По бланку результат может выглядеть «нормальным», а по самочувствию — нет. Мы не обещаем диагноз по переписке, но помогаем увидеть картину кейса, определить приоритеты и не терять месяцы в догадках.</p>
-                <span class="highlight">Только интегративный подход →</span>
-            </div>
-
-            <div class="bento-card card-square">
-                <h3>Не общий совет, а следующий шаг</h3>
-                <p>Вместо потока абстрактных рекомендаций мы собираем контекст, выделяем главное и даём понятный порядок действий без лишнего шума.</p>
-            </div>
-
-            <div class="bento-card card-half">
-                <h3>Безопасность важнее красивых обещаний</h3>
-                <p>Если в истории есть красные флаги или ограничения, мы не романтизируем “биохакинг”, а разделяем, где можно разбираться спокойно, а где нужна очная помощь.</p>
-            </div>
-
-            <div class="bento-card card-half">
-                <h3>Один чат вместо хаоса</h3>
-                <p>Всё остаётся в Telegram: первый разбор, уточнения, загрузка анализов и дальнейшее сопровождение. Без пересборки кейса в нескольких каналах.</p>
-            </div>
+    <section>
+      <div class="wrap">
+        <h2>Как собирается решение</h2>
+        <div class="steps">
+          <article class="step"><div class="num">01</div><h3>Исходная точка</h3><p>Выбираем одну цель и оцениваем текущее состояние по шкале 0-10.</p></article>
+          <article class="step"><div class="num">02</div><h3>Три дня фактов</h3><p>Дневник питания, режим, симптомы и действия. Без догадок по одному сообщению.</p></article>
+          <article class="step"><div class="num">03</div><h3>Приоритеты</h3><p>Отделяем факты от гипотез. Анализы добавляем только когда они меняют решение.</p></article>
+          <article class="step"><div class="num">04</div><h3>Проверяемый план</h3><p>Небольшие действия, целевая метрика и контроль соблюдения плана.</p></article>
         </div>
-    </div>
-</section>
+      </div>
+    </section>
 
-<section class="case-section">
-    <div class="container">
-        <div class="case-box">
-            <div class="case-text">
-                <div class="eyebrow">Кейс клиента</div>
-                <div class="case-quote">«Мне впервые не дали общий совет, а спокойно собрали картину и объяснили, куда смотреть дальше.»</div>
-                <p style="color:var(--text-muted);">Алина, 32 года. Обратилась с потерей энергии и выпадением волос. Через 8 недель следования протоколу впервые проснулась без будильника.</p>
-            </div>
-            <div class="case-stats">
-                <div class="stat-item">
-                    <div class="label">Ферритин</div>
-                    <div class="value">54</div>
-                    <div class="delta">Было: 12 (ЛДЖ)</div>
-                </div>
-                <div class="stat-item">
-                    <div class="label">Витамин D</div>
-                    <div class="value">68</div>
-                    <div class="delta">Было: 18 (Дефицит)</div>
-                </div>
-                <div class="stat-item">
-                    <div class="label">ТТГ</div>
-                    <div class="value">1.8</div>
-                    <div class="delta">Было: 3.8</div>
-                </div>
-                <div class="stat-item">
-                    <div class="label">Энергия</div>
-                    <div class="value">9/10</div>
-                    <div class="delta">Было: 2/10</div>
-                </div>
-            </div>
+    <section id="plans">
+      <div class="wrap">
+        <h2>Лестница продукта</h2>
+        <div class="plans">
+          <article class="plan"><div class="plan-tag">Знакомство</div><h3>ОК-Старт</h3><div class="price">0 ₽</div><p>Цель, оценка 0-10 и один безопасный первый шаг.</p><div class="who">Чтобы понять свой следующий формат.</div></article>
+          <article class="plan featured"><div class="plan-tag">Пилот</div><h3>ОК-Экспресс</h3><div class="price">990 ₽</div><p>3 дня питания, 3 главных паттерна, план на 7 дней. Без анализов и БАДов.</p><div class="regular">После пилота: 1 490 ₽</div><div class="who">Чтобы быстро исправить очевидные паттерны.</div></article>
+          <article class="plan"><div class="plan-tag">Полный</div><h3>ОК-Разбор</h3><div class="price">5 900 ₽</div><p>Полный профиль, персональный минимум анализов, одна интерпретация и стратегия на 30 дней.</p><div class="regular">После пилота: 7 900 ₽</div><div class="who">Проверяется Ольгой.</div></article>
+          <article class="plan"><div class="plan-tag">Сопровождение</div><h3>ОК-Результат 8</h3><div class="price">14 900 ₽</div><p>Полный разбор и 8 недель: действия до 15 минут, еженедельная адаптация.</p><div class="regular">После пилота: 19 900 ₽</div><div class="who">Для устойчивого изменения.</div></article>
+          <article class="plan"><div class="plan-tag">Поддержание</div><h3>ОК-Ритм</h3><div class="price">1 990 ₽</div><p>Ежемесячный контроль метрики и раннее обнаружение отката.</p><div class="who">После основной программы.</div></article>
         </div>
-    </div>
-</section>
+        <p class="lead">При переходе на следующий уровень в течение 30 дней предыдущая оплата засчитывается полностью. Лабораторные исследования оплачиваются отдельно.</p>
+      </div>
+    </section>
 
-<section class="final-cta">
-    <div class="container">
-        <h2>Хватит ходить по кругу между симптомами и общими советами.</h2>
-        <a href="https://t.me/zinchenko_wellness_ai_1_bot" class="btn-primary" target="_blank">Начать разбор в Telegram</a>
-    </div>
-</section>
+    <section>
+      <div class="wrap proof">
+        <div class="metric"><strong>0→10</strong>Сначала фиксируем исходную точку. Затем смотрим изменение целевой метрики и долю выполненных действий.</div>
+        <div class="rules">
+          <h2>Граница доверия</h2>
+          <ul>
+            <li>НутриОК не ставит диагнозы, не назначает лечение и не меняет лекарства.</li>
+            <li>ХМС по Осипову может быть дополнительным источником данных, но не отдельным продуктом и не основанием для причинных обещаний.</li>
+            <li>БАДы не являются лекарствами. Бренд, доза, длительность и ссылка появляются только после личного одобрения Ольги.</li>
+            <li>Партнёрские ссылки раскрываются явно и не влияют на схему или цену.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
 
-<footer>
-    <div class="container">
-        © 2026 Ольга Зинченко • Wellness Clarity. Разбор не заменяет консультацию врача.
-    </div>
-</footer>
+    <section>
+      <div class="wrap final">
+        <h2>Начните не с анализов.<br>Начните с цели.</h2>
+        <a class="cta" href="https://t.me/zinchenko_wellness_ai_1_bot" target="_blank" rel="noopener">Оставить заявку в Telegram</a>
+      </div>
+    </section>
+  </main>
 
+  <footer class="wrap">
+    <div class="disclosure">Информация носит образовательный и нутрициологический характер и не заменяет консультацию врача. При острых или опасных симптомах обратитесь за медицинской помощью.</div>
+    <div>© 2026 НутриОК by Olga Kovaleva</div>
+  </footer>
 </body>
-</html>
+</html>

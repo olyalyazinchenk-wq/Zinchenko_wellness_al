@@ -1,4 +1,4 @@
-﻿# WellnessBot Dockerfile
+# WellnessBot Dockerfile
 FROM python:3.11-slim
 
 LABEL maintainer="Olga Zinchenko"
@@ -36,6 +36,12 @@ COPY voice_processor.py .
 COPY medical_skill_database.py .
 COPY nutrition_reference_ranges.py .
 COPY supplement_product_catalog.py .
+COPY supplement_protocols.py .
+COPY nutriok_product.py .
+COPY nutriok_prompt.py .
+COPY nutriok_safety.py .
+COPY nutriok_texts.py .
+COPY review_gate.py .
 COPY helix_master_catalog.py .
 COPY test_data.py .
 

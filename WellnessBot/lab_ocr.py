@@ -3,6 +3,8 @@ import base64
 import json
 import logging
 import re
+import shutil
+import subprocess
 from pathlib import Path
 from typing import Any, Optional
 
@@ -372,6 +374,30 @@ def extract_text_from_pdf(file_path: Path) -> str:
         return ""
 
 
+def recognize_text_locally(file_path: Path) -> Optional[str]:
+    if file_path.suffix.lower() == ".pdf":
+        return None
+
+    executable = shutil.which("tesseract")
+    if not executable:
+        installed = Path("C:/Program Files/Tesseract-OCR/tesseract.exe")
+        executable = str(installed) if installed.exists() else None
+    if not executable:
+        return None
+
+    tessdata_dir = Path(__file__).parent / "data" / "tessdata"
+    command = [executable, str(file_path), "stdout", "-l", "rus+eng", "--psm", "6"]
+    if tessdata_dir.exists():
+        command.extend(["--tessdata-dir", str(tessdata_dir)])
+    try:
+        result = subprocess.run(command, capture_output=True, text=True, timeout=90, check=False)
+        text = result.stdout.strip()
+        return text or None
+    except Exception:
+        logger.exception("Local Tesseract OCR failed for %s", file_path.name)
+        return None
+
+
 def should_skip_ocr_line(name_part: str) -> bool:
     normalized = normalize_ocr_line(name_part).lower().replace("ё", "е")
     if len(normalized) < 2:
@@ -458,8 +484,8 @@ async def recognize_text(file_path: Path, settings: Any) -> Optional[str]:
 
     credentials = get_yandex_ocr_credentials(settings)
     if not credentials["api_key"] or not credentials["project_id"]:
-        logger.warning("Yandex OCR credentials are missing. OCR is skipped for %s.", file_path.name)
-        return None
+        logger.warning("Yandex OCR credentials are missing. Using local OCR for %s.", file_path.name)
+        return await asyncio.to_thread(recognize_text_locally, file_path)
 
     try:
         with open(file_path, "rb") as f:
@@ -499,7 +525,7 @@ async def recognize_text(file_path: Path, settings: Any) -> Optional[str]:
 
     except Exception:
         logger.exception("Yandex OCR failed for %s", file_path.name)
-        return None
+        return await asyncio.to_thread(recognize_text_locally, file_path)
 
 
 async def parse_biomarkers(raw_text: str, settings: Any) -> dict[str, Any]:

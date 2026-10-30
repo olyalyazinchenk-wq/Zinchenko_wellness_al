@@ -27,6 +27,7 @@ from payment_flow import (  # noqa: E402
     build_invoice_payload,
     build_payment_context,
     get_product_offer,
+    is_adult_age,
     is_payment_confirmed_for_dossier,
     mark_manual_payment_confirmed,
     mark_manual_payment_pending,
@@ -136,9 +137,30 @@ class PaymentCaseServiceTests(unittest.TestCase):
         session["offer"] = "vip"
         context = build_payment_context(session, now_iso="2026-04-21T00:30:00Z")
 
-        self.assertEqual(context["offer_code"], "vip")
+        self.assertEqual(context["offer_code"], "ok_result_8")
         self.assertEqual(context["amount_rub"], get_product_offer("vip")["price_rub"])
         self.assertEqual(context["amount_kop"], get_product_offer("vip")["amount_kop"])
+
+    def test_legacy_gut_support_maps_to_ok_review_price_and_payload(self) -> None:
+        session = build_session_fixture()
+        session["offer"] = "gut_support_18"
+        session["tier"] = "gut_support_18"
+
+        context = build_payment_context(session, now_iso="2026-06-18T20:00:00Z")
+
+        self.assertEqual(context["offer_code"], "ok_review")
+        self.assertEqual(context["amount_rub"], 5900)
+        self.assertEqual(context["amount_kop"], 590000)
+        self.assertEqual(
+            parse_invoice_payload(context["invoice_payload"]),
+            (session["submission_id"], session["telegram_user_id"]),
+        )
+
+    def test_adult_age_check(self) -> None:
+        self.assertTrue(is_adult_age(18))
+        self.assertTrue(is_adult_age("40 лет"))
+        self.assertFalse(is_adult_age(17))
+        self.assertFalse(is_adult_age("не указано"))
 
     def test_manual_payment_state_transitions(self) -> None:
         session = build_session_fixture()
