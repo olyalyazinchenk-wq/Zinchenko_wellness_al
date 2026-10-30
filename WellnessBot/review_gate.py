@@ -72,7 +72,7 @@ def _resolve_submission_product_code(submission: dict[str, Any]) -> str:
         or intake.get("product_code")
         or submission.get("offer")
         or submission.get("tier")
-        or "ok_express"
+        or "ok_review"
     )
     return normalize_product_code(str(raw_code))
 
@@ -93,6 +93,16 @@ def is_release_approved(submission: dict[str, Any] | None) -> bool:
         submission.get("intake_status") == "delivered_to_client"
         and submission.get("approved_by_admin_id")
     ):
+        expected_sha = str(submission.get("approved_artifact_sha256") or "").strip().lower()
+        if expected_sha:
+            pdf_path_raw = str(submission.get("pdf_path") or "").strip()
+            if not pdf_path_raw:
+                return False
+            pdf_path = Path(pdf_path_raw)
+            if not pdf_path.exists() or not pdf_path.is_file():
+                return False
+            if compute_file_sha256(pdf_path).lower() != expected_sha:
+                return False
         return True
 
     legacy_release = submission.get("legacy_release")
@@ -175,6 +185,7 @@ def record_review(
     if decision == "approved":
         submission["approved_by_admin_id"] = int(reviewer_id)
         submission["approved_at"] = now_iso
+        submission["approved_artifact_sha256"] = sha
 
     return record
 

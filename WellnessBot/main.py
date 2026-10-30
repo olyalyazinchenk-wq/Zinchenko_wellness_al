@@ -2323,7 +2323,7 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
         or getattr(callback_query.from_user, "username", None)
         or f"admin_{callback_query.from_user.id}"
     )
-    record_review(
+    review_record = record_review(
         submission,
         reviewer_id=callback_query.from_user.id,
         reviewer_name=reviewer_name,
@@ -2333,6 +2333,7 @@ async def process_admin_approval(callback_query: types.CallbackQuery) -> None:
     )
     submission["approved_by_admin_id"] = callback_query.from_user.id
     submission["approved_at"] = approved_now_iso
+    submission["approved_artifact_sha256"] = review_record.artifact_sha256
     if submission.get("supplement_review_required"):
         submission["supplement_review_approved_by"] = callback_query.from_user.id
         submission["supplement_review_approved_at"] = approved_now_iso

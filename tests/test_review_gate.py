@@ -130,6 +130,34 @@ class ReviewGateTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(PermissionError):
             release_or_raise(review_sub)
 
+        # B6: fail-closed when product/offer/tier codes are missing
+        no_code_sub = {
+            "submission_id": "sub_no_code",
+            "pdf_path": str(self.pdf_path),
+            "auto_delivery_decision": {"allow_automatic_delivery": True},
+        }
+        self.assertFalse(is_release_approved(no_code_sub))
+        with self.assertRaises(PermissionError):
+            release_or_raise(no_code_sub)
+
+    def test_legacy_approved_by_admin_id_verifies_approved_artifact_sha256(self) -> None:
+        original_sha = compute_file_sha256(self.pdf_path)
+        legacy_sub = {
+            "submission_id": "sub_legacy_admin",
+            "intake_status": "delivered_to_client",
+            "approved_by_admin_id": self.admin_id,
+            "approved_artifact_sha256": original_sha,
+            "pdf_path": str(self.pdf_path),
+        }
+        self.assertTrue(is_release_approved(legacy_sub))
+        self.assertEqual(release_or_raise(legacy_sub), self.pdf_path)
+
+        # Tampering with PDF after approved_by_admin_id must block release
+        self.pdf_path.write_bytes(b"%PDF-1.4 tampered after legacy admin approval\n")
+        self.assertFalse(is_release_approved(legacy_sub))
+        with self.assertRaises(PermissionError):
+            release_or_raise(legacy_sub)
+
     async def test_admin_callbacks_changes_with_comment_and_reject(self) -> None:
         submission_id = f"20261030T120000Z_{self.owner_id}"
         save_submission(

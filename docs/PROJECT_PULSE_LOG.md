@@ -543,3 +543,11 @@ Deliver ten unique external paid, named-review HMS cases with zero critical defe
 - Notion: будет выполнена отдельная запись только без секретов и клиентских данных; точный readback обязателен. При недоступности коннектора локальный fallback-отчёт фиксирует причину.
 - Готово к пилоту только: ограниченные обезличенные concierge-кейсы, ручная оплата, обязательный named human review. Нельзя запускать public traffic, автоматическую оплату, unattended delivery, широкий трафик или второй poller.
 - Следующие шаги: восстановить диск операторской уборкой; доказать единственного runtime-владельца; закрепить structured intake и reviewer evidence; собрать два актуальных NutriOK benchmark-прогона; опубликовать только проверенный allowlist.
+
+## 2026-10-30 12:51 MSK - Задачи B5 и B6 (Safety Gate Word-Order & Fail-Closed Review Gate)
+
+- Этап не изменён: `nutriok-controlled-build-2026-07-17-r1`; `PAYMENT_MODE=manual`, `ENABLE_TMA=false`, public launch заблокирован.
+- **B5 (`WellnessBot/nutriok_safety.py`, `tests/test_nutriok_safety.py`)**: добавлен хелпер `_within_words(group_a, group_b, max_words=4)` для сопоставления в любом порядке слов в окне до 4 слов (`black_tarry_stool`, `blood_in_stool_or_vomit` с кофейной гущей и прямой кишкой, `rapid_weight_loss` во всех перестановках, `jaundice`, `prolonged_fever`, `angioedema`) и фильтры ложных срабатываний (`BENIGN_LAB_OR_DIET_PHRASES_PATTERN`, `PAST_OR_NEGATED_PREGNANCY_PATTERN`). В `tests/test_nutriok_safety.py` добавлены таблицы на 31 позитивную и 18 нейтральных фраз (0 false positives).
+- **B6 (`WellnessBot/review_gate.py`, `WellnessBot/main.py`, `tests/test_review_gate.py`)**: `_resolve_submission_product_code` переведён в fail-closed со значением по умолчанию `"ok_review"`; в `record_review` и `process_admin_approval` сохраняется `approved_artifact_sha256`, который сверяется в legacy-ветке `approved_by_admin_id`.
+- Проверки: `93 passed, 58 subtests passed` (`ops/dev.ps1 test`), `compileall` без ошибок, независимое ревью второго агента `LGTM`.
+
